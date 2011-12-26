@@ -723,6 +723,7 @@ sub ReadBasketrows {
 	}
 
 	use goah::Database::Basketrows;
+	use goah::Database::Products;
 	my %rowdata;
 	my $field;
 	my $baskettotal=0;
@@ -758,6 +759,9 @@ sub ReadBasketrows {
 			$rowdata{$i}{'code'} = $row->get('code');
 			$rowdata{$i}{'name'} = $row->get('name');
 
+			my $proddata=goah::Database::Products->retrieve($row->get('productid'));
+			$rowdata{$i}{'in_store'}=$proddata->get('in_store');
+
 		}
 		$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrency($baskettotal,0,$uid,'out',$settref);
 		return \%rowdata;
@@ -777,6 +781,10 @@ sub ReadBasketrows {
 		$rowdata{'code'} = $data->get('code');
 		$rowdata{'name'} = $data->get('name');
 		$rowdata{'total'} = goah::GoaH->FormatCurrency( ($rowdata{'sell'}*$rowdata{'amount'}),0,$uid,'out',$settref);
+
+		my $proddata=goah::Database::Products->retrieve($data->get('productid'));
+		$rowdata{'in_store'}=$proddata->get('in_store');
+
 		return \%rowdata;
 	}
 
