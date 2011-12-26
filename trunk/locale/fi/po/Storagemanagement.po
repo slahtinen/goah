@@ -1,0 +1,659 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GoaH 2.0.0\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2011-02-02 21:43+0200\n"
+"Last-Translator: Sami Lahtinen <sami.lahtinen@tietovirta.fi>\n"
+"Language-Team: Development <helpdesk@tietovirta.fi>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../templates/modules/Storagemanagement/inventory.show:54
+#: ../templates/modules/Storagemanagement/suppliers.new:40
+msgid "Add"
+msgstr "Lisää"
+
+#: ../templates/modules/Storagemanagement/storages:56
+msgid "Add new storage"
+msgstr "Lisää uusi varasto"
+
+#: ../templates/modules/Storagemanagement/storages.new:1
+msgid "Add new storage to database"
+msgstr "Lisää uusi varasto tietokantaan"
+
+#: ../templates/modules/Storagemanagement/suppliers.new:1
+#: ../templates/modules/Storagemanagement/suppliers:54
+msgid "Add new supplier"
+msgstr "Lisää uusi toimittaja"
+
+#: ../templates/modules/Storagemanagement/inventory.show:40
+msgid "Add products to inventory"
+msgstr "Lisää tuotteita inventaarioon"
+
+#: ../templates/modules/Storagemanagement/shipments.show:82
+msgid "Add products to shipment"
+msgstr "Lisää tuotteita lähetteelle"
+
+#: ../templates/modules/Storagemanagement/showgroup.inventory:43
+msgid "Add to inventory"
+msgstr "Lisää inventaarioon"
+
+#: ../templates/modules/Storagemanagement/showgroup:49
+msgid "Add to shipment"
+msgstr "Lisää lähetteelle"
+
+#: ../goah/Modules/Storagemanagement.pm:127
+#: ../templates/modules/Storagemanagement/inventory.productlist:10
+msgid "Additional info"
+msgstr "Lisätieto"
+
+#: ../goah/Modules/Storagemanagement.pm:100
+#: ../goah/Modules/Storagemanagement.pm:112
+#: ../goah/Modules/Storagemanagement.pm:85
+msgid "Additional information"
+msgstr "Lisätietoja"
+
+#: ../templates/modules/Storagemanagement/inventory.show:14
+msgid "Additional information:"
+msgstr "Lisätieto:"
+
+#: ../goah/Modules/Storagemanagement.pm:99
+#: ../templates/modules/Storagemanagement/shipments.productlist:15
+#: ../templates/modules/Storagemanagement/showgroup:21
+msgid "Amount"
+msgstr "Määrä"
+
+#: ../goah/Modules/Storagemanagement.pm:126
+#: ../templates/modules/Storagemanagement/inventory.productlist:9
+#: ../templates/modules/Storagemanagement/showgroup.inventory:15
+msgid "Amount after"
+msgstr "Määrä jälkeen"
+
+#: ../goah/Modules/Storagemanagement.pm:125
+#: ../templates/modules/Storagemanagement/inventory.productlist:8
+#: ../templates/modules/Storagemanagement/showgroup.inventory:14
+msgid "Amount before"
+msgstr "Määrä ennen"
+
+#: ../goah/Modules/Storagemanagement.pm:1198
+msgid "Can't add individual product to inventory. Product ID is missing."
+msgstr "Tuotetta ei pystytty lisäämään inventaarioon. Tuotteen ID puuttuu."
+
+#: ../goah/Modules/Storagemanagement.pm:1150
+msgid "Can't add individual product to shipment. Product ID is missing."
+msgstr "Tuotetta ei pystytty lisäämään lähetykseen. Tuotteen ID puuttuu."
+
+#: ../goah/Modules/Storagemanagement.pm:1124
+msgid "Can't add product to inventory. Nothing to add!"
+msgstr "Tuotteen lisääminen inventaarioon epäonnistui. Ei lisättävää!"
+
+#: ../goah/Modules/Storagemanagement.pm:1018
+msgid "Can't add product to shipment. Nothing to add!"
+msgstr "Tuotteen lisääminen lähetykseen epäonnistui. Ei lisättävää!"
+
+#: ../goah/Modules/Storagemanagement.pm:1074
+msgid "Can't add product(s) to inventory. Inventory id is missing."
+msgstr "Tuotteen lisääminen inventaarioon epäonnistui. Inventaarion id puuttuu."
+
+#: ../goah/Modules/Storagemanagement.pm:981
+msgid "Can't add product(s) to shipment. Shipment id is missing."
+msgstr "Tuotteen lisääminen lähetykseen epäonnistui. Lähetyksen id puuttuu."
+
+#: ../goah/Modules/Storagemanagement.pm:845
+msgid "Can't find inventory with id"
+msgstr "Inventaariota ei löydy id:llä"
+
+#: ../goah/Modules/Storagemanagement.pm:596
+msgid "Can't find product from the database. Can't close incoming shipment."
+msgstr "Tuotetta ei löydy tietokannasta. Saapuvaa lähetystä ei pystytä sulkemaan."
+
+#: ../goah/Modules/Storagemanagement.pm:716
+msgid "Can't find shipment with id"
+msgstr "Lähetettä ei löydy id:llä"
+
+#: ../goah/Modules/Storagemanagement.pm:739
+#: ../goah/Modules/Storagemanagement.pm:786
+msgid "Can't find storage information with id"
+msgstr "Varastoa ei löydy id:llä"
+
+#: ../goah/Modules/Storagemanagement.pm:727
+#: ../goah/Modules/Storagemanagement.pm:775
+msgid "Can't find supplier information with id"
+msgstr "Toimittajaa ei löydy id:llä"
+
+#: ../goah/Modules/Storagemanagement.pm:1368
+msgid "Can't read rows for inventory! Inventory id is missing!"
+msgstr "Inventaarion rivien luku epäonnistui! Inventaarion id puuttuu!"
+
+#: ../goah/Modules/Storagemanagement.pm:1281
+msgid "Can't read rows for shipment! Shipment id is missing!"
+msgstr "Lähetyksen rivien luku epäonnistui! Lähetyksen id puuttuu!"
+
+#: ../goah/Modules/Storagemanagement.pm:234
+msgid "Can't remove database item"
+msgstr "Tietokantakohteen poisto epäonnistui"
+
+#: ../goah/Modules/Storagemanagement.pm:220
+msgid "Can't update database item"
+msgstr "Tietokantakohteen päivitys epäonnistui"
+
+#: ../goah/Modules/Storagemanagement.pm:463
+msgid "Can't update information in database!"
+msgstr "Tietojen päivittäminen tietokantaan epäonnistui!"
+
+#: ../goah/Modules/Storagemanagement.pm:301
+msgid "Can't update inventory row"
+msgstr "Inventaarion rivin päivitys epäonnistui"
+
+#: ../goah/Modules/Storagemanagement.pm:1432
+#: ../goah/Modules/Storagemanagement.pm:1512
+msgid "Can't update row information in database!"
+msgstr "Inventaarion rivitiedon päivitys epäonnistui!"
+
+#: ../goah/Modules/Storagemanagement.pm:289
+msgid "Can't update shipment row"
+msgstr "Rivin päivitys lähetykseen epäonnistui"
+
+#: ../goah/Modules/Storagemanagement.pm:270
+msgid "Cant' add product(s) to inventory!"
+msgstr "Tuotteen lisäys inventaarioon epäonnistui!"
+
+#: ../goah/Modules/Storagemanagement.pm:250
+msgid "Cant' add product(s) to shipment!"
+msgstr "Tuotteen lisäys lähetykseen epäonnistui!"
+
+#: ../templates/modules/Storagemanagement/inventory.productlist:6
+#: ../templates/modules/Storagemanagement/shipments.productlist:11
+#: ../templates/modules/Storagemanagement/showgroup.inventory:12
+#: ../templates/modules/Storagemanagement/showgroup:18
+msgid "Code"
+msgstr "Koodi"
+
+#: ../goah/Modules/Storagemanagement.pm:113
+#: ../templates/modules/Storagemanagement/inventory:7
+msgid "Completed"
+msgstr "Valmis"
+
+#: ../goah/Modules/Storagemanagement.pm:66
+#: ../templates/modules/Storagemanagement/suppliers:7
+msgid "Contact information"
+msgstr "Yhteystieto"
+
+#: ../goah/Modules/Storagemanagement.pm:211
+msgid "Couldn't add new item into database"
+msgstr "Uuden kohteen lisäys tietokantaan epäonnistui"
+
+#: ../templates/modules/Storagemanagement/inventory.new:32
+#: ../templates/modules/Storagemanagement/shipments.new:31
+msgid "Create"
+msgstr "Luo"
+
+#: ../templates/modules/Storagemanagement/inventory.new:2
+msgid "Create new inventory"
+msgstr "Luo uusi inventaario"
+
+#: ../templates/modules/Storagemanagement/shipments.new:2
+msgid "Create new shipment"
+msgstr "Luo uusi lähete"
+
+#: ../goah/Modules/Storagemanagement.pm:111
+#: ../goah/Modules/Storagemanagement.pm:80
+#: ../templates/modules/Storagemanagement/inventory:5
+#: ../templates/modules/Storagemanagement/shipments:7
+msgid "Created"
+msgstr "Luotu"
+
+#: ../templates/modules/Storagemanagement/storages:25
+msgid "Default"
+msgstr "Oletus"
+
+#: ../goah/Modules/Storagemanagement.pm:54
+msgid "Default storage"
+msgstr "Oletus varasto"
+
+#: ../templates/modules/Storagemanagement/inventory.productlist:12
+#: ../templates/modules/Storagemanagement/shipments.productlist:19
+#: ../templates/modules/Storagemanagement/shipments.show:74
+#: ../templates/modules/Storagemanagement/storages:48
+#: ../templates/modules/Storagemanagement/storages:9
+#: ../templates/modules/Storagemanagement/suppliers:10
+#: ../templates/modules/Storagemanagement/suppliers:46
+msgid "Delete"
+msgstr "Poista"
+
+#: ../templates/modules/Storagemanagement/shipments.show:75
+msgid "Delete shipment from database?"
+msgstr "Poista lähete tietokannasta?"
+
+#: ../templates/modules/Storagemanagement/storages:49
+msgid "Delete storage from database?"
+msgstr "Poista varasto tietokannasta?"
+
+#: ../templates/modules/Storagemanagement/suppliers:47
+msgid "Delete supplier from database?"
+msgstr "Poista toimittaja tietokannasta?"
+
+#: ../templates/modules/Storagemanagement/shipments:10
+msgid "Description"
+msgstr "Kuvaus"
+
+#: ../templates/modules/Storagemanagement/shipments:6
+msgid "Destination"
+msgstr "Kohde"
+
+#: ../goah/Modules/Storagemanagement.pm:79
+msgid "Destination storage"
+msgstr "Kohde varasto"
+
+#: ../templates/modules/Storagemanagement/shipments.show:22
+msgid "Destination storage:"
+msgstr "Kohde varasto:"
+
+#: ../goah/Modules/Storagemanagement.pm:81
+#: ../templates/modules/Storagemanagement/shipments:8
+msgid "Due"
+msgstr "Toimituspäivä"
+
+#: ../templates/modules/Storagemanagement/storages:37
+#: ../templates/modules/Storagemanagement/suppliers:35
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: ../templates/modules/Storagemanagement/storages.edit:1
+msgid "Edit storage data"
+msgstr "Muokkaa varaston tietoja"
+
+#: ../templates/modules/Storagemanagement/suppliers.edit:1
+msgid "Edit supplier data"
+msgstr "Muokkaa toimittajan tietoja"
+
+#: ../templates/modules/Storagemanagement/storages.edit:5
+#: ../templates/modules/Storagemanagement/storages.new:5
+#: ../templates/modules/Storagemanagement/suppliers.edit:5
+#: ../templates/modules/Storagemanagement/suppliers.new:5
+msgid "Field marked with * is required"
+msgstr "* Pakolliset kentät"
+
+#: ../goah/Modules/Storagemanagement.pm:1432
+#: ../goah/Modules/Storagemanagement.pm:1512
+#: ../goah/Modules/Storagemanagement.pm:463
+msgid "ID -field missing."
+msgstr "ID-kenttä puuttuu."
+
+#: ../templates/modules/Storagemanagement/shipments.productlist:13
+#: ../templates/modules/Storagemanagement/showgroup:20
+msgid "IN"
+msgstr "Osto"
+
+#: ../templates/modules/Storagemanagement/shipments.productlist:4
+#: ../templates/modules/Storagemanagement/showgroup:9
+msgid "Incl.VAT"
+msgstr "Sis. alv"
+
+#: ../goah/Modules/Storagemanagement.pm:38
+msgid "Incoming orders"
+msgstr "Saapuvat lähetykset"
+
+#: ../templates/modules/Storagemanagement/shipments:1
+msgid "Incoming shipments"
+msgstr "Saapuvat lähetykset"
+
+#: ../templates/modules/Storagemanagement/inventory:6
+#: ../templates/modules/Storagemanagement/storages:7
+#: ../templates/modules/Storagemanagement/suppliers:8
+msgid "Information"
+msgstr "Lisätieto"
+
+#: ../goah/Modules/Storagemanagement.pm:232
+msgid "Information removed from database"
+msgstr "Tieto poistettu tietokannasta"
+
+#: ../goah/Modules/Storagemanagement.pm:218
+msgid "Information updated"
+msgstr "Tieto päivitetty"
+
+#: ../goah/Modules/Storagemanagement.pm:940
+msgid "Invalid database identifier"
+msgstr "Virheellinen tietokantatunniste"
+
+#: ../goah/Modules/Storagemanagement.pm:1235
+#: ../goah/Modules/Storagemanagement.pm:1546
+msgid "Invalid number in amount after field: "
+msgstr "Virheellinen arvo määrä jälkeen kentässä:"
+
+#: ../goah/Modules/Storagemanagement.pm:1205
+msgid "Invalid product id. Can't add product to inventory."
+msgstr "Virheellinen tuote id. Tuotteen lisäys inventaarioon epäonnistui."
+
+#: ../goah/Modules/Storagemanagement.pm:1157
+msgid "Invalid product id. Can't add product to shipment."
+msgstr "Virheellinen tuote id. Tuotteen lisäys lähetykseen epäonnistui."
+
+#: ../goah/Modules/Storagemanagement.pm:597
+msgid "Invalid product id: "
+msgstr "Virheellinen tuote id:"
+
+#: ../templates/modules/Storagemanagement/inventory:1
+msgid "Inventories"
+msgstr "Inventaariot"
+
+#: ../goah/Modules/Storagemanagement.pm:39
+msgid "Inventory"
+msgstr "Inventaario"
+
+#: ../templates/modules/Storagemanagement/inventory.show:11
+msgid "Inventory created:"
+msgstr "Inventaario luotu:"
+
+#: ../templates/modules/Storagemanagement/inventory.show:27
+msgid "Inventory finished. Can't modify values anymore."
+msgstr "Inventaario valmis. Arvoja ei voi enään muokata."
+
+#: ../templates/modules/Storagemanagement/inventory.show:24
+msgid "Inventory finished:"
+msgstr "Inventaario valmis:"
+
+#: ../templates/modules/Storagemanagement/inventory.show:1
+msgid "Inventory information"
+msgstr "Inventaarion tiedot"
+
+#: ../goah/Modules/Storagemanagement.pm:299
+msgid "Inventory row updated"
+msgstr "Inventaarion rivi päivitetty"
+
+#: ../templates/modules/Storagemanagement/shipments.show:16
+msgid "Last update:"
+msgstr "Päivitetty viimeksi:"
+
+#: ../goah/Modules/Storagemanagement.pm:82
+msgid "Last updated"
+msgstr "Päivitetty viimeksi"
+
+#: ../goah/Modules/Storagemanagement.pm:498
+msgid "Leaving value unaltered."
+msgstr "Arvoa jätetään ennalleen."
+
+#: ../goah/Modules/Storagemanagement.pm:51
+#: ../templates/modules/Storagemanagement/storages:6
+msgid "Location"
+msgstr "Sijainti"
+
+#: ../goah/Modules/Storagemanagement.pm:913
+msgid "Missing ID, can't remove data from database"
+msgstr "ID puuttuu. Tietoja ei voi poistaa tietokannasta"
+
+#: ../goah/Modules/Storagemanagement.pm:918
+msgid "Missing type, can't remove data from database"
+msgstr "Tyyppi puuttuu. Tietoja ei voi poistaa tietokannasta"
+
+#: ../goah/Modules/Storagemanagement.pm:325
+msgid "Module doesn't have function "
+msgstr "Modulilla ei ole funktiota"
+
+#: ../goah/Modules/Storagemanagement.pm:50
+#: ../goah/Modules/Storagemanagement.pm:64
+#: ../templates/modules/Storagemanagement/inventory.productlist:7
+#: ../templates/modules/Storagemanagement/shipments.productlist:12
+#: ../templates/modules/Storagemanagement/showgroup.inventory:13
+#: ../templates/modules/Storagemanagement/showgroup:19
+#: ../templates/modules/Storagemanagement/storages:5
+#: ../templates/modules/Storagemanagement/suppliers:5
+msgid "Name"
+msgstr "Nimi"
+
+#: ../goah/Modules/Storagemanagement.pm:209
+msgid "New item added to database"
+msgstr "Uusi kohde lisätty tietokantaan"
+
+#: ../templates/modules/Storagemanagement/inventory:8
+#: ../templates/modules/Storagemanagement/shipments:11
+#: ../templates/modules/Storagemanagement/storages:8
+#: ../templates/modules/Storagemanagement/suppliers:9
+msgid "Open"
+msgstr "Avaa"
+
+#: ../goah/Modules/Storagemanagement.pm:52
+#: ../goah/Modules/Storagemanagement.pm:67
+msgid "Other information"
+msgstr "Lisätietoja"
+
+#: ../templates/modules/Storagemanagement/shipments.show:45
+msgid "Other information:"
+msgstr "Muuta tietoa:"
+
+#: ../goah/Modules/Storagemanagement.pm:124
+#: ../goah/Modules/Storagemanagement.pm:97
+msgid "Product"
+msgstr "Tuote"
+
+#: ../templates/modules/Storagemanagement/inventory.show:64
+#: ../templates/modules/Storagemanagement/shipments.show:96
+msgid "Product group"
+msgstr "Tuoteryhmä"
+
+#: ../goah/Modules/Storagemanagement.pm:1104
+msgid "Product not found"
+msgstr "Tuotetta ei löydy"
+
+#: ../goah/Modules/Storagemanagement.pm:268
+msgid "Product(s) added to inventory"
+msgstr "Tuotteet lisätty inventaarioon"
+
+#: ../goah/Modules/Storagemanagement.pm:248
+msgid "Product(s) added to shipment"
+msgstr "Tuotteet lisätty lähetykseen"
+
+#: ../templates/modules/Storagemanagement/inventory.productlist:1
+msgid "Products in inventory"
+msgstr "Tuotteet inventaariossa"
+
+#: ../templates/modules/Storagemanagement/shipments.productlist:1
+msgid "Products in shipment"
+msgstr "Tuotteet lähetyksessä"
+
+#: ../templates/modules/Storagemanagement/inventory.show:44
+msgid "Products on inventory"
+msgstr "Tuotteet inventaariossa"
+
+#: ../templates/modules/Storagemanagement/shipments.show:86
+msgid "Products on shipment"
+msgstr "Tuotteet lähetteellä"
+
+#: ../goah/Modules/Storagemanagement.pm:98
+msgid "Purchase price'"
+msgstr "Ostohinta"
+
+#: ../templates/modules/Storagemanagement/inventory.show:53
+msgid "Read barcode"
+msgstr "Lue viivakoodi"
+
+#: ../goah/Modules/Storagemanagement.pm:53
+msgid "Remote storage (ie. suppliers storage)"
+msgstr "Etävarasto (esim. toimittajan varasto)"
+
+#: ../goah/Modules/Storagemanagement.pm:409
+#: ../goah/Modules/Storagemanagement.pm:520
+msgid "Remote storage can't be default!"
+msgstr "Etävarasto ei voi olla oletus!"
+
+#: ../goah/Modules/Storagemanagement.pm:385
+#: ../goah/Modules/Storagemanagement.pm:497
+msgid "Required field"
+msgstr "Pakollinen kenttä"
+
+#: ../goah/Modules/Storagemanagement.pm:1440
+msgid "Row deleted from basket"
+msgstr "Rivi poistettu korista"
+
+#: ../goah/Modules/Storagemanagement.pm:1520
+msgid "Row deleted from inventory"
+msgstr "Rivi poistettu inventaariosta"
+
+#: ../templates/modules/Storagemanagement/shipments.productlist:17
+msgid "Row info"
+msgstr "Rivitieto"
+
+#: ../goah/Modules/Storagemanagement.pm:933
+msgid "Rows left on shipment! Refusing to delete shipment!"
+msgstr "Lähetteellä on rivejä! Lähetettä ei poisteta!"
+
+#: ../templates/modules/Storagemanagement/inventory.show:34
+#: ../templates/modules/Storagemanagement/shipments.show:65
+#: ../templates/modules/Storagemanagement/storages.edit:53
+#: ../templates/modules/Storagemanagement/storages.new:42
+#: ../templates/modules/Storagemanagement/suppliers.edit:45
+msgid "Save"
+msgstr "Tallenna"
+
+#: ../templates/modules/Storagemanagement/inventory.new:20
+#: ../templates/modules/Storagemanagement/shipments.new:20
+#: ../templates/modules/Storagemanagement/showgroup.inventory:11
+#: ../templates/modules/Storagemanagement/showgroup:17
+msgid "Select"
+msgstr "Valitse"
+
+#: ../templates/modules/Storagemanagement/inventory.show:43
+#: ../templates/modules/Storagemanagement/shipments.show:85
+msgid "Select product group"
+msgstr "Valitse tuoteryhmä"
+
+#: ../templates/modules/Storagemanagement/shipments.show:13
+msgid "Shipment created:"
+msgstr "Lähete luotu:"
+
+#: ../templates/modules/Storagemanagement/shipments.show:35
+msgid "Shipment due:"
+msgstr "Toimituspäivä:"
+
+#: ../templates/modules/Storagemanagement/shipments.show:1
+msgid "Shipment information"
+msgstr "Lähetteen tiedot"
+
+#: ../goah/Modules/Storagemanagement.pm:570
+msgid "Shipment is empty. Empty shipments can not be stored to database"
+msgstr "Lähetys on tyhjä. Tyhjää lähetystä ei voi tallentaa tietokantaan"
+
+#: ../goah/Modules/Storagemanagement.pm:83
+msgid "Shipment number"
+msgstr "Lähetysnumero"
+
+#: ../templates/modules/Storagemanagement/shipments.show:25
+msgid "Shipment number:"
+msgstr "Lähetysnumero:"
+
+#: ../goah/Modules/Storagemanagement.pm:84
+msgid "Shipment received"
+msgstr "Lähetys saapunut"
+
+#: ../templates/modules/Storagemanagement/shipments.show:58
+msgid "Shipment received. Can't modify values anymore."
+msgstr "Lähetys saapunut. Arvoja ei voi enään muokata."
+
+#: ../templates/modules/Storagemanagement/shipments.show:55
+msgid "Shipment received:"
+msgstr "Lähetys saapunut:"
+
+#: ../goah/Modules/Storagemanagement.pm:287
+msgid "Shipment row updated"
+msgstr "Lähetyksen rivi päivitetty"
+
+msgid "Shipments"
+msgstr "Lähetykset"
+
+#: ../templates/modules/Storagemanagement/inventory.show:72
+#: ../templates/modules/Storagemanagement/shipments.show:104
+msgid "Show"
+msgstr "Näytä"
+
+#: ../templates/modules/Storagemanagement/storagemanagement:2
+msgid "Storage management includes functionality to update product amounts and purchase prices to storage."
+msgstr "Varastonhallinta sisältää toiminnot varastomäärien ja ostohintojen päivittämiseen."
+
+#: ../goah/Modules/Storagemanagement.pm:36
+#: ../templates/modules/Storagemanagement/storages:1
+msgid "Storages"
+msgstr "Varastot"
+
+#: ../goah/Modules/Storagemanagement.pm:78
+#: ../templates/modules/Storagemanagement/shipments:5
+msgid "Supplier"
+msgstr "Toimittaja"
+
+#: ../templates/modules/Storagemanagement/shipments.show:19
+msgid "Supplier:"
+msgstr "Toimittaja:"
+
+#: ../goah/Modules/Storagemanagement.pm:37
+#: ../templates/modules/Storagemanagement/suppliers:1
+msgid "Suppliers"
+msgstr "Toimittajat"
+
+#: ../goah/Modules/Storagemanagement.pm:728
+#: ../goah/Modules/Storagemanagement.pm:740
+#: ../goah/Modules/Storagemanagement.pm:776
+#: ../goah/Modules/Storagemanagement.pm:787
+msgid "Terminating process."
+msgstr "Pysäytetään prosessi."
+
+#: ../templates/modules/Storagemanagement/shipments.productlist:16
+#: ../templates/modules/Storagemanagement/shipments.productlist:73
+msgid "Total"
+msgstr "Yhteensä"
+
+#: ../goah/Modules/Storagemanagement.pm:376
+msgid "Unknow type for writing new data into database"
+msgstr "Tiedon lisääminen tietokantaan epäonnistui. Tuntematon tyyppi"
+
+#: ../templates/modules/Storagemanagement/inventory.new:27
+#: ../templates/modules/Storagemanagement/shipments.new:27
+#: ../templates/modules/Storagemanagement/storages.edit:33
+#: ../templates/modules/Storagemanagement/storages.new:24
+#: ../templates/modules/Storagemanagement/suppliers.edit:25
+#: ../templates/modules/Storagemanagement/suppliers.new:22
+msgid "Unknown field type"
+msgstr "Tuntematon kenttätyyppi"
+
+#: ../goah/Modules/Storagemanagement.pm:191
+msgid "Unknown parameter for function: "
+msgstr "Tuntematon parametri funktiolle: "
+
+#: ../templates/modules/Storagemanagement/inventory.productlist:13
+#: ../templates/modules/Storagemanagement/shipments.productlist:20
+msgid "Update"
+msgstr "Päivitä"
+
+#: ../templates/modules/Storagemanagement/shipments:9
+msgid "Updated"
+msgstr "Päivitetty"
+
+#: ../templates/modules/Storagemanagement/shipments.productlist:14
+msgid "VAT"
+msgstr "ALV"
+
+#: ../templates/modules/Storagemanagement/shipments.productlist:6
+#: ../templates/modules/Storagemanagement/showgroup:11
+msgid "VAT 0%"
+msgstr "Alv 0%"
+
+#: ../templates/modules/Storagemanagement/suppliers:6
+msgid "Website"
+msgstr "Www-sivut"
+
+#: ../goah/Modules/Storagemanagement.pm:65
+msgid "Website address"
+msgstr "Kotisivut"
+
+#: ../goah/Modules/Storagemanagement.pm:385
+#: ../goah/Modules/Storagemanagement.pm:497
+msgid "empty!"
+msgstr "tyhjä!"
+

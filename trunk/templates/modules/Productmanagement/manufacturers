@@ -1,0 +1,58 @@
+<h2>[% gettext("Manufacturers") %]</h2>
+<table>
+<thead>
+<tr>
+  <th>[% gettext("Name") %]</th>
+  <th>[% gettext("Website") %]</th>
+  <th>[% gettext("Information") %]</th>
+  <th class="icon">[% gettext("Open") %]</th>
+  <th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+<tr>
+<td colspan='4'><a href="?module=[% module %]&amp;action=addnew&amp;type=manuf">[% gettext("Add new manufacturer") %]</a></td>
+</tr>
+[% odd = 0 %]
+[% FOREACH k IN manufacturers.keys.sort %]
+	[% manuf = manufacturers.$k %]
+	[% IF odd == 1 %]
+		<tr class="odd">
+		[% odd = 0 %]
+	[% ELSE %]
+		<tr class="even">
+		[% odd = 1 %]
+	[% END %]
+
+	<td>[% manuf.name %]</td>
+	<td>[% manuf.www %]</td>
+	<td>[% manuf.info %]</td>
+	<td class="center">
+	<form action="" method="post">
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="action" value="edit" />
+	<input type="hidden" name="type" value="manuf" />
+	<input type="hidden" name="id" value="[% manuf.id %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
+	</p>
+	</form>
+	</td>
+	<td class="center">
+	<form action="" method="post">
+	<p>
+	<input type="hidden" name="module" value="[% module %]">
+	<input type="hidden" name="action" value="delete">
+	<input type="hidden" name="type" value="manuf">
+	<input type="hidden" name="id" value="[% manuf.id %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]"
+	      onclick="return confirm('[% gettext("Delete manufacturer from database?") %]')" />
+	</p>
+	</form>
+	</td>
+	</tr>
+[% END %]
+</tbody>
+</table>
+
+

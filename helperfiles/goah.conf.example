@@ -1,0 +1,17 @@
+# 
+# Example configuration file for GoaH2
+# 
+# Change these values to match your system and copy the file into
+# /etc/goah.conf.
+#
+
+[database]
+# Currently only sqlite is supported
+type = SQLite 
+# With sqlite set the file location
+name = /var/lib/goah/goah2.db 
+
+[goah]
+theme = default
+# To enable anonymous login set this to 1
+demomode = 0

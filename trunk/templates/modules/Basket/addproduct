@@ -1,0 +1,21 @@
+<form method="get" action="javascript:loadContent('content.cgi','contentcgi');" name="contentcgi">
+<p>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='showgroup' />
+<input type='hidden' name='basketid' value='[% data.id %]' />
+<input type='hidden' name='target' value='[% data.companyid %]' />
+[% tmp = productgroups.0.id %]
+<select name="groupid" class="medium" onchange="submit()" size="[% usersettings.activebasketselect %]">
+<option value='-1'>-- [% gettext("Product group") %] --</option>
+[% FOREACH k IN productgroups.keys.sort %]
+	[% group = productgroups.$k %]
+	<option value="[% group.id %]">[% group.name %]</option>
+[% END %]
+</select>
+<input type="submit" value=">" />
+</p>
+
+<noscript>
+  <p><input type="submit" value="[% gettext("Show") %]" /></p>
+</noscript>
+</form>

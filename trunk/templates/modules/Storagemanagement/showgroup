@@ -1,0 +1,54 @@
+<h3>Products in group</h3>
+<form action="" method='post' name="editrow[% row.id %]">
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='action' value='addtoshipment'>
+<input type='hidden' name='shipmentid' value='[% data.id %]'>
+<input type='hidden' name='target' value="[% data.companyid %]">
+
+[% IF usersettings.showvat == 'on' %]
+	[% vattxt = gettext("Incl.VAT") %]
+[% ELSE %]
+	[% vattxt = gettext("VAT 0%") %]
+[% END %]
+
+<table>
+<thead>
+<tr>
+<th>[% gettext("Select") %]</th>
+<th>[% gettext("Code") %]</th>
+<th>[% gettext("Name") %]</th>
+<th>[% gettext("IN") %] ([% vattxt %])</th>
+<th>[% gettext("Amount") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc='odd' %]
+[% total = 0 %]
+
+[% FOREACH key IN products.keys.sort %]
+	[% row = products.$key %]
+
+	<tr class='[% rowc %]'>
+	<td><input name="addproducts" value="[% row.id %]" type="checkbox"></td>
+	<td>[% row.code %]</td>
+	<td>[% row.name %]</td>
+	<td><input class="small" name='purchase_[% row.id %]' value='[% row.purchase %]'></td>
+	<td><input class="small" name='amount_[% row.id %]' value='1'></td>
+	</tr>
+
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]
+	[% END %]
+[% END %]
+
+[% rowc = 'info' %]
+
+<tr class="[% rowc %]">
+<td colspan='7'><input type='submit' value="[% gettext("Add to shipment") %]"></td>
+</tr>
+</tbody>
+</table>
+</form>
+

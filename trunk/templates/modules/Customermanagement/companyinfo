@@ -1,0 +1,43 @@
+<h2>[% companydata.name %]
+[% IF companydata.vat_id == "00000000" %]
+	[% companydata.firstname %]
+[% END %]
+ [% gettext("information") %]</h2>
+<table>
+[% row = 'info' %]
+[% FOREACH key IN companydbfields.keys.sort %]
+[% data = companydbfields.$key %]
+[% IF data.type != "hidden" %]
+	<tr class="[% row %]"><td class="medium">[% data.name %]</td>
+	[% field = data.field %]
+	<td>
+	[% IF field == 'custtype' %] 
+		[% type = customeridentifier(companydata.$field) %]
+		[% type.name %]
+	[% ELSIF field == 'vat_id' && companydata.$field == "00000000" %]
+		[% gettext("Individual") %]
+	[% ELSE %]
+		[% IF data.type == 'selectbox' %]
+			[% FOREACH item IN data.data %]
+				[% IF item.id == companydata.$field || item.value == companydata.$field %]
+					[% IF item.item != '' %]
+					[% item.item %]
+					[% ELSE %]
+					[% item.name %]
+					[% END %]
+				[% END %]
+			[% END %]
+		[% ELSE %]
+			[% companydata.$field %]
+		[% END %]
+	[% END %]	
+	</td>
+	</tr>
+[% END %]
+[% END %]
+<tr class="[% row %]"><td colspan='2'><a href="?module=[% module %]&action=editcompany&companyid=[% companydata.id %]">[% gettext("Edit company information") %]</a></td></tr>
+</table>
+
+[% INCLUDE modules/Customermanagement/companyinfo.locations %]
+[% INCLUDE modules/Customermanagement/companyinfo.persons %]
+

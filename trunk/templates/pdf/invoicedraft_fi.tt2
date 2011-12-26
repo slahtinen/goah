@@ -1,0 +1,98 @@
+\documentclass[8pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[finnish]{babel}
+\usepackage{graphicx}
+\usepackage{lastpage}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage{ulem}
+\usepackage{draftwatermark}
+\usepackage[table]{xcolor}
+\renewcommand{\footrulewidth}{0.5pt}
+\renewcommand{\rmdefault}{phv}
+\SetWatermarkText{VEDOS}
+\definecolor{tableShade}{HTML}{EEEEEE}
+\definecolor{tableShade2}{HTML}{EEEEDD}
+
+\oddsidemargin -1.0cm
+\textwidth 18.2cm
+\topmargin -0.5cm
+\textheight 23.0cm
+\headheight 1.5cm
+\headsep 0.5cm
+\pagestyle{fancy}
+
+\lhead{\includegraphics{[% logo %]}}
+\rhead{\makebox[6.5cm][l]{\textbf{LASKUVEDOS}} sivu \thepage\ / \pageref{LastPage}} 
+
+\renewcommand{\footrulewidth}{0.5pt}
+
+\lfoot{[% owner.name %]\\
+[% ownerloc.addr1 %]\\
+[% IF ownerloc.addr2 != '' %]
+[% ownerloc.addr2 %]\\
+[% END -%]
+[% ownerloc.postalcode %] [% ownerloc.postaloffice %]} 
+\cfoot{Y-tunnus [% owner.vat_id %] \\ [% owner.bank_accounts %] } 
+\rfoot{Puhelin [% ownerloc.phone %] \\ [% IF ownerloc.fax != '' %] Faksi [% ownerloc.fax %] [% ELSE %]~[% END %] \\ [% owner.www %] } 
+
+\begin{document} 
+
+\hspace{-0.5cm}
+\begin{tabular}{p{9.2cm}}
+\textbf{[% customerinfo.name %]} \\
+[% billingaddr.addr1 %] \\
+[% IF billingaddr.addr2 != '' %]
+[% billingaddr.addr2 %] \\
+[% END %]
+[% billingaddr.postalcode %] [% billingaddr.postaloffice %] 
+\end{tabular}
+\begin{tabular}{p{7cm}}
+\textbf{Toimitusosoite} \\
+[% customerinfo.name %] \\
+[% shippingaddr.addr1 %] \\
+[% IF shippingaddr.addr2 != '' %]
+[% shippingaddr.addr2 %] \\
+[% END %]
+[% shippingaddr.postalcode %] [% shippingaddr.postaloffice %] 
+\end{tabular}
+
+\vspace*{1cm}
+
+\hspace{-0.5cm}
+\begin{tabular}{p{2.3cm} p{6.6cm} p{2.8cm} p{6cm}}
+\textbf{Laskutuspvm} & [% formatdate(invoicedata.created) %] & \textbf{Maksuehto} & [% customerinfo.payment_condition %] pv \\
+\textbf{Eräpäivä} & [% formatdate(invoicedata.due) %] & \textbf{Viivästyskorko} & [% customerinfo.delay_interest %] \% \\
+\textbf{Viitenumero} & [% invoicedata.referencenumber %] & \textbf{Huomautusaika} & [% customerinfo.reclamation_time %] pv \\
+\textbf{Viitteenne} & [% escape(invoicedata.customerreference) %] \\ 
+\\
+\end{tabular}
+ 
+\hspace{-0.5cm}
+\begin{tabular}{p{6.3cm} p{2.6cm} p{2.8cm} p{6cm}}
+\textbf{TILINUMERO} & & \textbf{BIC} & \textbf{IBAN} \\
+[% FOREACH bank IN bankaccounts %]
+[% bank.bankname %]~[% bank.domestic %] & & [% bank.bic %] & [% bank.iban %] \\
+[% END %]
+ \end{tabular}
+
+\vspace*{1cm}
+
+\hspace{-0.5cm}
+\footnotesize \begin{tabular*}{18cm}{p{2cm}p{7cm}rrrrr}
+\textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+[% FOREACH key IN invoicerows.keys.sort %]
+[% row = invoicerows.$key %]
+\\ [% escape(row.code) %] & [% row.name %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
+[% IF row.rowinfo != '' %]
+\scriptsize Lisätietoja: & \multicolumn{6}{p{7cm}}{\scriptsize [% escape(row.rowinfo) %]} \\
+[% END %]
+[% END %]
+\multicolumn{6}{r}{\textbf{Yht. ALV 0\%}} & [% total.vat0 %] \\
+\multicolumn{6}{r}{\textbf{ALV osuus}} & [% total.vat %] \\
+\multicolumn{6}{r}{\sout{\textbf{Maksettava}}} & \sout{\textbf{[% total.inclvat %]}} \\
+\end{tabular*}
+\end{document} 

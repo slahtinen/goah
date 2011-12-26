@@ -1,0 +1,62 @@
+<h2>[% gettext("Personal settings") %]</h2>
+<form method='post' action='' id="personal_settings">
+	<label for="showvat">[% gettext("Show prices with VAT") %]</label>
+	<span class="info">[% gettext("If this setting is enabled then every price you will see includes VAT. You will also give prices including VAT.") %]<br />
+	<i>[% gettext("Default") %]: Off</i></span>
+[% IF settings.showvat == 'on' %]
+	On<input type="radio" name="showvat" value="on" checked="checked">
+	<br/>
+	Off<input type="radio" name="showvat" value="off"> 
+[% ELSE %]
+	On<input type="radio" name="showvat" value="on" >
+	<br/>
+	Off<input type="radio" name="showvat" value="off" checked="checked">
+[% END %]
+	<br/>
+	<hr/>
+
+
+	<label for="activebasketselect">[% gettext("Active basket select rows") %]</label>
+	<span class="info">[% gettext("This setting defines how many rows is shown on active basket selects. Setting affects group selection and products in basket -lists") %]
+	<br/><i>[% gettext("Default") %]: 1</i></span>
+	<input type="input" name="activebasketselect" value="[% settings.activebasketselect %]" id="activebasketselect">
+	<br/>
+	<hr/>
+
+	<label for="decimals">[% gettext("Decimal Numbers") %]</label>
+	<span class="info">[% gettext("This setting defines the amount of decimals used to show prices") %]
+	<br/><i>[% gettext("Default") %]: 2</i></span>
+	<input type="input" name="decimals" value="[% settings.decimals %]" id="decimals">
+	<br/>
+	<hr/>
+
+	<label for="pass1">[% gettext("Password") %]</label>
+	<span class="info">[% gettext("To change your password type it twice on following boxes. Leave fields empty if you don't want to change your password.") %]</span>
+	<input type="password" name="pass1" id="pass1">
+	<br/>
+	<input type="password" name="pass2" id="pass2">
+	<br/>
+	<hr/>
+
+	<label for="locale">Language</label>
+	<span class="info">[% gettext("Choose interface language") %]</span>
+	<select name="locale" id="locale"size="1">
+		<option value="C">-- [% gettext("Select language") %] --</option>
+	[% FOREACH key IN languages.keys.sort %]
+		[% lang = languages.$key %]
+		[% IF settings.locale == lang.locale %]
+		<option selected value="[% lang.locale %]">[% lang.language %]</option>
+		[% ELSE %]
+		<option value="[% lang.locale %]">[% lang.language %]</option>
+		[% END %]
+	[% END %]	
+	</select>
+	<br/>
+	<hr/> 
+
+	<input type='hidden' name='module' value='[% module %]' />
+	<input type='hidden' name='action' value='writesettings' />
+	<input type='hidden' name='uid' value='[% uid %]' />
+
+	<input class="button" type="submit" value="[% gettext("Save settings") %]"/>
+</form>

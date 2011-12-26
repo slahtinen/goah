@@ -1,0 +1,47 @@
+<h3>[% gettext("Invoice history") %]</h3>
+<table>
+<thead>
+<tr>
+<th>[% gettext("Time") %]</th>
+<th>[% gettext("Action") %]</th>
+<th>[% gettext("State before") %]</th>
+<th>[% gettext("State after") %]</th>
+<th>[% gettext("Information") %]</th>
+</thead>
+<tbody class="rowdata">
+</tr>
+[% rclass = 'odd' %]
+[% FOREACH key IN invoicehistory.keys.sort %]
+[% event = invoicehistory.$key %]
+<tr class="[% rclass %]">
+	<td>[% event.time %]</td>
+	<td>[% event.action %]</td>
+	[% state1 = event.startstate %]
+	[% state2 = event.endstate %]
+	<td>[% invoicestates.$state1 %]</td>
+	<td>[% invoicestates.$state2 %]</td>
+	<td>[% event.info %]</td>
+</tr>
+	[% IF rclass == 'odd' %]
+		[% rclass = 'even' %]
+	[% ELSE %]
+		[% rclass = 'odd' %]
+	[% END %]
+[% END %]
+
+[% IF invoicehistory.size == 0 %]
+	<tr class='[% rclass %]'><td colspan='5'>[% gettext("No events") %]</td></tr>
+[% END %]
+
+<tr class='[% rclass %]'>
+<td colspan='5'>
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='addevent' />
+<input type='hidden' name='target' value='[% invoice.id %]' />
+[% gettext("Add note:") %] <input name='information'> <input type='submit' value='[% gettext("Add") %]'>
+</form>
+</td>
+</tr>
+</tbody>
+</table>

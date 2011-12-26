@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xml:lang="fi" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" href="themes/[% theme %]/login.css" />
+	<title>GoaH [% goahversion %]</title>
+</head>
+<body>
+	<div id="container">
+		<div id="branding" class="row">
+			<div id="branding-logo">
+				<h1>GoaH [% goahversion %] - Development</h1>
+			</div>
+		</div>
+
+		<div id="content" class="row">
+
+			<div class="cBox column grid_3">
+			
+				<div class="cBoxTop">
+					<h2>[% gettext("Login") %]</h2>
+				</div>
+			
+				<div class="cBoxBody">
+					<form action="" method="post" accept-charset="utf-8">
+						<label for="user">[% gettext("Username") %]</label>
+						<input type="text" name="user" value="" id="user">
+						<br/>
+						<label for="pass">[% gettext("Password") %]</label>
+						<input type="password" name="pass" value="" id="pass">
+						<br/>
+
+						<input type="submit" class="button" value="[% gettext("Login") %]">
+					</form>
+				</div>
+		
+			
+			</div>
+		
+		<!-- Messages about functionality -->
+		[% TRY %]
+		[% INCLUDE messages.tt2 %]
+		[% END %]
+		<!-- Messages about functionality -->
+
+		[% IF function == 'wronglogin' %]
+		[% INCLUDE wronglogin.tt2 %]
+		[% ELSIF function == 'logout' %]
+		[% INCLUDE logout.tt2 %]
+		[% END %]
+		</div>
+	
+		<div id="siteinfo" class="row">
+			<div id="tietovirta" class="column grid_3">
+				<a href="http://www.tietovirta.fi" target="_blank">
+					<img src="themes/[% theme %]/gfx/tietovirta.png" alt="Tietovirta Oy" />
+				</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,16 @@
+Include this in files released with default GoaH installation:
+
+=begin nd
+
+Package: <name of the package in file>
+
+  <description about the file and its purpose>
+
+About: License
+
+  This software is copyright (c) 2009 by Tietovirta Oy and associates.
+
+  See LICENSE and COPYRIGHT -files for full details.
+
+=cut
+

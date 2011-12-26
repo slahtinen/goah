@@ -1,0 +1,65 @@
+<h3>[% gettext("Company addresses") %]</h3>
+
+
+<table>
+	<thead>
+		<tr>
+[% FOREACH key IN locationdbfields.keys.sort %]
+	[% field = locationdbfields.$key %]
+	[% IF field.type != "hidden" && key != '2' && key != '3' %]
+			<th>[% field.name %]</th>
+	[% END %]
+[% END %]
+			<th class="icon">[% gettext("Open") %]</th>
+			<th class="icon">[% gettext("Delete") %]</th>
+		</tr>
+	</thead>
+	<tbody>
+[% row = 'odd' %]
+[% FOREACH location = locations %]
+	<tr class="[% row %]">
+[% FOREACH key IN locationdbfields.keys.sort %]
+[% field = locationdbfields.$key %]
+	[% IF field.type != "hidden" && key != '2' && key != '3' %]
+		[% field = field.field %]
+		[% IF location.defshipping == 'on' || location.defbilling == 'on' %]
+		<td><b>[% location.$field %]
+		[% IF field == 'info' && location.defshipping == 'on' %]
+			<br />[% gettext("Default shipping address.") %]<br />
+		[% END %]
+		
+		[% IF field == 'info' && location.defbilling == 'on' %]
+			<br />[% gettext("Default billing address") %]<br />
+		[% END %]
+		
+		</b></td>
+		[% ELSE %]
+		<td> [% location.$field %]
+		</td>
+		[% END %]
+	[% END %]
+[% END %]
+
+[% IF row == 'odd' %]
+	[% row = 'even' %]
+[% ELSE %]
+	[% row = 'odd' %]
+[% END %]
+			<td class="center">
+				<form action="" method="post" class="table">
+					<input type="hidden" name="module" value="[% module %]" />
+					<input type="hidden" name="action" value="editlocation" />
+					<input type="hidden" name="target" value="[% location.id %]" />
+					<input type="hidden" name="companyid" value="[% companydata.id %]" />
+					<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
+					</p>
+				</form>
+			</td>
+			<td class="center">
+				<p>Incomplete
+			</td>
+		</tr>
+[% END %]
+	</tbody>
+</table>
+<a href="?module=[% module %]&amp;action=newlocation&amp;companyid=[% companydata.id %]">[% gettext("Add new location") %]</a>

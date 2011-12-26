@@ -1,0 +1,72 @@
+<h3>[% gettext("Company bank accounts") %]</h3>
+<table>
+<thead>
+<tr>
+[% FOREACH key IN bankaccountsdbfields.keys.sort %]
+[% field = bankaccountsdbfields.$key %]
+[% IF field.type != "hidden" %]
+	<th>[% field.name %]</th>
+[% END %]
+[% END %]
+<th class="icon">[% gettext("Delete") %]</th>
+<th class="icon">[% gettext("Save") %]</th>
+</tr>
+</thead>
+<tbody>
+[% row = 'odd' %]
+[% FOREACH account = bankaccounts %]
+<tr class="[% row %]">
+<form action="" method="post" class="table">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="editbankaccount" />
+<input type="hidden" name="target" value="[% account.id %]" />
+<input type="hidden" name="companyid" value="[% companydata.id %]" />
+[% FOREACH key IN bankaccountsdbfields.keys.sort %]
+[% field = bankaccountsdbfields.$key %]
+	[% IF field.type != "hidden" %]
+		[% fkey = field.field %]
+		<td><input name="[% fkey %]" value="[% account.$fkey %]" />
+		</td>
+	[% END %]
+[% END %]
+
+[% IF row == 'odd' %]
+	[% row = 'even' %]
+[% ELSE %]
+	[% row = 'odd' %]
+[% END %]
+<td class="center">
+<input type="checkbox" name="delete" />
+</td>
+<td class="center">
+<p>
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Edit") %]" />
+</p>
+</form>
+</td>
+</tr>
+[% END %]
+[% IF row == 'odd' %]
+	[% row = 'even' %]
+[% ELSE %]
+	[% row = 'odd' %]
+[% END %]
+<tr class="[% row %]">
+<form action="" method="post" class="table">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="newbankaccount" />
+<input type="hidden" name="companyid" value="[% companydata.id %]" />
+[% FOREACH key IN bankaccountsdbfields.keys.sort %]
+[% field = bankaccountsdbfields.$key %]
+        [% IF field.type != "hidden" %]
+		<td><input name="[% field.field %]"></td>
+	[% END %]
+[% END %]
+<td>&nbsp;</td>
+<td class="center">
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Add") %]" />
+</td>
+</form>
+</tr>
+</tbody>
+</table>

@@ -1,0 +1,1 @@
+[% INCLUDE modules/Productmanagement/products %]

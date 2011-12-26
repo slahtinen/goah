@@ -1,0 +1,114 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GoaH 2.0.0\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2011-01-06 21:29+0200\n"
+"Last-Translator: Sami Lahtinen <sami.lahtinen@tietovirta.fi>\n"
+"Language-Team: Development <helpdesk@tietovirta.fi>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../templates/modules/Personalsettings/settings:29
+msgid "Active basket select rows"
+msgstr "Aktiivisen korin valintarivit"
+
+#: ../goah/Modules/Personalsettings.pm:116
+msgid "Can't read personal settings. User id is missing."
+msgstr "Omien asetusten luku epäonnistui. Käyttäjä id puuttuu."
+
+#: ../goah/Modules/Personalsettings.pm:72
+msgid "Can't update personal settings."
+msgstr "Omien asetusten päivitys epäonnistui."
+
+#: ../goah/Modules/Personalsettings.pm:156
+msgid "Can't write personal settings. User id is missing."
+msgstr "Omien asetusten tallennus epäonnistui! Käyttäjä id puuttuu."
+
+#: ../templates/modules/Personalsettings/settings:54
+msgid "Choose interface language"
+msgstr "Valitse käyttöliittymän kieli"
+
+#: ../templates/modules/Personalsettings/settings:37
+msgid "Decimal numbers"
+msgstr "Desimaalit"
+
+#: ../templates/modules/Personalsettings/settings:15 ../templates/modules/Personalsettings/settings:31 ../templates/modules/Personalsettings/settings:39
+msgid "Default"
+msgstr "Oletus"
+
+#: ../templates/modules/Personalsettings/settings:14
+msgid "If this setting is enabled then every price you will see includes VAT. You will also give prices including VAT."
+msgstr "Jos tämä valinta on valittuna, niin kaikki hinnat jotka näet sisältävät ALV:n Myös hinnat pitää antaa sisältäen ALV:n."
+
+#: ../templates/modules/Personalsettings/settings:53
+msgid "Language"
+msgstr "Kieli"
+
+#: ../goah/Modules/Personalsettings.pm:76
+msgid "Module doesn't have function "
+msgstr "Modulilla ei ole funktiota"
+
+#: ../templates/modules/Personalsettings/settings:45
+msgid "Password"
+msgstr "Salasana"
+
+#: ../goah/Modules/Personalsettings.pm:186
+msgid "Passwords doesn't match. Won't change password."
+msgstr "Salasanat eivät täsmää. Salasanaa ei vaihdeta."
+
+#: ../templates/modules/Personalsettings/settings:1
+msgid "Personal settings"
+msgstr "Omat asetukset"
+
+#: ../goah/Modules/Personalsettings.pm:70
+msgid "Personal settings updated."
+msgstr "Omat asetukset päivitetty."
+
+#: ../templates/modules/Personalsettings/settings:90
+msgid "Save settings"
+msgstr "Tallenna asetukset"
+
+#: ../templates/modules/Personalsettings/settings:57
+msgid "Select language"
+msgstr "Valitse kieli"
+
+#: ../templates/modules/Personalsettings/settings:6
+msgid "Setting"
+msgstr "Asetukset"
+
+#: ../templates/modules/Personalsettings/settings:70
+msgid "Show debug info"
+msgstr "Näytä virheilmoitukset"
+
+#: ../templates/modules/Personalsettings/settings:71
+msgid "Show debug messages from the system (mostly useful for developers)"
+msgstr "Näytä järjestelmän virheilmoitukset (hyödyllinen kehittäjille)"
+
+#: ../templates/modules/Personalsettings/settings:13
+msgid "Show prices with VAT"
+msgstr "Näytä hinnat sisältäen ALV:n"
+
+#: ../templates/modules/Personalsettings/settings:30
+msgid "This setting defines how many rows is shown on active basket selects. Setting affects group selection and products in basket -lists"
+msgstr "Tämä asetus määrittää kuinka monta riviä näytetään aktiivisen korin valintariveillä. Asetus vaikuttaa ryhmävalintaan ja tuotevalintaan korissa."
+
+#: ../templates/modules/Personalsettings/settings:38
+msgid "This setting defines the amount of decimals used to show prices"
+msgstr "Tämä asetus määrittää kuinka monta desimaalia näytetään esitettäessä hintoja."
+
+#: ../templates/modules/Personalsettings/settings:46
+msgid "To change your password type it twice on following boxes. Leave fields empty if you don't want to change your password."
+msgstr "Vaihtaaksesi salasanan syötä se molempiin kenttiin. Jätä kentät tyhjäksi, jos et halua vaihtaa salasanaa."
+
+#: ../templates/modules/Personalsettings/settings:7
+msgid "Value"
+msgstr "Arvo"

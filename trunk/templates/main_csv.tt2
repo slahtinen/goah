@@ -1,0 +1,21 @@
+[% IF function != '' %]
+[% TRY %]
+[% filename = function _ ".csvtt2" %]
+[% INCLUDE $filename %]
+[% CATCH %]
+[% PROCESS templateerror %]
+[% END %]
+[% ELSE %]
+Nothing to display.
+[% END %]
+
+[% gettext("Generated from GoaH") %] [% goahversion %].
+[% IF demomode == 1 %]
+	[% gettext("DEMO MODE! Anonymous login prohibited!") %]
+[% END %]
+
+[% BLOCK templateerror %]
+	[% gettext("Error in template file!") %]
+	Filename: [% filename %]
+	Function: [% function %]
+[% END %]

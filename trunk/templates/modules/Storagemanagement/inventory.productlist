@@ -1,0 +1,59 @@
+<h3>[% gettext("Products in inventory") %]</h3>
+
+<table>
+<thead>
+<tr>
+<th>[% gettext("Code") %]</th>
+<th>[% gettext("Name") %]</th>
+<th>[% gettext("Amount before") %]</th>
+<th>[% gettext("Amount after") %]</th>
+<th>[% gettext("Additional info") %]</th>
+[% IF inventory.done != 1 %]
+<th>[% gettext("Delete") %]</th>
+<th>[% gettext("Update") %]</th>
+[% END %]
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc='odd' %]
+[% total = 0 %]
+[% FOREACH key IN inventoryrows.keys.sort.reverse %]
+	[% row = inventoryrows.$key %]
+	[% prodinfo = productinfo(row.productid) %]
+	<tr class='[% rowc %]'>
+	[% IF inventory.done != 1 %]
+	<form action="" method='post' name="editrow[% row.id %]">
+	<input type='hidden' name='module' value='[% module %]'>
+	<input type='hidden' name='action' value='editrow.inventory'>
+	<input type='hidden' name='rowid' value='[% row.id %]'>
+	<input type='hidden' name='target' value='[% row.inventoryid %]'>
+	[% END %]
+	<td>[% prodinfo.code %]</td>
+	<td>[% prodinfo.name %]</td>
+	<td>[% row.amount_before %]</td>
+	[% IF inventory.done == 1 %]
+	<td>[% row.amount_after %]</td>
+	[% ELSE %]
+	<td><input class="small" name='amount_after' value='[% row.amount_after %]'></td>
+	[% END %]
+	[% IF inventory.done == 1 %]
+	<td>[% row.rowinfo %]</td>
+	[% ELSE %]
+	<td><input name='rowinfo' value='[% row.rowinfo %]'></td>
+	<td class="center"><input type='checkbox' name='delete' /></td>
+	<td class="center"><input type='image' src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="Update"/></td>
+	</form>
+	[% END %]
+	</tr>
+
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]
+	[% END %]
+[% END %]
+
+[% rowc = 'info' %]
+
+</tbody>
+</table>

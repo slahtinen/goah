@@ -1,0 +1,42 @@
+<h2>[% gettext("Customers") %]</h2>
+<table>
+<thead>
+<tr>
+<th>[% gettext("Name") %]</th>
+<th>[% gettext("Website") %]</th>
+<th>[% gettext("Type") %]</th>
+<th class="icon">[% gettext("Open") %]</th>
+<th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% odd = 0 %]
+[% FOREACH comp IN companies %]
+	[% IF odd == 1 %]
+		<tr class="odd">
+		[% odd = 0 %]
+	[% ELSE %]
+		<tr class="even">
+		[% odd = 1 %]
+	[% END %]
+
+	<td>[% comp.name %]
+	[% IF comp.vat_id == "00000000" %]
+		[% comp.firstname %]
+	[% END %]</td>
+	<td>[% comp.www %]</td>
+	<td>
+	[% type = customeridentifier(comp.custtype) %]
+	[% type.name %]</td>
+	<td class="center">
+	<a href="?module=[% module %]&amp;action=companyinfo&amp;companyid=[% comp.id %]">
+	<img class="link" alt="open" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
+	</td>
+	<td class="center">
+	<a href="?module=[% module %]&amp;action=deletecompany&amp;id=[% comp.id %]" onclick="return confirm('[% gettext("Delete customer from database?") %]')">
+	<img class="link" alt="open" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" /></a>	
+	</td>	
+	</tr>
+[% END %]
+</tbody>
+</table>

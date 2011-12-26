@@ -1,0 +1,78 @@
+<h3>[% gettext("Products in shipment") %]</h3>
+
+[% IF usersettings.showvat == 'on' %] 
+	[% vattxt = gettext("Incl.VAT") %]
+[% ELSE %]
+	[% vattxt = gettext("VAT 0%") %]
+[% END %]
+<table>
+<thead>
+<tr>
+<th>[% gettext("Code") %]</th>
+<th>[% gettext("Name") %]</th>
+<th>[% gettext("IN") %] ([% vattxt %])</th>
+<th>[% gettext("VAT") %]</th>
+<th colspan='2'>[% gettext("Amount") %]</th>
+<th>[% gettext("Total") %]</th>
+<th>[% gettext("Row info") %]</th>
+[% IF shipment.received != 1 %]
+<th>[% gettext("Delete") %]</th>
+<th>[% gettext("Update") %]</th>
+[% END %]
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc='odd' %]
+[% total = 0 %]
+[% FOREACH key IN shipmentrows.keys.sort %]
+	[% row = shipmentrows.$key %]
+	[% prodinfo = productinfo(row.productid) %]
+	<tr class='[% rowc %]'>
+	[% IF shipment.received != 1 %]
+	<form action="" method='post' name="editrow[% row.id %]">
+	<input type='hidden' name='module' value='[% module %]'>
+	<input type='hidden' name='action' value='editrow'>
+	<input type='hidden' name='rowid' value='[% row.id %]'>
+	<input type='hidden' name='target' value='[% row.shipmentid %]'>
+	[% END %]
+	<td>[% prodinfo.code %]</td>
+	<td>[% prodinfo.name %]</td>
+	[% IF shipment.received == 1 %]
+	<td>[% row.purchase %]</td>
+	[% ELSE %]
+	<td><input class="small" name='purchase' value='[% row.purchase %]'></td>
+	[% END %]
+	<td>[% prodinfo.vat %]&#37;</td>
+	[% IF shipment.received == 1 %]
+	<td>[% row.amount %]</td>
+	[% ELSE %]
+	<td><input class="small" name='amount' value='[% row.amount %]'></td>
+	[% END %]
+	<td>[% prodinfo.unit %]</td>
+	<td>[% row.total %]</td>
+	[% IF shipment.received == 1 %]
+	<td>[% row.rowinfo %]</td>
+	[% ELSE %]
+	<td><input name='rowinfo' value='[% row.rowinfo %]'></td>
+	<td class="center"><input type='checkbox' name='delete' /></td>
+	<td class="center"><input type='image' src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="Update"/></td>
+	</form>
+	[% END %]
+	</tr>
+
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]
+	[% END %]
+[% END %]
+
+[% rowc = 'info' %]
+
+<tr class="[% rowc %]">
+<td colspan='6'>[% gettext("Total") %]</td>
+<td class='number'>[% row.shipmenttotal %]</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>

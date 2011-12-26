@@ -1,0 +1,10 @@
+<ul id="settings">	
+	[% FOREACH key IN navi.settings.keys.sort %]
+	[% item = navi.settings.$key %]
+	[% IF module == item.module %]
+	<li class='active'><a href="?module=[% item.module %]">[% item.name %]</a></li>
+	[% ELSE %]
+	<li><a href="?module=[% item.module %]">[% item.name %]</a></li>
+	[% END %]
+	[% END %]
+</ul>

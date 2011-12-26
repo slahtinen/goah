@@ -1,0 +1,66 @@
+#navi {
+    width: 170px;
+/*    position: absolute;
+    top: 20px;
+    left: 20px;
+*/
+	margin: 20px 0 0 20px;
+	float:left;
+}
+
+#navi h2 {
+    background: transparent url('gfx/bg-menu-header.png') repeat-x 0 0;
+    color: #FFF;
+    width: 170px;
+}
+
+#navi ul {
+    	margin: 0;
+    	padding: 0;
+	text-indent: 12px;
+    	font-size: small;
+    	line-height: 37px;
+    	border-bottom: 6px solid #dae8f1;
+}
+
+#navi ul ul {
+	border-bottom: 0px;
+}
+
+
+#navi li {
+    	margin: 0;
+    	padding: 0;
+    	background-color: #fff;
+    	color: #6aa4c6;
+	list-style: none;
+	width: 170px; /* CSS2-standardin mukaan pakko olla */
+}
+
+#navi li.active > a {
+    	background-color: #dae8f1;
+   	font-weight: bold;
+}
+
+#navi ul.subcat1 {
+	text-indent: 28px;
+}
+
+#navi li.subcat1_active > a, li.subcat1_active > a:hover {
+    	background: transparent url('gfx/menu-active.png') no-repeat 12px 12px;
+   	font-weight: bold;
+}
+
+#navi a {
+	display: block;
+	width: 170px;
+	height: 32px;
+    	color: #6aa4c6;
+   	font-weight: normal;
+	text-decoration: none;
+    	border-bottom: 2px solid #dae8f1;
+}
+
+#navi a:hover, #navi .current a {
+    background-color: #dae8f1;
+}

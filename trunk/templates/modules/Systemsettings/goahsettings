@@ -1,0 +1,359 @@
+<h3>[% gettext("Default language") %]</h3>
+<table>
+<thead>
+<tr>
+  <th>[% gettext("Language") %]</th>
+  <th class="icon">[% gettext("Save") %]</th>
+</tr>
+</thead>
+<tbody class='rowdata'>
+<tr class='even'>
+<td>
+<form action="" method="post">
+<select name="item">
+<option value="C">-- [% gettext("Select language") %] --</option>
+[% FOREACH key IN languages.keys.sort %]
+[% lang = languages.$key %]
+[% IF syslocale.0.item == lang.locale %]
+<option value="[% lang.locale %]" selected>[% lang.language %]</option>
+[% ELSE %]
+<option value="[% lang.locale %]">[% lang.language %]</option>
+[% END %]
+[% END %]
+</td><td class="center">
+<p>
+[% IF syslocale.0.id != '' %]
+<input type="hidden" name="action" value="updatesetting" />
+[% ELSE %]
+<input type="hidden" name="action" value="newsetting" />
+[% END %]
+<input type="hidden" name="category" value="locale" />
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="id" value="[% syslocale.0.id %]" />
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+</p>
+</form>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>[% gettext("VAT Classes") %]</h3>
+<table>
+<thead>
+<tr>
+  <th>[% gettext("Name") %]</th>
+  <th>[% gettext("Value") %]</th>
+  <th>[% gettext("Sort") %]</th>
+  <th>[% gettext("Default") %]</th>
+  <th class="icon">[% gettext("Save") %]</th>
+  <th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc = 'even' %]
+[% FOREACH row IN vatclasses %]
+
+	<tr class="[% rowc %]">
+	<td>
+	<form action="" method="post">
+	    <input class="medium" name="item" value="[% row.item %]" />
+	</td>
+	<td><input  class="small" name="value" value="[% row.value %]" /></td>
+	<td><input class="small" name="sort" value="[% row.sort %]" /></td>
+	<td>
+	[% IF row.def == 1 %]
+		<input type="checkbox" name="def" checked />
+	[% ELSE %]
+		<input type="checkbox" name="def" />
+	[% END %]
+	<td class="center">
+	      <p>
+	      <input type="hidden" name="module" value="[% module %]" />
+	      <input type="hidden" name="category" value="vat" />
+	      <input type="hidden" name="id" value="[% row.id %]" />
+	      <input type="hidden" name="action" value="updatesetting" />
+	      <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+	      </p>
+	</form>
+	</td>
+
+	<td class="center">
+	<form action="" method="post">
+	      <p>
+	      <input type="hidden" name="module" value="[% module %]" />
+	      <input type="hidden" name="category" value="vat" />
+	      <input type="hidden" name="id" value="[% row.id %]" />
+	      <input type="hidden" name="action" value="deletesetting" />
+	      <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext('Delete') %]"
+		onClick="return confirm('[% gettext("Remove VAT class from database?") %]')" />
+	      </p>
+	</form>
+	</td>
+	</tr>
+
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]	
+	[% END %]
+[% END %]
+
+<tr class="[% rowc %]">
+<td>
+  <form action="" method="post">
+  <input class="medium" name="item" />
+</td>
+<td><input class="small" name="value" /></td>
+<td><input class="small" name="sort" /></td>
+<td colspan="2">&nbsp;</td>
+<td class="center">
+    <p>
+    <input type="hidden" name="module" value="[% module %]" />
+    <input type="hidden" name="category" value="vat" />
+    <input type="hidden" name="action" value="newsetting" />
+    <input type="submit" value="[% gettext('Add') %]" />
+    </p>
+</form>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>[% gettext("Payment conditions") %]</h3>
+<table>
+<thead>
+<tr>
+    <th>[% gettext("Name") %]</th>
+    <th>[% gettext("Value") %]</th>
+    <th>[% gettext("Sort") %]</th>
+    <th>[% gettext("Default") %]</th>
+    <th class="icon">[% gettext("Save") %]</th>
+    <th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc = 'even' %]
+[% FOREACH row IN paymentconditions %]
+
+	<tr class="[% rowc %]">
+	<td>
+	<form action="" method="post">
+	    <input class="medium" name="item" value="[% row.item %]" />
+	</td>
+	<td><input class="small" name="value" value="[% row.value %]" /></td>
+	<td><input class="small" name="sort" value="[% row.sort %]" /></td>
+	<td>
+	[% IF row.def == 1 %]
+		<input type="checkbox" name="def" checked />
+	[% ELSE %]
+		<input type="checkbox" name="def" />
+	[% END %]
+	<td class="center">
+	      <p>
+	      <input type="hidden" name="module" value="[% module %]" />
+	      <input type="hidden" name="category" value="paymentcondition" />
+	      <input type="hidden" name="id" value="[% row.id %]" />
+	      <input type="hidden" name="action" value="updatesetting" />
+	      <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+	      </p>
+	</form>
+	</td>
+
+	<td class="center">
+	<form action="" method="post">
+	      <p>
+	      <input type="hidden" name="module" value="[% module %]" />
+	      <input type="hidden" name="category" value="paymentcondition" />
+	      <input type="hidden" name="id" value="[% row.id %]" />
+	      <input type="hidden" name="action" value="deletesetting" />
+	      <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext('Delete') %]"
+		onClick="return confirm('[% gettext("Remove payment condition from database?") %]')" />
+	      </p>
+	</form>
+	</td>
+	</tr>
+
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]	
+	[% END %]
+[% END %]
+<tr class="[% rowc %]">
+<td>
+  <form action="" method="post">
+  <input class="medium" name="item" />
+</td>
+<td><input class="small" name="value" /></td>
+<td><input class="small" name="sort" /></td>
+<td colspan="2">&nbsp;</td>
+<td class="center">
+    <p>
+    <input type="hidden" name="module" value="[% module %]" />
+    <input type="hidden" name="category" value="paymentcondition" />
+    <input type="hidden" name="action" value="newsetting" />
+    <input type="submit" value="[% gettext('Add') %]" />
+    </p>
+</form>
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>[% gettext("Delay interests") %]</h3>
+<table>
+<thead>
+<tr>
+    <th>[% gettext("Name") %]</th>
+    <th>[% gettext("Value") %]</th>
+    <th>[% gettext("Sort") %]</th>
+    <th>[% gettext("Default") %]</th>
+    <th class="icon">[% gettext("Save") %]</th>
+    <th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc = 'even' %]
+[% FOREACH row IN delayinterests %]
+
+	<tr class="[% rowc %]">
+	<td>
+	<form action="" method="post">
+	    <input class="medium" name="item" value="[% row.item %]" />
+	</td>
+	<td><input class="small" name="value" value="[% row.value %]" /></td>
+	<td><input class="small" name="sort" value="[% row.sort %]" /></td>
+	<td>
+	[% IF row.def == 1 %]
+		<input type="checkbox" name="def" checked />
+	[% ELSE %]
+		<input type="checkbox" name="def" />
+	[% END %]
+	<td class="center">
+	      <p>
+	      <input type="hidden" name="module" value="[% module %]" />
+	      <input type="hidden" name="category" value="delayinterests" />
+	      <input type="hidden" name="id" value="[% row.id %]" />
+	      <input type="hidden" name="action" value="updatesetting" />
+	      <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+	      </p>
+	</form>
+	</td>
+
+	<td class="center">
+	<form action="" method="post">
+	      <p>
+	      <input type="hidden" name="module" value="[% module %]" />
+	      <input type="hidden" name="category" value="delayinterests" />
+	      <input type="hidden" name="id" value="[% row.id %]" />
+	      <input type="hidden" name="action" value="deletesetting" />
+	      <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext('Delete') %]"
+		onClick="return confirm('[% gettext("Remove delay interest from database?") %]')" />
+	      </p>
+	</form>
+	</td>
+	</tr>
+
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]	
+	[% END %]
+[% END %]
+
+<tr class="[% rowc %]">
+      <td>
+      <form action="" method="post">
+          <input class="medium" name="item" />
+      </td>
+      <td><input class="small" name="value" /></td>
+      <td><input class="small" name="sort" /></td>
+      <td colspan="2">&nbsp;</td>
+      <td class="center">
+          <p>
+          <input type="hidden" name="module" value="[% module %]" />
+          <input type="hidden" name="category" value="delayinterests" />
+          <input type="hidden" name="action" value="newsetting" />
+          <input type="submit" value="[% gettext('Add') %]" />
+          </p>
+	</form>
+      </td>
+</tr>
+</tbody>
+</table>
+
+<h3>[% gettext("Reclamation times") %]</h3>
+<table>
+<thead>
+<tr>
+    <th>[% gettext("Name") %]</th>
+    <th>[% gettext("Value") %]</th>
+    <th>[% gettext("Sort") %]</th>
+    <th>[% gettext("Default") %]</th>
+    <th class="icon">[% gettext("Save") %]</th>
+    <th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc = 'even' %]
+[% FOREACH row IN reclamationtimes %]
+
+        <tr class="[% rowc %]">
+        <td>
+        <form action="" method="post">
+	  <input class="medium" name="item" value="[% row.item %]" />
+        </td>
+        <td><input class="small" name="value" value="[% row.value %]" /></td>
+        <td><input class="small" name="sort" value="[% row.sort %]" /></td>
+	<td>
+	[% IF row.def == 1 %]
+		<input type="checkbox" name="def" checked />
+	[% ELSE %]
+		<input type="checkbox" name="def" />
+	[% END %]
+	</td>
+        <td class="center">
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="category" value="reclamationtime" />
+	<input type="hidden" name="id" value="[% row.id %]" />
+	<input type="hidden" name="action" value="updatesetting" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+	</p>
+        </form>
+        </td>
+        <td class="center">
+        <form action="" method="post">
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="category" value="reclamationtime" />
+	<input type="hidden" name="id" value="[% row.id %]" />
+	<input type="hidden" name="action" value="deletesetting" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext('Delete') %]"
+                onClick="return confirm('[% gettext("Remove reclamation time from database?") %]')" />
+	</p>
+        </form>
+        </td>
+        </tr>
+
+        [% IF rowc == 'odd' %]
+                [% rowc = 'even' %]
+        [% ELSE %]
+                [% rowc = 'odd' %]
+        [% END %]
+[% END %]
+
+<tr class="[% rowc %]">
+    <td>
+    <form action="" method="post">
+        <input class="medium" name="item" />
+    </td>
+    <td><input class="small" name="value" /></td>
+    <td><input class="small" name="sort" /></td>
+    <td colspan="2">&nbsp;</td>
+    <td class="center"><input type="submit" value="[% gettext('Add') %]"></form></td>
+</tr>
+</tbody>
+</table>

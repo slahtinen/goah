@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xml:lang="fi" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+<link rel="stylesheet" type="text/css" href="themes/[% theme %]/login.css" />
+<title>GoaH [% goahversion %]</title>
+</head>
+<body>
+
+<div id="loginbox">
+  <p class="logo"><img src="logo_lg.png" alt="GoaH - Open Solution for free business" /></p>
+  <form action="" method="post">
+  <table>
+  <thead>
+  <tr><th>[% gettext("Old browser") %]</th></tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td class="login">[% gettext("You're using an old version of Internet Explorer and GoaH2 doesn't support it. Please upgrade your browser and try again.") %]</td>
+  </tr>
+  <tr><td>Current locale: [% locale %]</td></tr>
+
+  <!-- Messages about functionality -->
+  [% TRY %]
+	[% INCLUDE messages.tt2 %]
+  [% END %]
+  <!-- Messages about functionality -->
+
+  [% IF function == 'wronglogin' %]
+        [% INCLUDE wronglogin.tt2 %]
+  [% ELSIF function == 'logout' %]
+        [% INCLUDE logout.tt2 %]
+  [% END %]
+
+  <tr class="footer">
+  <td colspan='2' class="footer">
+  Powered by <a href="http://www.goah.org" target="_blank">GoaH [% goahversion %]</a>.
+  Sponsored by <a href="http://www.tietovirta.fi" target="_blank">Tietovirta Oy</a>
+  </td>
+  </tr>
+
+  </tbody>
+  </table>
+</form>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,105 @@
+<h2>[% gettext("Invoices") %]</h2>
+<table>
+<tbody>
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="subaction" value="search" />
+<tr><td>[% gettext("State") %]<td><select name='states' size="3" multiple>
+[% FOREACH option IN invoicestates.keys.sort %]
+[%# Yes, this is ugly solution %]
+[% selected = 0 %]
+[% FOREACH state IN search_states %]
+[% IF state == option %]
+[% selected = 1 %]
+[% END %]
+[% END %]
+[% IF selected == 1 %]
+<option value='[% option %]' selected>[% invoicestates.$option %]</option>
+[% ELSE %]
+<option value='[% option %]'>[% invoicestates.$option %]</option>
+[% END %]
+[% END %]
+</select>
+</td>
+<td>[% gettext("From/to date") %]<br />(dd.mm.yyyy)</td>
+<td><input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" /></td>
+<td>[% gettext("Customer") %]</td><td><input class='big' name='customer' value="[% search_customer %]" /></td>
+<td><input type="submit" value="[% gettext("Search") %]"/></td></tr>
+</form>
+<tr><td>
+<a href="csv.cgi?[% csvurl %]">
+<img class="link" title="Download as CSV" src="themes/[% theme %]/icon/32x32/mimetypes/spreadsheet_document.png" /></a>
+</td></tr>
+</tbody>
+</table>
+
+<h3>[% gettext("Selected invoices") %]</h3>
+<table>
+<thead>
+<tr>
+<th>[% gettext("Number") %]</th>
+<th>[% gettext("Customer") %]</th>
+<th>[% gettext("Created") %]</th>
+<th>[% gettext("Due") %]</th>
+<th>[% gettext("Total") %] [% gettext("VAT 0%") %]</th>
+<th>[% gettext("Total") %] [% gettext("Incl. VAT") %]</th>
+<th>[% gettext("State") %]</th>
+<th class="icon">[% gettext("Open") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rclass = 'even' %]
+[% FOREACH k IN invoices.keys.sort %]
+	[% IF k != 'total' %]
+	[% invoice = invoices.$k %]
+	[% targeturl = "?module=$module&amp;action=show&amp;target=$invoice.id" %]
+	[% IF rclass == 'odd' %]
+		[% rclass = 'even' %]
+	[% ELSE %]
+		[% rclass = 'odd' %]
+	[% END %]
+	<tr class="[% rclass %]">
+	[% IF invoice.invoicenumber != 0  %]
+		<td>[% invoice.invoicenumber %]</td>
+	[% ELSE  %]
+		<td>&nbsp;</td>
+	[% END %]
+	[% cinfo = companyinfo(invoice.companyid) %]
+	<td><b>[% cinfo.name %] [% cinfo.firstname %]</b><br/>
+	[% linfo = locationinfo(invoice.locationid) %]
+	[% IF linfo == 0 %] 
+		[% gettext("Not available!") %]<br/><br/><br/>
+	[% ELSE %]
+		[% linfo.addr1 %]<br/>[% linfo.addr2 %]</br>[% linfo.postalcode %] [% linfo.postaloffice %]<br/>[% linfo.country %]
+	[% END %]
+	</td>
+	[% IF invoice.invoicenumber != 0 %]
+		<td>[% formatdate(invoice.created) %]</td>
+		<td>[% formatdate(invoice.due) %]</td>
+	[% ELSE %]
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	[% END %]
+	[% total = readtotal(invoice.id) %]
+	<td class="number">[% total.vat0 %]</td>
+	<td class="number">[% total.inclvat %]</td>
+
+	<td>[% state = invoice.state %]
+	[% invoicestates.$state %]
+	</td>
+	<td class="center"><a href="[% targeturl %]"><img class="link" alt="open" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+	</tr>
+	[% END %]
+[% END %]
+<tr class="[% rclass %]">
+<td>&nbsp;</td>
+<td>[% gettext("Total sum") %]</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td class="number">[% invoices.total.vat0 %]</td>
+<td class="number">[% invoices.total.inclvat %]</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>

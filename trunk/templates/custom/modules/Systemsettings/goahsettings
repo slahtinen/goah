@@ -1,0 +1,167 @@
+<script type="text/javascript" charset="utf-8">
+	$(function () {
+		$("ul.tabNav").tabs("div#tabs >div");
+	});
+	
+</script>
+
+<div class="cBox">
+
+<div class="cBoxTop">
+	<h2>[% gettext("System settings") %]</h2>
+	<ul class="tabNav">
+		<li><a href="#language">[% gettext("Language") %]</a></li>
+		<li><a href="#vat">[% gettext("VAT Classes") %]</a></li>
+		<li><a href="#payment">[% gettext("Payment conditions") %]</a></li>
+		<li><a href="#reclamation">[% gettext("Reclamation times") %]</a></li>
+	</ul>
+</div>	
+
+<div class="cBoxBody">
+
+
+<div id="tabs">
+
+	<div id="language">
+		<h3>[% gettext("Default language") %]</h3>
+		<form action="" method="post" accept-charset="utf-8">
+			<!-- <label for="item">[% gettext("Language") %]</label> -->
+			<select name="item" id="item">
+					<option value="c">-- [% gettext("Select language") %] --</option>
+		[% FOREACH key IN languages.keys.sort %]
+			[% lang = languages.$key %]
+			[% IF syslocale.0.item == lang.locale %]
+					<option value="[% lang.locale %]" selected="selected">[% lang.language %]</option>
+			[% ELSE %]
+					<option value="[% lang.locale %]">[% lang.language %]</option>
+			[% END %]
+		[% END %]		
+			</select>
+		[% IF syslocale.0.id != '' %]
+			<input type="hidden" name="action" value="updatesetting" />
+		[% ELSE %]
+			<input type="hidden" name="action" value="newsetting" />
+		[% END %]
+			<input type="hidden" name="category" value="locale" />
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="id" value="[% syslocale.0.id %]" />
+			<input type="submit" class="button save" value="[% gettext('Save') %]" title="[% gettext('Save') %]">
+		</form>	
+	</div>
+
+	<div id="vat">
+		<h3>[% gettext("VAT Classes") %]</h3>
+		<span class="name">[% gettext("Name") %]</span>
+		<span class="value">[% gettext("Value") %]</span>
+		<span class="sort">[% gettext("Sort") %]</span>
+		[% FOREACH row IN vatclasses %]
+		<form action="" method="post" accept-charset="utf-8">
+			<input class="name" name="item" value="[% row.item %]" />
+			<input class="value" name="value" value="[% row.value %]" />
+			<input class="sort" name="sort" value="[% row.sort %]" />
+	
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="category" value="vat" />
+			<input type="hidden" name="id" value="[% row.id %]" />
+			<input type="hidden" name="action" value="updatesetting" />
+	
+			<input type="submit" class="button save" value="[% gettext('Save') %]" title="[% gettext('Save') %]">
+		</form>
+
+		<form action="" method="post">
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="category" value="vat" />
+			<input type="hidden" name="id" value="[% row.id %]" />
+			<input type="hidden" name="action" value="deletesetting" />
+			<input type="submit" class="button delete" name="submit" value="[% gettext('Delete') %]" onClick="return confirm('[% gettext("Remove VAT class from database?") %]')" title="[% gettext('Delete') %]">
+		</form>
+		[% END %]
+		<form action="" method="post" class="add">
+			<input class="name" name="item" />
+			<input class="value" name="value" />
+			<input class="sort" name="sort" />
+
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="category" value="vat" />
+			<input type="hidden" name="action" value="newsetting" />
+			<input type="submit" class="button add" value="[% gettext('Add') %]" title="[% gettext('Add') %]" />
+		</form>
+	</div>
+
+	<div id="payment">
+		<h3>[% gettext("Payment conditions") %]</h3>
+		<span class="name">[% gettext("Name") %]</span>
+		<span class="value">[% gettext("Value") %]</span>
+		<span class="sort">[% gettext("Sort") %]</span>
+
+		[% FOREACH row IN paymentconditions %]
+		<form action="" method="post">
+			<input class="name" name="item" value="[% row.item %]" />
+			<input class="value" name="value" value="[% row.value %]" />
+			<input class="sort" name="sort" value="[% row.sort %]" />
+	
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="category" value="paymentcondition" />
+			<input type="hidden" name="id" value="[% row.id %]" />
+			<input type="hidden" name="action" value="updatesetting" />
+	
+			<input type="submit" class="button save" value="[% gettext('Save') %]" title="[% gettext('Save') %]">
+		</form>
+
+		<form action="" method="post">
+		      <input type="hidden" name="module" value="[% module %]" />
+		      <input type="hidden" name="category" value="paymentcondition" />
+		      <input type="hidden" name="id" value="[% row.id %]" />
+		      <input type="hidden" name="action" value="deletesetting" />
+		      <input type="submit" class="button delete" name="submit" value="[% gettext('Delete') %]" title="[% gettext('Delete') %]" onClick="return confirm('[% gettext("Remove payment condition from database?") %]')" />
+			</form>
+		[% END %]
+		<form action="" method="post" class="add">
+			<input class="name" name="item" />
+			<input class="value" name="value" />
+			<input class="sort" name="sort" />
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="category" value="paymentcondition" />
+			<input type="hidden" name="action" value="newsetting" />
+			<input type="submit" class="button add" value="[% gettext('Add') %]" title="[% gettext('Add') %]"/>
+		</form>
+	</div>
+
+	<div id="reclamation">
+		<h3>[% gettext("Reclamation times") %]</h3>
+		<span class="name">[% gettext("Name") %]</span>
+		<span class="value">[% gettext("Value") %]</span>
+		<span class="sort">[% gettext("Sort") %]</span>
+
+		[% FOREACH row IN reclamationtimes %]
+		<form action="" method="post">
+			<input class="name" name="item" value="[% row.item %]" />
+			<input class="value" name="value" value="[% row.value %]" />
+			<input class="sort" name="sort" value="[% row.sort %]" />
+
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="category" value="reclamationtime" />
+			<input type="hidden" name="id" value="[% row.id %]" />
+			<input type="hidden" name="action" value="updatesetting" />
+	
+			<input type="submit" class="button save" value="[% gettext('Save') %]" title="[% gettext('Save') %]">
+		</form>
+		<form action="" method="post">
+			<input type="hidden" name="module" value="[% module %]" />
+			<input type="hidden" name="category" value="reclamationtime" />
+			<input type="hidden" name="id" value="[% row.id %]" />
+			<input type="hidden" name="action" value="deletesetting" />
+			<input type="submit" class="button delete" name="submit" value="[% gettext('Delete') %]" title="[% gettext('Delete') %]" onClick="return confirm('[% gettext("Remove reclamation time from database?") %]')" />
+		</form>
+		[% END %]
+
+		<form action="" class="add" method="post">
+			<input class="name" name="item" />
+		    <input class="value" name="value" />
+		    <input class="sort" name="sort" />
+		    <input type="submit" class="button add" value="[% gettext('Add') %]" title="[% gettext('Add') %]">
+		</form>	
+	</div>
+	</div>
+</div>
+</div>

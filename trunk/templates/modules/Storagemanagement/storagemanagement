@@ -1,0 +1,4 @@
+<blockquote class="helptext">
+<p>[% gettext("Storage management includes functionality to update product amounts and purchase prices to storage.") %]</p>
+<p>&nbsp;</p>
+</blockquote>

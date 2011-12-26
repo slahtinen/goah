@@ -1,0 +1,1 @@
+<div class="error">[% gettext("Invalid login name or password!") %]</div>

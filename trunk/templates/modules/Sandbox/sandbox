@@ -1,0 +1,8 @@
+<h2>[% gettext("Sandbox") %] - [% dir %]</h2>
+
+[% FOREACH f IN files %]
+<h3>[% f %]</h3>
+<iframe src="external/[% f %]" width="100%" height="500" border="1"></iframe>
+[% END %]
+
+</frameset>

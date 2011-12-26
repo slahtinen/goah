@@ -1,0 +1,51 @@
+GoaH 2.0.0 installation instructions
+
+Just a quick document to get things started. More will follow. See README
+for more details.
+
+
+ENVIRONMENT AND REQUIREMENTS
+============================
+I've written and tested the code with both Debian Etch and Debian Lenny, but
+there's no reason why the software wouldn't run with any GNU/Linux distribution.
+
+Currently installation requires some technical skills, but we'll be more than
+glad to help you out on our forums.
+
+Basic system installation requires (either program or Debian package name):
+- Apache2 (others will do)
+- Perl
+- texlive-latex-base
+- texlive-latex-recommended
+
+
+PERL CPAN REQUIREMENTS
+======================
+These (and maybe some other) CPAN -modules are required by current version.
+Install modules via whatever suits your environment. We'll create something more
+useful later on, but now you'll have to satisfy with this ;)
+
+Most of these packages can be found via offical Debian 5.0 repositories and I've
+built some of them for my own use, you can find these packages from
+http://take.nerd.fi/goah. My packages are totally unoffical so treat them properly.
+
+Required CPAN modules:
+- CGI
+- Switch
+- Encode
+- Locale::Textdomain
+- POSIX
+- Class::DBI
+- Class::DBI::Plugin::RetrieveAll
+- Class::DBI::AbstractSearch
+- Digest::MD5
+- Template::Latex
+
+
+INSTALLATION
+============
+Download the code, make sure every .cgi -file is executable and alter Apache
+configuration so that ExecCGI is enabled. Then make sure that goah/db -directory
+is fully writable (with files) by the apache-user. That's pretty much it. The
+data in current database contains an user with l/p demo / demo.
+

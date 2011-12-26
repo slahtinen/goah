@@ -1,0 +1,9 @@
+# An command line to create .po -file for individual module. Xgettext.pl is an perl-script
+# which can be found from http://search.cpan.org/~drtech/Locale-Maketext-Lexicon-0.77/script/xgettext.pl
+#
+# Note, that xgettext.pl is totally another project than xgettext from 'gettext' -Debian package.
+# This file can't be used directly and I'll replace this one with actually working script for easier
+# management of .po -files later. So consider this merely as an hint about how to create .po files than
+# actual script, manual or anything more than just an single command line.
+
+~/bin/xgettext.pl -o tmp/syssettings.po templates/modules/systemsettings/* templates/systemsettings goah/Modules/Systemsettings.pm

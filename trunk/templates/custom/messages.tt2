@@ -1,0 +1,22 @@
+[% FOREACH message = messages %]
+	[% IF message.0 != '' %] 
+	[% IF message.0 == 'info' %]
+		[% msg_type = 'success' %]
+	[% ELSIF message.0 == 'error' %]
+		[% msg_type = 'error' %]
+	[% ELSIF message.0 == 'warn' %]
+		[% msg_type = 'warning' %]
+	[% ELSIF message.0 == 'debug' %]
+		[% msg_type = 'development' %]
+	[% ELSE %]
+		[% msg_type = 'system' %]
+	[% END %]
+		
+	<div class="[% msg_type %]"><p>[% message.1 %]
+	[% IF message.2 != '' %]
+		<br/>[% message.2 %] line [% message.3 %]
+	[% END %]
+	</p>
+	</div>
+	[% END %]
+[% END %]

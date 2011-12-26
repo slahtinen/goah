@@ -1,0 +1,76 @@
+<h3>[% gettext("Company addresses") %]</h3>
+<table>
+<thead>
+<tr>
+[% FOREACH key IN locationdbfields.keys.sort %]
+[% field = locationdbfields.$key %]
+[% IF field.type != "hidden" && key != '2' && key != '3' %]
+	<th>[% field.name %]</th>
+[% END %]
+[% END %]
+<th class="icon">[% gettext("Open") %]</th>
+<th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% row = 'odd' %]
+[% FOREACH location = companylocations %]
+<tr class="[% row %]">
+[% FOREACH key IN locationdbfields.keys.sort %]
+[% field = locationdbfields.$key %]
+	[% IF field.type != "hidden" && key != '2' && key != '3' %]
+		[% field = field.field %]
+		[% IF location.defshipping == 'on' || location.defbilling == 'on' %]
+			<td><b>[% location.$field %]
+			[% IF field == 'info' && location.defshipping == 'on' %]
+				<br />[% gettext("Default shipping address.") %]<br />
+			[% END %]
+
+			[% IF field == 'info' && location.defbilling == 'on' %]
+				<br />[% gettext("Default billing address") %]<br />
+			[% END %]
+			</b></td>
+		[% ELSE %]
+		<td>[% location.$field %]
+		</td>
+		[% END %]
+	[% END %]
+[% END %]
+
+[% IF row == 'odd' %]
+	[% row = 'even' %]
+[% ELSE %]
+	[% row = 'odd' %]
+[% END %]
+
+<form action="" method="post">
+<td class="center">
+  <p>
+  <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
+  <input type="hidden" name="module" value="[% module %]">
+  <input type="hidden" name="action" value="editlocation">
+  <input type="hidden" name="target" value="[% location.id %]">
+  <input type="hidden" name="companyid" value="[% companydata.id %]">
+  </p>
+</td>
+</form>
+
+<form action="" method="post" class="table">
+<td class="center">
+  <p>
+  <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" 
+    alt="[% gettext("Delete") %]" onclick="return confirm('[% gettext("Delete address from database?") %]')" />
+  <input type="hidden" name="module" value="[% module %]">
+  <input type="hidden" name="action" value="deletelocation">
+  <input type="hidden" name="target" value="[% location.id %]">
+  <input type="hidden" name="companyid" value="[% companydata.id %]">
+  </p>
+</td>
+</form>
+</tr>
+[% END %]
+<tr class="content">
+<td colspan='10'><a href="?module=[% module %]&amp;action=newlocation&amp;companyid=[% companydata.id %]">[% gettext("Add new location") %]</a></td>
+</tr>
+</tbody>
+</table>

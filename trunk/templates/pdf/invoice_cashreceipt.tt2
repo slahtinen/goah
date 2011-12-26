@@ -1,0 +1,80 @@
+\documentclass[8pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[finnish]{babel}
+\usepackage{graphicx}
+\usepackage{lastpage}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage{verbatim}
+\usepackage{tabularx}
+\usepackage[table]{xcolor}
+\renewcommand{\footrulewidth}{0.5pt}
+\renewcommand{\rmdefault}{phv}
+\definecolor{tableShade}{HTML}{EEEEEE}
+\definecolor{tableShade2}{HTML}{EEEEDD}
+
+\oddsidemargin -0.5cm
+\textwidth 18.2cm
+\topmargin -0.5cm
+\textheight 23.0cm
+\headheight 1.5cm
+\headsep 0.5cm
+\pagestyle{fancy}
+
+\lhead{\includegraphics{[% logo %]}}
+\rhead{\makebox[6.5cm][l]{\textbf{KÄTEISKUITTI: [% invoicedata.invoicenumber %]}} sivu \thepage\ / \pageref{LastPage}} 
+
+\renewcommand{\footrulewidth}{0.5pt}
+
+\lfoot{[% owner.name %]\\
+[% ownerloc.addr1 %]\\
+[% IF ownerloc.addr2 != '' %]
+[% ownerloc.addr2 %]\\
+[% END -%]
+[% ownerloc.postalcode %] [% ownerloc.postaloffice %]} 
+\cfoot{Y-tunnus [% owner.vat_id %] \\ [% owner.bank_accounts %] } 
+\rfoot{Puhelin [% ownerloc.phone %] \\ Faksi [% ownerloc.fax %] \\ [% owner.www %] } 
+
+\begin{document} 
+
+\hspace{-0.5cm}
+\begin{tabular}{p{9.2cm}}
+\textbf{[% customerinfo.name %]} \\
+[% billingaddr.addr1 %] \\
+[% billingaddr.postalcode %] [% billingaddr.postaloffice %] 
+\end{tabular}
+\begin{tabular}{p{7cm}}
+\textbf{Toimitusosoite} \\
+[% customerinfo.name %] \\
+[% shippingaddr.addr1 %] \\
+[% shippingaddr.postalcode %] [% shippingaddr.postaloffice %] 
+\end{tabular}
+
+\vspace*{1cm}
+
+\hspace{-0.5cm}
+\begin{tabular}{p{3cm} p{6cm} p{3cm} p{4cm}}
+\textbf{Maksupvm} & [% formatdate(invoicedata.received) %] & \textbf{Viitteenne} & [% escape(invoicedata.customerreference) %] \\
+\textbf{Maksutapa} & [% paymentoption %] & \\
+\end{tabular}
+
+\vspace*{1cm}
+
+\hspace{-0.5cm}
+\rowcolors{0}{white}{tableShade}
+\footnotesize \begin{tabular*}{18cm}{p{2cm}p{7cm}rrrrr}
+\rowcolor[rgb]{0.8,0.8,0.8} \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+[% FOREACH key IN invoicerows.keys.sort %]
+[% row = invoicerows.$key %]
+[% escape(row.code) %] & [% row.name %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
+[% IF row.info != '' %]
+\multicolumn{7}{p{7cm}}{Lisätied: [% escape(row.info) %]} \\
+[% END %]
+[% END %]
+\multicolumn{6}{r}{\textbf{Yht. ALV 0\%}} & [% total.vat0 %] \\
+\multicolumn{6}{r}{\textbf{ALV osuus}} & [% total.vat %] \\
+\multicolumn{6}{r}{\textbf{Maksettu}} & \textbf{[% total.inclvat %]} \\
+\end{tabular*}
+\end{document}
+

@@ -1,0 +1,459 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GOAH 2.0.0\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2011-02-02 21:33+0200\n"
+"Last-Translator: Sami Lahtinen <sami.lahtinen@tietovirta.fi>\n"
+"Language-Team: Development <helpdesk@tietovirta.fi>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+msgid "Activate"
+msgstr "Aktivoi"
+
+msgid "Active basket"
+msgstr "Aktiivinen kori"
+
+#: ../templates/modules/Basket/activebasket:84
+#: ../templates/modules/Basket/activebasket:94
+msgid "Add"
+msgstr "Lisää"
+
+msgid "Add products"
+msgstr "Lisää tuotteita"
+
+#: ../templates/modules/Basket/showgroup:53
+msgid "Add to basket"
+msgstr "Lisää koriin"
+
+#: ../goah/Modules/Basket.pm:55
+#: ../templates/modules/Basket/basketinfo.productlist:16
+#: ../templates/modules/Basket/showgroup:22
+msgid "Amount"
+msgstr "Määrä"
+
+#: ../goah/Modules/Basket.pm:462
+#: ../goah/Modules/Basket.pm:550
+msgid "Amount field is not numeric. Setting amount to 0"
+msgstr "Määräkenttä ei ole numeerinen. Asetetaan määrä arvoon 0"
+
+#: ../goah/Modules/Basket.pm:216
+msgid "Basket converted to invoice"
+msgstr "Kori muutettu laskuksi"
+
+#: ../goah/Modules/Basket.pm:901
+msgid "Basket converted to order. Order number "
+msgstr "Kori muutettu laskuksi. Laskun numero "
+
+#: ../templates/modules/Basket/activebasket:3
+#: ../templates/modules/Basket/basketinfo:4
+msgid "Basket created:"
+msgstr "Kori luotu:"
+
+#: ../goah/Modules/Basket.pm:208
+msgid "Basket deleted"
+msgstr "Kori poistettu"
+
+#: ../templates/modules/Basket/activebasket:107
+#: ../templates/modules/Basket/basketinfo:10
+msgid "Basket functions"
+msgstr "Korin toiminnot"
+
+#: ../templates/modules/Basket/activebasket:1
+#: ../templates/modules/Basket/basketinfo:1
+msgid "Basket information"
+msgstr "Korin tiedot"
+
+msgid "Baskets"
+msgstr "Omat korit"
+
+#: ../templates/modules/Basket/showbaskets:4
+msgid ""
+"Baskets are collection of products and they are attached to single customer. Via baskets you can collect\n"
+"proper setup for your customer and create an offer from it or transform it as an order. After you've finished with \n"
+"the basket (ie made an offer) basket will disappear."
+msgstr ""
+"Korit sisältävät tuotteita, jotka on kohdistettu yhteen asiakkaaseen. Korien kautta voit kerätä\n"
+"asiakkaalle tuotteet ja tehdä niistä tarjouksen tai tilauksen. Viimeisteltyäsi korin (esim. tehtyäsi tilauksen) kori häviää."
+
+#: ../goah/Modules/Basket.pm:156
+msgid "Baskets customer info updated"
+msgstr "Korin asiakastieto päivitetty"
+
+#: ../goah/Modules/Basket.pm:38
+msgid "Billing address"
+msgstr "Laskutusosoite"
+
+#: ../templates/modules/Basket/activebasket:76
+msgid "By barcode"
+msgstr "Viivakoodilla"
+
+#: ../templates/modules/Basket/activebasket:92
+msgid "By code"
+msgstr "Koodilla"
+
+#: ../templates/modules/Basket/activebasket:74
+msgid "By group"
+msgstr "Ryhmällä"
+
+#: ../goah/Modules/Basket.pm:641
+msgid "Can't add individual product to basket. Product ID is missing."
+msgstr "Tuotetta ei voitu lisätä koriin. Tuotteen ID puuttuu."
+
+#: ../goah/Modules/Basket.pm:137
+msgid "Can't add new basket to database"
+msgstr "Uutta koria ei voitu lisätä tietokantaan"
+
+#: ../goah/Modules/Basket.pm:600
+msgid "Can't add product to basket. Nothing to add!"
+msgstr "Tuotetta ei voitu lisätä koriin, koska ei ole mitään lisättävää!"
+
+#: ../goah/Modules/Basket.pm:182
+msgid "Can't add product(s) to basket"
+msgstr "Tuotteiden lisäys koriin epäonnistui"
+
+#: ../goah/Modules/Basket.pm:529
+msgid "Can't add product(s) to basket. Basket id is missing."
+msgstr "Tuotteiden lisäys koriin epäonnistui. Korin ID puuttuu."
+
+#: ../goah/Modules/Basket.pm:898
+msgid "Can't convert basket to order!"
+msgstr "Korin muuttaminen laskuksi epäonnistui!"
+
+#: ../goah/Modules/Basket.pm:820
+#: ../goah/Modules/Basket.pm:867
+msgid "Can't convert basket! Basket id is missing!"
+msgstr "Korin ei voida muuttaa! Korin ID puuttuu!"
+
+#: ../goah/Modules/Basket.pm:218
+msgid "Can't create invoice"
+msgstr "Laskun luonti epäonnistui!"
+
+#: ../goah/Modules/Basket.pm:891
+msgid "Can't create invoice!"
+msgstr "Laskun luonti epäonnistui!"
+
+#: ../goah/Modules/Basket.pm:877
+msgid "Can't create referral!"
+msgstr "Lähetteen luonti epäonnistui!"
+
+#: ../goah/Modules/Basket.pm:210
+msgid "Can't delete basket!"
+msgstr "Korin poisto epäonnistui!"
+
+#: ../goah/Modules/Basket.pm:785
+msgid "Can't delete basket! Basket id is missing!"
+msgstr "Korin poisto epäonnistui! Korin ID puuttuu!"
+
+#: ../goah/Modules/Basket.pm:429
+msgid "Can't read row information from database."
+msgstr "Rivitiedon luku tietokannasta epäonnistu."
+
+#: ../goah/Modules/Basket.pm:695
+msgid "Can't read rows for basket! Basket id is missing!"
+msgstr "Korin rivien luku epäonnistui! Korin ID puuttuu!"
+
+#: ../goah/Modules/Basket.pm:158
+msgid "Can't update basket information"
+msgstr "Korin tietojen päivitys epäonnistui"
+
+#: ../goah/Modules/Basket.pm:368
+msgid "Can't update information in database!"
+msgstr "Tietojen päivitys tietokantaan epäonnistui!"
+
+#: ../goah/Modules/Basket.pm:884
+msgid "Can't update referral amounts to match ordered amount"
+msgstr "Lähetteen määrien päivittäminen vastaamaan tilattua määrää epäonnistui"
+
+#: ../goah/Modules/Basket.pm:421
+#: ../goah/Modules/Basket.pm:429
+msgid "Can't update row information in database!"
+msgstr "Rivin tietojen päivittäminen tietokantaan epäonnistui!"
+
+#: ../goah/Modules/Basket.pm:194
+msgid "Can't update row."
+msgstr "Rivin päivittäminen epäonnistui."
+
+#: ../goah/Modules/Basket.pm:825
+msgid "CloseBasket called outside package goah::Modules::Basket!"
+msgstr "CloseBasket kutsuttu paketin goah::Modules::Basket ulkopuolelta!"
+
+#: ../templates/modules/Basket/basketinfo.productlist:11
+#: ../templates/modules/Basket/showgroup:18
+msgid "Code"
+msgstr "Koodi"
+
+#: ../templates/modules/Basket/newbasket:35
+msgid "Create"
+msgstr "Luo"
+
+#: ../templates/modules/Basket/activebasket:115
+#: ../templates/modules/Basket/basketinfo:18
+msgid "Create invoice"
+msgstr "Luo lasku"
+
+#: ../templates/modules/Basket/newbasket:2
+msgid "Create new basket"
+msgstr "Luo uusi kori"
+
+#: ../templates/modules/Basket/activebasket:123
+#: ../templates/modules/Basket/basketinfo:26
+msgid "Create shipment"
+msgstr "Luo lähete"
+
+#: ../templates/modules/Basket/activebaskets:6
+msgid "Created"
+msgstr "Luotu"
+
+#: ../goah/Modules/Basket.pm:36
+#: ../templates/modules/Basket/activebaskets:5
+msgid "Customer"
+msgstr "Asiakas"
+
+#: ../templates/modules/Basket/basketinfo.customer:1
+msgid "Customer information"
+msgstr "Asiakkaan tiedot"
+
+#: ../templates/modules/Basket/basketinfo.productlist:19
+msgid "Delete"
+msgstr "Poista"
+
+#: ../templates/modules/Basket/activebasket:131
+#: ../templates/modules/Basket/basketinfo:34
+msgid "Delete basket"
+msgstr "Poista kori"
+
+#: ../templates/modules/Basket/activebasket:131
+#: ../templates/modules/Basket/basketinfo:34
+msgid "Delete basket from database?"
+msgstr "Poista kori tietokannasta?"
+
+#: ../goah/Modules/Basket.pm:780
+msgid "DeleteBasket called outside package goah::Modules::Basket!"
+msgstr "DeleteBasket kutsuttu paketin goah::Modules::Basket ulkopuolelta!"
+
+#: ../goah/Modules/Basket.pm:41
+#: ../templates/modules/Basket/activebaskets:8
+msgid "Description"
+msgstr "Kuvaus"
+
+#: ../templates/modules/Basket/basketinfo.customer:4
+msgid "Field marked with * is required"
+msgstr "* Pakolliset rivit"
+
+#: ../goah/Modules/Basket.pm:882
+msgid "Filled referral amounts."
+msgstr "Täytetyt lähetteen määrät"
+
+#: ../goah/Modules/Basket.pm:368
+#: ../goah/Modules/Basket.pm:421
+msgid "ID -field missing."
+msgstr "ID-kenttä puuttuu."
+
+#: ../templates/modules/Basket/basketinfo.productlist:13
+#: ../templates/modules/Basket/showgroup:20
+msgid "IN"
+msgstr "Osto"
+
+#: ../templates/modules/Basket/basketinfo.productlist:4
+#: ../templates/modules/Basket/showgroup:9
+msgid "Incl.VAT"
+msgstr "sis. alv"
+
+#: ../goah/Modules/Basket.pm:648
+msgid "Invalid product id. Can't add product to basket."
+msgstr "Virheellinen tuote ID. Tuotetta ei voida lisätä koriin."
+
+#: ../goah/Modules/Basket.pm:889
+msgid "Invoice created."
+msgstr "Lasku luotu."
+
+#: ../templates/modules/Basket/activebasket:4
+#: ../templates/modules/Basket/basketinfo:5
+msgid "Last update:"
+msgstr "Päivitetty viimeksi:"
+
+#: ../goah/Modules/Basket.pm:382
+msgid "Leaving value unaltered."
+msgstr "Arvo jätetään muuttamatta."
+
+#: ../goah/Modules/Basket.pm:230
+msgid "Module doesn't have function "
+msgstr "Modulilla ei ole funktiota"
+
+#: ../templates/modules/Basket/activebaskets:1
+msgid "My baskets"
+msgstr "Omat korit"
+
+#: ../templates/modules/Basket/basketinfo.productlist:12
+#: ../templates/modules/Basket/showgroup:19
+msgid "Name"
+msgstr "Nimi"
+
+#: ../goah/Modules/Basket.pm:135
+msgid "New basket created"
+msgstr "Uusi kori lisätty"
+
+#: ../templates/modules/Basket/activebasket:65
+msgid "No active basket. Choose menu option"
+msgstr "Ei aktiivista koria. Tee valinta valikosta"
+
+msgid "Not available!"
+msgstr "Ei saatavilla"
+
+#: ../templates/modules/Basket/activebaskets:26
+msgid "Not selected!"
+msgstr "Ei valittu!"
+
+#: ../templates/modules/Basket/basketinfo.productlist:14
+#: ../templates/modules/Basket/showgroup:21
+msgid "OUT"
+msgstr "Myynti"
+
+#: ../templates/modules/Basket/activebaskets:9
+msgid "Open"
+msgstr "Avaa"
+
+#: ../templates/modules/Basket/activebaskets:35
+msgid "Owner:"
+msgstr "Omistaja:"
+
+#: ../goah/Modules/Basket.pm:52
+msgid "Product"
+msgstr "Tuote"
+
+#: ../templates/modules/Basket/addproduct:8
+msgid "Product group"
+msgstr "Tuoteryhmä"
+
+#: ../goah/Modules/Basket.pm:576
+msgid "Product not found"
+msgstr "Tuotetta ei löydy"
+
+#: ../goah/Modules/Basket.pm:180
+msgid "Product(s) added to basket"
+msgstr "Tuotteet lisätty koriin"
+
+#: ../templates/modules/Basket/basketinfo.productlist:1
+msgid "Products in basket"
+msgstr "Tuotteet korissa"
+
+#: ../goah/Modules/Basket.pm:53
+msgid "Purchase price"
+msgstr "Ostohinta"
+
+#: ../goah/Modules/Basket.pm:875
+msgid "Referral created."
+msgstr "Lähete luotu."
+
+#: ../goah/Modules/Basket.pm:279
+#: ../goah/Modules/Basket.pm:381
+msgid "Required field"
+msgstr "Pakollinen kenttä"
+
+#: ../goah/Modules/Basket.pm:434
+msgid "Row deleted from basket"
+msgstr "Rivi poistettu korista"
+
+#: ../templates/modules/Basket/basketinfo.productlist:18
+msgid "Row info"
+msgstr "Rivin lisätieto"
+
+#: ../goah/Modules/Basket.pm:56
+msgid "Row information"
+msgstr "Rivitieto"
+
+#: ../goah/Modules/Basket.pm:192
+msgid "Row updated"
+msgstr "Rivi päivitetty"
+
+#: ../templates/modules/Basket/activebasket:57
+#: ../templates/modules/Basket/basketinfo.customer:59
+msgid "Save"
+msgstr "Tallenna"
+
+#: ../templates/modules/Basket/activebasket:70
+msgid "Search products"
+msgstr "Etsi tuotteita"
+
+#: ../templates/modules/Basket/activebasket:24
+#: ../templates/modules/Basket/basketinfo.customer:26
+#: ../templates/modules/Basket/newbasket:20
+#: ../templates/modules/Basket/showgroup:17
+msgid "Select"
+msgstr "Valitse"
+
+#: ../goah/Modules/Basket.pm:54
+msgid "Sell price"
+msgstr "Myyntihinta"
+
+#: ../goah/Modules/Basket.pm:37
+msgid "Shipping address"
+msgstr "Lähetysosoite"
+
+#: ../templates/modules/Basket/addproduct:17
+msgid "Show"
+msgstr "Näytä"
+
+#: ../templates/modules/Basket/activebasket:65
+msgid "Show baskets"
+msgstr "Näytä korit"
+
+#: ../goah/Modules/Basket.pm:65
+msgid "Stored baskets"
+msgstr "Tallennetut korit"
+
+#: ../templates/modules/Basket/basketinfo.productlist:17
+#: ../templates/modules/Basket/basketinfo.productlist:60
+msgid "Total"
+msgstr "Yhteensä"
+
+#: ../templates/modules/Basket/activebasket:42
+#: ../templates/modules/Basket/basketinfo.customer:44
+#: ../templates/modules/Basket/newbasket:31
+msgid "Unknown field type"
+msgstr "Tuntematon kenttä"
+
+#: ../templates/modules/Basket/basketinfo.productlist:20
+msgid "Update"
+msgstr "Päivitä"
+
+#: ../templates/modules/Basket/activebaskets:7
+msgid "Updated"
+msgstr "Päivitetty"
+
+#: ../templates/modules/Basket/basketinfo.productlist:15
+#: ../templates/modules/Basket/showgroup:23
+msgid "VAT"
+msgstr "ALV"
+
+#: ../templates/modules/Basket/basketinfo.productlist:6
+#: ../templates/modules/Basket/showgroup:11
+msgid "VAT 0%"
+msgstr "ALV 0%"
+
+#: ../templates/modules/Basket/activebasket:67
+msgid "You can't add any products without an active basket "
+msgstr "Tuotteita ei voi lisätä ilman aktiivista koria"
+
+msgid "Your baskets"
+msgstr "Omat korit"
+
+#: ../goah/Modules/Basket.pm:279
+#: ../goah/Modules/Basket.pm:381
+msgid "empty!"
+msgstr "tyhjä!"
+
+#: ../templates/modules/Basket/activebasket:66
+msgid "to select basket."
+msgstr "valitaksesi korin"
+

@@ -1,0 +1,50 @@
+<h2>[% gettext("Edit group data") %]</h2>
+<form action="" method=post>
+<table>
+<tr>
+  <td colspan='3'>[% gettext("Field marked with * is required") %]</td>
+</tr>
+[% row = 'even' %]
+[% FOREACH key IN groupdbfields.keys.sort %]
+[% field = groupdbfields.$key %]
+[% fieldname = field.field %]
+
+[% IF field.type != 'hidden' %]
+	<tr class="[% row %]">
+	<td class="medium">[% field.name %]
+	[% IF field.required == 1 %]
+		*
+	[% END %]
+	</td>
+
+	[% IF field.type == 'textfield' %]
+		<td><input class="big" name="[% field.field %]" value="[% data.$fieldname %]"></td>
+	[% ELSIF field.type == 'textarea' %]
+		<td><textarea class="medium" name="[% field.field %]">[% data.$fieldname %]</textarea></td>
+	[% ELSE %]
+		<td><p class='error'>[% gettext("Unknown field type") %] '[% field.type %]'</p></td>
+	[% END %]
+	</tr>
+[% ELSE %]
+	<input name='[% field.field %]' value='[% data.$fieldname %]' type='hidden'>
+[% END %]
+
+[% IF row == 'odd' %]
+	[% row = 'even' %]
+[% ELSE %]
+	[% row = 'odd' %]	
+[% END %]
+	
+[% END %]
+<tr>
+<td colspan='2'>
+<p>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="writeedited" />
+<input type="hidden" name="type" value="productgroups" />
+<input type="submit" value="[% gettext("Save") %]" />
+</p>
+</td>
+</tr>
+</table>
+</form>

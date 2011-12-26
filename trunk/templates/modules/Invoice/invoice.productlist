@@ -1,0 +1,70 @@
+<h3>[% gettext("Products on invoice") %]</h3>
+<table>
+[% rowc='odd' %]
+<thead>
+<tr>
+<th>[% gettext("Code") %]</th>
+<th>[% gettext("Name") %]</th>
+<th>[% gettext("IN") %]</th>
+<th>[% gettext("OUT") %]</th>
+<th>[% gettext("VAT") %]</th>
+<th>[% gettext("OUT") %] [% gettext("Incl. VAT") %]</th>
+<th colspan=2>[% gettext("Amount") %]</th>
+<th>[% gettext("Total") %]</th>
+<th>[% gettext("Total") %] [% gettext("Incl. VAT") %]</th>
+<th>[% gettext("Row info") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% total = 0 %]
+[% FOREACH key IN invoicerows.keys %]
+	[% row = invoicerows.$key %]
+	<tr class='[% rowc %]'>
+	<td>[% row.code %]</td>
+	<td>[% row.name %]</td>
+	<td class="number">[% row.purchase %]</td>
+	<td class="number">[% row.sell %]</td>
+	<td class="number">[% row.vat %]&#37;</td>
+	<td class="number">[% row.sellvat %]</td>
+	<td class="number">[% row.amount %]</td>
+	<td>[% row.unit %]</td>
+	<td class="number">[% row.rowtotal  %]</td>
+	<td class="number">[% row.rowtotalvat %]</td>
+	<td>[% row.rowinfo %]</td>
+	</tr>
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]
+	[% END %]
+[% END %]
+
+[% total = readtotal(invoice.id) %]
+
+<tr class="[% rowc %]">
+<td colspan='8'>[% gettext("Total") %] [% gettext("VAT 0%") %]</td>
+<td class="number">[% total.vat0 %]</td>
+<td colspan='2'>&nbsp;</td>
+</tr>
+[% IF rowc == 'odd' %]
+	[% rowc = 'even' %]
+[% ELSE %]
+	[% rowc = 'odd' %]
+[% END %]
+<tr class="[% rowc %]">
+<td colspan='8'>[% gettext("VAT") %]</td>
+<td class="number">[% total.vat %]</td>
+<td colspan='2'>&nbsp;</td>
+</tr>
+[% IF rowc == 'odd' %]
+	[% rowc = 'even' %]
+[% ELSE %]
+	[% rowc = 'odd' %]
+[% END %]
+<tr class="[% rowc %]">
+<td colspan='8'>[% gettext("Total") %] [% gettext("Incl. VAT") %]</td>
+<td class="number">[% total.inclvat %]</td>
+<td colspan='2'>&nbsp;</td>
+</tr>
+</tbody>
+</table>

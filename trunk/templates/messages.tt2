@@ -1,0 +1,26 @@
+[% FOREACH message = messages %]
+	[% IF message.0 != '' %] 
+	[% IF message.0 == 'info' %]
+		[% msg_type = 'msg-info' %]
+	[% ELSIF message.0 == 'error' %]
+		[% msg_type = 'msg-error' %]
+	[% ELSIF message.0 == 'warn' %]
+		[% msg_type = 'msg-warning' %]
+	[% ELSIF message.0 == 'debug' %]
+		[% msg_type = 'msg-development' %]
+	[% ELSE %]
+		[% msg_type = 'msg-system' %]
+	[% END %]
+	
+	[% IF message.0 == 'info' %]
+		<script>$.jnotify("[% message.1 %] [% IF message.2 != '' %] [% message.2 %] line [% message.3 %] [% END %] ");</script>
+	[% ELSE %]
+		<p class="[% msg_type %]">[% message.1 %]
+		[% IF message.2 != '' %]
+			<br/><small>[% message.2 %] line [% message.3 %]</small>
+		[% END %]
+		</p>
+	[% END %]
+
+	[% END %]
+[% END %]

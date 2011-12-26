@@ -1,0 +1,49 @@
+<h2>[% gettext("My baskets") %]</h2>
+<table>
+<thead>
+<tr>
+	<th>[% gettext("Customer") %]</th>
+	<th>[% gettext("Value") %]</th>
+	<th>[% gettext("Dates") %]</th>
+	<th class="medium">[% gettext("Description") %]</th>
+	<th class="icon">[% gettext("Open") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rclass = 'even' %]
+[% FOREACH key IN baskets.keys %]
+	[% IF key >= 0 %]
+	[% basket = baskets.$key %]
+	[% IF rclass == 'odd' %]
+		[% rclass = 'even' %]
+	[% ELSE %]
+		[% rclass = 'odd' %]
+	[% END %]
+	<tr class="[% rclass %]">
+	[% cinfo = companyinfo(basket.companyid) %]
+	<td>
+	<b>[% cinfo.name %]</b><br/>
+	[% linfo = locationinfo(basket.locationid) %]
+	[% IF linfo == 0 %] 
+		[% gettext("Not selected!") %]
+	[% ELSE %]
+		[% linfo.addr1 %]<br />[% linfo.addr2 %]<br />[% linfo.postalcode %] [% linfo.postaloffice %]<br />[% linfo.country %]
+	[% END %]
+	</td>
+	<td>[% gettext("Total") %]: [% basket.total %]&euro;<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
+	<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
+	[% gettext("Updated") %]: [% formatdate(basket.updated) %]</td>
+	<td >[% basket.info %]
+	[% uinfo = userinfo(basket.ownerid) %]
+	<br/>[% gettext("Owner:") %] [% uinfo.firstname %] [% uinfo.lastname %]
+	</td>
+	<td class="center"><a href="?module=[% module %]&amp;action=selectbasket&amp;target=[% basket.id %]">
+		<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+	</tr>
+	[% END %]
+[% END %]
+<tr class='[% rclass %]'>
+<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]&euro;</td></tr>
+</tbody>
+
+</table>

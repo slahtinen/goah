@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.44.1"
+   sodipodi:docbase="/Tiedostopalvelin/goah/logo"
+   sodipodi:docname="logo_slogan.svg"
+   inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo_slogan.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs4">
+    <linearGradient
+       id="linearGradient5490">
+      <stop
+         style="stop-color:#000078;stop-opacity:1;"
+         offset="0"
+         id="stop5492" />
+      <stop
+         id="stop5498"
+         offset="0.5"
+         style="stop-color:#00001a;stop-opacity:0.47058824;" />
+      <stop
+         style="stop-color:#000078;stop-opacity:1;"
+         offset="1"
+         id="stop5494" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4583">
+      <stop
+         style="stop-color:#fa4600;stop-opacity:1;"
+         offset="0"
+         id="stop4585" />
+      <stop
+         id="stop4591"
+         offset="0.5"
+         style="stop-color:#ff6400;stop-opacity:0.3137255;" />
+      <stop
+         style="stop-color:#fa4600;stop-opacity:1;"
+         offset="1"
+         id="stop4587" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2777">
+      <stop
+         style="stop-color:#b40000;stop-opacity:1;"
+         offset="0"
+         id="stop2779" />
+      <stop
+         id="stop2785"
+         offset="0.5"
+         style="stop-color:red;stop-opacity:0.3137255;" />
+      <stop
+         style="stop-color:#b40000;stop-opacity:1;"
+         offset="1"
+         id="stop2781" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient5490"
+       id="linearGradient17303"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-8.80832e-5,-1.2828e-5)"
+       x1="476.54181"
+       y1="628.42346"
+       x2="564.85767"
+       y2="643.86597" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4583"
+       id="linearGradient17307"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-6.487e-6,-1.2828e-5)"
+       x1="538.62579"
+       y1="412.71591"
+       x2="635.07721"
+       y2="435.43893" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2777"
+       id="linearGradient17311"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.363809,-0.730923,0.691214,0.613504,-154.0527,208.4298)"
+       x1="272.32315"
+       y1="710.84882"
+       x2="248.64818"
+       y2="585.84393" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="971.42443"
+     inkscape:cy="402.28894"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1645"
+     inkscape:window-height="952"
+     inkscape:window-x="25"
+     inkscape:window-y="28">
+    <sodipodi:guide
+       orientation="horizontal"
+       position="715.71429"
+       id="guide2799" />
+    <sodipodi:guide
+       orientation="vertical"
+       position="78.571429"
+       id="guide2801" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="294.96454"
+       id="guide17291" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="910.14744"
+       id="guide17299" />
+    <sodipodi:guide
+       orientation="horizontal"
+       position="189.90868"
+       id="guide20057" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       style="fill:url(#linearGradient17311);fill-opacity:1;fill-rule:nonzero;stroke:#950000;stroke-width:1.99999976;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 425.51084,358.75751 C 466.04873,393.13062 486.09743,451.75153 464.32979,498.96097 C 444.27695,538.04276 387.80501,546.57886 348.24418,511.47287 C 308.68335,476.36687 293.08819,411.17307 317.80091,370.43629 C 338.37397,337.38163 382.04181,322.43004 425.51084,358.75751 z "
+       id="path1872"
+       sodipodi:nodetypes="ccscc"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:red;fill-opacity:0.49019608;fill-rule:nonzero;stroke:#960000;stroke-width:2.67141557;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path2760"
+       sodipodi:cx="183.84776"
+       sodipodi:cy="374.54984"
+       sodipodi:rx="111.11678"
+       sodipodi:ry="118.18785"
+       d="M 294.96455 374.54984 A 111.11678 118.18785 0 1 1  72.73098,374.54984 A 111.11678 118.18785 0 1 1  294.96455 374.54984 z"
+       transform="matrix(0.319166,-0.641097,0.606392,0.538109,107.6548,349.4644)"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:url(#linearGradient17307);fill-opacity:1;fill-rule:nonzero;stroke:#ff6400;stroke-width:1.99999976;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 622.26392,356.09351 C 661.05005,383.80132 687.88901,450.11385 665.91901,496.45747 C 647.48859,536.33024 588.41722,546.76256 548.8564,511.65655 C 509.29558,476.55052 493.70043,411.3567 518.41312,370.61994 C 538.98618,337.56528 577.08506,324.16329 622.26392,356.09351 z "
+       id="path3692"
+       sodipodi:nodetypes="ccscc"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#ff8700;fill-opacity:0.49019608;fill-rule:nonzero;stroke:#ff6400;stroke-width:2.67141557;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path3694"
+       sodipodi:cx="183.84776"
+       sodipodi:cy="374.54984"
+       sodipodi:rx="111.11678"
+       sodipodi:ry="118.18785"
+       d="M 294.96455 374.54984 A 111.11678 118.18785 0 1 1  72.73098,374.54984 A 111.11678 118.18785 0 1 1  294.96455 374.54984 z"
+       transform="matrix(0.319166,-0.641097,0.606392,0.538109,308.2671,349.6478)"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:url(#linearGradient17303);fill-opacity:1;fill-rule:nonzero;stroke:#00005a;stroke-width:1.99999976;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 552.49834,579.63414 C 591.32637,610.0986 619.25373,675.46868 593.08218,721.8758 C 573.50571,761.19843 517.53448,769.49366 477.97365,734.38765 C 438.41284,699.28164 422.81768,634.08783 447.53038,593.35106 C 468.10343,560.29639 509.76211,547.70392 552.49834,579.63414 z "
+       id="path4599"
+       sodipodi:nodetypes="ccscc"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#0000c8;fill-opacity:0.49019608;fill-rule:nonzero;stroke:#00005a;stroke-width:2.67141557;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="path4601"
+       sodipodi:cx="183.84776"
+       sodipodi:cy="374.54984"
+       sodipodi:rx="111.11678"
+       sodipodi:ry="118.18785"
+       d="M 294.96455 374.54984 A 111.11678 118.18785 0 1 1  72.73098,374.54984 A 111.11678 118.18785 0 1 1  294.96455 374.54984 z"
+       transform="matrix(0.319166,-0.641097,0.606392,0.538109,237.3844,572.3789)"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:75;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1302.6474,559.63595 C 1202.929,561.88249 1196.7599,719.59672 1306.3631,719.84894 C 1415.9643,720.10112 1402.3809,557.38902 1302.6474,559.63595 z "
+       id="path6017"
+       sodipodi:nodetypes="czz"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:75;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1485.8913,721.22824 C 1485.8913,646.19288 1463.6246,568.89249 1559.8058,557.83398 C 1658.8121,560.0005 1646.2089,645.89039 1646.4564,719.97062"
+       id="path10041"
+       sodipodi:nodetypes="ccs"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:74.99996948;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1741.7501,370.79615 L 1741.7501,720.71311"
+       id="path14479"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:74.99996948;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1935.2441,371.69287 L 1935.2441,721.60982"
+       id="path16254"
+       sodipodi:nodetypes="cc"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:75.00005341;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1826.0028,592.82939 L 1851.8504,592.75765"
+       id="path16256"
+       sodipodi:nodetypes="cc"
+       inkscape:transform-center-y="15.241371"
+       inkscape:transform-center-x="-2.4338831"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:75;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1091.9628,375.80196 C 980.67576,375.00158 940.29459,385.05397 885.60116,440.79888 C 799.06748,545.07054 862.0227,717.04705 1005.6195,717.20617 C 1148.2061,717.36528 1124.7077,698.95599 1128.8383,596.75345"
+       id="path16260"
+       sodipodi:nodetypes="cczz"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:black;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 516.9074,838.90018 C 1136.2434,769.81662 1644.5971,771.18528 2277.9174,837.75264 C 1662.4597,789.13857 1067.0091,795.70112 516.9074,838.90018 z "
+       id="path3925"
+       sodipodi:nodetypes="ccc"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo_slogan.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <text
+       xml:space="preserve"
+       style="font-size:113.29922485px;font-style:normal;font-weight:normal;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:TSCu_Comic"
+       x="938.216"
+       y="810.01129"
+       id="text20059"
+       transform="scale(0.88783,1.126342)"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo_slogan.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan20061"
+         x="938.216"
+         y="810.01129">Open solution for free business.</tspan></text>
+    <path
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:45.00000381;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1558.505,668.82663 L 1574.3526,668.75489"
+       id="path2803"
+       sodipodi:nodetypes="cc"
+       inkscape:transform-center-y="15.241371"
+       inkscape:transform-center-x="-1.4924548"
+       inkscape:export-filename="/Tiedostopalvelin/goah/logo/logo8.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+  </g>
+</svg>

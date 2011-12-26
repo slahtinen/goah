@@ -1,0 +1,16 @@
+[% IF submenu != '' %]
+<!-- Subnavigation DIV starts -->
+<div class="subnavi">
+<p class="subnavititle">Module functions</p>
+[% IF submenu == 0 %]
+	<p class="warn">[% gettext("No submenu") %]!</p>
+[% ELSE %]
+	[% FOREACH key IN submenu.keys.sort %]
+		[% item = submenu.$key %]
+		<a class="subnavi" HREF="?module=[% module %]&amp;action=[% item.action %]">[% item.title %]</A>
+	[% END %]
+[% END %]
+</div>
+
+<!-- Navigation DIV ends -->
+[% END %]

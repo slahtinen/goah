@@ -1,0 +1,38 @@
+<h2>[% gettext("Basket information") %]</h2>
+<table>
+<tr>
+<td>[% gettext("Basket created:") %]</td><td>[% data.created %]</td>
+<td>[% gettext("Last update:") %]</td><td>[% data.updated %]</td></tr>
+</table>
+[% INCLUDE modules/Basket/basketinfo.customer %]
+[% INCLUDE modules/Basket/basketinfo.productlist %]
+
+<h3>[% gettext("Basket functions") %]</h3>
+<table>
+<tr>
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='target' value='[% data.id %]'>
+<input type='hidden' name='action' value='basket2invoice'>
+<input type='submit' value="[% gettext("Create invoice") %]" />
+</form>
+</td>
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='target' value='[% data.id %]'>
+<input type='hidden' name='action' value='basket2shipment'>
+<input type='submit' value="[% gettext("Create shipment") %]" />
+</form>
+</td>
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value="[% module %]">
+<input type='hidden' name='target' value="[% data.id %]">
+<input type='hidden' name='action' value="deletebasket">
+<input type='submit' value="[% gettext("Delete basket") %]" onclick="return confirm('[% gettext("Delete basket from database?") %]')"/>
+</form>
+</td>
+</tr>
+</table>

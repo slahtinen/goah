@@ -1,0 +1,13 @@
+[% IF function != '' %]
+	[% TRY %]
+        	[% INCLUDE $function %]
+	[% CATCH %]
+		[% PROCESS templateerror %]
+	[% END %]
+[% END %]
+[% BLOCK templateerror %]
+	<div class="error"><img src="themes/[% theme %]/icon/32x32/status/dialog-error.png" alt="Error" class="msgbox" />
+	<b>[% gettext("Error in template file!") %]</b><br/>
+	Error: [% error %]<br/>
+	</div>
+[% END %]

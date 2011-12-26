@@ -1,0 +1,66 @@
+<h3>[% gettext("Company personnell") %]</h3>
+<table>
+<thead>
+<tr>
+[% FOREACH key IN persondbfields.keys.sort %]
+[% field = persondbfields.$key %]
+[% IF field.type != "hidden" && field.field != "pass" %]
+	<th>[% field.name %]</th>
+[% END %]
+[% END %]
+<th class="icon">[% gettext("Open") %]</th>
+<th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody>
+[% row = 'odd' %]
+[% FOREACH pkey = companypersonnel.keys.sort %]
+[% person = companypersonnel.$pkey %]
+<tr class="[% row %]">
+[% FOREACH key IN persondbfields.keys.sort %]
+[% field = persondbfields.$key %]
+	[% IF field.type != "hidden" && field.field != "pass" %]
+		[% field = field.field %]
+		<td>[% person.$field %]
+		</td>
+	[% END %]
+[% END %]
+
+[% IF row == 'odd' %]
+	[% row = 'even' %]
+[% ELSE %]
+	[% row = 'odd' %]
+[% END %]
+<td class="center">
+<form action="" method="post">
+<p>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="editperson" />
+<input type="hidden" name="target" value="[% person.id %]" />
+<input type="hidden" name="companyid" value="[% companydata.id %]" />
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
+</p>
+</form>
+</td>
+<td class="center">
+<!-- <form action="" method="post"> -->
+<p>Incomplete
+<!-- THIS FUNCTION ISN'T CORRECTLY WRITTEN IN CODE
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="deleteperson" />
+<input type="hidden" name="target" value="[% person.id %]" />
+<input type="hidden" name="companyid" value="[% companydata.id %]" />
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]" 
+    onclick="return confirm('[% gettext("Delete company person  from database?") %]')" />
+-->
+</p>
+<!-- </form>-->
+</td>
+</tr>
+[% END %]
+<tr>
+  <td colspan='9'><a href="?module=[% module %]&action=newperson&companyid=[% companydata.id %]">[% gettext("Add new person") %]</a></td>
+</tr>
+</tbody>
+</table>
+

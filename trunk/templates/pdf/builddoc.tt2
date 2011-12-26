@@ -1,0 +1,4 @@
+[%# A simple wrapper just to enable Latex -plugin for Template::Toolkit %]
+[% USE Latex;
+	INCLUDE $file FILTER latex(foo.pdf)
+-%]

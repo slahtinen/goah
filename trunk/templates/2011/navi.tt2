@@ -1,0 +1,30 @@
+<nav role="navigation" class="clearfix">
+	<ul>
+	[% IF navi == 0 %]
+		<div class="message warning">[% gettext("No modules") %]!</div>
+	[% ELSE %]
+		[% FOREACH key IN navi.modules.keys.sort %]
+			[% mainitem = navi.modules.$key %]
+
+		<li [% IF module == mainitem.module %] class="current" [% END %]>
+			<a href="?module=[% mainitem.module %]">[% mainitem.name %]</a>
+
+			[% IF submenu == 0 %]
+			<li>[% gettext("No submenu") %]!</li>
+			[% ELSE %]
+				[% FOREACH subkey IN submenu.keys.sort %]
+					[% item = submenu.$subkey %]
+					[% IF mainitem.module == module %]
+						[% '<ul>' IF loop.first %]
+						<li	[% IF item.action == action %] class="current" [% END %]>
+							<a href="?module=[% module %]&amp;action=[% item.action %]">[% item.title %]</a>
+						</li>
+						[% "</ul>" IF loop.last %]
+					[% END %]
+				[% END %] [%# Submenu foreach end %]	
+		</li>
+			[% END %] [%# If submenu==0 else block %]
+		[% END %] [%# Menu foreach loop end %]
+	[% END %] [%# If navi==0 block %]
+	</ul>
+</nav>

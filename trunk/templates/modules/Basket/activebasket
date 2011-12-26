@@ -1,0 +1,135 @@
+<h2>[% gettext("Basket information") %]</h2>
+<table>
+<tr><td>[% gettext("Basket created:") %] [% formatdate(data.created) %]</td>
+<td>[% gettext("Last update:") %] [% formatdate(data.updated) %]</td></tr>
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]">
+<input type="hidden" name="action" value="editcustomerinfo">
+[% row = 'info' %]
+[% FOREACH key IN basketdbfields.keys.sort %]
+[% field = basketdbfields.$key %]
+[% fieldname = field.field %]
+[% IF field.type != 'hidden' && field.field != 'companyid' %]
+	<tr class="[% row %]"><td class="medium">[% field.name %]
+	[% IF field.required == 1 %]
+		*
+	[% END %]
+	</td>
+	[% IF field.type == 'textfield' %]
+		<td><input name="[% field.field %]" value="[% data.$fieldname %]"></td>
+	[% ELSIF field.type == 'textarea' %]
+		<td><textarea class="medium" name="[% field.field %]">[% data.$fieldname %]</textarea></td>
+	[% ELSIF field.type == 'selectbox' %]
+		<td><select class="big" name="[% field.field %]">
+		<option value="-1">-- [% gettext("Select") %] --</option>
+		[% fielddata = field.data %]
+		[% IF field.field == 'locationid' || field.field == 'billingid' %]
+			[% fielddata = locations(data.companyid) %]
+		[% END %]
+		[% FOREACH item IN fielddata %]
+			[% itemname = item.name %]
+			[% IF field.field == 'locationid' || field.field == 'billingid' %]
+				[% itemname = "$item.addr1 $item.addr2 $item.postalcode $item.postaloffice" %]
+			[% END %]
+			[% IF item.id == data.$fieldname %]
+				<option value="[% item.id %]" selected>[% itemname %]</option>
+			[% ELSE %]
+				<option value="[% item.id %]">[% itemname %]</option> 
+			[% END %]
+		[% END %]
+		</select></td>
+	[% ELSE %]
+		<td><p class='error'>[% gettext("Unknown field type") %] '[% field.type %]'</p></td>
+	[% END %]
+	</tr>
+
+[% ELSIF field.field == 'companyid' %]
+	[% compinfo = companyinfo(data.companyid) %]
+	<input type='hidden' name='target' value="[% data.companyid %]">
+	<input type='hidden' name='companyid' value="[% data.companyid %]">
+	<tr class="[% row %]"><td>[% field.name %]</td><td>[% compinfo.name %]</td></tr>
+[% ELSE %]
+	<input name='[% field.field %]' value='[% data.$fieldname %]' type='hidden'> 
+[% END %]
+[% END %]
+<tr>
+<td>
+<input type="submit" value="[% gettext("Save") %]" /></td></tr>
+</table>
+
+
+</form>
+
+[% IF activebasket == 0 %]
+	<p class="msg-info"> 
+	[% gettext("No active basket. Choose menu option") %] [% gettext("Show baskets") %]
+	[% gettext("to select basket.") %] 
+	[% gettext("You can't add any products without an active basket ") %]
+	</p>
+[% ELSE %]
+	<h3>[% gettext("Search products") %]</h3>
+	<table>
+	<tbody>
+	<tr>
+	<td>[% gettext("By group") %]:</td>
+	<td>[% INCLUDE modules/Basket/addproduct %]</td>
+	<td>[% gettext("By barcode") %]</td>
+	<td>
+	<form method="post" name="barcodeform">
+	<input type='hidden' name='module' value='[% module %]' />
+	<input type='hidden' name='action' value='addtobasket' />
+	<input type="hidden" name="subaction" value="ean" />
+	<input type='hidden' name='basketid' value='[% data.id %]'>
+	<input name="barcode" />
+	<input type="submit" value="[% gettext("Add") %]" />
+	</form>
+	</td>		
+	<form method="post" name="productcodeform">
+	<input type='hidden' name='module' value='[% module %]' />
+	<input type='hidden' name='action' value='addtobasket' />
+	<input type="hidden" name="subaction" value="productcode" />
+	<input type='hidden' name='basketid' value='[% data.id %]'>
+	<td>[% gettext("By code") %]: </td>
+	<td><input name="code" />
+	<input type="submit" value="[% gettext("Add") %]" />
+	</form>
+	</td>
+	</tr>
+	</tbody>
+	</table>
+[% END %]
+
+<div id='contentcgi'>
+</div>
+
+[% INCLUDE modules/Basket/basketinfo.productlist %]
+
+<h3>[% gettext("Basket functions") %]</h3>
+<table>
+<tr>
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='target' value='[% data.id %]'>
+<input type='hidden' name='action' value='basket2invoice'>
+<input type='submit' value="[% gettext("Create invoice") %]" onclick="return confirm('[% gettext("Create invoice from basket?") %]')"/>
+</form>
+</td>
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='target' value='[% data.id %]'>
+<input type='hidden' name='action' value='basket2shipment'>
+<input type='submit' value="[% gettext("Create shipment") %]" onclick="return confirm('[% gettext("Create shipment from basket?") %]')"/>
+</form>
+</td>
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value="[% module %]">
+<input type='hidden' name='target' value="[% data.id %]">
+<input type='hidden' name='action' value="deletebasket">
+<input type='submit' value="[% gettext("Delete basket") %]" onclick="return confirm('[% gettext("Delete basket from database?") %]')"/>
+</form>
+</td>
+</tr>
+</table>

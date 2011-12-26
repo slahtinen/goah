@@ -1,0 +1,9 @@
+[% INCLUDE modules/Invoice/activeinvoices %]
+
+<!--
+<blockquote class="helptext">
+<p>[% gettext("Here you can see all active invoices you have created so far. Optionally you can either review
+the invoice or update the state for it.") %]<br /><br /> [% gettext("Invoices have 5 different states: open, sent, remark1, remark2 and closed. With these you can
+follow individual invoices life and keep track of what's been done to it.") %]</p></blockquote>
+-->
+

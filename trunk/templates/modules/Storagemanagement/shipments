@@ -1,0 +1,38 @@
+<h2>[% gettext("Incoming shipments") %]</h2>
+<table>
+<thead>
+<tr>
+	<th>[% gettext("Supplier") %]</th>
+	<th>[% gettext("Destination") %]</th>
+	<th>[% gettext("Created") %]</th>
+	<th>[% gettext("Due") %]</th>
+	<th>[% gettext("Updated") %]</th>
+	<th class="medium">[% gettext("Description") %]</th>
+	<th class="icon">[% gettext("Open") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rclass = 'even' %]
+[% FOREACH key IN shipments.keys.sort.reverse %]
+	[% shipment = shipments.$key %]
+	[% IF rclass == 'odd' %]
+		[% rclass = 'even' %]
+	[% ELSE %]
+		[% rclass = 'odd' %]
+	[% END %]
+	<tr class="[% rclass %]">
+	<td>[% shipment.supplier.name %]</td>
+	<td>[% shipment.storage.name %]</td>
+	<td>[% shipment.created %]</td>
+	<td>[% shipment.due %]</td>
+	<td>[% shipment.updated %]</td>
+	<td >[% shipment.info %]</td>
+	<td class="center"><a href="?module=[% module %]&amp;action=showshipment&amp;target=[% shipment.id %]">
+		<img class="link" alt="open" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+	</tr>
+[% END %]
+</tbody>
+
+</table>
+
+[% INCLUDE "modules/Storagemanagement/shipments.new" %]

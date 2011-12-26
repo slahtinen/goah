@@ -1,0 +1,72 @@
+<h2>[% gettext("Customer groups") %]</h2>
+<table>
+<thead>
+<tr>
+<th>[% gettext("Group") %]</th>
+<th class="icon">[% gettext("Save") %]</th>
+<th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% row = "even" %]
+[% FOREACH group = customergroups %]
+	<form action="" method="post">
+	<tr class="[% row %]">
+	<td>
+	<p>
+	<input name="group" class="big" value="[% group.name %]" />
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="action" value="editgroup" />
+	<input type="hidden" name="target" value="[% group.id %]" />
+	</p>
+	</td>
+	<td class="center">
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" /></form>
+	</td>
+	<form action="" method=post>
+	<td class="center">
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="action" value="deleteidentifier" />
+	<input type="hidden" name="selector" value="group" />
+	<input type="hidden" name="target" value="[% group.id %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext('Delete') %]"
+		onClick="return confirm('[% gettext("Remove customer group from database?") %]')" />
+	</p>
+	</td>
+	</tr>
+	</form>
+
+	[% IF row == 'even' %]
+		[% row = 'odd' %]
+	[% ELSE %]
+		[% row = 'even' %]
+	[% END %]
+[% END %]
+</tbody>
+</table>
+
+<h3>[% gettext("Add new customer group") %]</h3>
+<table>
+<form action="" method="post">
+<tr>
+<td>
+<p>
+<input type="hidden" name="module" value="[% module %]">
+<input type="hidden" name="action" value="newgroup">
+<input name="group" class="big" />
+<input type="submit" value="[% gettext('Add') %]">
+</p>
+</td>
+</tr>
+</form>
+</table>
+
+<blockquote class="helptext">
+[% gettext("With these groups it's possible for example to create statistics and
+reports based on different group assignments.") %][% gettext("Single company can 
+be assigned to several groups.") %][% gettext("Groups can be used to categorize 
+customers based on geographical location, business ares etc.") %]
+</blockquote>
+
+

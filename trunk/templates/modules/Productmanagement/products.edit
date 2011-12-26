@@ -1,0 +1,87 @@
+<h2>[% gettext("Edit product data") %]</h2>
+<form action="" method=post>
+<table>
+  <tr>
+  <td colspan='3'>[% gettext("Field marked with * is required") %]</td>
+  </tr>
+[% row = 'even' %]
+[% FOREACH key IN productsdbfields.keys.sort %]
+[% field = productsdbfields.$key %]
+[% fieldname = field.field %]
+
+[% IF field.type != 'hidden' %]
+	<tr class="[% row %]">
+	  <td class="medium">[% field.name %]
+	[% IF field.required == 1 %]
+		*
+	[% END %]
+        [% IF field.field == 'purchase' || field.field == 'sell' %]
+		[% IF usersettings.showvat == 'on' %]
+			[% gettext("(incl. vat)") %]
+		[% ELSE %]
+			[% gettext("(vat 0%)") %]
+		[% END %]
+	[% END %]
+
+	</td>
+	[% IF field.type == 'textfield' %]
+		<td><input class="big" name="[% field.field %]" value="[% data.$fieldname %]" /></td>
+	[% ELSIF field.type == 'textarea' %]
+		<td><textarea name="[% field.field %]" class="medium">[% data.$fieldname %]</textarea></td>
+	[% ELSIF field.type == 'selectbox' %]
+		<td>
+		<select name="[% field.field %]">
+		<option value="-1">-- [% gettext("Select one") %] --</option>
+		[%# Ugly-ish hack to fix loops for both HASHes and arrays, this should be fixed soon! %]
+		[% IF field.field == 'manufacturer' || field.field == 'groupid' %]
+		[% FOREACH k IN field.data.keys %]
+			[% item = field.data.$k %]
+			[% EXT = '' %]
+			[% IF item.id == data.$fieldname %]
+				[% EXT = 'selected' %]
+			[% END %]
+			<option value="[% item.id %]" [% EXT %]>[% item.name %]</option>
+		[% END %]
+		[% ELSE %]
+		[% FOREACH item IN field.data %]
+			[% EXT = '' %]
+			[% IF item.id == data.$fieldname || item.value == data.$fieldname %]
+				[% EXT = 'selected' %]
+			[% END %]
+
+			[% IF item.item != '' %]
+				<option value="[% item.value %]" [% EXT %]>[% item.item %]</option>
+			[% ELSE %]
+				<option value="[% item.id %]" [% EXT %]>[% item.name %]</option>
+			[% END %]
+		[% END %]
+		[% END %]
+		</select>
+	[% ELSE %]
+		<td><p class='msg-error'>[% gettext("Unknown field type") %] '[% field.type %]'</p></td>
+	[% END %]
+	</tr>
+
+	[% IF row == 'odd' %]
+		[% row = 'even' %]
+	[% ELSE %]
+		[% row = 'odd' %]	
+	[% END %]
+[% ELSE %]
+	[% IF field.field != 'in_store' %]
+	<input name='[% field.field %]' value='[% data.$fieldname %]' type='hidden' />
+	[% END %]
+[% END %]
+[% END %]
+<tr>
+<td colspan='2'>
+<p>
+  <input type="hidden" name="module" value="[% module %]">
+  <input type="hidden" name="action" value="writeedited">
+  <input type="hidden" name="type" value="products">
+</p>
+    <input type="submit" value="[% gettext("Save") %]">
+</td>
+</tr>
+</table>
+</form>

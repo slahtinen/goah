@@ -1,0 +1,32 @@
+<h2>[% gettext("Inventories") %]</h2>
+<table>
+<thead>
+<tr>
+	<th>[% gettext("Created") %]</th>
+	<th>[% gettext("Information") %]</th>
+	<th>[% gettext("Completed") %]</th>
+	<th class="icon">[% gettext("Open") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rclass = 'even' %]
+[% FOREACH key IN inventories.keys.sort %]
+	[% inventory = inventories.$key %]
+	[% IF rclass == 'odd' %]
+		[% rclass = 'even' %]
+	[% ELSE %]
+		[% rclass = 'odd' %]
+	[% END %]
+	<tr class="[% rclass %]">
+	<td>[% inventory.created %]</td>
+	<td>[% inventory.info %]</td>
+	<td>[% inventory.done %]</td>
+	<td class="center"><a href="?module=[% module %]&amp;action=showinventory&amp;target=[% inventory.id %]">
+		<img class="link" alt="open" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+	</tr>
+[% END %]
+</tbody>
+
+</table>
+
+[% INCLUDE "modules/Storagemanagement/inventory.new" %]

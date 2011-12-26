@@ -1,0 +1,113 @@
+<h2>[% gettext("Shipment information") %]</h2>
+<table>
+<tr>
+[% IF shipment.received != 1 %]
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="writeedited" />
+<input type="hidden" name="id" value="[% shipment.id %]" />
+<input type="hidden" name="type" value="shipments" />
+<input type="hidden" name="supplierid" value="[% shipment.supplier.id %]" />
+<input type="hidden" name="destination" value="[% shipment.storage.id %]" />
+[% END %]
+<td>[% gettext("Shipment created:") %]</td><td>[% shipment.created %]</td>
+</tr>
+<tr>
+<td>[% gettext("Last update:") %]</td><td>[% shipment.updated %]</td>
+</tr>
+<tr>
+<td>[% gettext("Supplier:") %]</td><td>[% shipment.supplier.name %]</td>
+</tr>
+<tr>
+<td>[% gettext("Destination storage:") %]</td><td>[% shipment.storage.name %]</td>
+</tr>
+<tr>
+<td>[% gettext("Shipment number:") %]</td>
+<td>
+[% IF shipment.received == 1 %]
+[% shipment.shipmentnum %]
+[% ELSE %]
+<input name='shipmentnum' value="[% shipment.shipmentnum %]" />
+[% END %]
+</td>
+</tr>
+<tr>
+<td>[% gettext("Shipment due:") %]</td>
+<td>
+[% IF shipment.received == 1 %]
+[% shipment.due %]
+[% ELSE %]
+<input name='due' value="[% shipment.due %]" />
+[% END %]
+</td>
+</tr>
+<tr>
+<td>[% gettext("Other information:") %]</td>
+<td>
+[% IF shipment.received == 1 %]
+[% shipment.info %]
+[% ELSE %]
+<textarea name='info'>[% shipment.info %]</textarea>
+[% END %]
+</td>
+</tr>
+<tr>
+<td>[% gettext("Shipment received:") %]</td>
+<td>
+[% IF shipment.received == 1 %]
+[% gettext("Shipment received. Can't modify values anymore.") %]
+</td></tr>
+[% ELSE %]
+<input name='received' type='checkbox' />
+</td></tr>
+<tr>
+<td>
+<input type="submit" value="[% gettext("Save") %]" />
+</form>
+[% END %]
+[% IF shipmentrows == 0 %]
+<form action="" method="post">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="delete" />
+<input type="hidden" name="type" value="shipments" />
+<input type="hidden" name="id" value="[% shipment.id %]" />
+<input type="submit" value="[% gettext("Delete") %]" 
+onclick="return confirm('[% gettext("Delete shipment from database?") %]')" />
+</form>
+[% END %]
+</td></tr>
+</table>
+
+[% IF shipment.received != 1 %]
+<h2>[% gettext("Add products to shipment") %]</h2>
+<table>
+<thead>
+<tr><th>[% gettext("Select product group") %]</th>
+<th>[% gettext("Products on shipment") %]</th></tr>
+</thead>
+<tbody>
+<tr><td>
+<form method="get" action="javascript:loadContent('content.cgi','contentcgi');" name="contentcgi">
+<p>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='showgroup' />
+<input type='hidden' name='target' value='[% shipment.id %]' />
+<select name="groupid" class="big" onchange="submit()" size="[% usersettings.activebasketselect %]">
+<option value='-1'>-- [% gettext("Product group") %] --</option>
+[% FOREACH group IN productgroups %]
+	<option value="[% group.id %]">[% group.name %]</option>
+[% END %]
+</select>
+</p>
+
+<noscript>
+  <p><input type="submit" value="[% gettext("Show") %]" /></p>
+</noscript>
+</form>
+</tbody>
+</table>
+
+<div id='contentcgi'>&nbsp;</div>
+[% END %]
+
+[% INCLUDE modules/Storagemanagement/shipments.productlist %]

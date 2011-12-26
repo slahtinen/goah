@@ -1,0 +1,1 @@
+<p>[% gettext("No active function.") %]</p>

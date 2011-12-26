@@ -1,0 +1,95 @@
+<h2>[% gettext("Personal settings") %]</h2>
+<form method='post' action=''>
+<table>
+<thead>
+<tr>
+<th>[% gettext("Setting") %]</th>
+<th>[% gettext("Value") %]</th>
+</tr>
+</thead>
+<tbody>
+
+<tr><td>
+<b>[% gettext("Show prices with VAT") %]</b><br />
+[% gettext("If this setting is enabled then every price you will see includes VAT. You will also give prices including VAT.") %]<br />
+<i>[% gettext("Default") %]: Off</i>
+</td>
+<td>
+[% IF settings.showvat == 'on' %]
+<input name="showvat" value="on" type="radio" checked /> On<br />
+<input name="showvat" value="off" type="radio" /> Off
+[% ELSE %]
+<input name="showvat" value="on" type="radio" /> On<br />
+<input name="showvat" value="off" type="radio" checked /> Off
+[% END %]
+</td>
+</tr>
+
+<tr><td>
+<b>[% gettext("Active basket select rows") %]</b><br />
+[% gettext("This setting defines how many rows is shown on active basket selects. Setting affects group selection and products in basket -lists") %]
+<br /><i>[% gettext("Default") %]: 1</i>
+</td><td>
+<input name="activebasketselect" value="[% settings.activebasketselect %]" />
+</td></tr>
+
+<tr><td>
+<b>[% gettext("Decimal numbers") %]</b><br />
+[% gettext("This setting defines the amount of decimals used to show prices") %]
+<br/><i>[% gettext("Default") %]: 2</i>
+</td><td>
+<input name="decimals" value="[% settings.decimals %]" />
+</td></tr>
+
+<tr><td>
+<b>[% gettext("Password") %]</b><br />
+[% gettext("To change your password type it twice on following boxes. Leave fields empty if you don't want to change your password.") %]
+</td><td>
+<input type="password" name="pass1" /><br />
+<input type="password" name="pass2" />
+</td></tr>
+
+<tr><td>
+<b>[% gettext("Language") %]</b><br />
+[% gettext("Choose interface language") %]
+</td><td>
+<select name='locale' size='1'>
+<option value='C'>-- [% gettext("Select language") %] --</option>
+[% FOREACH key IN languages.keys.sort %]
+[% lang = languages.$key %]
+[% IF settings.locale == lang.locale %]
+<option selected value="[% lang.locale %]">[% lang.language %]</option>
+[% ELSE %]
+<option value="[% lang.locale %]">[% lang.language %]</option>
+[% END %]
+[% END %]
+</select>
+</td></tr>
+
+<tr><td>
+<b>[% gettext("Show debug info") %]</b><br />
+[% gettext("Show debug messages from the system (mostly useful for developers)") %]
+</td><td>
+[% IF settings.showdebug == 'on' %]
+<input name="showdebug" value="on" type="radio" checked /> On<br />
+<input name="showdebug" value="off" type="radio" /> Off
+[% ELSE %]
+<input name="showdebug" value="on" type="radio" /> On<br />
+<input name="showdebug" value="off" type="radio" checked /> Off
+[% END %]
+</td>
+</tr>
+
+
+<tr><td>
+<p>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='writesettings' />
+<input type='hidden' name='uid' value='[% uid %]' />
+</p>
+<input type="submit" value="[% gettext("Save settings") %]"/>
+</td></tr>
+
+</tbody>
+</table>
+</form>

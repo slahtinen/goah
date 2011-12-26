@@ -1,0 +1,239 @@
+/* @override http://goah/themes/custom/style.css */
+
+@import url(reset.css);
+@import url(type.css);
+@import url(grid.css);
+
+body {
+	background:#fcfcff url(img/body-bg.png) repeat-x;
+}
+
+#container {background:url(img/siteinfo-bg.png) repeat-x 0 bottom;}
+
+/* @group Branding */
+
+#branding{
+	height:100px;
+}
+
+#branding-logo {
+		background:url(img/Goah-head.png) no-repeat;
+		width: 229px;
+		height: 84px;
+		float: left;
+		margin: 3px 0 0;
+}
+
+#branding-logo h1 {
+	display:none;
+}
+
+#branding-userbox{
+	float: right;
+	width: 250px;
+}
+
+#branding-userbox ul li {
+	float: left;
+	list-style-type: none;
+	padding: 2px 5px;
+	margin: 5px;
+	background: #eee;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+}
+#branding-userbox li.active {
+	background:#333;
+}
+#branding-userbox ul li a{
+	color: #333;
+	font-weight: bold;
+}
+#branding-userbox li.active a {
+	color: #eee;
+}
+
+#branding-userbox a:hover {
+	color: #666;
+}
+
+/* @end */
+
+/* @group Navigation */
+
+#navigation{
+	height:80px;
+	width: 960px;
+	margin: 0 auto;
+}
+
+#navigation ul {
+	margin: 0;
+	list-style-type: none;
+}
+
+#navigation ul li {
+	float:left;
+}
+
+#navigation-main li {
+	margin: 10px 2px 0;
+	padding-left: 10px;
+	background: url(img/navigation-main-left.png) no-repeat left top;
+}
+
+#navigation-main li a {
+	font-size: 15px;
+	color:#fff;
+	display: block;
+	height: 20px;
+	padding: 3px 10px 7px 0;
+	font-weight: bold;
+	background: url(img/navigation-main-right.png) no-repeat right top;
+}
+
+#navigation-main li.active {
+	background-position: left bottom;
+}
+
+#navigation-main li.active a {
+	color: #333;
+	background-position: right bottom;
+}
+#navigation-main li a:hover {
+	color: #333;
+	text-shadow: #fff 0 1px 1px;
+}
+
+#navigation-sub {
+	position: absolute;
+	top: 140px;
+}
+#navigation-sub li {
+	margin-top: 0;
+	background-image: none;
+}
+#navigation-sub li a{
+	font-size: 14px;
+	font-weight: bold;
+	color: #333;
+	line-height:1;
+	height: 10px;
+	margin: 10px 0;
+	padding: 3px 15px 5px;
+	border-right: 2px solid #333;
+	background-image: none;
+}
+#navigation-sub li.active a{
+	color: #356F98;
+}
+
+#navigation-sub li a:hover{
+	color: #356F98;
+	text-shadow: #000000 0px 0px 1px;
+}
+
+/* @end */
+
+#content {
+	margin: 10px auto;
+}
+
+.cBox { 
+	border: 1px solid #ccc;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	background:#f9f9f9;
+}
+
+.cBoxTop {
+	height: 38px;
+	/*border: 1px solid #ccc;*/
+	background: url(img/cBoxTop-bg.png) repeat-x;
+	-webkit-border-top-left-radius:5px;
+	-webkit-border-top-right-radius:5px;
+	-moz-border-radius-topleft:5px;
+	-moz-border-radius-topright:5px;
+}
+
+.cBoxTop h2 {
+	color: #333;
+	text-transform: uppercase;
+	font-weight: bold;
+	padding: 5px 0 0 10px;
+}
+
+.cBoxTop ul { 
+	list-style-type: none;
+	float: right;
+	margin: -25px 0 0;
+}
+
+.cBoxTop li {
+	float: left;
+	margin: 0 5px;
+}
+.cBoxBody {
+	padding: 5px 10px;
+	background: url(img/cBoxBody-bg.png) repeat-x;
+}
+
+label {
+	display: block;
+	padding: 0 10px;
+	font-weight: bold;
+}
+
+input[type=text] {
+	border: 1px solid #ccc;
+	height: 25px;
+	width: 250px;
+	margin-bottom: 10px;
+	background:#e6e6e6;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+}
+input[type=text]:focus {
+  border: 1px solid #A6C8DD;
+  background:#fff;
+}
+
+input[type=submit] {
+	border: 1px solid #ccc;
+	height: 25px;
+	width: 100px;
+	background: url(img/button-bg.png) repeat-x;
+	font-weight: bold;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	margin-bottom: 20px;
+}
+input[type=submit]:hover {
+  border: 1px solid #A6C8DD;
+}
+
+
+#siteinfo{height: 145px; }
+
+table {
+	background: #fff;
+}
+thead tr th{
+	height: 30px;
+	background: url(img/button-bg.png) repeat-x;
+}
+
+h2 {
+	color: #6796b0;
+}
+
+.notice{
+	background:#DEEEF6;
+	padding: 10px;
+	margin: 10px;
+	border: 1px solid #ccc;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	color: #205C87;
+	font-weight: bold;
+}

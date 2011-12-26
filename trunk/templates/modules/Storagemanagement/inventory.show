@@ -1,0 +1,81 @@
+<h2>[% gettext("Inventory information") %]</h2>
+<table>
+<tr>
+[% IF inventory.done != 1 %]
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="writeedited" />
+<input type="hidden" name="id" value="[% inventory.id %]" />
+<input type="hidden" name="type" value="inventory" />
+[% END %]
+<td>[% gettext("Inventory created:") %]</td><td>[% inventory.created %]</td>
+</tr>
+<tr>
+<td>[% gettext("Additional information:") %]</td>
+<td>
+[% IF inventory.done == 1 %]
+[% inventory.info %]
+[% ELSE %]
+<textarea name='info'>[% inventory.info %]</textarea>
+[% END %]
+</td>
+</tr>
+<tr>
+<td>[% gettext("Inventory finished:") %]</td>
+<td>
+[% IF inventory.done == 1 %]
+[% gettext("Inventory finished. Can't modify values anymore.") %]
+</td></tr>
+[% ELSE %]
+<input name='done' type='checkbox' />
+</td></tr>
+<tr>
+<td>
+<input type="submit" value="[% gettext("Save") %]" /></td></tr>
+</form>
+[% END %]
+</table>
+
+[% IF inventory.done != 1 %]
+<h2>[% gettext("Add products to inventory") %]</h2>
+<table>
+<thead>
+<tr><th>[% gettext("Select product group") %]</th>
+<th>[% gettext("Products on inventory") %]</th></tr>
+</thead>
+<tbody>
+<tr><td>
+<form method="post" name="barcodeform">
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='addtoinventory' />
+<input type="hidden" name="subaction" value="ean" />
+<input type='hidden' name='inventoryid' value='[% inventory.id %]'>
+[% gettext("Read barcode") %]</td><td><input name="barcode" />
+<input type="submit" value="[% gettext("Add") %]" />
+</form>
+</td></tr>
+<tr><td>
+<form method="get" action="javascript:loadContent('content.cgi','contentcgi');" name="contentcgi">
+<p>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='showgroup.inventory' />
+<input type='hidden' name='target' value='[% inventory.id %]' />
+<select name="groupid" class="big" onchange="submit()" size="[% usersettings.activebasketselect %]">
+<option value='-1'>-- [% gettext("Product group") %] --</option>
+[% FOREACH group IN productgroups %]
+	<option value="[% group.id %]">[% group.name %]</option>
+[% END %]
+</select>
+</p>
+
+<noscript>
+  <p><input type="submit" value="[% gettext("Show") %]" /></p>
+</noscript>
+</form>
+</tbody>
+</table>
+
+<div id='contentcgi'>&nbsp;</div>
+[% END %]
+
+[% INCLUDE modules/Storagemanagement/inventory.productlist %]

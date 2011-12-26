@@ -1,0 +1,35 @@
+[% INCLUDE chunk/head.tt2 %]
+    
+    <div id="content" role="main">
+	
+		<div id="login">
+			<header>
+				<h2>[% gettext("Login") %]</h2>			
+			</header>
+		
+			<form action="" method="post" accept-charset="utf-8">
+				<label for="user">[% gettext("Username") %]</label>
+				<input type="text" name="user" value="" id="user">
+				<br/>
+				<label for="pass">[% gettext("Password") %]</label>
+				<input type="password" name="pass" value="" id="pass">
+				<br/>
+
+				<input type="submit" class="button" value="[% gettext("Login") %]">
+			</form>	
+		</div>
+		<!-- Messages about functionality -->
+		[% TRY %]
+		[% INCLUDE messages.tt2 %]
+		[% END %]
+		<!-- Messages about functionality -->
+
+		[% IF function == 'wronglogin' %]
+		[% INCLUDE wronglogin.tt2 %]
+		[% ELSIF function == 'logout' %]
+		[% INCLUDE logout.tt2 %]
+		[% END %]
+			
+	</div>
+	
+[% INCLUDE chunk/foot.tt2 %]

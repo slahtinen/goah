@@ -1,0 +1,52 @@
+[% gettext("Invoices") %]
+
+
+[% gettext("Selected invoice states") %];
+[%- FOREACH option IN invoicestates.keys.sort %]
+[%# Yes, this is ugly solution %]
+[% selected = 0 %]
+[%- FOREACH state IN search_states %]
+[% IF state == option %]
+[% selected = 1 %]
+[% END %]
+[% END %]
+[% IF selected == 1 %]
+[%- invoicestates.$option %],
+[%- END -%]
+[% END %]
+
+[% gettext("From date:") %];[% search_startdate %]
+
+[% gettext("To date:") %];[% search_enddate %]
+
+[% gettext("Customer:") %];[% search_customer %]
+
+
+[% gettext("Selected invoices") %]
+
+[% gettext("Number") %];[% gettext("Customer") %];Addr1;Addr2;Postalcode;Postaloffice;Country;[% gettext("Created") %];[% gettext("Due") %];[% gettext("Received") %];[% gettext("Total") %] [% gettext("VAT 0%") %];[% gettext("Total") %] [% gettext("Incl. VAT") %];[% gettext("State") %]
+
+[% FOREACH invoice IN invoices %]
+[% IF invoice.invoicenumber != 0  %]
+[% invoice.invoicenumber %];
+[%- ELSE %]
+##;
+[%- END -%]
+[% cinfo = companyinfo(invoice.companyid) %]
+[% cinfo.name %] [% cinfo.firstname %];
+[%- linfo = locationinfo(invoice.locationid) %]
+[% IF linfo == 0 %] 
+[% gettext("Not available!") %];
+[% ELSE %]
+[% linfo.addr1 %];[% linfo.addr2 %];[% linfo.postalcode %];[% linfo.postaloffice %];[% linfo.country %];
+[%- END %]
+[% IF invoice.invoicenumber != 0 %]
+[% formatdate(invoice.created) %];[% formatdate(invoice.due) %];[% formatdate(invoice.received) %];
+[%- ELSE %]
+;;;
+[%- END %]
+[% total = readtotal(invoice.id) %]
+[%- total.vat0 %];[% total.inclvat %];
+[%- state = invoice.state %]
+[% invoicestates.$state %];
+[% END %]

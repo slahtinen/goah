@@ -1,0 +1,426 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: GoaH 2.0.0\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2011-02-02 21:36+0200\n"
+"Last-Translator: Sami Lahtinen <sami.lahtinen@tietovirta.fi>\n"
+"Language-Team: Development <helpdesk@tietovirta.fi>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Finnish\n"
+"X-Poedit-Country: FINLAND\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: ../templates/modules/Invoice/invoice.history:6
+msgid "Action"
+msgstr "Toiminto"
+
+msgid "Active invoices"
+msgstr "Aktiiviset laskut"
+
+#: ../templates/modules/Invoice/invoice.history:42
+msgid "Add"
+msgstr "Lisää"
+
+#: ../templates/modules/Invoice/invoice.history:42
+msgid "Add note:"
+msgstr "Lisää merkintä:"
+
+#: ../templates/modules/Invoice/invoice.productlist:12
+msgid "Amount"
+msgstr "Määrä"
+
+#: ../templates/modules/Invoice/invoice.customer:6
+msgid "Billing address"
+msgstr "Laskutusosoite"
+
+#: ../goah/Modules/Invoice.pm:743
+#: ../goah/Modules/Invoice.pm:748
+msgid "Can't add event to invoice!"
+msgstr "Tapahtuman lisäys laskuun epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:116
+msgid "Can't add event to invoice."
+msgstr "Tapahtuman lisäys laskuun epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:419
+#: ../goah/Modules/Invoice.pm:424
+msgid "Can't add row to invoice!"
+msgstr "Rivin lisäys laskuun epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:691
+msgid "Can't calculate total sum for invoice! Invoice id is missing!"
+msgstr "Laskun loppusumman laskenta epäonnistui! Laskun id puuttuu!"
+
+#: ../goah/Modules/Invoice.pm:251
+#: ../goah/Modules/Invoice.pm:267
+msgid "Can't create new invoice!"
+msgstr "Uuden laskun luominen epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:361
+msgid "Can't create reference number for the bill! Invoice number is missing!"
+msgstr "Viitenumeron luonti laskuun epäonnistui! Laskunumero puuttuu!"
+
+#: ../goah/Modules/Invoice.pm:285
+#: ../goah/Modules/Invoice.pm:831
+msgid "Can't get reference number for invoice number! Can't create invoice!"
+msgstr "Viitenumeron haku laskunumerolle epäonnistui! Laskua ei voida tehdä!"
+
+#: ../goah/Modules/Invoice.pm:647
+msgid "Can't read invoice history!"
+msgstr "Laskuhistorian luku epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:267
+msgid "Can't read order contents!"
+msgstr "Tilauksen sisällön luku epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:576
+#: ../goah/Modules/Invoice.pm:584
+msgid "Can't read rows for invoice!"
+msgstr "Rivien luku laskulle epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:136
+#: ../goah/Modules/Invoice.pm:156
+#: ../goah/Modules/Invoice.pm:174
+#: ../goah/Modules/Invoice.pm:798
+msgid "Can't update invoice information!"
+msgstr "Laskun tietojen päivitys epäonnistui!"
+
+#: ../templates/modules/Invoice/invoiceinfo:117
+msgid "Card payment"
+msgstr "Korttimaksu"
+
+#: ../goah/Modules/Invoice.pm:171
+#: ../goah/Modules/Invoice.pm:187
+msgid "Card payment received. Don't forget to print out PDF!"
+msgstr "Korttimaksu suoritettu. Muista tulostaa PDF!"
+
+#: ../templates/modules/Invoice/invoiceinfo:109
+msgid "Cash payment"
+msgstr "Käteismaksu"
+
+#: ../goah/Modules/Invoice.pm:169
+msgid "Cash payment received. Don't forget to print out PDF!"
+msgstr "Käteismaksu suoritettu. Muista tulostaa PDF!"
+
+msgid "Closed"
+msgstr "Suljettu"
+
+#: ../goah/Modules/Invoice.pm:47
+msgid "Closed, card payment"
+msgstr "Suljettu, korttimaksu"
+
+#: ../goah/Modules/Invoice.pm:46
+msgid "Closed, cash payment"
+msgstr "Suljettu, käteismaksu"
+
+#: ../goah/Modules/Invoice.pm:45
+msgid "Closed, payment received"
+msgstr "Suljettu, maksu suoritettu"
+
+#: ../templates/modules/Invoice/invoice.productlist:6
+msgid "Code"
+msgstr "Koodi"
+
+#: ../templates/modules/Invoice/invoiceinfo:109
+#: ../templates/modules/Invoice/invoiceinfo:117
+#: ../templates/modules/Invoice/invoiceinfo:129
+msgid "Confirm payment for invoice"
+msgstr "Vahvista maksu laskutukseen"
+
+#: ../goah/Modules/Invoice.pm:296
+msgid "Couldn't read customer data from the database. Can't calculate due date."
+msgstr "Asiakastiedon luku tietokannasta epäonnistui. Eräpäivää ei pystytty laskemaan."
+
+#: ../goah/Modules/Invoice.pm:844
+msgid "Couldn't read payment condition! Can't calculate due date."
+msgstr "Maksuehdon luku epäonnistui! Eräpäivää ei pystytty laskemaan."
+
+#: ../templates/modules/Invoice/activeinvoices:38
+#: ../templates/modules/Invoice/invoiceinfo:35
+msgid "Created"
+msgstr "Laskutus pvm"
+
+#: ../templates/modules/Invoice/activeinvoices:26
+#: ../templates/modules/Invoice/activeinvoices:37
+msgid "Customer"
+msgstr "Asiakas"
+
+#: ../templates/modules/Invoice/invoice.customer:1
+msgid "Customer information"
+msgstr "Asiakastieto"
+
+#: ../templates/modules/Invoice/invoiceinfo:75
+msgid "Customer reference"
+msgstr "Asiakkaan viite"
+
+#: ../templates/modules/Invoice/activeinvoices:39
+#: ../templates/modules/Invoice/invoiceinfo:67
+msgid "Due"
+msgstr "Eräpäivä"
+
+#: ../goah/Modules/Invoice.pm:487
+msgid "End date isn't formatted correctly. Ignoring filter."
+msgstr "Päättymispäivä on väärässä muodossa. Suodatinta ei huomioida."
+
+#: ../goah/Modules/Invoice.pm:114
+msgid "Event added to invoice"
+msgstr "Tapahtuma lisätty laskulle"
+
+#: ../goah/Modules/Invoice.pm:748
+msgid "Event content is missing!"
+msgstr "Tapahtuman sisältö puuttuu!"
+
+#. ($row->productid)
+#: ../goah/Modules/Invoice.pm:609
+msgid "Fatal error! Can't read product information for invoice with id "
+msgstr "Kriittinen virhe! Tuotetietojen luku epäonnistui lasku id:lle "
+
+#: ../goah/Modules/Invoice.pm:697
+msgid "Fatal error. Can't read invoice total due to faulty invoice rows!"
+msgstr "Kriittinen virhe! Virheellisiä rivejä laskulla, luku epäonnistui!"
+
+#: ../templates/modules/Invoice/activeinvoices:24
+msgid "From/to date"
+msgstr "Alku/loppu pvm"
+
+#: ../templates/modules/Invoice/invoices:5
+msgid ""
+"Here you can see all active invoices you have created so far. Optionally you can either review\n"
+"the invoice or update the state for it."
+msgstr "Tässä on kaikki laskut jotka on luotu. Voit katsella laskuja tai päivittää niiden tilaa. "
+
+msgid ""
+"Here you can see all active invoices you have created so far. Optionally you can either review\n"
+"the invoice or update the state for it. New invoices can only be made via baskets, so you can't create new\n"
+"invoices here."
+msgstr ""
+"Tässä näkymässä on kaikki tähän mennessä tehdyt aktiiviset laskut. Voit katsella laskuja\n"
+"tai päivittää laskun tilaa. Uudet laskut tehdään korien kautta, joten uusia laskuja ei voi tehdä täällä."
+
+#: ../templates/modules/Invoice/invoice.productlist:8
+msgid "IN"
+msgstr "Osto"
+
+#: ../templates/modules/Invoice/activeinvoices:41
+#: ../templates/modules/Invoice/invoice.productlist:11
+#: ../templates/modules/Invoice/invoice.productlist:14
+#: ../templates/modules/Invoice/invoice.productlist:65
+msgid "Incl. VAT"
+msgstr "sis. alv"
+
+#: ../templates/modules/Invoice/invoice.history:9
+msgid "Information"
+msgstr "Lisätieto"
+
+#: ../templates/modules/Invoice/invoice.history:1
+msgid "Invoice history"
+msgstr "Laskuhistoria"
+
+#: ../goah/Modules/Invoice.pm:419
+#: ../goah/Modules/Invoice.pm:576
+#: ../goah/Modules/Invoice.pm:647
+#: ../goah/Modules/Invoice.pm:743
+#: ../goah/Modules/Invoice.pm:798
+msgid "Invoice id is missing!"
+msgstr "Laskun id puuttuu!"
+
+#: ../templates/modules/Invoice/invoiceinfo:1
+msgid "Invoice information"
+msgstr "Laskun lisätieto"
+
+#: ../goah/Modules/Invoice.pm:134
+msgid "Invoice information updated."
+msgstr "Laskun tiedot päivitetty."
+
+#: ../templates/modules/Invoice/invoiceinfo:10
+msgid "Invoice number"
+msgstr "Laskunumero"
+
+#: ../goah/Modules/Invoice.pm:375
+msgid "Invoice number too long! Can't create reference number!"
+msgstr "Laskun numero on liian pitkä! Viitenumeron luonti epäonnistui!"
+
+#: ../goah/Modules/Invoice.pm:185
+msgid "Invoice payment received."
+msgstr "Laskun suoritus vastaanotettu."
+
+#: ../templates/modules/Invoice/invoiceinfo:14
+msgid "Invoice status"
+msgstr "Laskun tila"
+
+#: ../goah/Modules/Invoice.pm:154
+msgid "Invoice transferred to billing. Don't forget to print out PDF!"
+msgstr "Lasku siirretty laskutukseen. Muista tulostaa PDF!"
+
+#: ../templates/modules/Invoice/activeinvoices:1
+msgid "Invoices"
+msgstr "Laskut"
+
+#: ../templates/modules/Invoice/invoices:6
+msgid ""
+"Invoices have 5 different states: open, sent, remark1, remark2 and closed. With these you can\n"
+"follow individual invoices life and keep track of what's been done to it."
+msgstr ""
+"Laskuilla voi olla 5 eri tilaa: avoin, lähetetty, muistutus 1, muistutus 2 ja käsitelty. Näiden avulla voit\n"
+"seurata eri laskujen tapahtumia ja pysyä perillä mitä niille on tehty."
+
+#: ../goah/Modules/Invoice.pm:198
+msgid "Module doesn't have function "
+msgstr "Modulilla ei ole funktiota"
+
+#: ../templates/modules/Invoice/invoiceinfo:101
+msgid "Move invoice to billing?"
+msgstr "Siirrä lasku laskutukseen?"
+
+#: ../templates/modules/Invoice/invoice.productlist:7
+msgid "Name"
+msgstr "Nimi"
+
+#: ../templates/modules/Invoice/invoice.history:33
+msgid "No events"
+msgstr "Ei tapahtumia"
+
+#: ../templates/modules/Invoice/activeinvoices:65
+msgid "Not available!"
+msgstr "Ei saatavilla!"
+
+#: ../templates/modules/Invoice/activeinvoices:36
+msgid "Number"
+msgstr "Numero"
+
+#: ../templates/modules/Invoice/invoice.productlist:11
+#: ../templates/modules/Invoice/invoice.productlist:9
+msgid "OUT"
+msgstr "Myynti"
+
+#: ../goah/Modules/Invoice.pm:41
+#: ../templates/modules/Invoice/activeinvoices:43
+msgid "Open"
+msgstr "Avoin"
+
+#: ../templates/modules/Invoice/invoiceinfo:43
+msgid "Payment condition"
+msgstr "Maksuehto"
+
+#: ../templates/modules/Invoice/invoiceinfo:129
+#: ../templates/modules/Invoice/invoiceinfo:71
+msgid "Payment received"
+msgstr "Suoritus vastaanotettu"
+
+#: ../templates/modules/Invoice/invoiceinfo:128
+msgid "Payment received (leave empty for today):"
+msgstr "Suoritus saapunut: "
+
+#: ../goah/Modules/Invoice.pm:424
+msgid "Product id is missing!"
+msgstr "Tuotteen id puuttuu!"
+
+#: ../templates/modules/Invoice/invoice.productlist:1
+msgid "Products on invoice"
+msgstr "Tuotteet laskulla"
+
+#: ../goah/Modules/Invoice.pm:251
+msgid "Referral id is missing!"
+msgstr "Viitenumero puuttuu!"
+
+#: ../goah/Modules/Invoice.pm:43
+msgid "Remark1"
+msgstr "Muistutus 1"
+
+#: ../goah/Modules/Invoice.pm:44
+msgid "Remark2"
+msgstr "Muistutus 2"
+
+#: ../templates/modules/Invoice/invoice.productlist:15
+msgid "Row info"
+msgstr "Rivitieto"
+
+#: ../templates/modules/Invoice/invoiceinfo:84
+msgid "Save"
+msgstr "Tallenna"
+
+#: ../templates/modules/Invoice/activeinvoices:27
+msgid "Search"
+msgstr "Hae"
+
+#: ../templates/modules/Invoice/invoiceinfo:46
+msgid "Select one"
+msgstr "Valitse yksi"
+
+#: ../templates/modules/Invoice/activeinvoices:32
+msgid "Selected invoices"
+msgstr "Valitut laskut"
+
+#: ../templates/modules/Invoice/invoiceinfo:101
+msgid "Send invoice"
+msgstr "Lähetä lasku"
+
+#: ../goah/Modules/Invoice.pm:42
+msgid "Sent"
+msgstr "Lähetetty"
+
+#: ../templates/modules/Invoice/invoice.customer:7
+msgid "Shipping address"
+msgstr "Toimitusosoite"
+
+#: ../goah/Modules/Invoice.pm:479
+msgid "Start date isn't formatted correctly. Ignoring filter."
+msgstr "Aloituspäivä on väärässä muodossa. Suodatinta ei huomioida."
+
+#: ../templates/modules/Invoice/activeinvoices:42
+#: ../templates/modules/Invoice/activeinvoices:7
+msgid "State"
+msgstr "Tila"
+
+#: ../templates/modules/Invoice/invoice.history:8
+msgid "State after"
+msgstr "Tila jälkeen"
+
+#: ../templates/modules/Invoice/invoice.history:7
+msgid "State before"
+msgstr "Tila ennen"
+
+#: ../templates/modules/Invoice/invoice.history:5
+msgid "Time"
+msgstr "Aika"
+
+#: ../templates/modules/Invoice/activeinvoices:40
+#: ../templates/modules/Invoice/activeinvoices:41
+#: ../templates/modules/Invoice/invoice.productlist:13
+#: ../templates/modules/Invoice/invoice.productlist:14
+#: ../templates/modules/Invoice/invoice.productlist:45
+#: ../templates/modules/Invoice/invoice.productlist:65
+msgid "Total"
+msgstr "Yhteensä"
+
+#: ../goah/Modules/Invoice.pm:584
+msgid "UID is missing"
+msgstr "UID puuttuu"
+
+#: ../templates/modules/Invoice/invoice.productlist:10
+#: ../templates/modules/Invoice/invoice.productlist:55
+msgid "VAT"
+msgstr "Alv"
+
+#: ../templates/modules/Invoice/activeinvoices:40
+#: ../templates/modules/Invoice/invoice.productlist:45
+msgid "VAT 0%"
+msgstr "Alv 0%"
+
+#: ../templates/modules/Invoice/invoiceinfo:140
+msgid ""
+"You can alter the information of the invoice as \n"
+"long as its state is 'open'. Once the invoice is sent data cannot be altered anymore, not counting \n"
+"the state which is possible to modify 'upwards'."
+msgstr ""
+"Voit muokata laskun tietoja niin kauan kuin\n"
+"sen tila on 'avoin'. Lähetettyäsi laskun, tietoja ei voi enään muokata, lukuunottamatta\n"
+"tilaa, mitä voi muokata 'ylöspäin'"
+

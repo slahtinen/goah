@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>GoaH [% goahversion %] - Development</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	
+	<link rel="stylesheet" type="text/css" href="/themes/[% theme %]/style.css" />
+	<script type="text/javascript" src="/themes/[% theme %]/js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="/themes/[% theme %]/js/jquery-ui-1.8rc3.min.js"></script>
+	<script type="text/javascript" src="/themes/[% theme %]/js/jquery.tools.min.js"></script>
+
+</head>
+<body>
+	<div id="container">
+		<div id="branding" class="row">
+			<div id="branding-logo">
+				<h1>GoaH [% goahversion %] - Development</h1>
+			</div>
+			
+			<div id="branding-userbox">		
+			[% TRY %]
+				[% INCLUDE userbox.tt2 %]
+			[% CATCH %]
+				[% PROCESS templateerror %]
+			[% END %]
+			</div>
+		</div>
+		
+		<div id="navigation" class="row" >
+			[% TRY %]
+				[% INCLUDE navi.tt2 %]
+			[% CATCH %]
+				[% PROCESS templateerror %]
+			[% END %]
+		</div>
+		
+		<div id="content" class="row">
+			[% TRY %]
+				[% INCLUDE messages.tt2 %]
+			[% CATCH %]
+				[% PROCESS templateerror %]
+			[% END %]
+
+			[% IF function != '' %]
+				[% TRY %]
+			        	[% INCLUDE $function %]
+				[% CATCH %]
+					[% PROCESS templateerror %]
+				[% END %]
+			[% ELSE %]
+			<div class="notice">
+				<p><strong>Development version</strong></p>
+				<p>This installation is running development code of the GoaH -project. Some
+				features are still missing, mainly the option to select modules per user basis. 
+				Please feel free to participate to project either via 
+				<a href="http://forum.goah.org">discussion forums</a> or via
+				our <a href="http://redmine.tietovirta.fi/projects/show/goah">
+				project management tool</a>.</p>
+				<p>Please report any bugs you find either via forums, project management tool or via IRCNet at channel #goah.</p>
+			</div>
+			[% END %]
+			
+		</div>
+		
+		<div id="siteinfo" class="row">
+			
+		</div>
+	</div>
+</body>
+</html>

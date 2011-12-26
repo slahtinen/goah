@@ -1,0 +1,41 @@
+<form action="" method="post">
+<h3>[% gettext("Create new basket") %]</h3>
+<table>
+[% row = 'info' %]
+<tr>
+[% FOREACH key IN basketdbfields.keys.sort %]
+[% data = basketdbfields.$key %]
+[% IF data.type != "hidden" && data.field !='locationid' && data.field != 'billingid' %]
+	<td>[% data.name %]
+	[% IF data.required == 1 %]
+		*
+	[% END %]
+	</td>
+	[% IF data.type == 'textfield' %]
+		<td><input  name="[% data.field %]"></td>
+	[% ELSIF data.type == 'textarea' %]
+		<td><textarea class="medium" name="[% data.field %]"></textarea></td>
+	[% ELSIF data.type == 'selectbox' %]
+		<td><select class="medium" name="[% data.field %]">
+		<option  value="-1">-- [% gettext("Select") %] --</option>
+		[% FOREACH item IN data.data %]
+			<option value="[% item.id %]">[% item.name %]
+			[%- IF item.vat_id == '00000000' %]
+			, [% item.firstname %]
+			[% END %]
+			</option> 
+		[% END %]
+		</select>
+		</td>
+	[% ELSE %]
+		<td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
+	[% END %]
+[% END %]
+[% END %]
+<td class="center"><input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Create") %]" /></td>
+</tr>
+</table>
+<input type="hidden" name="module" value="[% module %]" />
+<input type='hidden' name='action' value='newbasket' />
+</form>
+

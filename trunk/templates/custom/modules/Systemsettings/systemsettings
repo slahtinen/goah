@@ -1,0 +1,4 @@
+<div class="notice">[% gettext("System settings include options to modify GoaH behaviour and other system -wide options,
+such as user accounts.") %] [% gettext("You're running GoaH version") %] [% goahversion %]. [% gettext("Check manuals, updates and
+other information from GoaH website at http://www.goah.org.") %]
+</div>

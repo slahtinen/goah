@@ -1,0 +1,61 @@
+<h2>[% gettext("Storages") %]</h2> 
+<table>
+<thead>
+<tr>
+  <th>[% gettext("Name") %]</th>
+  <th>[% gettext("Location") %]</th>
+  <th>[% gettext("Information") %]</th>
+  <th class="icon">[% gettext("Open") %]</th>
+  <th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% odd = 0 %]
+[% FOREACH storage IN storages %]
+	[% IF odd == 1 %]
+		<tr class="odd">
+		[% odd = 0 %]
+	[% ELSE %]
+		<tr class="even">
+		[% odd = 1 %]
+	[% END %]
+
+	<td>[% storage.name %]
+	[% IF storage.def == 1 %]
+		([% gettext("Default") %])
+	[% END %]
+	</td>
+	<td>[% storage.location %]</td>
+	<td>[% storage.info %]</td>
+	<td class="center">
+	<form action="" method="post">
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="action" value="edit" />
+	<input type="hidden" name="type" value="storages" />
+	<input type="hidden" name="id" value="[% storage.id %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
+	</p>
+	</form>
+	</td>
+	<td class="center">
+	<form action="" method="post">
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="action" value="delete" />
+	<input type="hidden" name="type" value="storages" />
+	<input type="hidden" name="id" value="[% storage.id %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]"
+	    onclick="return confirm('[% gettext("Delete storage from database?") %]')" />
+	</p>
+	</form>
+	</td>
+	</tr>
+[% END %]
+<tr>
+<td><a href="?module=[% module %]&amp;action=addnew&amp;type=storages">[% gettext("Add new storage") %]</a></td>
+</tr>
+</tbody>
+</table>
+
+

@@ -1,0 +1,43 @@
+<h2>[% gettext('New person data for company') %] [% companydata.name %]</h2>
+<form action="" method=post>
+<table>
+<tr>
+    <td>[% gettext("Fields marked with * are required") %]</td></tr>
+[% row = 'even' %]
+[% FOREACH key IN persondbfields.keys.sort %]
+[% data = persondbfields.$key %]
+[% IF data.type != "hidden" %]
+	<tr class="[% row %]">
+	<td class="medium">[% data.name %]
+	[% IF data.required == 1 %]
+		*
+	[% END %]
+	</td>
+	[% IF data.type == 'textfield' %]
+		<td><input class="big" name="[% data.field %]" /></td>
+	[% ELSIF data.type == 'textarea' %]
+		<td><textarea name="[% data.field %]"></textarea></td>
+	[% ELSE %]
+		<td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
+	[% END %]
+	</tr>
+
+	[% IF row == 'odd' %]
+		[% row = 'even' %]
+	[% ELSE %]
+		[% row = 'odd' %]	
+	[% END %]
+		
+[% END %]
+[% END %]
+<tr>
+    <td colspan='2'>
+    <p>
+    <input type="hidden" name="module" value="[% module %]" />
+    <input type="hidden" name="action" value="writenewperson" />
+    <input type="hidden" name="companyid" value="[% companydata.id %]" />
+    <input type="submit" Value="[% gettext("Save") %]">
+    </p>
+</td></tr>
+</table>
+</form>

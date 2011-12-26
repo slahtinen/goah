@@ -1,0 +1,64 @@
+<h2>[% gettext("Customer types") %]</h2>
+<table>
+<thead>
+<tr>
+<th>[% gettext("Type") %]</th>
+<th class="icon">[% gettext("Save") %]</th>
+<th class="icon">[% gettext("Delete") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% row = "even" %]
+[% FOREACH type = customertypes %]
+	<tr class="[% row %]">
+	<td>
+	<form action="" method="post">
+	 <p>
+	<input class="big" name="type" value="[% type.name %]" />
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="action" value="edittype" />
+	<input type="hidden" name="target" value="[% type.id %]" />
+	</p>
+	</td>
+	<td class="center"><input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Save") %]" />
+	</form>
+	 </td>
+	<td class="center">
+	<form action="" method="post">
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="selector" value="type" />
+	<input type="hidden" name="action" value="deleteidentifier" />
+	<input type="hidden" name="target" value="[% type.id %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]" 
+		onclick="return confirm('[% gettext("Delete customer type from database?") %]')" />
+	</p>
+	</form>
+	</td>
+	</tr>
+
+	[% IF row == 'even' %]
+		[% row = 'odd' %]
+	[% ELSE %]
+		[% row = 'even' %]
+	[% END %]
+[% END %]
+</table>
+</tbody>
+
+<h3>[% gettext("Add new customer type") %]</h3>
+<table>
+<tr>
+<form action="" method="post">
+<td>
+<p>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="newtype" />
+<input name="type" class="big" />
+<input type="submit" name="submit" value="[% gettext("Add") %]" />
+</p>
+</td>
+</tr>
+</form>
+</tr>
+</table>

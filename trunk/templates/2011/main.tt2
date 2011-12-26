@@ -1,0 +1,36 @@
+[% INCLUDE chunk/head.tt2 %]
+    
+[% TRY %]
+	[% INCLUDE navi.tt2 %]
+[% CATCH %]
+	[% PROCESS templateerror %]
+[% END %]
+
+    <div id="content" role="main" class="clearfix" >
+		[% TRY %]
+			[% INCLUDE messages.tt2 %]
+		[% CATCH %]
+			[% PROCESS templateerror %]
+		[% END %]
+
+		[% IF function != '' %]
+			[% TRY %]
+		        	[% INCLUDE $function %]
+			[% CATCH %]
+				[% PROCESS templateerror %]
+			[% END %]
+		[% ELSE %]
+		<div class="message notice">
+			<p><strong>Development version</strong></p>
+			<p>This installation is running development code of the GoaH -project. Some
+			features are still missing, mainly the option to select modules per user basis. 
+			Please feel free to participate to project either via 
+			<a href="http://forum.goah.org">discussion forums</a> or via
+			our <a href="http://redmine.tietovirta.fi/projects/show/goah">
+			project management tool</a>.</p>
+			<p>Please report any bugs you find either via forums, project management tool or via IRCNet at channel #goah.</p>
+		</div>
+		[% END %]
+	</div>
+	
+[% INCLUDE chunk/foot.tt2 %]

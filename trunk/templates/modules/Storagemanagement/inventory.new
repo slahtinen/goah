@@ -1,0 +1,41 @@
+<form action="" method="post">
+<h3>[% gettext("Create new inventory") %]</h3>
+<table>
+[% row = 'info' %]
+[% FOREACH key IN inventorydbfields.keys.sort %]
+[% data = inventorydbfields.$key %]
+[% IF data.type != 'hidden' && key != 3 && key != 1 %]
+	<tr>
+	<td>[% data.name %]
+	[% IF data.required == 1 %]
+		*
+	[% END %]
+	</td>
+	[% IF data.type == 'textfield' %]
+		<td><input  name="[% data.field %]"></td>
+	[% ELSIF data.type == 'textarea' %]
+		<td><textarea class="medium" name="[% data.field %]"></textarea></td>
+	[% ELSIF data.type == 'selectbox' %]
+		<td><select class="medium" name="[% data.field %]">
+		<option  value="-1">-- [% gettext("Select") %] --</option>
+		[% FOREACH item IN data.data %]
+			<option value="[% item.id %]">[% item.name %]</option> 
+		[% END %]
+		</select>
+		</td>
+	[% ELSE %]
+		<td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
+	[% END %]
+	</tr>
+[% END %]
+[% END %]
+<td><input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Create") %]" /></td>
+</tr>
+</table>
+<p>
+<input type="hidden" name="type" value="inventory" />
+<input type="hidden" name="module" value="[% module %]" />
+<input type='hidden' name='action' value='writenew' />
+</p>
+</form>
+

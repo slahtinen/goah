@@ -1,0 +1,16 @@
+    <footer role="contentinfo">
+	  Powered by <a href="http://www.goah.org" target="_blank">GoaH [% goahversion %]</a>.
+	  Sponsored by <a href="http://www.tietovirta.fi" target="_blank">Tietovirta Oy</a>
+    </footer>
+  </div> 
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+	<script>!window.jQuery && document.write(unescape('%3Cscript src="/themes/[% theme %]/js/libs/jquery-1.4.4.js"%3E%3C/script%3E'))</script>
+  
+	<script src="/themes/[% theme %]/js/plugins.js"></script>
+  	<script src="/themes/[% theme %]/js/script.js"></script>
+	<!--[if lt IE 7 ]>
+	<script src="/themes/[% theme %]/js/libs/dd_belatedpng.js"></script>
+	<script>DD_belatedPNG.fix('img, .png_bg'); // Fix any <img> or .png_bg bg-images. Also, please read goo.gl/mZiyb </script>
+	<![endif]-->
+</body>
+</html>

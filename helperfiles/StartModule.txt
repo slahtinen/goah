@@ -1,0 +1,17 @@
+Template for NaturalDocs & individual modules start function.
+
+#
+# Function: Start
+#
+#   Start the actual module. Module process is controlled via HTTP
+#   variables which are created internally inside the module.
+#
+# Parameters:
+#
+#   None
+#
+# Returns:
+#
+#   Reference to hash array which contains variables for Template::Toolkit
+#   process for the module.
+#

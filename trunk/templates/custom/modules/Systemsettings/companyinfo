@@ -1,0 +1,68 @@
+<script type="text/javascript" charset="utf-8">
+	$(function () {
+		$("ul.tabNav").tabs("div#tabs >div");
+	});
+	
+</script>
+
+<div class="cBox">
+	<div class="cBoxTop">
+		<h2>[% gettext("Company information") %]</h2>
+
+		<ul class="tabNav">
+			<li><a href="#owner">[% gettext("Owner information") %]</a></li>
+			<li><a href="#location">[% gettext("Company addresses") %]</a></li>
+			<li><a href="#personell">[% gettext("Company personnell") %]</a></li>
+		</ul>
+	</div>	
+
+	<div id="tabs" class="cBoxBody">
+		<div id="owner">
+			
+			<h3>[% gettext("Edit owner information") %]</h3>
+		
+			<div class="notice">
+				[% gettext("Field marked with * are required") %]
+			</div>
+		
+			<form action="" method="post">
+
+	[% FOREACH key IN companydbfields.keys.sort %]
+		[% data = companydbfields.$key %]
+		[% field = data.field %]
+		[% IF data.type != "hidden" %]
+				<label for="[% data.field %]">[% data.name %] 	
+			[% IF data.required == 1 %]
+			*
+			[% END %]
+				</label>
+
+			[% IF data.type == 'textfield' %]
+				<input type="text" name="[% data.field %]" value="[% companydata.$field %]" >
+			[% ELSIF data.type == 'textarea' %]
+				<textarea name="[% data.field %]">[% companydata.$field %]</textarea>
+			[% ELSE %]
+				<div class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</div>
+			[% END %]
+				<br/>
+		[% ELSE %]
+				<input type="hidden" name="[% data.field %]" value="[% companydata.$field %]" />
+		[% END %]
+	[% END %]
+				<input type="hidden" name="module" value="[% module %]" />
+				<input type="hidden" name="action" value="writecompanydata" />
+				<input type="hidden" name="companyid" value="[% companydata.id %]" />
+				<input type="hidden" name="isowner" value="1" />
+				<input type="submit" class="button save" value="[% gettext("Save") %]" title="[% gettext("Save") %]" />
+			</form>
+			<!-- <br class="clearfix" /> -->
+		</div>
+		<div id="location">
+			[% INCLUDE modules/Systemsettings/companylocations %]
+		</div>
+
+		<div id="personel">
+			[% INCLUDE modules/Systemsettings/companypersons %]
+		</div>
+	</div>
+</div>

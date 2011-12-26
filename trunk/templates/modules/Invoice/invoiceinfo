@@ -1,0 +1,127 @@
+<h2>[% gettext("Invoice information") %]</h2>
+<table>
+[% IF invoice.state == 0 %]
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='target' value='[% invoice.id %]' />
+<input type='hidden' name='action' value='updateinvoice' />
+[% END %]
+<tr class="odd">
+	<td>[% gettext("Invoice number") %]</td>
+	<td>[% invoice.invoicenumber %]</td>
+</tr>
+<tr class="even">
+	<td>[% gettext("Invoice status") %]</td>
+	[% state = invoice.state %]
+	[% IF state < 0 %]
+		<td><select name='state' size='1'>
+		[% FOREACH option IN invoicestates.keys.sort %]
+			[% IF option >= state %]
+			[% IF option == state %]
+			<option selected value='[% option %]'>
+			[% ELSE %]
+			<option value='[% option %]'>
+			[% END %]
+			[% invoicestates.$option %]</option>
+			[% END %]
+		[% END %]
+		</select>
+		</td>
+	[% ELSE %]
+		<td>[% invoicestates.$state %]</td>
+	[% END %]
+	</tr>
+<tr class="odd">
+	<td class="medium">[% gettext("Created") %] (dd.mm.yyyy)</td>
+	[% IF state == '0' %]
+		<td>Current: [% formatdate(invoice.created) %]<br />
+		Change to: <input class="medium" name='created' />
+		[% gettext("Leave empty for current date.") %]</td>
+	[% ELSE %]
+		<td>[% formatdate(invoice.created) %]</td>
+	[% END %]
+</tr>
+<tr class="even">
+	<td>[% gettext("Payment condition") %]</td>
+	[% IF state == '0' %]
+		<td><select name="payment_condition">
+		<option value="-1">-- [% gettext("Select one") %] --</option>
+		[% FOREACH item IN paymentconditions %]
+			[% IF item.value == invoice.payment_condition %]
+				<option selected value="[% item.value %]">[% item.item %]</option>
+			[% ELSE %]
+				<option value="[% item.value %]">[% item.item %]</option>
+			[% END %]
+		[% END %]
+		</select>
+		</td>
+	[% ELSE %]
+		<td>
+		[% FOREACH item IN paymentconditions %]
+			[% IF item.id == invoice.payment_condition || item.value == invoice.payment_condition %]
+				[% item.item %]
+			[% END %]
+		[% END %]
+		</td>
+	[% END %]
+</tr>
+<tr class="odd">
+	<td>[% gettext("Due") %]</td>
+	<td>[% formatdate(invoice.due) %]</td>
+</tr>
+<tr class="even">
+	<td>[% gettext("Payment received") %]</td>
+	<td>[% formatdate(invoice.received) %]</td>
+</tr>
+<tr class="odd">
+	<td>[% gettext("Customer reference") %]</td>
+	[% IF state == '0' %]
+		<td><input class="medium" name='customerreference' value='[% invoice.customerreference %]'/></td>
+	[% ELSE %]
+		<td>[% invoice.customerreference %]</td>
+	[% END %]
+</tr>
+[% IF invoice.state == 0 %]
+<tr class='even'>
+	<td><input type='submit' value='[% gettext("Save") %]'/></td>
+</tr>
+[% END %]
+</table>
+<table>
+<tr class="even">
+	<td>
+	<a href="pdf.cgi?type=invoice&amp;id=[% invoice.id %]">
+	<img class="link" alt="Download as PDF" title="Download as PDF" src="themes/[% theme %]/icon/32x32/actions/document-print.png" /></a></td>
+	[% IF invoice.state == 0 %]
+	<td>
+	<input type='submit' name="invoicetobilling" value='[% gettext("Send invoice") %]' onclick="return confirm('[% gettext("Move invoice to billing?") %]')" />
+	</td><td>
+	<input type='submit' name="invoicetocashreceipt" value='[% gettext("Cash payment") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" />
+	</td><td>
+        <input type='submit' name="invoicetocardreceipt" value='[% gettext("Card payment") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" />
+	</td>
+	</form>
+	[% END %]
+	[% IF invoice.state == 1 %]
+	<td>
+        <form action='' method='post'>
+        <input type='hidden' name='module' value='[% module %]' />
+        <input type='hidden' name='target' value='[% invoice.id %]' />
+        <input type='hidden' name='state' value='4' />
+        <input type='hidden' name='action' value='invoicepaymentreceived' />
+	[% gettext("Payment received (leave empty for today):") %] (dd.mm.yyyy) <input name='received' />
+        <input type='submit' value='[% gettext("Payment received") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" />
+	</form>
+	</td>
+	[% END %]
+</tr>
+</table>
+
+[% INCLUDE modules/Invoice/invoice.customer %]
+[% INCLUDE modules/Invoice/invoice.productlist %]
+[% INCLUDE modules/Invoice/invoice.history %]
+
+<blockquote class="helptext"><p>[% gettext("You can alter the information of the invoice as 
+long as its state is 'open'. Once the invoice is sent data cannot be altered anymore, not counting 
+the state which is possible to modify 'upwards'.") %]</p></blockquote>
+

@@ -1,0 +1,9 @@
+/* @override http://goah/themes/custom/grid.css */
+
+.grid_3 { width: 250px}
+
+.column{margin:0 5px; overflow:hidden; float:left;}
+
+.row{width:960px; margin:0 auto; overflow:hidden;}
+
+.row .row{margin:0 -10px;width:auto;}
