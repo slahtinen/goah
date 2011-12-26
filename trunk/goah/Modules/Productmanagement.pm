@@ -540,6 +540,7 @@ sub WriteEditedItem {
 #    item - Item(s) to retrieve. manuf|productgroups|suppliers|products
 #    id - Spesific id from the database so we can retrieve individual items
 #    uid - Sometimes the module isn't "started" when then function is called, so provide UID via parameter.
+#          If uid == -1, ignore all currency formatting
 #    settref - Settings reference, for same reason than uid
 #
 # Returns:
@@ -561,8 +562,7 @@ sub ReadData {
 
 	if($uid eq '' && $_[0] eq 'products') {
 		unless($_[2]) {
-			goah::Modules->AddMessage("error",__("Can't access product information. UID is missing"),__FILE__,__LINE__);
-			return 0;
+			$uid=0;
 		} else {
 			$uid = $_[2];
 		}

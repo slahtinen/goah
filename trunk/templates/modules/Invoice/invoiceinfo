@@ -100,6 +100,11 @@
 	</td><td>
         <input type='submit' name="invoicetocardreceipt" value='[% gettext("Card payment") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" />
 	</td>
+	[% IF invoice.state == 0 %]
+	<td>
+	<input type='submit' name="invoicebacktobasket" value='[% gettext("Return invoice to basket") %]' onclick="return confirm('[% gettext("Confirm returning invoice to basket") %]')" />
+	</td>
+	[% END %]
 	</form>
 	[% END %]
 	[% IF invoice.state == 1 %]

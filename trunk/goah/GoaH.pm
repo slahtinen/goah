@@ -114,15 +114,19 @@ sub FormatCurrency {
 	}
 
 	my $set;
-	unless($_[4]) {
+	unless($_[4] && $_[2] != -1) {
 		goah::Modules->AddMessage('warn',__("Slow version of FormatCurrency called"));
 		use goah::Modules::Personalsettings;
 		$set = goah::Modules::Personalsettings->ReadSettings($_[2]);
 	} else {
-		$set=$_[4];
+		if($_[2]==-1) {
+			$set=0;
+		} else {
+			$set=$_[4];
+		}
 	}
 	my %settings;
-	unless($set==0) {
+	unless($set==0 && $_[2] != -1) {
 		%settings = %$set;
 
 		# Check if user wants to see prices with VAT. If not then revert VAT-multiplier to 1.

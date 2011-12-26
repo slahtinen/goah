@@ -705,6 +705,7 @@ sub AddProductToBasket {
 #
 #   basketid - Basket id from the database
 #   rowid - If set read individual row from the database. If omitted read whole basket.
+#   ignoreuid - If set, don't do any currency formatting, return raw data from database
 #
 # Returns:
 #
@@ -740,6 +741,9 @@ sub ReadBasketrows {
 			foreach my $key (keys %basketrowdbfields) {
 				$field = $basketrowdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
+					if($_[2]) {
+						$uid=-1;
+					}
 					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref); 
 					my %prod = %$prodpoint;
 					if($_[1]==-1) {
@@ -772,6 +776,10 @@ sub ReadBasketrows {
 			$field = $basketrowdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
 				my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$data->productid,$uid,$settref); 
+				unless($prodpoint) {
+					goah::Modules->AddMessage('error',__("Couldn't read product data for id")." ".$data->productid,__FILE__,__LINE__);
+					return 0;
+				}
 				my %prod = %$prodpoint;
 				$rowdata{$field} = goah::GoaH->FormatCurrency($data->get($field),$prod{'vat'},$uid,'out',$settref);
 			} else {
@@ -873,6 +881,49 @@ sub BasketToOrder {
 	$data->update;
 
 	return $ordernum;
+}
+
+# 
+# Function: OrderToBasket
+#
+#  Create basket from order. Basically this function only updates basket state
+#
+# Parameters:
+#
+#   id - ID for order to convert back to basket
+#
+# Returns:
+#
+#   0 - Success
+#   1 - Fail
+#
+sub OrderToBasket {
+
+	if($_[0]=~/goah::Modules::Basket/) {
+		shift;
+	}
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("Can't convert order back to basket. Order ID is missing!"),__FILE__,__LINE__);
+		return 1;
+	}
+
+	use goah::Database::Baskets;
+	my $data = goah::Database::Baskets->retrieve($_[0]);
+
+	unless($data) {
+		goah::Modules->AddMessage('error',__("Can't convert order back to basket. Couldn't read order info!"),__FILE__,__LINE__);
+		return 1;
+	}
+
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	$data->ordernum("0");
+	$data->state('0');
+	$data->info(__("Returned from order"));
+	$data->updated(sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
+	$data->update;
+
+	return 0;
 }
 
 

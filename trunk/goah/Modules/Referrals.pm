@@ -46,7 +46,7 @@ sub Start {
 
 #
 # Referral is always created from basket, so 
-# we'll read invoice information via basket.
+# we'll read referral information via basket.
 sub NewReferral {
 
 	# This function is called outside of the package internal namespace
@@ -153,8 +153,21 @@ sub AddRowToReferral {
 	return 1;
 }
 
-# An simple function to "fill in" referral so it can be quickly transferred
-# to invoice
+#
+# Function: FillReferral
+#
+#   An simple function to "fill in" referral so it can be quickly transferred
+#   to invoice
+#
+# Parameters:
+#
+#   id - Referral id to fill
+#
+# Returns:
+#   
+#  0 - Fail
+#  1 - Success
+#
 sub FillReferral {
 
 	if($_[0]=~/goah::Modules::Referrals/) {
@@ -206,6 +219,87 @@ sub FillReferral {
 	$refinfo->update();
 
 	return 1;
+}
+
+#
+# Function: DeleteReferral
+#
+#   Function to loop trough and delete referral and it's rows from
+#   the database. This is used when invoice is converted back to basket
+#
+# Parameters:
+#
+#   id - Referral id to remove
+#
+# Returns:
+#
+#   0 - Success
+#   1 - Fail
+#
+sub DeleteReferral {
+
+	if($_[0]=~/goah::Modules::Referrals/) {
+		shift;
+	}
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("Can't delete referral!")." ".__("Rererral id is missing!"));
+		return 1;
+	}
+
+	use goah::Database::Referralrows;
+	use goah::Modules::Basket;
+	use goah::Database::Products;
+	use goah::Database::Referrals;
+
+	my $referral = goah::Database::Referrals->retrieve($_[0]);
+	unless($referral) {
+		goah::Modules->AddMessage('error',__("Can't delete referral!")." ".__("Couldn't read referral from database!"),__FILE__,__LINE__);
+		return 1;
+	}
+
+	# Convert order into an basket
+	use goah::Modules::Basket;
+	if(goah::Modules::Basket->OrderToBasket($referral->orderid)) {
+		goah::Modules->AddMessage('error',__("Couldn't convert order to basket!"),__FILE__,__LINE__);
+		return 1;
+	} else {
+		goah::Modules->AddMessage('info',__("Basket created from the order."),__FILE__,__LINE__);
+	}
+		
+	$referral->delete;
+	goah::Database::Referrals->commit;
+
+	my @rows = goah::Database::Referralrows->search_where({ refid => $_[0]});
+	my $rowpointer;
+	my %rowinfo;
+	foreach my $row (@rows) {
+
+		$rowpointer = goah::Modules::Basket::ReadBasketrows(0,$row->rowid,1);
+		unless($rowpointer) {
+			goah::Modules->AddMessage('error',__("Couldn't read basket row with id ").$row->rowid,__FILE__,__LINE__);
+			return 1;
+		}
+		%rowinfo = %$rowpointer;
+
+		my $proddata = goah::Database::Products->retrieve($rowinfo{'productid'});
+		my $amt = $proddata->in_store;
+		if($rowinfo{'amount'}>=0) {
+			$amt+=$rowinfo{'amount'};
+		} else {
+			$amt-=(-1*$rowinfo{'amount'});
+		}
+		$proddata->in_store($amt);
+		goah::Modules->AddMessage('debug',"New storage value for ".$proddata->code.": ".$proddata->in_store,__FILE__,__LINE__);
+		$proddata->update;
+		$proddata->commit;
+
+		$row->delete;
+		goah::Database::Referralrows->commit;
+	}
+
+
+	return 0;
 }
 
 1;

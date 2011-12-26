@@ -141,12 +141,45 @@ sub Start {
 				$state=5;
 			} elsif($q->param('invoicetocardreceipt')) {
 				$state=6;
+			} elsif($q->param('invoicebacktobasket')) {
+		
+				# Convert unsent invoice back to basket
+
+				# First, check that invoice status is convertable
+				my $invoice = ReadInvoices($q->param('target'));
+				unless($invoice->id eq $q->param('target')) {
+					goah::Modules->AddMessage('error',__("Can't read invoice information. Can't revert invoice into an basket."),__FILE__,__LINE__);
+				} else {
+					my $ok=1;
+					unless($invoice->state eq "0") {
+						goah::Modules->AddMessage('error',__("Can't delete invoice! Invoice already sent!"));
+						goah::Modules->AddMessage('debug',"Invoice state: ".$invoice->state,__FILE__,__LINE__);
+						$ok=0;
+					}
+					# Actually delete the invoice and referral included in it
+					use goah::Modules::Referrals;
+					my $delref = goah::Modules::Referrals->DeleteReferral($invoice->referralid);
+
+					if($delref==0 && $ok==1) {
+						goah::Modules->AddMessage('info',__("Referral removed."));
+						if(DeleteInvoice($q->param('target'))) {
+							goah::Modules->AddMessage('info',__("Invoice converted to basket"),__FILE__,__LINE__);
+						} else {
+							goah::Modules->AddMessage('error',__("Couldn't convert invoice to basket!"),__FILE__,__LINE__);
+						}
+					} elsif($ok==1) {
+						goah::Modules->AddMessage('error',__("Couldn't delete referral. Leaving invoice untouched!"));
+					}
+				}
+
 			}
 
-			if(UpdateInvoiceinfo($q->param('target'),$state)) {
-				goah::Modules->AddMessage('info',__("Invoice information updated."));
-			} else {
-				goah::Modules->AddMessage('error',__("Can't update invoice information!"));
+			unless($q->param('invoicebacktobasket')) {
+				if(UpdateInvoiceinfo($q->param('target'),$state)) {
+					goah::Modules->AddMessage('info',__("Invoice information updated."));
+				} else {
+					goah::Modules->AddMessage('error',__("Can't update invoice information!"));
+				}
 			}
 
 			$tmp = ReadInvoices($q->param('target'));
@@ -157,7 +190,6 @@ sub Start {
 
 			$tmp = ReadInvoicehistory($q->param('target'));
 			$variables{'invoicehistory'} = $tmp;
-
 
 			$variables{'function'} = 'modules/Invoice/invoiceinfo';
 
@@ -748,7 +780,7 @@ sub ReadInvoiceTotal {
 	}
 
 	$total{'vat0'}=goah::GoaH->FormatCurrency($total{'vat0'},0,$uid,'out',$settref);
-	$total{'inclvat'}=goah::GoaH->FormatCurrency($total{'inclvat'},0,$uid,'out'),$settref;
+	$total{'inclvat'}=goah::GoaH->FormatCurrency($total{'inclvat'},0,$uid,'out',$settref);
 	$total{'vat'}=goah::GoaH->FormatCurrency($total{'vat'},0,$uid,'out',$settref);
 
 	return \%total;
@@ -948,6 +980,50 @@ sub UpdateInvoiceinfo {
 	
 	return 1;
 
+}
+
+
+# 
+# Function: DeleteInvoice
+#
+#   Function to delete invoice information from the database. This is used only
+#   when the invoice is converted back into an basket.
+#
+# Parameters:
+#
+#   id - Invoice id for removal
+#
+# Returns:
+#
+#   0 - Success
+#   1 - Fail
+#
+sub DeleteInvoice {
+
+	if($_[0]=~/goah::Modules::Invoice/) {
+		shift;
+	}
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("Can't delete invoice! Id is missing!"),__FILE__,__LINE__);
+		return 1;
+	}
+
+	use goah::Database::Invoices;
+	use goah::Database::Invoicerows;
+
+	my $invoice=goah::Database::Invoices->retrieve($_[0]);
+	$invoice->delete;
+	goah::Database::Invoices->commit;
+
+	my @invoicerows=goah::Database::Invoicerows->search_where('invoiceid' => $_[0]);
+
+	foreach my $row (@invoicerows) {
+		$row->delete;
+	}
+	goah::Database::Invoicerows->commit;
+
+	return 0;
 }
 
 1;
