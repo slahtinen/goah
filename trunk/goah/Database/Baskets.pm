@@ -25,7 +25,7 @@ use base 'goah::Database';
 use utf8;
 
 __PACKAGE__->table('Baskets');
-__PACKAGE__->columns(All => qw/id companyid locationid billingid created updated ordernum state info ownerid lasttrigger dayinmonth repeat/);  
+__PACKAGE__->columns(All => qw/id companyid locationid billingid created updated ordernum state info ownerid lasttrigger dayinmonth repeat nexttrigger/);  
 
 
 
