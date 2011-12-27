@@ -65,7 +65,7 @@
 [% rowc = 'info' %]
 
 <tr class="[% rowc %]">
-<td colspan='7'>[% gettext("Total") %]</td>
+<td colspan='8'>[% gettext("Total") %]</td>
 <td class='number'>[% basketrows.-1.baskettotal %]</td>
 <td>&nbsp;</td>
 </tr>

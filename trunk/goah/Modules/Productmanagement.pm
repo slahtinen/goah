@@ -542,6 +542,8 @@ sub WriteEditedItem {
 #    uid - Sometimes the module isn't "started" when then function is called, so provide UID via parameter.
 #          If uid == -1, ignore all currency formatting
 #    settref - Settings reference, for same reason than uid
+#    internal - If set to 1 no currency conversions are made. This is used for internal usage, so that
+#               whenever it's not necessary to actually (re-)format currencies the procedure can be skipped
 #
 # Returns:
 #
@@ -621,7 +623,11 @@ sub ReadData {
 			foreach my $key (keys %productsdbfields) {
 				$field = $productsdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
-					$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->get($field),$prod->get('vat'),$uid,'out',$settref);
+					unless($_[4]) {
+						$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->get($field),$prod->get('vat'),$uid,'out',$settref);
+					} else {
+						$pdata{$i}{$field} = $prod->get($field);
+					}
 				} else {
 					$pdata{$i}{$field} = $prod->get($field);
 				}
@@ -646,7 +652,11 @@ sub ReadData {
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
-				$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
+				unless($_[4] eq "1") {
+					$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
+				} else {
+					$pdata{$i}{$field} = $data[0]->get($field);
+				}
 			} else {
 				$pdata{$field} = $data[0]->get($field);
 			}

@@ -180,18 +180,27 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't update invoice information!"));
 				}
+
+				$tmp = ReadInvoices($q->param('target'));
+				$variables{'invoice'} = $tmp;
+
+				$tmp = ReadInvoicerows($q->param('target'));
+				$variables{'invoicerows'} = $tmp;
+
+				$tmp = ReadInvoicehistory($q->param('target'));
+				$variables{'invoicehistory'} = $tmp;
+
+				$variables{'function'} = 'modules/Invoice/invoiceinfo';
+			} else {
+
+				$variables{'function'} = 'modules/Invoice/invoices';
+				$variables{'invoices'} = ReadInvoices();
+				my @tmp;
+				@tmp=qw(0 1 2 3);
+				my $csvurl.="&states=".join("&states=",@tmp);
+				$variables{'csvurl'}=$csvurl;
+				$variables{'search_states'}=\@tmp;
 			}
-
-			$tmp = ReadInvoices($q->param('target'));
-			$variables{'invoice'} = $tmp;
-
-			$tmp = ReadInvoicerows($q->param('target'));
-			$variables{'invoicerows'} = $tmp;
-
-			$tmp = ReadInvoicehistory($q->param('target'));
-			$variables{'invoicehistory'} = $tmp;
-
-			$variables{'function'} = 'modules/Invoice/invoiceinfo';
 
 		} elsif($q->param('action') eq 'invoicetobilling') {
 
@@ -995,8 +1004,8 @@ sub UpdateInvoiceinfo {
 #
 # Returns:
 #
-#   0 - Success
-#   1 - Fail
+#   1 - Success
+#   0 - Fail
 #
 sub DeleteInvoice {
 
@@ -1006,7 +1015,7 @@ sub DeleteInvoice {
 
 	unless($_[0]) {
 		goah::Modules->AddMessage('error',__("Can't delete invoice! Id is missing!"),__FILE__,__LINE__);
-		return 1;
+		return 0;
 	}
 
 	use goah::Database::Invoices;
@@ -1023,7 +1032,7 @@ sub DeleteInvoice {
 	}
 	goah::Database::Invoicerows->commit;
 
-	return 0;
+	return 1;
 }
 
 1;

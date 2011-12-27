@@ -275,7 +275,7 @@ sub DeleteReferral {
 	my %rowinfo;
 	foreach my $row (@rows) {
 
-		$rowpointer = goah::Modules::Basket::ReadBasketrows(0,$row->rowid,1);
+		$rowpointer = goah::Modules::Basket->ReadBasketrows(0,$row->rowid,1);
 		unless($rowpointer) {
 			goah::Modules->AddMessage('error',__("Couldn't read basket row with id ").$row->rowid,__FILE__,__LINE__);
 			return 1;

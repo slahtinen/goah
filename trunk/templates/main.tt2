@@ -50,9 +50,10 @@
         <blockquote class="helptext">
 	<p><b>Development version</b><br/>This installation is running development code of the GoaH -project. Some
 	features are still missing, mainly the option to select modules per user basis. Please feel free
-	to participate to project either via <a href="http://forum.goah.org">discussion forums</a> or via
-	our <a href="http://redmine.tietovirta.fi/projects/show/goah">project management tool</a>.</p>
-	<p>Please report any bugs you find either via forums, project management tool or via IRCNet at channel #goah.</p>
+	to participate to project via our <a href="https://sorsavoima.fi/">project management tool</a>.</p>
+	<p>Project management tool requires an account and due to problems with spammers we've restricted the 
+	login to the remine installation. If you wish to have an account, please feel free to contact us via email
+	to address <a href="mailto:helpdesk@tietovirta.fi">helpdesk@tietovirta.fi</a>.</p>
 	</blockquote>
 [% END %]
 

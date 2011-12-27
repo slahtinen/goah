@@ -705,7 +705,7 @@ sub AddProductToBasket {
 #
 #   basketid - Basket id from the database
 #   rowid - If set read individual row from the database. If omitted read whole basket.
-#   ignoreuid - If set, don't do any currency formatting, return raw data from database
+#   internal - If set don't do any currency formatting. This is to speed up internal processing of data.
 #
 # Returns:
 #
@@ -741,10 +741,7 @@ sub ReadBasketrows {
 			foreach my $key (keys %basketrowdbfields) {
 				$field = $basketrowdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
-					if($_[2]) {
-						$uid=-1;
-					}
-					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref); 
+					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref,$_[2]); 
 					my %prod = %$prodpoint;
 					if($_[1]==-1) {
 						$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),0,$uid,'in',$settref);
@@ -758,7 +755,11 @@ sub ReadBasketrows {
 			unless($rowdata{$i}{'amount'}) {
 				$rowdata{$i}{'amount'}=0;
 			}
-			$rowdata{$i}{'total'} = goah::GoaH->FormatCurrency( ($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'}),0,$uid,'out',$settref);
+			unless($_[2]) {
+				$rowdata{$i}{'total'} = goah::GoaH->FormatCurrency( ($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'}),0,$uid,'out',$settref);
+			} else {
+				$rowdata{$i}{'total'} = $rowdata{$i}{'sell'}*$rowdata{$i}{'amount'};
+			}
 			$baskettotal+=($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'});
 			$rowdata{$i}{'code'} = $row->get('code');
 			$rowdata{$i}{'name'} = $row->get('name');
@@ -775,20 +776,28 @@ sub ReadBasketrows {
 		foreach my $key (keys %basketrowdbfields) {
 			$field = $basketrowdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
-				my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$data->productid,$uid,$settref); 
+				my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$data->productid,$uid,$settref,$_[2]); 
 				unless($prodpoint) {
 					goah::Modules->AddMessage('error',__("Couldn't read product data for id")." ".$data->productid,__FILE__,__LINE__);
 					return 0;
 				}
 				my %prod = %$prodpoint;
-				$rowdata{$field} = goah::GoaH->FormatCurrency($data->get($field),$prod{'vat'},$uid,'out',$settref);
+				unless($_[2]) {
+					$rowdata{$field} = goah::GoaH->FormatCurrency($data->get($field),$prod{'vat'},$uid,'out',$settref);
+				} else {
+					$rowdata{$field} = $data->get($field);
+				}
 			} else {
 				$rowdata{$field} = $data->get($field);
 			}
 		}
 		$rowdata{'code'} = $data->get('code');
 		$rowdata{'name'} = $data->get('name');
-		$rowdata{'total'} = goah::GoaH->FormatCurrency( ($rowdata{'sell'}*$rowdata{'amount'}),0,$uid,'out',$settref);
+		unless($_[2]) {
+			$rowdata{'total'} = goah::GoaH->FormatCurrency( ($rowdata{'sell'}*$rowdata{'amount'}),0,$uid,'out',$settref);
+		} else {
+			$rowdata{'total'} = $rowdata{'sell'}*$rowdata{'amount'};
+		}
 
 		my $proddata=goah::Database::Products->retrieve($data->get('productid'));
 		$rowdata{'in_store'}=$proddata->get('in_store');
@@ -946,8 +955,6 @@ sub OrderToBasket {
 #
 sub BasketToInvoice {
 
-	goah::Modules->AddMessage('debug',"BasketToInvoice -function started");
-
 	unless($_[0]) {
 		goah::Modules->AddMessage('error',__("Can't convert basket! Basket id is missing!"));
 		return 0;
@@ -957,14 +964,14 @@ sub BasketToInvoice {
 	use goah::Modules::Referrals;
 	my $refid = goah::Modules::Referrals->NewReferral($_[0]);
 	if($refid > 0) {
-		goah::Modules->AddMessage('info',__("Referral created."));
+		goah::Modules->AddMessage('debug',__("Referral created."));
 	} else {
 		goah::Modules->AddMessage('error',__("Can't create referral!"));
 		return 0;
 	}
 
 	if(goah::Modules::Referrals->FillReferral($refid)) {
-		goah::Modules->AddMessage('info',__("Filled referral amounts."));
+		goah::Modules->AddMessage('debug',__("Filled referral amounts."));
 	} else {
 		goah::Modules->AddMessage('error',__("Can't update referral amounts to match ordered amount"));
 	}
@@ -983,7 +990,7 @@ sub BasketToInvoice {
 		goah::Modules->AddMessage('error',__("Can't convert basket to order!"));
 		return 0;
 	} else {
-		goah::Modules->AddMessage('info',__("Basket converted to order. Order number ").$ordernum);
+		goah::Modules->AddMessage('debug',__("Basket converted to order. Order number ").$ordernum,__FILE__,__LINE__);
 	}
 
 	return 1;
