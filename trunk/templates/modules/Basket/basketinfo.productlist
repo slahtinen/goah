@@ -38,7 +38,11 @@
 	<td>[% prodinfo.code %]</td>
 	<td>[% prodinfo.name %]</td>
 	<td><input class="number" name='purchase' value='[% row.purchase %]'></td>
-	<td><input class="number" name='sell' value='[% row.sell %]'></td>
+	<td><input class="number" name='sell' value='[% row.sell %]'>
+	[% IF row.sell <= row.purchase %] 
+		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% gettext("Purchase price lower than sell price!") %]" />
+	[% END %]
+	</td>
 	<td>[% prodinfo.vat %]&#37;</td>
 	<td>[% prodinfo.in_store %]
 	[% IF prodinfo.in_store < row.amount %]
