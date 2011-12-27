@@ -340,7 +340,7 @@ sub ReadBaskets {
 		#@data = $db->search_where({ state => '0', ownerid => $_[1] }, { order_by => $sort });
 		@data = $db->search_where({ state => '0' }, { order_by => $sort });
 		my %baskets;
-		my $i=0;
+		my $i=10000;
 		my $f;
 		my $br;
 		my %basketrows;
