@@ -22,7 +22,6 @@
 	<tr class="[% rclass %]">
 	[% cinfo = companyinfo(basket.companyid) %]
 	<td>
-	key=[% key %]<br>
 	<b>[% cinfo.name %]</b><br/>
 	[% linfo = locationinfo(basket.locationid) %]
 	[% IF linfo == 0 %] 

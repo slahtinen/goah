@@ -1,7 +1,3 @@
 [% INCLUDE modules/Basket/activebaskets %]
 [% INCLUDE modules/Basket/newbasket %]
 
-<blockquote class="helptext"><p> [% gettext("Baskets are collection of products and they are attached to single customer. Via baskets you can collect
-proper setup for your customer and create an offer from it or transform it as an order. After you've finished with 
-the basket (ie made an offer) basket will disappear.") %]</p></blockquote>
-

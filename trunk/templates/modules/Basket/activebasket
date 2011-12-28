@@ -1,7 +1,10 @@
 <h2>[% gettext("Basket information") %]</h2>
 <table>
-<tr><td>[% gettext("Basket created:") %] [% formatdate(data.created) %]</td>
-<td>[% gettext("Last update:") %] [% formatdate(data.updated) %]</td></tr>
+<tr>
+<td>[% gettext("Basket state:") %]</td><td>[% state = data.state %][% basketstates.$state %]</td></tr>
+<tr>
+<td>[% gettext("Basket created:") %]</td><td>[% formatdate(data.created) %]</td></tr>
+<tr><td>[% gettext("Last update:") %]</td><td>[% formatdate(data.updated) %]</td></tr>
 <form action="" method=post>
 <input type="hidden" name="module" value="[% module %]">
 <input type="hidden" name="action" value="editcustomerinfo">
@@ -51,6 +54,12 @@
 [% ELSE %]
 	<input name='[% field.field %]' value='[% data.$fieldname %]' type='hidden'> 
 [% END %]
+[% END %]
+[% IF state == 2 %]
+<tr><td>[% gettext("Last triggered") %]</td><td>[% data.lasttrigger %]</td></tr>
+<tr><td>[% gettext("Next trigger") %]</td><td>[% data.nexttrigger %]</td></tr>
+<tr><td>[% gettext("Repeat every n month") %]</td><td><input name="repeat" value="[% data.repeat %]" /></td></tr>
+<tr><td>[% gettext("Day of month (1-28)") %]</td><td><input name="dayinmonth" value="[% data.dayinmonth %]" /></td></tr>
 [% END %]
 <tr>
 <td>
@@ -107,6 +116,7 @@
 <h3>[% gettext("Basket functions") %]</h3>
 <table>
 <tr>
+[% IF state != 2 && state != 3 %]
 <td>
 <form action='' method='post'>
 <input type='hidden' name='module' value='[% module %]'>
@@ -123,6 +133,7 @@
 <input type='submit' value="[% gettext("Create shipment") %]" onclick="return confirm('[% gettext("Create shipment from basket?") %]')"/>
 </form>
 </td>
+[% END %]
 <td>
 <form action='' method='post'>
 <input type='hidden' name='module' value="[% module %]">

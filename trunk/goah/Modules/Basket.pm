@@ -63,7 +63,19 @@ my %basketrowdbfields = (
 #   Submenu definition
 #
 my %submenu = ( 
-		0 => { title => __("Stored baskets"), action => 'storedbaskets' }
+		0 => { title => __("Recurring baskets"), action => 'recurring' }
+	);
+
+
+# 
+# Hash: basketstates
+#
+#   Text representations of basket states
+#
+my %basketstates = ( 0 => __("Open"),
+		     1 => __("Sent/Closed"),
+		     2 => __("Recurring"),
+		     3 => __("Offer") 
 	);
 
 #
@@ -106,6 +118,7 @@ sub Start {
 	$variables{'formatdate'} = sub { goah::GoaH::FormatDate($_[0]); };
 	$variables{'basketdbfields'} = \%basketdbfields;
 	$variables{'basketrowdbfields'} = \%basketrowdbfields;
+	$variables{'basketstates'} = \%basketstates;
 	$variables{'submenu'} = \%submenu;
 	$variables{'function'} = 'modules/Basket/showbaskets';
 	$variables{'activebasket'} = 0;
@@ -118,6 +131,7 @@ sub Start {
 
 		if($q->param('action') eq 'showbaskets') {
 
+				$variables{'baskets'} = ReadBaskets('',$uid);
 				$variables{'function'} = 'modules/Basket/showbaskets';
 
 		} elsif($q->param('action') eq 'selectbasket') {
@@ -127,10 +141,10 @@ sub Start {
 				$variables{'data'} = ReadBaskets($q->param('target'));
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 
-		} elsif($q->param('action') eq 'storedbaskets') {
+		} elsif($q->param('action') eq 'recurring') {
 
-				goah::Modules::AddMessage('info','Feature under construction');
-				$variables{'function'} = 'modules/Basket/showbaskets';
+				$variables{'function'} = 'modules/Basket/recurringbaskets';
+				$variables{'baskets'} = ReadBaskets('',$uid,2);
 
 		} elsif($q->param('action') eq 'newbasket') {
 
@@ -235,9 +249,11 @@ sub Start {
 				$variables{'function'} = 'modules/blank';
 		}
 
-	}
+	} else {
+		$variables{'baskets'} = ReadBaskets('',$uid);
 
-	$variables{'baskets'} = ReadBaskets('',$uid);
+	}
+		
 	use goah::Modules::Customermanagement;
 	$variables{'userinfo'} = sub { return goah::Modules::Customermanagement::ReadPersondata($_[0]) };
 	$variables{'companyinfo'} = sub { goah::Modules::Customermanagement::ReadCompanydata($_[0]) };
@@ -301,7 +317,12 @@ sub WriteNewBasket {
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 	$data{'created'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec);
 	$data{'updated'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec);
-	$data{'state'} = '0';
+
+	if($q->param('state')) {
+		$data{'state'}=$q->param('state');
+	} else {
+		$data{'state'} = '0';
+	}
 	$data{'ordernum'} = '0';
 	$data{'ownerid'} = $_[0];
 
@@ -318,6 +339,7 @@ sub WriteNewBasket {
 #
 #   id - Id to retrieve from database. If omitted every basket is returned
 #   ownerid - UID to search baskets since we show only 'owned' baskets to users (temporarily disabled)
+#   state - Which basket states to include (open, recurring ...)
 #
 # Returns:
 #
@@ -338,7 +360,11 @@ sub ReadBaskets {
 	if(!($_[0]) || $_[0] eq '') {
 		# Dummy fix. This will show all baskets to all users.
 		#@data = $db->search_where({ state => '0', ownerid => $_[1] }, { order_by => $sort });
-		@data = $db->search_where({ state => '0' }, { order_by => $sort });
+		my $state=0;
+		if($_[2]) {
+			$state=$_[2];
+		}
+		@data = $db->search_where({ state => $state }, { order_by => $sort });
 		my %baskets;
 		my $i=10000;
 		my $f;
@@ -358,6 +384,14 @@ sub ReadBaskets {
 			@rows=sort keys(%basketrows);
 			$baskets{$i}{'rows'}=pop @rows;
 			$baskets{$i}{'rows'}++;
+
+			if($state eq "2") {
+				$baskets{$i}{'lasttrigger'}=$_->lasttrigger;
+				$baskets{$i}{'nexttrigger'}=$_->nexttrigger;
+				$baskets{$i}{'repeat'}=$_->repeat;
+				$baskets{$i}{'dayinmonth'}=$_->dayinmonth;
+			}
+
 			$i++;
 		} 
 		$baskets{-1}{'total'}=goah::GoaH->FormatCurrency($total,0,$uid,'out',$settref);
@@ -413,6 +447,60 @@ sub UpdateBasket {
 			} else {
 				 $data->set($fieldinfo{'field'} => '');
 			}
+		}
+	}
+
+	# Add fields for recurring baskets, if necessary
+	if($data->state eq "2") {
+
+		my $recalc=0;
+		if($q->param('repeat')) {
+			unless($q->param('repeat') eq $data->repeat) {
+				$recalc=1;
+			}
+			if($q->param('repeat')=~/[0-9]{1,2}/) {
+				$data->repeat($q->param('repeat'));
+			} else { 
+				goah::Modules->AddMessage('warn',__("Value for repeat every n month isn't valid. Setting value to 1."));
+				$data->repeat(1);
+			}
+		}
+
+		if($q->param('dayinmonth')) {
+			unless($q->param('dayinmonth') eq $data->dayinmonth) {
+				$recalc=1;
+			}
+			if($q->param('dayinmonth')=~/[0-9]{1,2}/) {
+				if($q->param('dayinmonth') > 0 && $q->param('dayinmonth') <= 28) {
+					$data->dayinmonth($q->param('dayinmonth'));
+				} else {
+					goah::Modules->AddMessage('warn',__("Value for day of month isn't in range. Setting value to 1."));
+					$data->dayinmonth(1);
+				}
+			} else {
+				goah::Modules->AddMessage('warn',__("Value for day of month isn't valid. Setting value to 1."));
+				$data->dayinmonth(1);
+			}
+		}
+	
+		if($recalc==1) {
+
+			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+		
+			if($mday >= $data->dayinmonth) {
+				$mon++;
+			}
+
+			$mday=$data->dayinmonth;
+			$mon+=$data->repeat;
+
+			if($mon>12) {
+				$year++;
+				$mon-=12;
+			}
+
+			$data->lasttrigger(0);
+			$data->nexttrigger(sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,0,0,0));
 		}
 	}
 
