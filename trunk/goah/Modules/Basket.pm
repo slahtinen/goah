@@ -667,10 +667,42 @@ sub UpdateBasket {
 				$data->dayinmonth(1);
 			}
 		}
+
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+		my $nextyear=0;
+		my $nextmonth=0;
+		if($q->param('nexttrigger_year')) {
+			if($q->param('nexttrigger_year')=~/^[0-9]{4}$/) {
+				if($year+1900 > $q->param('nexttrigger_year')) {
+					goah::Modules->AddMessage('error',__("Can't change next trigger time to past!"),__FILE__,__LINE__);
+				} else {
+					$nextyear=$q->param('nexttrigger_year');
+					$recalc=1;
+				}
+			} else {
+				goah::Modules->AddMessage('error',__("Next year to trigger isn't valid. Won't change the value."),__FILE__,__LINE__);
+			}
+		}
+
+		if($q->param('nexttrigger_month')) {
+			if($q->param('nexttrigger_month')=~/^[0-9]{1,2}$/) {
+				if($q->param('nexttrigger_month') >= 1 && $q->param('nexttrigger_month') <=12) {
+
+					if( ($q->param('nexttrigger_month') > $mon+1) || $nextyear>0) {
+						$nextmonth=$q->param('nexttrigger_month');
+						$recalc=1;
+					}
+
+				} else {
+					goah::Modules->AddMessage('error',__("Next month to trigger isn't valid. Won't change the value."),__FILE__,__LINE__);
+				}
+			} else {
+				goah::Modules->AddMessage('error',__("Next month to trigger isn't valid. Won't change the value."),__FILE__,__LINE__);
+			}
+		}
 	
 		if($recalc==1) {
 
-			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 			$mon++;
 			$year+=1900;
 		
@@ -683,6 +715,14 @@ sub UpdateBasket {
 			if($mon>12) {
 				$year++;
 				$mon-=12;
+			}
+
+			if($nextyear!=0) {
+				$year=$nextyear;
+			}
+
+			if($nextmonth!=0) {
+				$mon=$nextmonth;
 			}
 
 			$data->lasttrigger(0);

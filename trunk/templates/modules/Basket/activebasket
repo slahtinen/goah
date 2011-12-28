@@ -57,7 +57,10 @@
 [% END %]
 [% IF state == 2 %]
 <tr><td>[% gettext("Last triggered") %]</td><td>[% data.lasttrigger %]</td></tr>
-<tr><td>[% gettext("Next trigger") %]</td><td>[% data.nexttrigger %]</td></tr>
+<tr><td>[% gettext("Next trigger") %]</td><td>[% data.nexttrigger %].
+[% gettext("Change to") %] [% gettext("year") %] <input name="nexttrigger_year" style="width: 40px;"/> 
+[% gettext("month") %] <input name="nexttrigger_month" style="width: 40px;" />
+</td></tr>
 <tr><td>[% gettext("Repeat every n month") %]</td><td><input name="repeat" value="[% data.repeat %]" /></td></tr>
 <tr><td>[% gettext("Day of month (1-28)") %]</td><td><input name="dayinmonth" value="[% data.dayinmonth %]" /></td></tr>
 [% END %]
