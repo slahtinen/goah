@@ -198,6 +198,45 @@ if($auth==1) {
 		# from database and it triggers execution of active modules
 		use goah::Modules;
 
+		# Do the 'cron'-ish run for recurring baskets. Further on, if
+		# there's more of this kind of functions I suppose we should
+		# build someting more sophisticated for this, but for now this
+		# should do.
+		my $cronp = goah::Modules::Systemsettings->ReadSetup('runcron');
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+		my $runcron=0;
+		unless($cronp eq "0") {
+			my @cronarr=@$cronp;
+			my $cron=$cronarr[0];
+			my $datetxt=$cron->value;
+			goah::Modules->AddMessage('debug',"Cronrun: $datetxt",__FILE__,__LINE__);
+			my @date=split("-",$datetxt);
+		
+			if($date[0] < $year+1900) {
+				$runcron=1;
+			}
+
+			if($runcron==0 && $date[1] < $mon+1) {
+				$runcron=1;
+			}
+
+			if($runcron==0 && $date[2] < $mday) {
+				$runcron=1;
+			}
+
+		} else {
+			$runcron=1;
+		}
+
+		if($runcron) {
+			goah::Modules->AddMessage('info',__("Cron process triggered"));
+			goah::Modules::Systemsettings->WriteSetupInt('runcron',sprintf("%04d-%02d-%02d",$year+1900,$mon+1,$mday));
+			use goah::Modules::Basket;
+			goah::Modules::Basket->RunCron();
+		} else {
+			goah::Modules->AddMessage('debug',__("Cron process already ran for today"));
+		}
+
 		# 
 		#  Read navigation first to variable and assign TT-variable 
 		#  via that. If ReadTopNavi is assigned directly to TT there'll

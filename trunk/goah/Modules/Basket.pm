@@ -345,6 +345,50 @@ sub WriteNewBasket {
 }
 
 #
+# Function: RunCron
+#
+#   This function is used to search trough and run recurring baskets according
+#   to their dates
+#
+# Parameters:
+#   
+#   None
+#
+# Returns:
+#
+#   1 - Success
+#   0 - Fail
+#
+sub RunCron {
+
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	my $now = sprintf("%04d-%02d-%02d",$year+1900,$mon+1,$mday);
+	use goah::Database::Baskets;
+	my @baskets = goah::Database::Baskets->search_where({ state => '2', nexttrigger => { '<=', $now } });
+
+	my $fail=0;
+	unless(@baskets) {
+		goah::Modules->AddMessage('debug',__("No baskets found for cron run."),__FILE__,__LINE__);
+	} else {
+		foreach(@baskets) {
+			goah::Modules->AddMessage('debug',"Running recurring basket id ".$_->id." which is due at ".$_->nexttrigger,__FILE__,__LINE__);
+			if(WriteRecurringBasket($_->id)) {
+				goah::Modules->AddMessage('info',__("Recurring basket ran succesfully. Id: ").$_->id,__FILE__,__LINE__);
+			} else {
+				goah::Modules->AddMessage('error',__("Coudln't run recurring basket with id ").$_->id,__FILE__,__LINE__);
+				$fail=1;
+			}
+		}
+	}
+
+	if($fail) {
+		return 0;
+	} 
+
+	return 1;	
+}
+
+#
 # Function: WriteRecurringBasket
 #   
 #   This function is used to convert recurring basket into an actual basket.
@@ -973,10 +1017,14 @@ sub ReadBasketrows {
 				if($field eq 'purchase' || $field eq 'sell') {
 					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref,$_[2]); 
 					my %prod = %$prodpoint;
-					if($_[1]==-1) {
-						$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),0,$uid,'in',$settref);
+					unless($_[2]) {
+						if($_[1]==-1) {
+							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),0,$uid,'in',$settref);
+						} else {
+							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$prod{'vat'},$uid,'out',$settref);
+						}
 					} else {
-						$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$prod{'vat'},$uid,'out',$settref);
+						$rowdata{$i}{$field}=$row->get($field);
 					}
 				} else {
 					$rowdata{$i}{$field} = $row->get($field);
@@ -1002,7 +1050,9 @@ sub ReadBasketrows {
 			}
 			$rowdata{$i}{'in_store'}=$proddata->get('in_store');
 		}
-		$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrency($baskettotal,0,$uid,'out',$settref);
+		unless($_[2]) {
+			$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrency($baskettotal,0,$uid,'out',$settref);
+		}
 		return \%rowdata;
 	} else {
 		# Row id is set, read only single row from the database

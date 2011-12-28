@@ -475,6 +475,49 @@ sub WriteSetup {
 	}
 }
 
+#
+# Function: WriteSetupInt
+#
+#   Internal function for setup changes (at this moment, only cron). This one
+#   is needed, since we're updating settings also via other functions, so 
+#   there isn't HTTP-variables for use.
+#
+# Parameters:
+#   
+#   item - Item to update
+#   value - Value for item
+#
+# Returns:
+#
+#   1 - Success
+#   0 - Fail
+#
+sub WriteSetupInt {
+
+	if($_[0]=~/goah::Modules::Systemsettings/) {
+		shift;
+	}
+
+	unless($_[0] && $_[1]) {
+		goah::Modules->AddMessage('error',__("Can't update system settings. Either item or value is missing!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	use goah::Database::Setup;
+	my @setup = goah::Database::Setup->search({ category => $_[0] });
+
+	unless(@setup) {
+		# We didn't find the setting we were after, so we'll create one instead
+		goah::Database::Setup->insert({ category => $_[0], value => $_[1] });
+		goah::Database::Setup->commit;
+	} else {
+		my $s = $setup[0];
+		$s->value($_[1]);
+		$s->update;
+	}
+
+	return 1;
+}
 
 #
 # Function: ReadOwnerInfo
