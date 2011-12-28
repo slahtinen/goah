@@ -1,5 +1,5 @@
-#!/usr/bin/perl -w 
-##!/usr/bin/perl -w -d:NYTProf
+#!/usr/bin/perl -w -d:NYTProf
+##!/usr/bin/perl -w 
 # -d:DProf
 
 =begin nd
@@ -209,7 +209,6 @@ if($auth==1) {
 			my @cronarr=@$cronp;
 			my $cron=$cronarr[0];
 			my $datetxt=$cron->value;
-			goah::Modules->AddMessage('debug',"Cronrun: $datetxt",__FILE__,__LINE__);
 			my @date=split("-",$datetxt);
 		
 			if($date[0] < $year+1900) {
@@ -234,7 +233,7 @@ if($auth==1) {
 			use goah::Modules::Basket;
 			goah::Modules::Basket->RunCron();
 		} else {
-			goah::Modules->AddMessage('debug',__("Cron process already ran for today"));
+			#goah::Modules->AddMessage('debug',__("Cron process already ran for today"));
 		}
 
 		# 
