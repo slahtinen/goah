@@ -91,15 +91,12 @@ sub CreateSessionid {
 	# Create session id from random number, remote address and user id
 	use Digest::MD5;
 	my $md5 = new Digest::MD5;
-	srand(time() ^($$ + ($$ <<15))) ;
-	my $random = rand();
-	$md5->add($uid.$ENV{'REMOTE_ADDR'}.$random);
+	$md5->add($uid.$ENV{'REMOTE_ADDR'});
 	my $id = $md5->hexdigest;
 	
 	# Search user id from the database
 	use goah::Database::users;
 	my @user = goah::Database::users->search(accountid => $uid);
-
 
 	# Store created session id and other information into database
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
