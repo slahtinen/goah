@@ -119,27 +119,37 @@
 [% IF state != 2 && state != 3 %]
 <td>
 <form action='' method='post'>
-<input type='hidden' name='module' value='[% module %]'>
-<input type='hidden' name='target' value='[% data.id %]'>
-<input type='hidden' name='action' value='basket2invoice'>
-<input type='submit' value="[% gettext("Create invoice") %]" onclick="return confirm('[% gettext("Create invoice from basket?") %]')"/>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='target' value='[% data.id %]' />
+<input type='hidden' name='action' value='basket2invoice' />
+<input type='submit' value="[% gettext("Create invoice") %]" onclick="return confirm('[% gettext("Create invoice from basket?") %]')" />
 </form>
 </td>
 <td>
 <form action='' method='post'>
-<input type='hidden' name='module' value='[% module %]'>
-<input type='hidden' name='target' value='[% data.id %]'>
-<input type='hidden' name='action' value='basket2shipment'>
-<input type='submit' value="[% gettext("Create shipment") %]" onclick="return confirm('[% gettext("Create shipment from basket?") %]')"/>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='target' value='[% data.id %]' />
+<input type='hidden' name='action' value='basket2shipment' />
+<input type='submit' value="[% gettext("Create shipment") %]" onclick="return confirm('[% gettext("Create shipment from basket?") %]')" />
+</form>
+</td>
+[% END %]
+[% IF state == 2 %]
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='target' value='[% data.id %]' />
+<input type='hidden' name='action' value='runrecurring' />
+<input type='submit' value="[% gettext("Run recurring basket now") %]" onclick="return confirm('[% gettext("Run recurring basket now?") %]')" />
 </form>
 </td>
 [% END %]
 <td>
 <form action='' method='post'>
-<input type='hidden' name='module' value="[% module %]">
-<input type='hidden' name='target' value="[% data.id %]">
-<input type='hidden' name='action' value="deletebasket">
-<input type='submit' value="[% gettext("Delete basket") %]" onclick="return confirm('[% gettext("Delete basket from database?") %]')"/>
+<input type='hidden' name='module' value="[% module %]" />
+<input type='hidden' name='target' value="[% data.id %]" />
+<input type='hidden' name='action' value="deletebasket" />
+<input type='submit' value="[% gettext("Delete basket") %]" onclick="return confirm('[% gettext("Delete basket from database?") %]')" />
 </form>
 </td>
 </tr>

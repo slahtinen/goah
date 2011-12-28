@@ -228,6 +228,9 @@ sub Start {
 					goah::Modules->AddMessage('error',__("Can't delete basket!"));
 				}
 
+				$variables{'baskets'} = ReadBaskets('',$uid);
+				$variables{'function'} = 'modules/Basket/showbaskets';
+
 		} elsif($q->param('action') eq 'basket2invoice') {
 
 				if(BasketToInvoice($q->param('target'))) {
@@ -243,6 +246,17 @@ sub Start {
 				$variables{'data'} = $tmpdata;
 				$variables{'products'} = goah::Modules::Productmanagement::ReadProductsByGroup($q->param('groupid'),$uid);
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
+
+		} elsif($q->param('action') eq 'runrecurring') {
+
+				if(WriteRecurringBasket($q->param('target'))) {
+					goah::Modules->AddMessage('info',__("New basket created via recurring basket"),__FILE__,__LINE__);
+				} else {
+					goah::Modules->AddMessage('error',__("Couldn't create new basket via recurring basket!"),__FILE__,__LINE__);
+				}
+
+				$variables{'baskets'} = ReadBaskets('',$uid);
+				$variables{'function'} = 'modules/Basket/showbaskets';
 
 		} else {
 				goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
@@ -331,6 +345,129 @@ sub WriteNewBasket {
 }
 
 #
+# Function: WriteRecurringBasket
+#   
+#   This function is used to convert recurring basket into an actual basket.
+#
+# Parameters:
+#  
+#   id - Recurring basket id which to convert into actual basket
+#
+# Returns:
+#
+#   1 - Success
+#   0 - Fail
+#
+sub WriteRecurringBasket {
+
+	if($_[0]=~/goah::Modules::Basket/) {
+		shift;
+	}
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("Can't run recurring basket! Basket id is missing!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	use goah::Database::Baskets;
+	my $rbasket = goah::Database::Baskets->retrieve($_[0]);
+        my $db = new goah::Database::Baskets;
+
+	# Update last triggered timestamp. The last trigger option will be set to current date,
+	# but since we need the actual time span we'll use dayinmonth -variable to store the 
+	# date which will end up on basket information and invoices.
+	my $repeat = $rbasket->repeat;
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	$rbasket->lasttrigger(sprintf("%04d-%02d-%02d",$year+1900,$mon+1,$mday));
+	my @lasttrigger=split("-",sprintf("%04d-%02d-%02d",$year+1900,$mon+1,$rbasket->dayinmonth));
+
+	# Calculate next date when to run
+	$mon++;
+	$year+=1900;
+
+	$mon+=$repeat;
+	if($mon>12) {
+		$year++;
+		$mon-=12;
+	}
+
+	$rbasket->nexttrigger(sprintf("%04d-%02d-%02d",$year,$mon,$rbasket->dayinmonth));
+
+	my @nexttrigger=split("-",$rbasket->nexttrigger);
+
+	my %data;
+	my %fieldinfo;
+	# Loop trough variables based on basketdbfields -hash definition
+	while(my($key,$value)=each(%basketdbfields)) {
+
+		%fieldinfo = %$value;
+		if($fieldinfo{'field'} eq 'id') { next; }
+
+		if($fieldinfo{'field'}=~/info/) {
+			$data{$fieldinfo{'field'}}.="\n".__("Automatically created from recurring basket.");
+			$data{$fieldinfo{'field'}}.=" ".__("Period: ").$lasttrigger[2].".".$lasttrigger[1].".".$lasttrigger[0];
+			$data{$fieldinfo{'field'}}.=" - ".$nexttrigger[2].".".$nexttrigger[1].".".$nexttrigger[0];
+		} else {
+			$data{$fieldinfo{'field'}} = $rbasket->get($fieldinfo{'field'});
+		}
+
+	}
+
+	($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	$data{'created'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec);
+	$data{'updated'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec);
+	$data{'state'} = '0';
+
+	my $basket = $db->insert(\%data);
+
+	my $rbasketrowsp=ReadBasketrows($rbasket->id,-1,1);
+
+	if($rbasketrowsp==0) {
+		goah::Modules->AddMessage("error",__("Couldn't read rows for recurring basket! Can't create basket!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	use goah::Database::Basketrows;
+	my $rdb = goah::Database::Basketrows->new;
+	my %rbasketrows=%$rbasketrowsp;
+	foreach my $key (keys %rbasketrows) {
+
+		my $rowp = $rbasketrows{$key};
+		my %row = %$rowp;
+		my %rowdata;
+
+		# Basket rows total is at index 'baskettotal', so we'll need to skip that one
+		if($row{'baskettotal'}) { next; }
+
+		foreach my $fkey (keys %basketrowdbfields) {
+			my $field = $basketrowdbfields{$fkey}{'field'};
+
+			if($field eq 'id') {
+				# Do nothing, since we're using auto increment primary keys
+			} elsif($field=~/rowinfo/) {
+				$rowdata{$field}=$row{$field}." \n".__("Period: ").$lasttrigger[2].".".$lasttrigger[1].".".$lasttrigger[0];
+				$rowdata{$field}.=" - ".$nexttrigger[2].".".$nexttrigger[1].".".$nexttrigger[0];
+			} elsif($field=~/basketid/) {
+				$rowdata{$field}=$basket->id;
+			} else {
+				$rowdata{$field}=$row{$field};
+			}
+		}
+
+
+		my $debug="Rowdata keys: ".join(";",keys(%rowdata));
+		$debug.="<br>Rowdata values: ".join(";",values(%rowdata));
+
+		$debug.="<br><br>Row keys: ".join(";",keys(%row));
+		$debug.="<br>Row values: ".join(";",values(%row));
+		goah::Modules->AddMessage('debug',$debug,__FILE__,__LINE__);
+		$rdb->insert(\%rowdata);
+	}
+	$rbasket->update;
+	return 1;
+}
+
+#
 # Function: ReadBaskets
 #
 #   Read active baskets from the database.
@@ -378,6 +515,10 @@ sub ReadBaskets {
 				$baskets{$i}{$f}=$_->get($f);
 			}
 			$br=ReadBasketrows($_->id);
+			unless($br) {
+				goah::Modules->AddMessage('error',__("Couldn't read basket's rows with basket id ").$_->id."!",__FILE__,__LINE__);
+				return 0;
+			}
 			%basketrows=%$br;
 			$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 			$total+=$basketrows{-1}{'baskettotal'};
@@ -486,13 +627,14 @@ sub UpdateBasket {
 		if($recalc==1) {
 
 			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+			$mon++;
+			$year+=1900;
 		
 			if($mday >= $data->dayinmonth) {
 				$mon++;
-			}
+			} 
 
 			$mday=$data->dayinmonth;
-			$mon+=$data->repeat;
 
 			if($mon>12) {
 				$year++;
@@ -500,7 +642,7 @@ sub UpdateBasket {
 			}
 
 			$data->lasttrigger(0);
-			$data->nexttrigger(sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,0,0,0));
+			$data->nexttrigger(sprintf("%04d-%02d-%02d",$year,$mon,$mday));
 		}
 	}
 
@@ -853,14 +995,24 @@ sub ReadBasketrows {
 			$rowdata{$i}{'name'} = $row->get('name');
 
 			my $proddata=goah::Database::Products->retrieve($row->get('productid'));
-			$rowdata{$i}{'in_store'}=$proddata->get('in_store');
 
+			unless($proddata) {
+				goah::Modules->AddMessage('error',__("Couldn't read product data for id ").$row->get('productid')."!",__FILE__,__LINE__);
+				return 0;
+			}
+			$rowdata{$i}{'in_store'}=$proddata->get('in_store');
 		}
 		$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrency($baskettotal,0,$uid,'out',$settref);
 		return \%rowdata;
 	} else {
 		# Row id is set, read only single row from the database
 		my $data = goah::Database::Basketrows->retrieve($_[1]);
+
+		unless($data) {
+			goah::Modules->AddMessage('error',__("Couldn't retrieve basket row from the database!")." ".__("Id not found: ").$_[1],__FILE__,__LINE__);
+			return 0;
+		}
+
 		foreach my $key (keys %basketrowdbfields) {
 			$field = $basketrowdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
@@ -876,7 +1028,11 @@ sub ReadBasketrows {
 					$rowdata{$field} = $data->get($field);
 				}
 			} else {
-				$rowdata{$field} = $data->get($field);
+				if($data->$field) {
+					$rowdata{$field} = $data->get($field);
+				} else {
+					$rowdata{$field} = "Empty value from db?!?";
+				}
 			}
 		}
 		$rowdata{'code'} = $data->get('code');
