@@ -574,16 +574,19 @@ sub ReadData {
 	my $sort = 'name';
 	my %dbhash;
 	if($_[0] eq 'manuf') {
-		use goah::Database::Manufacturers;
-		$db = new goah::Database::Manufacturers;
+		#use goah::Database::Manufacturers;
+		#$db = new goah::Database::Manufacturers;
+		use goah::Db::Manufacturers::Manager;
 		%dbhash=%manufdbfields;
 	} elsif ($_[0] eq 'productgroups') {
-		use goah::Database::Productgroups;
-		$db = new goah::Database::Productgroups;
+		#use goah::Database::Productgroups;
+		#$db = new goah::Database::Productgroups;
+		use goah::Db::Productgroups::Manager;
 		%dbhash=%groupdbfields;
 	} elsif ($_[0] eq 'products') {
-		use goah::Database::Products;
-		$db = new goah::Database::Products;
+		#use goah::Database::Products;
+		#$db = new goah::Database::Products;
+		use goah::Db::Products::Manager;
 		%dbhash=%productsdbfields;
 	} else {
 		# Unknown type
@@ -602,21 +605,41 @@ sub ReadData {
 	my $field;
 	if(!($_[1]) || $_[1] eq '') {
 		unless($_[0] eq 'products') {
-			@data = $db->retrieve_all_sorted_by($sort);
+			if($_[0] eq 'manuf') {
+				my $datap=goah::Db::Manufacturers::Manager->get_manufacturers( sort_by => $sort );
+				@data = @$datap;
+			} elsif($_[0] eq 'productgroups') {
+				my $datap=goah::Db::Productgroups::Manager->get_productgroups( sort_by => $sort );
+				@data=@$datap;
+			} else {
+				@data = $db->retrieve_all_sorted_by($sort);
+			}
 			my %mdata;
 			foreach my $i (@data) {
 				foreach my $k (keys %dbhash) {
 					my $f=$dbhash{$k}{'field'};	
-					$mdata{$i->id}{$f}=$i->get($f);
+					if($_[0] eq 'manuf' || $_[0] eq 'productgroups') {
+						$mdata{$i->id}{$f}=$i->$f;
+					} else {
+						$mdata{$i->id}{$f}=$i->get($f);
+					}
 				}
 			}
 			return \%mdata;
 		} 
 
-		@data = $db->search_where( { hidden => { '!=', '1' } }, { order_by => $sort });
-		if(scalar(@data) == 0) {
+		#@data = $db->search_where( { hidden => { '!=', '1' } }, { order_by => $sort });
+		#if(scalar(@data) == 0) {
+		#	return 0;
+		#}
+
+		my $datap = goah::Db::Products::Manager->get_products( query => [ hidden => 0 ], sort_by => $sort );
+
+		unless($datap) {
 			return 0;
 		}
+
+		my @data=@$datap;
 
 		my $storagetotal=0;
 		foreach my $prod (@data) {
@@ -624,12 +647,12 @@ sub ReadData {
 				$field = $productsdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
 					unless($_[4]) {
-						$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->get($field),$prod->get('vat'),$uid,'out',$settref);
+						$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
 					} else {
-						$pdata{$i}{$field} = $prod->get($field);
+						$pdata{$i}{$field} = $prod->$field;
 					}
 				} else {
-					$pdata{$i}{$field} = $prod->get($field);
+					$pdata{$i}{$field} = $prod->$field;
 				}
 			}
 			$pdata{$i}{'row_total_value'}=$pdata{$i}{'purchase'}*$pdata{$i}{'in_store'};
@@ -640,6 +663,17 @@ sub ReadData {
 		return \%pdata;
 		
 	} else {
+		if($_[0] eq 'manuf') {
+			use goah::Database::Manufacturers;
+			$db = new goah::Database::Manufacturers;
+		} elsif ($_[0] eq 'productgroups') {
+			use goah::Database::Productgroups;
+			$db = new goah::Database::Productgroups;
+		} elsif ($_[0] eq 'products') {
+			use goah::Database::Products;
+			$db = new goah::Database::Products;
+		}
+
 		@data = $db->retrieve($_[1]);
 		if(scalar(@data) == 0) {
 			return 0;
