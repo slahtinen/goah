@@ -663,36 +663,47 @@ sub ReadData {
 		return \%pdata;
 		
 	} else {
+		my $dbdata;
 		if($_[0] eq 'manuf') {
-			use goah::Database::Manufacturers;
-			$db = new goah::Database::Manufacturers;
+			use goah::Db::Manufacturers;
+			$dbdata = goah::Db::Manufacturers->new( id => $_[1]);
 		} elsif ($_[0] eq 'productgroups') {
-			use goah::Database::Productgroups;
-			$db = new goah::Database::Productgroups;
+			use goah::Db::Productgroups;
+			$dbdata = goah::Db::Productgroups->new( id => $_[1]);
 		} elsif ($_[0] eq 'products') {
-			use goah::Database::Products;
-			$db = new goah::Database::Products;
+			use goah::Db::Products;
+			$dbdata = goah::Db::Products->new(id => $_[1]);
 		}
 
-		@data = $db->retrieve($_[1]);
-		if(scalar(@data) == 0) {
-			return 0;
+		unless($dbdata->load(speculative => 1)) {
+			goah::Modules->AddMessage('error',__("Couldn't retrieve info for ").$_[0]." id ".$_[1],__FILE__,__LINE__);
 		}
 		unless($_[0] eq 'products') {
-			return $data[0];
+			return $dbdata;
 		}
+
+		#@data = $db->retrieve($_[1]);
+		#if(scalar(@data) == 0) {
+		#	return 0;
+		#}
+		#unless($_[0] eq 'products') {
+		#	return $data[0];
+		#}
 
 		%pdata = ();
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
 				unless($_[4] eq "1") {
-					$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
+					#$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
+					$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$dbdata->vat,$uid,'out',$settref);
 				} else {
-					$pdata{$i}{$field} = $data[0]->get($field);
+					#$pdata{$i}{$field} = $data[0]->get($field);
+					$pdata{$i}{$field} = $dbdata->$field;
 				}
 			} else {
-				$pdata{$field} = $data[0]->get($field);
+				#$pdata{$field} = $data[0]->get($field);
+				$pdata{$field} = $dbdata->$field;
 			}
 		}
 		return \%pdata;
