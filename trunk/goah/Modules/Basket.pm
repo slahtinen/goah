@@ -449,7 +449,7 @@ sub WriteRecurringBasket {
 
 		if($fieldinfo{'field'}=~/info/) {
 			$data{$fieldinfo{'field'}}.="\n".__("Automatically created from recurring basket.");
-			$data{$fieldinfo{'field'}}.=" ".__("Period: ").$lasttrigger[2].".".$lasttrigger[1].".".$lasttrigger[0];
+			$data{$fieldinfo{'field'}}.=" ".$lasttrigger[2].".".$lasttrigger[1].".".$lasttrigger[0];
 			$data{$fieldinfo{'field'}}.=" - ".$nexttrigger[2].".".$nexttrigger[1].".".$nexttrigger[0];
 		} else {
 			$data{$fieldinfo{'field'}} = $rbasket->get($fieldinfo{'field'});
@@ -489,7 +489,7 @@ sub WriteRecurringBasket {
 			if($field eq 'id') {
 				# Do nothing, since we're using auto increment primary keys
 			} elsif($field=~/rowinfo/) {
-				$rowdata{$field}=$row{$field}." \n".__("Period: ").$lasttrigger[2].".".$lasttrigger[1].".".$lasttrigger[0];
+				$rowdata{$field}=$row{$field}." \n".$lasttrigger[2].".".$lasttrigger[1].".".$lasttrigger[0];
 				$rowdata{$field}.=" - ".$nexttrigger[2].".".$nexttrigger[1].".".$nexttrigger[0];
 			} elsif($field=~/basketid/) {
 				$rowdata{$field}=$basket->id;
