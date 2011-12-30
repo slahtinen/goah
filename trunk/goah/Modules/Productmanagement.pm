@@ -237,8 +237,33 @@ sub Start {
 			$variables{'function'} = 'modules/blank';
 		}
 	} else { 
-		$variables{'products'} = ReadData('products');
-		$variables{'manufacturers'} = ReadData('manuf');
+		# List all products on groups if no other action is defined
+		my $prodgroupref = ReadData('productgroups');
+		unless($prodgroupref) {
+			goah::Modules->AddMessage('error',__("Couldn't read product groups from database!"),__FILE__,__LINE__);
+			$variables{'produtgroups'}=0;
+			$variables{'productspergroup'}=0;
+			$variables{'manufacturers'}=0;
+		} else {
+			my %productgroups=%$prodgroupref;
+			my %productspergroup;
+			foreach my $key (keys %productgroups) {
+				my $gpoint = $productgroups{$key};
+				my %group=%$gpoint;
+				$productspergroup{$key}{'name'}=$group{'name'};
+
+				my $prodpointer = ReadProductsByGroup($group{'id'},$uid);
+				unless($prodpointer) {
+					goah::Modules->AddMessage('warn',__("Empty product group")." ".$group{'name'});
+					$productspergroup{$key}{'products'}=0;
+				} else {
+					$productspergroup{$key}{'products'}=$prodpointer;
+				}
+			}
+			$variables{'produtgroups'}=$prodgroupref;
+			$variables{'productspergroup'}=\%productspergroup;
+			$variables{'manufacturers'}=ReadData('manuf');
+		}	
 	}
 	$variables{'suppliers'} = goah::Modules::Storagemanagement->ReadData('suppliers');
 	if($q->param('type') eq 'manuf' || $action eq 'manufacturers' || $action eq 'addnew' || $action eq 'writenew') {
@@ -833,18 +858,14 @@ sub ReadProductsByGroup {
 		$search = $_[0];
 	}
 	
-	use goah::Database::Products;
-	my @data = goah::Database::Products->search_where({ 
-								groupid => $search, 
-								hidden => { '!=', '1' } 
-							  }, { 
-							  	order_by => 'code' 
-							});
-	
-	if(scalar(@data) == 0) {
+	use goah::Db::Products::Manager;
+	my $dbdata = goah::Db::Products::Manager->get_products( query => [ hidden => 0, groupid => $search ], sort_by => 'code' );
+	unless($dbdata) {
 		return 0;
 	}
 
+	my @data=@$dbdata;
+	
 	if(scalar(keys(%productsdbfields))==0) {
 		InitVars();
 	}
@@ -856,9 +877,9 @@ sub ReadProductsByGroup {
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
-				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->get($field),$prod->get('vat'),$uid,'out',$settref);
+				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
 			} else {
-				$pdata{$i}{$field} = $prod->get($field);
+				$pdata{$i}{$field} = $prod->$field;
 			}
 		}
 		$i++;

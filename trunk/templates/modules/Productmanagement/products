@@ -1,80 +1,75 @@
 <h2>[% gettext("Products") %]</h2>
-<table>
-<thead>
-<tr>
-    <th>[% gettext("Code") %]</th>
-    <th>[% gettext("Name") %]</th>
-    <th>[% gettext("Manufacturer") %]</th>
-    <th>[% gettext("Purchase price") %]</th>
-    <th>[% gettext("Sell price") %]</th>
-    <th>[% gettext("In storage") %]</th>
-    <th>[% gettext("Row value") %]</th>
-    <th class="icon">[% gettext("Open") %]</th>
-    <th class="icon">[% gettext("Delete") %]</th>
-</tr>
-</thead>
-<tbody class="rowdata">
-<tr>
-  <td><a href="?module=Productmanagement&action=addnew&type=products">[% gettext("Add new product") %]</a></td>
-  <td colspan=3><form method=post name="barcodeform">
-  <input type='hidden' name='module' value='[% module %]' />
-  <input type='hidden' name='action' value='addnew' />
-  <input type='hidden' name='subaction' value='ean' />
-  <input type="hidden" name="type" value="products" />
-  [% gettext("Add new from barcode:") %]<input name='barcode' /> 
-  <input type="submit" value="[% gettext("Add") %]" />
-  </form>
-  </td>
-</tr>
-[% odd = 0 %]
+<a href="?module=Productmanagement&action=addnew&type=products">[% gettext("Add new product") %]</a>
+
 [% edittext = gettext("Edit") %]
 [% deltext = gettext("Delete") %]
 [% delconfirmtext = gettext("Delete product from database?") %]
-[% FOREACH key IN products.keys.sort %]
-	[% product  = products.$key %]
-	[% IF odd == 1 %]
-		<tr class="odd">
-		[% odd = 0 %]
-	[% ELSE %]
-		<tr class="even">
-		[% odd = 1 %]
-	[% END %]
-
-	<td>[% product.code %]</td>
-	<td>[% product.name %]</td>
-	<td>
-	[% m = product.manufacturer %]
-	[% manufacturers.$m.name %]
-	</td>
-	<td>[% product.purchase %]</td>
-	<td>[% product.sell %]</td>
-	<td>[% product.in_store %]</td>
-	<td>[% product.row_total_value %]</td>
-	<td class="center">
-	<form action="" method="post">
-	<p>
-	<input type="hidden" name="module" value="[% module %]" />
-	<input type="hidden" name="action" value="edit" />
-	<input type="hidden" name="type" value="products" />
-	<input type="hidden" name="id" value="[% product.id %]" />
-	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% edittext %]" />
-	</p>
-	</form>
-	</td>
-	<td class="center">
-	<form action="" method="post">
-	<p>
-	<input type="hidden" name="module" value="[% module %]" />
-	<input type="hidden" name="action" value="delete" />
-	<input type="hidden" name="type" value="products" />
-	<input type="hidden" name="id" value="[% product.id %]" />
-	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% deltext %]"
-	        onclick="return confirm('[% delconfirmtext %]')" />
-	 </p>
-	</form>
-	</td>
+[% FOREACH g IN productspergroup.keys.sort %]
+	[% group = productspergroup.$g %]
+	<h3>[% group.name %]</h3>
+	<table>
+	<thead>
+	<tr>
+	<th>[% gettext("Code") %]</th>
+	<th>[% gettext("Name") %]</th>
+	<th>[% gettext("Manufacturer") %]</th>
+	<th>[% gettext("Purchase price") %]</th>
+	<th>[% gettext("Sell price") %]</th>
+	<th>[% gettext("In storage") %]</th>
+	<th>[% gettext("Row value") %]</th>
+	<th class="icon">[% gettext("Open") %]</th>
+	<th class="icon">[% gettext("Delete") %]</th>
 	</tr>
+	</thead>
+	<tbody class="rowdata">
+	[% odd = 0 %]
+	[% products = productspergroup.$g.products %]
+	[% FOREACH key IN products.keys.sort %]
+		[% product  = products.$key %]
+		[% IF odd == 1 %]
+			<tr class="odd">
+			[% odd = 0 %]
+		[% ELSE %]
+			<tr class="even">
+			[% odd = 1 %]
+		[% END %]
+
+		<td>[% product.code %]</td>
+		<td>[% product.name %]</td>
+		<td>
+		[% m = product.manufacturer %]
+		[% manufacturers.$m.name %]
+		</td>
+		<td>[% product.purchase %]</td>
+		<td>[% product.sell %]</td>
+		<td>[% product.in_store %]</td>
+		<td>[% product.row_total_value %]</td>
+		<td class="center">
+		<form action="" method="post">
+		<p>
+		<input type="hidden" name="module" value="[% module %]" />
+		<input type="hidden" name="action" value="edit" />
+		<input type="hidden" name="type" value="products" />
+		<input type="hidden" name="id" value="[% product.id %]" />
+		<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% edittext %]" />
+		</p>
+		</form>
+		</td>
+		<td class="center">
+		<form action="" method="post">
+		<p>
+		<input type="hidden" name="module" value="[% module %]" />
+		<input type="hidden" name="action" value="delete" />
+		<input type="hidden" name="type" value="products" />
+		<input type="hidden" name="id" value="[% product.id %]" />
+		<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% deltext %]"
+			onclick="return confirm('[% delconfirmtext %]')" />
+		 </p>
+		</form>
+		</td>
+		</tr>
+	[% END %]
+	</tbody>
+	</table>
 [% END %]
-<tr><td colspan=9>[% gettext("Total storage value") %] [% products.storage_total_value %]</td></tr>
-</tbody>
-</table>
+<p>[% gettext("Total storage value") %] [% products.storage_total_value %]</p>
