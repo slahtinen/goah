@@ -204,6 +204,11 @@ sub FillReferral {
 			$amt+=(-1*$rowinfo{'amount'});
 		}
 		$proddata->in_store($amt);
+
+		# Don't let storage amount below 0
+		if($proddata->in_store < 0) {
+			$proddata->in_store(0);
+		}
 		goah::Modules->AddMessage('debug',"New storage value for ".$proddata->code.": ".$proddata->in_store,__FILE__,__LINE__);
 		$proddata->update;
 		$proddata->commit;
@@ -290,6 +295,11 @@ sub DeleteReferral {
 			$amt-=(-1*$rowinfo{'amount'});
 		}
 		$proddata->in_store($amt);
+
+		# Don't let storage value below zero
+		if($proddata->in_store < 0) {
+			$proddata->in_store=0;
+		}
 		goah::Modules->AddMessage('debug',"New storage value for ".$proddata->code.": ".$proddata->in_store,__FILE__,__LINE__);
 		$proddata->update;
 		$proddata->commit;

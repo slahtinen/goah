@@ -27,6 +27,9 @@
   </td>
 </tr>
 [% odd = 0 %]
+[% edittext = gettext("Edit") %]
+[% deltext = gettext("Delete") %]
+[% delconfirmtext = gettext("Delete product from database?") %]
 [% FOREACH key IN products.keys.sort %]
 	[% product  = products.$key %]
 	[% IF odd == 1 %]
@@ -54,7 +57,7 @@
 	<input type="hidden" name="action" value="edit" />
 	<input type="hidden" name="type" value="products" />
 	<input type="hidden" name="id" value="[% product.id %]" />
-	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% edittext %]" />
 	</p>
 	</form>
 	</td>
@@ -65,8 +68,8 @@
 	<input type="hidden" name="action" value="delete" />
 	<input type="hidden" name="type" value="products" />
 	<input type="hidden" name="id" value="[% product.id %]" />
-	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]"
-	        onclick="return confirm('[% gettext("Delete product from database?") %]')" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% deltext %]"
+	        onclick="return confirm('[% delconfirmtext %]')" />
 	 </p>
 	</form>
 	</td>

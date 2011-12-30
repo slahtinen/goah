@@ -548,6 +548,12 @@ sub WriteEditedItem {
 
 			$product = goah::Database::Products->retrieve($rows{$key}{'productid'});
 			$product->set(in_store => $rows{$key}{'amount_after'});
+
+			# Don't let storage value below 0
+			if($product->in_store < 0) {
+				$product->in_store(0);
+			}
+
 			$product->update();
 			
 			goah::Modules->AddMessage('debug',"Changed amount for product ".$product->name." to ".$product->in_store);
@@ -603,7 +609,12 @@ sub WriteEditedItem {
 				}
 				
 				goah::Modules->AddMessage('debug',"Updating value for product ".$prod->name.". Current amount is ".$prod->in_store,__FILE__,__LINE__); 
+
 				$prod->in_store($prod->in_store+$prow{'amount'});
+				# Don't let storage value below zero
+				if($prod->in_store < 0) {
+					$prod->in_store(0);
+				}
 				$prod->update;
 				goah::Modules->AddMessage('debug',"Product ".$prod->name." has now ".$prod->in_store." items in storage.",__FILE__,__LINE__); 
 			}

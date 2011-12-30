@@ -67,7 +67,7 @@
 \rowcolor[rgb]{0.8,0.8,0.8} \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 [% FOREACH key IN invoicerows.keys.sort %]
 [% row = invoicerows.$key %]
-[% escape(row.code) %] & [% row.name %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
+[% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
 [% IF row.info != '' %]
 \multicolumn{7}{p{7cm}}{Lisätied: [% escape(row.info) %]} \\
 [% END %]
