@@ -1,5 +1,6 @@
+<!--
 <h2>[% gettext("Products") %]</h2>
-<a href="?module=Productmanagement&action=addnew&type=products">[% gettext("Add new product") %]</a>
+--> 
 
 [% edittext = gettext("Edit") %]
 [% deltext = gettext("Delete") %]
@@ -72,4 +73,4 @@
 	</tbody>
 	</table>
 [% END %]
-<p>[% gettext("Total storage value") %] [% products.storage_total_value %]</p>
+<p>[% gettext("Total storage value") %] [% storagetotalvalue %]</p>

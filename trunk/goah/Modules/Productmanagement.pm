@@ -69,6 +69,7 @@ sub InitVars {
 	$initvars=1;
 
 	%submenu = (	
+			0 => {title => __("Add new product"), action => 'addnew&type=products'},
 			1 => {title => __("Manufacturers"),action => 'manufacturers'},
 			2 => {title => __("Groups"), action => 'productgroups'},
 		);
@@ -244,9 +245,11 @@ sub Start {
 			$variables{'produtgroups'}=0;
 			$variables{'productspergroup'}=0;
 			$variables{'manufacturers'}=0;
+			$variables{'storagetotalvalue'}=0;
 		} else {
 			my %productgroups=%$prodgroupref;
 			my %productspergroup;
+			my $storagetotalvalue=0;
 			foreach my $key (keys %productgroups) {
 				my $gpoint = $productgroups{$key};
 				my %group=%$gpoint;
@@ -258,11 +261,16 @@ sub Start {
 					$productspergroup{$key}{'products'}=0;
 				} else {
 					$productspergroup{$key}{'products'}=$prodpointer;
+					my %groupprods = %$prodpointer;
+					foreach my $prodkey (keys %groupprods) {
+						$storagetotalvalue+=$groupprods{$prodkey}{'row_total_value'};
+					}
 				}
 			}
 			$variables{'produtgroups'}=$prodgroupref;
 			$variables{'productspergroup'}=\%productspergroup;
 			$variables{'manufacturers'}=ReadData('manuf');
+			$variables{'storagetotalvalue'}=$storagetotalvalue;
 		}	
 	}
 	$variables{'suppliers'} = goah::Modules::Storagemanagement->ReadData('suppliers');
@@ -882,6 +890,7 @@ sub ReadProductsByGroup {
 				$pdata{$i}{$field} = $prod->$field;
 			}
 		}
+		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
 		$i++;
 	}
 
