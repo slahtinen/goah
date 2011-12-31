@@ -244,7 +244,7 @@ sub Start {
 			goah::Modules->AddMessage('error',__("Couldn't read product groups from database!"),__FILE__,__LINE__);
 			$variables{'produtgroups'}=0;
 			$variables{'productspergroup'}=0;
-			$variables{'manufacturers'}=0;
+			#$variables{'manufacturers'}=0;
 			$variables{'storagetotalvalue'}=0;
 		} else {
 			my %productgroups=%$prodgroupref;
@@ -269,7 +269,7 @@ sub Start {
 			}
 			$variables{'produtgroups'}=$prodgroupref;
 			$variables{'productspergroup'}=\%productspergroup;
-			$variables{'manufacturers'}=ReadData('manuf');
+			#$variables{'manufacturers'}=ReadData('manuf');
 			$variables{'storagetotalvalue'}=$storagetotalvalue;
 		}	
 	}
@@ -585,7 +585,7 @@ sub WriteEditedItem {
 #
 sub ReadData {
 
-	if($_[0]=~/Productmanagement$/) {
+	if($_[0]=~/goah::Modules::Productmanagement$/) {
 		shift(@_);
 	}
 

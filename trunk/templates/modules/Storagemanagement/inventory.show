@@ -37,41 +37,52 @@
 </table>
 
 [% IF inventory.done != 1 %]
-<h2>[% gettext("Add products to inventory") %]</h2>
+<h3>[% gettext("Add products to inventory") %]</h3>
 <table>
-<thead>
-<tr><th>[% gettext("Select product group") %]</th>
-<th>[% gettext("Products on inventory") %]</th></tr>
-</thead>
 <tbody>
 <tr><td>
-<form method="post" name="barcodeform">
-<input type='hidden' name='module' value='[% module %]' />
-<input type='hidden' name='action' value='addtoinventory' />
-<input type="hidden" name="subaction" value="ean" />
-<input type='hidden' name='inventoryid' value='[% inventory.id %]'>
-[% gettext("Read barcode") %]</td><td><input name="barcode" />
-<input type="submit" value="[% gettext("Add") %]" />
-</form>
-</td></tr>
-<tr><td>
+[% gettext("By group:") %]</td><td>
 <form method="get" action="javascript:loadContent('content.cgi','contentcgi');" name="contentcgi">
-<p>
 <input type='hidden' name='module' value='[% module %]' />
 <input type='hidden' name='action' value='showgroup.inventory' />
 <input type='hidden' name='target' value='[% inventory.id %]' />
 <select name="groupid" class="big" onchange="submit()" size="[% usersettings.activebasketselect %]">
 <option value='-1'>-- [% gettext("Product group") %] --</option>
-[% FOREACH group IN productgroups %]
+[%# This one is really strange, but for some reason I can't get product groups listed unless this line is preset %]
+[% productgroups.keys %]
+[% FOREACH k IN productgroups.keys.sort %]
+        [% group = productgroups.$k %]
 	<option value="[% group.id %]">[% group.name %]</option>
 [% END %]
 </select>
-</p>
-
-<noscript>
-  <p><input type="submit" value="[% gettext("Show") %]" /></p>
-</noscript>
+<input type="submit" value=">" />
 </form>
+</td>
+<td>
+[% gettext("By barcode:") %]
+</td><td>
+<form method="post" name="barcodeform">
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='addtoinventory' />
+<input type="hidden" name="subaction" value="ean" />
+<input type='hidden' name='inventoryid' value='[% inventory.id %]'>
+<input name="barcode" />
+<input type="submit" value="[% gettext("Add") %]" />
+</form>
+</td>
+<td>
+[% gettext("By code:") %]
+</td><td>
+<form method="post">
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='addtoinventory' />
+<input type="hidden" name="subaction" value="code" />
+<input type='hidden' name='inventoryid' value='[% inventory.id %]' />
+<input name="code" />
+<input type="submit" value="[% gettext("Add") %]" />
+</form>
+</td>
+</tr>
 </tbody>
 </table>
 

@@ -273,7 +273,9 @@ sub Start {
 			}
 			$variables{'function'} = $function.'inventory.show';
 			$variables{'inventory'} = ReadInventories($q->param('inventoryid'));
-			$variables{'productgroups'} = sub { goah::Modules::Productmanagement::ReadData('productgroups') };
+			#$variables{'productgroups'} = sub { goah::Modules::Productmanagement::ReadData('productgroups') };
+			my $productgroups = goah::Modules::Productmanagement::ReadData('productgroups');
+			$variables{'productgroups'} = $productgroups;
 			$variables{'inventoryrows'} = ReadInventoryrows($q->param('inventoryid'));
 	
 		} elsif($action eq 'showinventory') {
@@ -1108,10 +1110,9 @@ sub AddToInventory {
 			}
 		}
 
-	} elsif ($q->param('productid') || $_[0]) {
+	} elsif ($q->param('productid') || $_[0] || $q->param('code') ) {
 		# Add only one product
 		
-
 		my $prod;
 		# If we have an EAN -code read product information via that
 		if($_[0]) {
@@ -1121,6 +1122,13 @@ sub AddToInventory {
 				goah::Modules->AddMessage('error',__("Product not found"),__FILE__,__LINE__);
 				return 0;
 			}
+		} elsif ($q->param('code')) {
+
+			$prod = goah::Modules::Productmanagement->ReadProductByCode($q->param('code'));
+			unless($prod) {
+				goah::Modules->AddMessage('error',__("Didn't find product code. Can't add product to inventory.")." Code:".$q->param('code'));
+			} 
+
 		} else {
 			$prod = $q->param('productid');
 		}
