@@ -648,15 +648,17 @@ sub ReadData {
 				@data = $db->retrieve_all_sorted_by($sort);
 			}
 			my %mdata;
+			my $sortcounter=10000000;
 			foreach my $i (@data) {
 				foreach my $k (keys %dbhash) {
 					my $f=$dbhash{$k}{'field'};	
 					if($_[0] eq 'manuf' || $_[0] eq 'productgroups') {
-						$mdata{$i->id}{$f}=$i->$f;
+						$mdata{$sortcounter.".".$i->id}{$f}=$i->$f;
 					} else {
-						$mdata{$i->id}{$f}=$i->get($f);
+						$mdata{$sortcounter.".".$i->id}{$f}=$i->get($f);
 					}
 				}
+				$sortcounter++;
 			}
 			return \%mdata;
 		} 

@@ -13,7 +13,10 @@
   <td colspan='3'><a href="?module=[% module %]&amp;action=addnew&amp;type=productgroups">[% gettext("Add new group") %]</a></td>
 </tr>
 [% odd = 0 %]
-[% FOREACH k IN productgroups.keys %]
+[% deletetxt= gettext("Delete") %]
+[% edittxt = gettext("Edit") %]
+[% confirmdeltxt = gettext("Delete product group from database?") %]
+[% FOREACH k IN productgroups.keys.sort %]
 	[% group = productgroups.$k %]
 	[% IF odd == 1 %]
 		<tr class="odd">
@@ -32,7 +35,7 @@
 	<input type="hidden" name="action" value="edit" />
 	<input type="hidden" name="type" value="productgroups" />
 	<input type="hidden" name="id" value="[% group.id %]" />
-	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% edittxt %]" />
 	</p>
 	</form>
 	</td>
@@ -43,8 +46,8 @@
 	<input type="hidden" name="action" value="delete" />
 	<input type="hidden" name="type" value="productgroups" />
 	<input type="hidden" name="id" value="[% group.id %]" />
-	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]"
-	        onclick="return confirm('[% gettext("Delete product group from database?") %]')"/>
+	<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% deletetxt %]"
+	        onclick="return confirm('[% confirmdeltxt %]')"/>
 	</p>
 	</form>
 	</td>
