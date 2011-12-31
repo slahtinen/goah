@@ -892,6 +892,11 @@ sub ReadProductsByGroup {
 				$pdata{$i}{$field} = $prod->$field;
 			}
 		}
+		my $manuf = ReadData('manuf',$prod->manufacturer);
+		if($manuf) {
+			my %m=%$manuf;
+			$pdata{$i}{'manufacturer_name'}=$m{'name'};
+		}
 		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
 		$i++;
 	}

@@ -37,10 +37,7 @@
 
 		<td>[% product.code %]</td>
 		<td>[% product.name %]</td>
-		<td>
-		[% m = product.manufacturer %]
-		[% manufacturers.$m.name %]
-		</td>
+		<td>[% product.manufacturer_name %]</td>
 		<td>[% product.purchase %]</td>
 		<td>[% product.sell %]</td>
 		<td>[% product.in_store %]</td>
