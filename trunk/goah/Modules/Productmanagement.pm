@@ -211,6 +211,7 @@ sub Start {
 			} else {
 				$variables{'function'} = $function;
 			}
+			$action='showall';
 		} elsif($action eq 'writeedited') {
 			if(WriteEditedItem() == 0) {
 				goah::Modules->AddMessage('info',__("Information updated"));
@@ -219,6 +220,7 @@ sub Start {
 			}
 			$variables{'function'} = $function;
 			$variables{'storages'} = goah::Modules::Storagemanagement->ReadData('storages');
+			$action='showall';
 		} elsif($action eq 'edit') {
 			$variables{'data'} = ReadData($q->param('type'),$q->param('id'));
 			$variables{'function'} = $function.'.edit';
@@ -238,6 +240,10 @@ sub Start {
 			$variables{'function'} = 'modules/blank';
 		}
 	} else { 
+		$action='showall';
+	}
+
+	if($action eq 'showall') {
 		# List all products on groups if no other action is defined
 		my $prodgroupref = ReadData('productgroups');
 		unless($prodgroupref) {
