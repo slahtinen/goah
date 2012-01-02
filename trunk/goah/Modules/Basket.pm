@@ -238,6 +238,7 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't create invoice"));
 				}
+				$variables{'baskets'} = ReadBaskets('',$uid);
 
 		} elsif($q->param('action') eq 'showgroup') {
 
