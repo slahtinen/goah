@@ -694,6 +694,8 @@ sub ReadData {
 					} else {
 						$pdata{$i}{$field} = $prod->$field;
 					}
+				} elsif ($field eq 'vat') {
+					$pdata{$field} = sprintf("%.2f",$prod->$field);
 				} else {
 					$pdata{$i}{$field} = $prod->$field;
 				}
@@ -744,6 +746,8 @@ sub ReadData {
 					#$pdata{$i}{$field} = $data[0]->get($field);
 					$pdata{$i}{$field} = $dbdata->$field;
 				}
+			} elsif ($field eq 'vat') {
+				$pdata{$field} = sprintf("%.2f",$dbdata->$field);
 			} else {
 				#$pdata{$field} = $data[0]->get($field);
 				$pdata{$field} = $dbdata->$field;
@@ -891,6 +895,8 @@ sub ReadProductsByGroup {
 	my %pdata;
 	my $field;
 	my $i=0;
+	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat',1);
+	my %vat=%$vatp;
 	foreach my $prod (@data) {
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
@@ -904,6 +910,12 @@ sub ReadProductsByGroup {
 		if($manuf) {
 			my %m=%$manuf;
 			$pdata{$i}{'manufacturer_name'}=$m{'name'};
+		}
+		while (my ($key,$value) = each(%vat)) {
+			my %tmp=%$value;
+			if($tmp{'value'} == $pdata{$i}{'vat'}) {
+				$pdata{$i}{'vatclass'}=$tmp{'item'};
+			}
 		}
 		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
 		$i++;

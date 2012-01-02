@@ -16,6 +16,7 @@
 	<th>[% gettext("Manufacturer") %]</th>
 	<th>[% gettext("Purchase price") %]</th>
 	<th>[% gettext("Sell price") %]</th>
+	<th>[% gettext("VAT class") %]</th>
 	<th>[% gettext("In storage") %]</th>
 	<th>[% gettext("Row value") %]</th>
 	<th class="icon">[% gettext("Open") %]</th>
@@ -40,6 +41,7 @@
 		<td>[% product.manufacturer_name %]</td>
 		<td>[% product.purchase %]</td>
 		<td>[% product.sell %]</td>
+		<td>[% product.vatclass %]</td>
 		<td>[% product.in_store %]</td>
 		<td>[% product.row_total_value %]</td>
 		<td class="center">

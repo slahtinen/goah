@@ -45,7 +45,7 @@
 		[% ELSE %]
 		[% FOREACH item IN field.data %]
 			[% EXT = '' %]
-			[% IF item.id == data.$fieldname || item.value == data.$fieldname %]
+			[% IF item.id == data.$fieldname || item.value == data.$fieldname || item.item == data.$fieldname %]
 				[% EXT = 'selected' %]
 			[% END %]
 

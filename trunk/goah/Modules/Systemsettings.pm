@@ -372,6 +372,9 @@ sub DeleteSetup {
 # Parameters:
 #
 #   category - Category name to be retrieved
+#   hash - If set to 1 return values in hash instead of class::dbi resources
+#          This is an temporary option until all functions using this are
+#          migrated to hash-format
 #
 # Returns:
 #
@@ -397,6 +400,23 @@ sub ReadSetup {
 		return 0;
 	}
 
+	if($_[1]) {
+	
+		my %sdata;
+		my $sortidx=10000000;
+		my @fields=qw(id category item value sort def);
+
+		foreach (@data) {
+			
+			foreach my $k (@fields) {
+				$sdata{$sortidx}{$k}=$_->$k;
+			}
+			$sortidx++;
+		}
+		return \%sdata;
+	}
+
+	goah::Modules->AddMessage('debug',"Old version of goah::Modules::Systemsettings->ReadSetup called",__FILE__,__LINE__);
 	return \@data;
 }
 
