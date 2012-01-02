@@ -31,30 +31,39 @@
 		<td><select name="[% data.field %]">
 		<option value="-1">-- [% gettext("Select one") %] --</option>
 		[% loopfirst = 1 %]
-		[% FOREACH item IN data.data %]
-			[% IF item.item != '' %]
-				[% IF item.def == 1 %]
-					<option selected value="[% item.value %]">[% item.item %]</option> 
-				[% ELSE %]
-					<option value="[% item.value %]">[% item.item %]</option>
-				[% END %]
-			[% ELSE %]
-				[% IF item.def == 1 %]
-					<option selected value="[% item.id %]">[% item.name %]</option> 
-				[% ELSE %]
-					[%# Purukumilla me paikkaamme sen %]
-					[% IF data.field == 'supplier' && loopfirst == 1 && prefill.barcode != '' %]
-						<option selected value="[% item.id %]">[% item.name %]</option> 
-						[% loopfirst = 0 %]
-					[% ELSE %] 
-						<option value="[% item.id %]">[% item.name %]</option> 
+
+		[%# An ugly fix to keep things running while migration to Rose::DB is incomplete %]
+		[% IF data.field == 'supplier' %]
+			[% FOREACH item IN data.data %]
+				[% IF item.item != '' %]
+					[% IF item.def == 1 %]
+						<option selected value="[% item.value %]">[% item.item %]</option> 
+					[% ELSE %]
+						<option value="[% item.value %]">[% item.item %]</option>
 					[% END %]
-				[% END %]
-			[% END %]			
-		[% END %]
-		</select>
-		[% IF data.field == "manufacturer" || data.field == "groupid" %]
-			[% gettext("OR add new") %] <input name="[% data.field %].new" value="[% prefill.$prefillfield %]" />
+				[% ELSE %]
+					[% IF item.def == 1 %]
+						<option selected value="[% item.id %]">[% item.name %]</option> 
+					[% ELSE %]
+						[%# Purukumilla me paikkaamme sen %]
+						[% IF data.field == 'supplier' && loopfirst == 1 && prefill.barcode != '' %]
+							<option selected value="[% item.id %]">[% item.name %]</option> 
+							[% loopfirst = 0 %]
+						[% ELSE %] 
+							<option value="[% item.id %]">[% item.name %]</option> 
+						[% END %]
+					[% END %]
+				[% END %]			
+			[% END %]
+			</select>
+			[% IF data.field == "manufacturer" || data.field == "groupid" %]
+				[% gettext("OR add new") %] <input name="[% data.field %].new" value="[% prefill.$prefillfield %]" />
+			[% END %]
+		[% ELSE %]
+			[% FOREACH key IN data.data.keys.sort %]
+				[% item = data.data.$key %]
+				<option value="[% item.id %]">[% item.name %]</option>
+			[% END %]
 		[% END %]
 		</td>
 	[% ELSE %]
