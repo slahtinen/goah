@@ -24,6 +24,11 @@
 <tbody class="rowdata">
 [% rowc='odd' %]
 [% total = 0 %]
+[%# These variables speed up template processing suprisingly, specially
+    if the table has lots of rows this can make an difference of several
+    seconds per refresh. %]
+[% purchasealertxt = gettext("Purchase price lower than sell price!") %]
+[% instorealerttxt = gettext("Storage count not enough!") %]
 [% FOREACH key IN basketrows.keys.sort %]
 	[% IF key >= 0 %]
 	[% row = basketrows.$key %]
@@ -40,13 +45,13 @@
 	<td><input class="number" name='purchase' value='[% row.purchase %]'></td>
 	<td><input class="number" name='sell' value='[% row.sell %]'>
 	[% IF row.sell <= row.purchase %] 
-		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% gettext("Purchase price lower than sell price!") %]" />
+		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% purchasealertxt %]" title="[% purchasealertxt %]" />
 	[% END %]
 	</td>
 	<td>[% prodinfo.vat %]&#37;</td>
 	<td>[% prodinfo.in_store %]
 	[% IF prodinfo.in_store < row.amount %]
-		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% gettext("Storage count not enough!") %]" />
+		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% instorealerttxt %]" title="[% instorealerttxt %]" />
 	[% END %]
 	</td>
 	<td><input class="number" name='amount' value='[% row.amount %]'></td>

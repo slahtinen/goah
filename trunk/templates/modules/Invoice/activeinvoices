@@ -1,5 +1,5 @@
 <h2>[% gettext("Invoices") %]</h2>
-<table>
+<table id="activeinvoices">
 <tbody>
 <form action="" method=post>
 <input type="hidden" name="module" value="[% module %]" />
