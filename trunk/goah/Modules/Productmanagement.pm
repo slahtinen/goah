@@ -254,6 +254,7 @@ sub Start {
 				my $gpoint = $productgroups{$key};
 				my %group=%$gpoint;
 				$productspergroup{$key}{'name'}=$group{'name'};
+				$productspergroup{$key}{'group_total_value'}=0;
 
 				my $prodpointer = ReadProductsByGroup($group{'id'},$uid);
 				unless($prodpointer) {
@@ -264,6 +265,7 @@ sub Start {
 					my %groupprods = %$prodpointer;
 					foreach my $prodkey (keys %groupprods) {
 						$storagetotalvalue+=$groupprods{$prodkey}{'row_total_value'};
+						$productspergroup{$key}{'group_total_value'}+=$groupprods{$prodkey}{'row_total_value'};
 					}
 				}
 			}

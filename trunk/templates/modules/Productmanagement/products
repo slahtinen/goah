@@ -67,6 +67,7 @@
 		</td>
 		</tr>
 	[% END %]
+	<tr><th colspan="6">[% gettext("Group total value:") %]</th><th>[% group.group_total_value %]</th><th colspan="2">&nbsp;</th></tr>
 	</tbody>
 	</table>
 [% END %]
