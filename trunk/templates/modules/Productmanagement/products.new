@@ -14,8 +14,8 @@
 	[% IF data.field == 'purchase' || data.field == 'sell' %]
 		[% IF usersettings.showvat == 'on' %]
 			(incl. vat)
-		[% ELSE %]
-			(vat 0%)
+	[% ELSE %]
+		(vat 0%)
 		[% END %]
 	[% END %]
 	[% IF data.required == 1 %]
@@ -33,7 +33,7 @@
 		[% loopfirst = 1 %]
 
 		[%# An ugly fix to keep things running while migration to Rose::DB is incomplete %]
-		[% IF data.field == 'supplier' %]
+		[% IF data.field == 'supplier' || data.field == 'vat' || data.field == 'storage' %]
 			[% FOREACH item IN data.data %]
 				[% IF item.item != '' %]
 					[% IF item.def == 1 %]
@@ -56,13 +56,14 @@
 				[% END %]			
 			[% END %]
 			</select>
-			[% IF data.field == "manufacturer" || data.field == "groupid" %]
-				[% gettext("OR add new") %] <input name="[% data.field %].new" value="[% prefill.$prefillfield %]" />
-			[% END %]
 		[% ELSE %]
 			[% FOREACH key IN data.data.keys.sort %]
 				[% item = data.data.$key %]
 				<option value="[% item.id %]">[% item.name %]</option>
+			[% END %]
+			</select>
+			[% IF data.field == "manufacturer" || data.field == "groupid" %]
+				[% gettext("OR add new") %] <input name="[% data.field %].new" value="[% prefill.$prefillfield %]" />
 			[% END %]
 		[% END %]
 		</td>
