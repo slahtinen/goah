@@ -115,7 +115,7 @@ sub FormatCurrency {
 
 	my $set;
 	unless($_[4] && $_[2] != -1) {
-		goah::Modules->AddMessage('warn',__("Slow version of FormatCurrency called"));
+		goah::Modules->AddMessage('debug',__("Slow version of FormatCurrency called"));
 		use goah::Modules::Personalsettings;
 		$set = goah::Modules::Personalsettings->ReadSettings($_[2]);
 	} else {
