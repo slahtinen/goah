@@ -27,7 +27,11 @@
 	[% IF linfo == 0 %] 
 		[% gettext("Not selected!") %]
 	[% ELSE %]
-		[% linfo.addr1 %]<br />[% linfo.addr2 %]<br />[% linfo.postalcode %] [% linfo.postaloffice %]<br />[% linfo.country %]
+		[% linfo.addr1 %]
+		[% IF linfo.addr2 != "" %]
+		, [% linfo.addr2 %]<br/>
+		[% END %]
+		, [% linfo.postalcode %] [% linfo.postaloffice %]
 	[% END %]
 	</td>
 	<td>[% gettext("Total") %]: [% basket.total %]&euro;<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
@@ -43,7 +47,7 @@
 	[% END %]
 [% END %]
 <tr class='[% rclass %]'>
-<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]&euro;</td></tr>
+<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]&euro;</td><td colspan=3>&nbsp;</td></tr>
 </tbody>
 
 </table>
