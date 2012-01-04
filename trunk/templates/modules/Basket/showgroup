@@ -19,6 +19,7 @@
 <th>[% gettext("Name") %]</th>
 <th>[% gettext("IN") %] ([% vattxt %])</th>
 <th>[% gettext("OUT") %] ([% vattxt %])</th>
+<th>[% gettext("In storage") %]</th>
 <th>[% gettext("Amount") %]</th>
 <th>[% gettext("VAT") %]</th>
 </tr>
@@ -36,6 +37,7 @@
 	<td>[% row.name %]</td>
 	<td><input class="number" name='purchase_[% row.id %]' value='[% row.purchase %]'></td>
 	<td><input class="number" name='sell_[% row.id %]' value='[% row.sell %]'></td>
+	<td>[% row.in_store %]</td>
 	<td><input class="number" name='amount_[% row.id %]' value='1'></td>
 	<td>[% row.vat %]&#37;</td>
 	</tr>
