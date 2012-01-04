@@ -2,9 +2,9 @@
 
 =begin nd
 
-Package: goah::Database::Products
+Package: goah::Db::Products
 
-  Database definition for products -table. Table rows contain basic
+  Db definition for products -table. Table rows contain basic
   information about individual product which is enough to create an
   invoice.
 
