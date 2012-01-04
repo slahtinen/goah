@@ -873,7 +873,7 @@ sub AddEventToInvoice {
 sub UpdateInvoiceinfo {
 
 	unless($_[0]) {
-		goah::Modules->AddMessage('error',__("Can't update invoice information!")." ".__("Invoice id is missing!"));
+		goah::Modules->AddMessage('error',__("Can't update invoice information!")." ".__("Invoice id is missing!"),__FILE__,__LINE__);
 		return 0;
 	}
 
@@ -884,10 +884,10 @@ sub UpdateInvoiceinfo {
         my $state;
         if($_[1]) {
                 $state=$_[1];
-        } elsif($q->param('state')) {
+        } elsif( !($q->param('state') eq '') ) {
                 $state=$q->param('state');
         } else {
-                goah::Modules->AddMessage('error',__("Can't update invoice information!")." ".__("Invoice state is missing!"));
+                goah::Modules->AddMessage('error',__("Can't update invoice information!")." ".__("Invoice state is missing!"),__FILE__,__LINE__);
                 return 0;
         }
 

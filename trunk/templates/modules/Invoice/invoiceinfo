@@ -28,7 +28,9 @@
 		</select>
 		</td>
 	[% ELSE %]
-		<td>[% invoicestates.$state %]</td>
+		<td>[% invoicestates.$state %]
+		<input type="hidden" name="state" value="[% invoice.state %]" />
+		</td>
 	[% END %]
 	</tr>
 <tr class="odd">
