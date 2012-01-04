@@ -83,7 +83,7 @@ sub Start {
         $variables{'formatdate'} = sub { goah::GoaH::FormatDate($_[0]); };
 	$variables{'invoicestates'} = \%invoicestates;
 
-	$variables{'companyinfo'} = sub { goah::Modules::Customermanagement::ReadCompanydata($_[0]) };
+	$variables{'companyinfo'} = sub { goah::Modules::Customermanagement::ReadCompanydata($_[0],1) };
 	$variables{'locationinfo'} = sub { goah::Modules::Customermanagement::ReadLocationdata($_[0]) };
 	$variables{'locations'} = sub { goah::Modules::Customermanagement::ReadCompanylocations($_[0]) };
 	$variables{'products'} = sub { goah::Modules::Productmanagement::ReadData('products',,$uid,$settref) };
@@ -516,11 +516,15 @@ sub AddRowToInvoice {
 #
 sub ReadInvoices {
 
-	use goah::Database::Invoices;
+	#use goah::Database::Invoices;
+	use goah::Db::Invoices::Manager;
 	my @data;
 	
 	if(!($_[0]) || $_[0] eq '') {
-		@data = goah::Database::Invoices->retrieve_all_sorted_by('state,due');
+
+		my $datap=goah::Db::Invoices::Manager->get_invoices( sort_by => 'state,due' );
+		@data=@$datap;
+		#@data = goah::Database::Invoices->retrieve_all_sorted_by('state,due');
 
 		# Search invoices.
 		# ---------------
@@ -663,8 +667,12 @@ sub ReadInvoicerows {
 		}
 	}
 
-	use goah::Database::Invoicerows;
-	my @rows = goah::Database::Invoicerows->search_where( { invoiceid => $_[0] }, { order_by => 'id' } );
+	#use goah::Database::Invoicerows;
+	#my @rows = goah::Database::Invoicerows->search_where( { invoiceid => $_[0] }, { order_by => 'id' } );
+	use goah::Db::Invoicerows::Manager;
+	my $rowp=goah::Db::Invoicerows::Manager->get_invoicerows( query => [ invoiceid => $_[0] ], sort_by => 'id' );
+
+	my @rows = @$rowp;
 
 	my $i=0;
 	my %rowdata;

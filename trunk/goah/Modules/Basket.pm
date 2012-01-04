@@ -33,7 +33,7 @@ use goah::Modules::Productmanagement;
 #
 my %basketdbfields = ( 
 		0 => { field => 'id', name => 'id', type => 'hidden', required => '0' },
-		1 => { field => 'companyid', name => __('Customer'), type => 'selectbox', required => '1', data => goah::Modules::Customermanagement->ReadAllCompanies() },
+		1 => { field => 'companyid', name => __('Customer'), type => 'selectbox', required => '1', data => goah::Modules::Customermanagement->ReadAllCompanies(1) },
 		2 => { field => 'locationid', name => __('Shipping address'), type => 'selectbox', required => '1', data => '0' },
 		3 => { field => 'billingid', name => __('Billing address') , type => 'selectbox', required => '1', data => '0' },
 		4 => { field => 'created', name => 'created', type => 'hidden', required => '0' },

@@ -1,5 +1,5 @@
-#!/usr/bin/perl -w 
 #!/usr/bin/perl -w -CSDA
+##!/usr/bin/perl -w 
 
 =begin nd
 
@@ -209,7 +209,7 @@ sub Start {
 				}
 
 				$variables{'function'} = 'modules/Customermanagement/customers';
-				$variables{'companies'} = ReadAllCompanies();
+				$variables{'companies'} = ReadAllCompanies(1);
 		
 		} elsif($q->param('action') eq 'writelocationdata') {
 
@@ -336,7 +336,7 @@ sub Start {
 		}
 
 	} else {
-		$variables{'companies'} = ReadAllCompanies();
+		$variables{'companies'} = ReadAllCompanies(1);
 	}
 
 	if($companyid eq '') {
@@ -412,23 +412,54 @@ sub ReadSetup {
 #
 # Parameters:
 #
-#   None 
+#   hash - If set, return data in processed Rose::DB hash instead of Class::DBI
 #
 # Returns:
 #
-#   Reference for Class::DBI result set
+#   If hash unset, Reference for Class::DBI result set, otherwise reference to hash array
+#   containing all companies.
+#
+#   0 on error.
 # 
 sub ReadAllCompanies {
 
-	use goah::Database::Companies;
-	my @data = goah::Database::Companies->search_where(
-								{ isowner => { '!=', '1' },
-								  hidden => { '!=', '1' } }, 
-								{ order_by => 'name' }
-							);
+	if($_[0]=~/goah::Modules::Customermanagement/) {
+		shift;
+	}
 
-	return \@data;
+	unless($_[0]) {
+		goah::Modules->AddMessage('debug',"Old version of goah::Modules::Customermanagement->ReadAllCompanies",__FILE__,__LINE__);
+		use goah::Database::Companies;
+		my @data = goah::Database::Companies->search_where(
+									{ isowner => { '!=', '1' },
+									  hidden => { '!=', '1' } }, 
+									{ order_by => 'name' }
+								);
+		return \@data;
+	} 
 
+	use goah::Db::Companies::Manager;
+	my $datap = goah::Db::Companies::Manager->get_companies( sort_by => 'name' );
+
+	if($datap==0) {
+		goah::Modules->AddMessage('error',__("Couldn't find any companies from the database."),__FILE__,__LINE__);
+		return 0;
+	}
+		
+	my @data=@$datap;
+
+	my %companydata;
+	my $sortcounter=1000000;
+	foreach my $d (@data) {
+		while (my ($k,$v) = each (%companydbfieldnames)) {
+			my %f = %$v;
+			my $key=$f{'field'};
+			$companydata{$sortcounter}{$key}=$d->$key;
+		}
+		$sortcounter++;
+	}
+
+	return \%companydata;
 }
 
 #
@@ -611,6 +642,7 @@ sub WriteNewLocation {
 # Parameters:
 #
 #   id - Parameter can be either VAT-id or database id
+#   hash - If set, return data via Rose::DB
 #
 # Returns:
 #
@@ -625,18 +657,40 @@ sub ReadCompanydata {
 
 	my $var = $_[0];
 	
-	use goah::Database::Companies;
-	my @data = goah::Database::Companies->search_where({ id => $var });
+	unless($_[1]) {
+		goah::Modules->AddMessage('debug',"Old version of goah::Modules::Customermanagement->ReadCompanydata called",__FILE__,__LINE__);
+		use goah::Database::Companies;
+		my @data = goah::Database::Companies->search_where({ id => $var });
 
+		if(scalar(@data) == 0) {
+			@data = goah::Database::Companies->search_where({ vat_id => $var });
+		}
 
-	if(scalar(@data) == 0) {
-		@data = goah::Database::Companies->search_where({ vat_id => $var });
+		if(scalar(@data) == 0) {
+			return 0;
+		} 
+		return $data[0];
 	}
 
-	if(scalar(@data) == 0) {
-		return 0;
-	} 
-	return $data[0];
+	use goah::Db::Companies;
+	my $data = goah::Db::Companies->new( id => $var );
+
+	unless($data->load(speculative => 1)) {
+		$data = goah::Db::Companies->new( vat_id => $var );
+		unless($data->load(speculative => 1)) {
+			return 0;
+		}
+	}
+
+	my %cdata;
+	while(my($k,$v)=each(%companydbfieldnames)) {
+		my %f=%$v;
+		my $fn=$f{'field'};
+		$cdata{$fn}=$data->$fn;
+	}
+
+	return \%cdata;
+
 }
 
 #
