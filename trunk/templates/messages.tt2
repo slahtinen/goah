@@ -13,7 +13,7 @@
 	[% END %]
 	
 	[% IF message.0 == 'info' %]
-		<script>$.jnotify("[% message.1 %] [% IF message.2 != '' %] [% message.2 %] line [% message.3 %] [% END %] ");</script>
+		<script>$.jnotify("[% message.1 %]");</script>
 	[% ELSE %]
 		<p class="[% msg_type %]">[% message.1 %]
 		[% IF message.2 != '' %]

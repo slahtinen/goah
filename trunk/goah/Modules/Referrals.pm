@@ -269,7 +269,7 @@ sub DeleteReferral {
 		goah::Modules->AddMessage('error',__("Couldn't convert order to basket!"),__FILE__,__LINE__);
 		return 1;
 	} else {
-		goah::Modules->AddMessage('info',__("Basket created from the order."),__FILE__,__LINE__);
+		#goah::Modules->AddMessage('info',__("Basket created from the order."),__FILE__,__LINE__);
 	}
 		
 	$referral->delete;
