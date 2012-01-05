@@ -94,10 +94,14 @@ onclick="return confirm('[% gettext("Delete shipment from database?") %]')" />
 <input type='hidden' name='target' value='[% shipment.id %]' />
 <select name="groupid" class="big" onchange="submit()" size="[% usersettings.activebasketselect %]">
 <option value='-1'>-- [% gettext("Product group") %] --</option>
-[% FOREACH group IN productgroups %]
+[%# This one is needed so that the hash is initialized %]
+[% productgroups %]
+[% FOREACH key IN productgroups.keys.sort %]
+	[% group = productgroups.$key %]
 	<option value="[% group.id %]">[% group.name %]</option>
 [% END %]
 </select>
+<input type="submit" value=">" />
 </p>
 
 <noscript>
