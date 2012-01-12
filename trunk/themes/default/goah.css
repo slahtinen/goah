@@ -217,6 +217,7 @@ table p {
 
 th {
     text-align: left;
+    font-size: 0.9em;
 }
 
 th.icon {
@@ -234,8 +235,12 @@ td.medium {
 .number {
 	text-align: right;
 	font-family: monospace;
-	font-size: 1em;
-	width: 65px;
+	font-size: 0.9em;
+	width: 55px;
+}
+
+input.number {
+	border: 1px solid black;
 }
 
 td.center {

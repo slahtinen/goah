@@ -1,24 +1,22 @@
 <h3>[% gettext("Products in basket") %]</h3>
 
-[% IF usersettings.showvat == 'on' %] 
-	[% vattxt = gettext("Incl.VAT") %]
-[% ELSE %]
-	[% vattxt = gettext("VAT 0%") %]
-[% END %]
 <table>
 <thead>
 <tr>
 <th>[% gettext("Code") %]</th>
-<th>[% gettext("Name") %]</th>
-<th>[% gettext("IN") %] ([% vattxt %])</th>
-<th>[% gettext("OUT") %] ([% vattxt %])</th>
-<th>[% gettext("VAT") %]</th>
-<th>[% gettext("In storage") %]</th>
+<!--<th>[% gettext("Name") %]</th>-->
+<th>[% gettext("IN VAT0%") %]</th>
+<th>[% gettext("IN") %]</th>
+<th>[% gettext("OUT VAT0%") %]</th>
+<th>[% gettext("OUT") %]</th>
+<!--<th>[% gettext("VAT") %]</th>-->
+<th>[% gettext("In stor.") %]</th>
 <th colspan='2'>[% gettext("Amount") %]</th>
+<th>[% gettext("Tot.VAT0%") %]</th>
 <th>[% gettext("Total") %]</th>
 <th>[% gettext("Row info") %]</th>
-<th>[% gettext("Delete") %]</th>
-<th>[% gettext("Update") %]</th>
+<th>[% gettext("D") %]</th>
+<th>[% gettext("Upd") %]</th>
 </tr>
 </thead>
 <tbody class="rowdata">
@@ -29,36 +27,46 @@
     seconds per refresh. %]
 [% purchasealertxt = gettext("Purchase price lower than sell price!") %]
 [% instorealerttxt = gettext("Storage count not enough!") %]
+[% deleterowtxt = gettext("Delete row from basket") %]
 [% FOREACH key IN basketrows.keys.sort %]
 	[% IF key >= 0 %]
 	[% row = basketrows.$key %]
 	[% prodinfo = productinfo(row.productid) %]
 	<tr class='[% rowc %]'>
 	<form action="" method='post' name="editrow[% row.id %]">
-	<input type='hidden' name='module' value='[% module %]'>
-	<input type='hidden' name='action' value='editrow'>
-	<input type='hidden' name='rowid' value='[% row.id %]'>
-	<input type='hidden' name='target' value='[% row.basketid %]'>
-	<input type='hidden' name='activebasket' value="[% activebasket %]">
-	<td>[% prodinfo.code %]</td>
-	<td>[% prodinfo.name %]</td>
-	<td><input class="number" name='purchase' value='[% row.purchase %]'></td>
-	<td><input class="number" name='sell' value='[% row.sell %]'>
+	<input type='hidden' name='module' value='[% module %]'/>
+	<input type='hidden' name='action' value='editrow'/>
+	<input type='hidden' name='rowid' value='[% row.id %]'/>
+	<input type='hidden' name='target' value='[% row.basketid %]'/>
+	<input type='hidden' name='activebasket' value="[% activebasket %]"/>
+	<input type='hidden' name='productid' value="[% row.productid %]"/>
+	<td>[% prodinfo.code %]<br/>
+	[% prodinfo.name %]</td>
+	<td><input type="hidden" name="purchase_orig" value="[% row.purchase %]"/>
+	    <input class="number" name='purchase' value='[% row.purchase %]'></td>
+	<td><input type="hidden" name="purchase_vat_orig" value='[% row.purchase_vat %]'/>
+	    <input class="number" name='purchase_vat' value='[% row.purchase_vat %]'></td>
+	<td><input type="hidden" name="sell_orig" value='[% row.sell %]'/>
+	    <input class="number" name='sell' value='[% row.sell %]'></td>
+	<td><input type="hidden" name="sell_vat_orig" value='[% row.sell_vat %]'/>
 	[% IF row.sell <= row.purchase %] 
-		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% purchasealertxt %]" title="[% purchasealertxt %]" />
+	    <input class="number" style="font-weight: bold; color: red; border: 2px solid red;" name='sell_vat' value='[% row.sell_vat %]'>
+	[% ELSE %]
+	    <input class="number" name='sell_vat' value='[% row.sell_vat %]'>
 	[% END %]
 	</td>
-	<td>[% prodinfo.vat %]&#37;</td>
+	<!--<td>[% prodinfo.vat %]&#37;</td>-->
 	<td>[% prodinfo.in_store %]
 	[% IF prodinfo.in_store < row.amount %]
 		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% instorealerttxt %]" title="[% instorealerttxt %]" />
 	[% END %]
 	</td>
-	<td><input class="number" name='amount' value='[% row.amount %]'></td>
+	<td><input class="number" style='width: 35px;' name='amount' value='[% row.amount %]'></td>
 	<td>[% prodinfo.unit %]</td>
 	<td class="number">[% row.total %]</td>
+	<td class="number">[% row.total_vat %]</td>
 	<td><input name='rowinfo' value='[% row.rowinfo %]'></td>
-	<td class="center"><input type='checkbox' name='delete' /></td>
+	<td class="center"><input type='checkbox' name='delete' title="[% deleterowtxt %]" /></td>
 	<td class="center"><input type='image' src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="Update"/></td>
 	</form>
 	</tr>
@@ -76,7 +84,8 @@
 <tr class="[% rowc %]">
 <td colspan='8'>[% gettext("Total") %]</td>
 <td class='number'>[% basketrows.-1.baskettotal %]</td>
-<td>&nbsp;</td>
+<td class='number'>[% basketrows.-1.baskettotal_vat %]</td>
+<td colspan=2>&nbsp;</td>
 </tr>
 </tbody>
 </table>

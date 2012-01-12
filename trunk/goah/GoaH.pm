@@ -154,6 +154,69 @@ sub FormatCurrency {
 	return $ret;
 }
 
+
+#
+# Function: FormatCurrencyNopref
+#
+#   Alternative function for currency formatting. This is used when there's need to format 
+#   currency with/without vat regardless of the user's preference
+#
+# Parameters:
+#
+#   num - Number to format
+#   vat - Vat% to use in calculations. If omitted defaults to 0
+#   includevat - Tells if number to format already contains VAT
+#   direction - In or out, Decides wether VAT is added or subtracted from amount. Defaults as out.
+#   returnwithvat - If set to 1 include VAT in outgoing number 
+#
+sub FormatCurrencyNopref {
+
+	if($_[0]=~/goah::GoaH/) {
+		shift;
+	}
+
+	unless ($_[0]) { 
+		goah::Modules->AddMessage('error',__('No number to reformat at all.'),__FILE__,__LINE__);
+		return 0;
+	}
+
+	unless ($_[0]=~/^-?([0-9\,\.\ ]+)$/) {
+		goah::Modules->AddMessage('error',__('No number to reformat. Got '.$_[0]),__FILE__,__LINE__);	
+		return 0;
+	}
+
+	$_[0]=~s/,/\./g;
+	$_[0]=~s/\ //g;
+
+	my $vat=1; # Even if we set up VAT% as 0% we still need to use 1 as an multiplier
+	unless ($_[1]=~/^[0-9\.\ ]+$/) {
+		goah::Modules->AddMessage('error',__("Incorrectly formatted VAT% (".$_[1]."). Reverting to 0."),__FILE__,__LINE__);
+	} else {
+		unless($_[1]==0) {
+			$vat = ($_[1]/100)+1;
+		}
+	}
+
+	my $sum=$_[0];
+	if($_[2] == 1) {
+		goah::Modules->AddMessage('debug',"Removing VAT from amount",__FILE__,__LINE__);
+		$sum=$sum/$vat;
+	}
+
+	my $ret;
+	if($_[3] && $_[3] eq 'in') {
+		$ret = sprintf("%.05f",($_[0]/$vat));
+	} else {
+		if($_[4] == 1) {
+			$ret = sprintf("%.02f",($_[0]*$vat) );
+		} else {
+			$ret = sprintf("%.02f",$_[0]);
+		}
+	}
+
+	return $ret;
+}
+		
 #
 # Function: FormatDate
 #

@@ -789,10 +789,43 @@ sub UpdateBasketRow {
 
 		if($q->param($fieldinfo{'field'})) {
 
-			if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
-				my $amt = goah::GoaH->FormatCurrency($q->param($fieldinfo{'field'}),$prod{'vat'},$uid,'in',$settref);
-				$rowinfo->set($fieldinfo{'field'} => $amt);
-				goah::Modules->AddMessage('debug',"Updated ".$fieldinfo{'field'}." to value $amt",__FILE__,__LINE__);
+			if($fieldinfo{'field'} eq 'purchase') {
+			
+				my $purchase='na';
+				if($q->param('purchase_orig') ne $q->param('purchase')) {
+					$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase'),0,0,'in',0);
+				} elsif($q->param('purchase_vat_orig') ne $q->param('purchase_vat')) {
+					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$q->param('productid'),$uid,$settref,1);
+					if($prodpoint==0) {
+						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
+					} else {
+						my %prod = %$prodpoint;
+						$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase_vat'),$prod{'vat'},0,'in',0);
+					}
+				}
+	
+				unless($purchase eq 'na') {
+					$rowinfo->set('purchase' => $purchase);
+				}
+
+			} elsif($fieldinfo{'field'} eq 'sell') {
+
+				my $sell='na';
+				if($q->param('sell_orig') ne $q->param('sell')) {
+					$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell'),0,0,'in',0);
+				} elsif($q->param('sell_vat_orig') ne $q->param('sell_vat')) {
+					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$q->param('productid'),$uid,$settref,1);
+					if($prodpoint==0) {
+						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
+					} else {
+						my %prod = %$prodpoint;
+						$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell_vat'),$prod{'vat'},0,'in',0);
+					}
+				}
+
+				unless($sell eq 'na') {
+					$rowinfo->set('sell' => $sell);
+				}
 
 			} elsif($fieldinfo{'field'} eq 'amount') {
 				# Feed validation
@@ -1043,6 +1076,7 @@ sub ReadBasketrows {
 	my %rowdata;
 	my $field;
 	my $baskettotal=0;
+	my $baskettotal_vat=0;
 
 	if( !($_[1]) || $_[1]==-1) {
 		# We don't have id for individual row, read all rows for
@@ -1062,7 +1096,16 @@ sub ReadBasketrows {
 						if($_[1]==-1) {
 							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),0,$uid,'in',$settref);
 						} else {
-							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$prod{'vat'},$uid,'out',$settref);
+							# Calculate rows sums for display
+							if($field eq 'purchase') {
+								$rowdata{$i}{'purchase'}=goah::GoaH->FormatCurrencyNopref($row->purchase,$prod{'vat'},0,'out',0);
+								$rowdata{$i}{'purchase_vat'}=goah::GoaH->FormatCurrencyNopref($row->purchase,$prod{'vat'},0,'out',1);
+							} elsif ( $field eq 'sell' ) {
+								$rowdata{$i}{'sell'}=goah::GoaH->FormatCurrencyNopref($row->sell,$prod{'vat'},0,'out',0);
+								$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($row->sell,$prod{'vat'},0,'out',1);
+							} else {
+								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$prod{'vat'},$uid,'out',$settref);
+							}
 						}
 					} else {
 						$rowdata{$i}{$field}=$row->get($field);
@@ -1075,11 +1118,14 @@ sub ReadBasketrows {
 				$rowdata{$i}{'amount'}=0;
 			}
 			unless($_[2]) {
-				$rowdata{$i}{'total'} = goah::GoaH->FormatCurrency( ($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'}),0,$uid,'out',$settref);
+				$rowdata{$i}{'total'} = goah::GoaH->FormatCurrencyNopref( ($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'}),0,'out',0);
+				$rowdata{$i}{'total_vat'} = goah::GoaH->FormatCurrencyNopref( ($rowdata{$i}{'sell_vat'}*$rowdata{$i}{'amount'}),0,'out',0);
 			} else {
 				$rowdata{$i}{'total'} = $rowdata{$i}{'sell'}*$rowdata{$i}{'amount'};
+				$rowdata{$i}{'total_vat'} = $rowdata{$i}{'sell_vat'}*$rowdata{$i}{'amount'};
 			}
 			$baskettotal+=($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'});
+			$baskettotal_vat+=($rowdata{$i}{'sell_vat'}*$rowdata{$i}{'amount'});
 			$rowdata{$i}{'code'} = $row->get('code');
 			$rowdata{$i}{'name'} = $row->get('name');
 
@@ -1092,7 +1138,8 @@ sub ReadBasketrows {
 			$rowdata{$i}{'in_store'}=$proddata->get('in_store');
 		}
 		unless($_[2]) {
-			$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrency($baskettotal,0,$uid,'out',$settref);
+			$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrencyNopref($baskettotal,0,'out',0);
+			$rowdata{-1}{'baskettotal_vat'} = goah::GoaH->FormatCurrencyNopref($baskettotal_vat,0,'out',0);
 		}
 		return \%rowdata;
 	} else {
