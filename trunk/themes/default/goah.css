@@ -165,8 +165,8 @@ blockquote.helptext {
 	padding-bottom:172px;
 }
 #contents {
-    margin:0 0 0 210px;
-    padding: 20px 20px 82px 20px;
+    margin:0 0 0 180px;
+    padding: 10px 20px 82px 12px;
     border-left: 1px solid #dae8f1;
 }
 
@@ -181,7 +181,7 @@ blockquote.helptext {
 
 #goah-logo {
 	background: transparent url('gfx/goah-logo-mirror.png') no-repeat center bottom;
-	width: 210px;
+	width: 180px;
 	border-right: 1px solid #dae8f1;
 	height: 172px;
 	float: left;
@@ -234,17 +234,40 @@ td.medium {
 
 .number {
 	text-align: right;
-	font-family: monospace;
 	font-size: 0.9em;
-	width: 55px;
 }
 
 input.number {
-	border: 1px solid black;
+	text-align: right;
+	width: 52px;
+	font-size: 0.9em;
+}
+
+input.number_vat0 {
+	text-align: right;
+	width: 52px;
+	font-size: 0.9em;
+	color: blue;
+}
+
+input.number_alert {
+	text-align: right;
+	width: 52px;
+	font-size: 0.9em;
+	color: #920000;
+	background-color: #dae8f1;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 1px solid #707070;
+	-moz-border-radius: 3px;
 }
 
 td.center {
 	text-align: center;
+}
+
+td.right {
+	text-align: right;
 }
 
 thead th {
@@ -253,7 +276,7 @@ thead th {
     line-height: 24px;
     height: 24px;
     margin: 0;
-    padding: 0 12px;
+    padding: 0 6px;
     white-space: nowrap;
 }
 
@@ -273,6 +296,10 @@ tbody th{
    padding: 6px;
 }
 
+th.center {
+	text-align: center;
+}
+
 tbody td {
    padding: 6px;
    border-left: 1px solid #dae8f1;
@@ -290,7 +317,7 @@ textarea.medium {
 }
 
 input {
-	padding-right: 5px;
+	padding-right: 3px;
 }
 
 input.date {

@@ -1,17 +1,17 @@
 #navi {
-    width: 170px;
+    width: 163px;
 /*    position: absolute;
     top: 20px;
     left: 20px;
 */
-	margin: 20px 0 0 20px;
+	margin: 10px 0 0 5px;
 	float:left;
 }
 
 #navi h2 {
     background: transparent url('gfx/bg-menu-header.png') repeat-x 0 0;
     color: #FFF;
-    width: 170px;
+    width: 163px;
 }
 
 #navi ul {
@@ -34,7 +34,7 @@
     	background-color: #fff;
     	color: #6aa4c6;
 	list-style: none;
-	width: 170px; /* CSS2-standardin mukaan pakko olla */
+	width: 163px; /* CSS2-standardin mukaan pakko olla */
 }
 
 #navi li.active > a {
@@ -53,7 +53,7 @@
 
 #navi a {
 	display: block;
-	width: 170px;
+	width: 163px;
 	height: 32px;
     	color: #6aa4c6;
    	font-weight: normal;

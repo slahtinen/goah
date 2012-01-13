@@ -3,20 +3,16 @@
 <table>
 <thead>
 <tr>
-<th>[% gettext("Code") %]</th>
-<!--<th>[% gettext("Name") %]</th>-->
-<th>[% gettext("IN VAT0%") %]</th>
-<th>[% gettext("IN") %]</th>
-<th>[% gettext("OUT VAT0%") %]</th>
-<th>[% gettext("OUT") %]</th>
-<!--<th>[% gettext("VAT") %]</th>-->
+<th>[% gettext("Code") %] / [% gettext("Product") %]</th>
+<th class="center" colspan='2'>[% gettext("IN") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
+<th class="center" colspan='2'>[% gettext("OUT") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
 <th>[% gettext("In stor.") %]</th>
 <th colspan='2'>[% gettext("Amount") %]</th>
-<th>[% gettext("Tot.VAT0%") %]</th>
-<th>[% gettext("Total") %]</th>
+<th>[% gettext("VAT 0%") %]</th>
+<th>[% gettext("Inc. VAT") %]</th>
 <th>[% gettext("Row info") %]</th>
-<th>[% gettext("D") %]</th>
-<th>[% gettext("Upd") %]</th>
+<th>[% gettext("Del") %]</th>
+<th>&nbsp;</th>
 </tr>
 </thead>
 <tbody class="rowdata">
@@ -42,15 +38,21 @@
 	<input type='hidden' name='productid' value="[% row.productid %]"/>
 	<td>[% prodinfo.code %]<br/>
 	[% prodinfo.name %]</td>
-	<td><input type="hidden" name="purchase_orig" value="[% row.purchase %]"/>
+	<td class="right"><input type="hidden" name="purchase_orig" value="[% row.purchase %]"/>
 	    <input class="number" name='purchase' value='[% row.purchase %]'></td>
 	<td><input type="hidden" name="purchase_vat_orig" value='[% row.purchase_vat %]'/>
 	    <input class="number" name='purchase_vat' value='[% row.purchase_vat %]'></td>
-	<td><input type="hidden" name="sell_orig" value='[% row.sell %]'/>
+
+	<td class="right"><input type="hidden" name="sell_orig" value='[% row.sell %]'/>
+	[% IF row.sell <= row.purchase %]
+	    <input class="number_alert" name='sell' value='[% row.sell %]'></td>
+	[% ELSE %]
 	    <input class="number" name='sell' value='[% row.sell %]'></td>
+	[% END %]
+
 	<td><input type="hidden" name="sell_vat_orig" value='[% row.sell_vat %]'/>
 	[% IF row.sell <= row.purchase %] 
-	    <input class="number" style="font-weight: bold; color: red; border: 2px solid red;" name='sell_vat' value='[% row.sell_vat %]'>
+	    <input class="number_alert" name='sell_vat' value='[% row.sell_vat %]'>
 	[% ELSE %]
 	    <input class="number" name='sell_vat' value='[% row.sell_vat %]'>
 	[% END %]
@@ -82,7 +84,7 @@
 [% rowc = 'info' %]
 
 <tr class="[% rowc %]">
-<td colspan='8'>[% gettext("Total") %]</td>
+<td class="right" colspan='8'>[% gettext("Total") %]</td>
 <td class='number'>[% basketrows.-1.baskettotal %]</td>
 <td class='number'>[% basketrows.-1.baskettotal_vat %]</td>
 <td colspan=2>&nbsp;</td>
