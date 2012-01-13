@@ -243,11 +243,15 @@ input.number {
 	font-size: 0.9em;
 }
 
-input.number_vat0 {
+input.number_sell {
 	text-align: right;
 	width: 52px;
 	font-size: 0.9em;
-	color: blue;
+	background-color: #dae8f1;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 1px solid #707070;
+	-moz-border-radius: 3px;
 }
 
 input.number_alert {
@@ -255,10 +259,9 @@ input.number_alert {
 	width: 52px;
 	font-size: 0.9em;
 	color: #920000;
-	background-color: #dae8f1;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	border: 1px solid #707070;
+	border: 1px solid #920000;
 	-moz-border-radius: 3px;
 }
 
