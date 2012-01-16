@@ -243,12 +243,30 @@ if($auth==1) {
 		#  on HTML-document
 		#
 		my $topmenu = goah::Modules->ReadTopNavi();
+
 		$templatevars{'navi'} = $topmenu;
 
-		# If module is selected start it here
+		# If module is selected start it here. If there's no module selected, then start Basket
+		# as default module.
 		if($q->param('module')) {
 			my $modref = goah::Modules->StartModule($q->param('module'),$uid,$settref);
-
+			
+			# Process return value from module and assign them into
+			# templatevars -hash
+			unless($modref == 0) {
+				my %mod = %$modref;
+		
+				my $key;
+				my $value;
+				while(($key,$value) = each (%mod)) {
+					$templatevars{$key} = $value;
+				}
+			} else {
+				goah::Modules->AddMessage('error',"Error with module ".$q->param('module'));
+			}	
+		} else {
+			my $modref = goah::Modules->StartModule('Basket',$uid,$settref);
+			
 			# Process return value from module and assign them into
 			# templatevars -hash
 			unless($modref == 0) {
@@ -262,8 +280,8 @@ if($auth==1) {
 			} else {
 				goah::Modules->AddMessage('error',"Error with module ".$q->param('module'));
 			}
-			
 		}
+		
 		$templatevars{'messages'} = sub { goah::Modules::GetMessages($uid); };
 
 	}
