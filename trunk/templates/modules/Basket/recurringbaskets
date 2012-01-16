@@ -73,7 +73,8 @@
 	[% ELSIF data.type == 'selectbox' %]
 		<td><select class="medium" name="[% data.field %]">
 		<option  value="-1">-- [% gettext("Select") %] --</option>
-		[% FOREACH item IN data.data %]
+		[% FOREACH key IN data.data.keys.sort %]
+			[% item = data.data.$key %]
 			<option value="[% item.id %]">[% item.name %]
 			[%- IF item.vat_id == '00000000' %]
 			, [% item.firstname %]
