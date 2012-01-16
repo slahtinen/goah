@@ -25,7 +25,7 @@
 [% field = bankaccountsdbfields.$key %]
 	[% IF field.type != "hidden" %]
 		[% fkey = field.field %]
-		<td><input name="[% fkey %]" value="[% account.$fkey %]" />
+		<td><input class="large" name="[% fkey %]" value="[% account.$fkey %]" />
 		</td>
 	[% END %]
 [% END %]
@@ -59,7 +59,7 @@
 [% FOREACH key IN bankaccountsdbfields.keys.sort %]
 [% field = bankaccountsdbfields.$key %]
         [% IF field.type != "hidden" %]
-		<td><input name="[% field.field %]"></td>
+		<td><input class="large" name="[% field.field %]"></td>
 	[% END %]
 [% END %]
 <td>&nbsp;</td>

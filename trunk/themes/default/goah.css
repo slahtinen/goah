@@ -346,6 +346,10 @@ input.medium {
 	width: 120px;
 }
 
+input.large {
+	width: 160px;
+}
+
 input.big {
 	width: 250px;
 }

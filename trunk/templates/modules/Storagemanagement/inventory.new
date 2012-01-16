@@ -26,11 +26,11 @@
 	[% ELSE %]
 		<td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
 	[% END %]
+	<td class="center"><input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" 
+	alt="[% gettext("Create") %]" /></td>
 	</tr>
 [% END %]
 [% END %]
-<td><input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Create") %]" /></td>
-</tr>
 </table>
 <p>
 <input type="hidden" name="type" value="inventory" />

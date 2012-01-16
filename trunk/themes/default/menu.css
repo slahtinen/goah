@@ -48,7 +48,6 @@
 
 #navi li.subcat1_active > a, li.subcat1_active > a:hover {
     	background: transparent url('gfx/menu-active.png') no-repeat 12px 12px;
-   	font-weight: bold;
 }
 
 #navi a {
