@@ -41,14 +41,10 @@
 	<td class="right"><input type="hidden" name="purchase_orig" value="[% row.purchase %]"/>
 	    <input class="number" name='purchase' value='[% row.purchase %]'></td>
 	<td><input type="hidden" name="purchase_vat_orig" value='[% row.purchase_vat %]'/>
-	    <input class="number" name='purchase_vat' value='[% row.purchase_vat %]'></td>
+	    <input class="number_buy" name='purchase_vat' value='[% row.purchase_vat %]'></td>
 
 	<td class="right"><input type="hidden" name="sell_orig" value='[% row.sell %]'/>
-	[% IF row.sell <= row.purchase %]
-	    <input class="number_alert" name='sell' value='[% row.sell %]'></td>
-	[% ELSE %]
-	    <input class="number_sell" name='sell' value='[% row.sell %]'></td>
-	[% END %]
+	    <input class="number" name='sell' value='[% row.sell %]'></td>
 
 	<td><input type="hidden" name="sell_vat_orig" value='[% row.sell_vat %]'/>
 	[% IF row.sell <= row.purchase %] 
