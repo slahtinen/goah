@@ -21,9 +21,9 @@
 [% IF mainitem.module == module %]
 	[% "<li><ul class=\"subcat1\">" IF loop.first %]
 [% IF item.action == action %]
-	<li class="subcat1_active"><a href="?module=[% module %]&amp;action=[% item.action %]">[% item.title %]</a></li>
+	<li class="subcat1_active"><a href="?module=[% module %]&amp;action=[% item.action %]">[% gettext(item.title) %]</a></li>
 [% ELSE %]
-	<li><a href="?module=[% module %]&amp;action=[% item.action %]">[% item.title %]</a></li>
+	<li><a href="?module=[% module %]&amp;action=[% item.action %]">[% gettext(item.title) %]</a></li>
 [% END %]
 	[% "</ul></li>" IF loop.last %]
 [% END %]

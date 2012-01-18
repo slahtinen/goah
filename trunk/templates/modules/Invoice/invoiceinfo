@@ -1,3 +1,4 @@
+[% USE date %]
 <h2>[% gettext("Invoice information") %]</h2>
 <table>
 [% IF invoice.state == 0 %]
@@ -9,6 +10,10 @@
 <tr class="odd">
 	<td>[% gettext("Invoice number") %]</td>
 	<td>[% invoice.invoicenumber %]</td>
+</tr>
+<tr class="even">
+	<td>[% gettext("Payment received") %]</td>
+	<td>[% formatdate(invoice.received) %]</td>
 </tr>
 <tr class="even">
 	<td>[% gettext("Invoice status") %]</td>
@@ -28,17 +33,15 @@
 		</select>
 		</td>
 	[% ELSE %]
-		<td>[% invoicestates.$state %]
+		<td>[% gettext(invoicestates.$state) %] 
 		<input type="hidden" name="state" value="[% invoice.state %]" />
 		</td>
 	[% END %]
 	</tr>
 <tr class="odd">
-	<td class="medium">[% gettext("Created") %] (dd.mm.yyyy)</td>
+	<td class="medium">[% gettext("Created") %] </td>
 	[% IF state == '0' %]
-		<td>Current: [% formatdate(invoice.created) %]<br />
-		Change to: <input class="medium" name='created' />
-		[% gettext("Leave empty for current date.") %]</td>
+		<td><input class="date" name='created' value="[% formatdate(invoice.created) %]" /></td>
 	[% ELSE %]
 		<td>[% formatdate(invoice.created) %]</td>
 	[% END %]
@@ -71,42 +74,28 @@
 	<td>[% gettext("Due") %]</td>
 	<td>[% formatdate(invoice.due) %]</td>
 </tr>
-<tr class="even">
-	<td>[% gettext("Payment received") %]</td>
-	<td>[% formatdate(invoice.received) %]</td>
-</tr>
+
 <tr class="odd">
 	<td>[% gettext("Customer reference") %]</td>
 	[% IF state == '0' %]
-		<td><input class="medium" name='customerreference' value='[% invoice.customerreference %]'/></td>
+		<td><input class="big" name='customerreference' value='[% invoice.customerreference %]'/></td>
 	[% ELSE %]
 		<td>[% invoice.customerreference %]</td>
 	[% END %]
 </tr>
-[% IF invoice.state == 0 %]
-<tr class='even'>
-	<td><input type='submit' value='[% gettext("Save") %]'/></td>
-</tr>
-[% END %]
 </table>
 <table>
 <tr class="even">
-	<td>
-	<a href="pdf.cgi?type=invoice&amp;id=[% invoice.id %]">
+	<td class="small"><a href="pdf.cgi?type=invoice&amp;id=[% invoice.id %]">
 	<img class="link" alt="Download as PDF" title="Download as PDF" src="themes/[% theme %]/icon/32x32/actions/document-print.png" /></a></td>
 	[% IF invoice.state == 0 %]
-	<td>
-	<input type='submit' name="invoicetobilling" value='[% gettext("Send invoice") %]' onclick="return confirm('[% gettext("Move invoice to billing?") %]')" />
-	</td><td>
-	<input type='submit' name="invoicetocashreceipt" value='[% gettext("Cash payment") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" />
-	</td><td>
-        <input type='submit' name="invoicetocardreceipt" value='[% gettext("Card payment") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" />
-	</td>
-	[% IF invoice.state == 0 %]
+	<td><input type='submit' value='[% gettext("Save") %]'/></td>
+	<td><input type='submit' name="invoicetobilling" value='[% gettext("Send invoice") %]' onclick="return confirm('[% gettext("Move invoice to billing?") %]')" /></td>
+	<td><input type='submit' name="invoicetocashreceipt" value='[% gettext("Cash payment") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" /></td>
+	<td><input type='submit' name="invoicetocardreceipt" value='[% gettext("Card payment") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" /></td>
 	<td>
 	<input type='submit' name="invoicebacktobasket" value='[% gettext("Return invoice to basket") %]' onclick="return confirm('[% gettext("Confirm returning invoice to basket") %]')" />
 	</td>
-	[% END %]
 	</form>
 	[% END %]
 	[% IF invoice.state == 1 %]
@@ -116,10 +105,10 @@
         <input type='hidden' name='target' value='[% invoice.id %]' />
         <input type='hidden' name='state' value='4' />
         <input type='hidden' name='action' value='invoicepaymentreceived' />
-	[% gettext("Payment received (leave empty for today):") %] (dd.mm.yyyy) <input name='received' />
-        <input type='submit' value='[% gettext("Payment received") %]' onclick="return confirm('[% gettext("Confirm payment for invoice") %]')" />
+        [% gettext("Payment received") %] <input name='received' class="date" value="[% date.format(date.now, '%d.%m.%Y') %]" />
+        <input type='submit' value='[% gettext("Save") %]' onclick="return confirm('[% gettext("Confirm payment as received") %]')" />
+   </td>
 	</form>
-	</td>
 	[% END %]
 </tr>
 </table>

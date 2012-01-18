@@ -1,7 +1,7 @@
 <h2>[% gettext("Basket information") %]</h2>
 <table>
 <tr>
-<td>[% gettext("Basket state:") %]</td><td>[% state = data.state %][% basketstates.$state %]</td></tr>
+<td>[% gettext("Basket state:") %]</td><td>[% state = data.state %][% gettext(basketstates.$state) %]</td></tr>
 <tr>
 <td>[% gettext("Basket created:") %]</td><td>[% formatdate(data.created) %]</td></tr>
 <tr><td>[% gettext("Last update:") %]</td><td>[% formatdate(data.updated) %]</td></tr>
@@ -13,7 +13,7 @@
 [% field = basketdbfields.$key %]
 [% fieldname = field.field %]
 [% IF field.type != 'hidden' && field.field != 'companyid' %]
-	<tr class="[% row %]"><td class="medium">[% field.name %]
+	<tr class="[% row %]"><td class="medium">[% gettext(field.name) %]
 	[% IF field.required == 1 %]
 		*
 	[% END %]
@@ -50,7 +50,7 @@
 	[% compinfo = companyinfo(data.companyid) %]
 	<input type='hidden' name='target' value="[% data.companyid %]">
 	<input type='hidden' name='companyid' value="[% data.companyid %]">
-	<tr class="[% row %]"><td>[% field.name %]</td><td>[% compinfo.name %]</td></tr>
+	<tr class="[% row %]"><td>[% gettext(field.name) %]</td><td>[% compinfo.name %]</td></tr>
 [% ELSE %]
 	<input name='[% field.field %]' value='[% data.$fieldname %]' type='hidden'> 
 [% END %]
@@ -63,8 +63,8 @@
 <td>[% gettext("Year") %] <input name="nexttrigger_year" class="small" /> 
 [% gettext("Month") %] <input name="nexttrigger_month" class="small" /></td>
 </tr>
-<tr><td>[% gettext("Repeat every n month") %]</td><td><input name="repeat" value="[% data.repeat %]" /></td></tr>
-<tr><td>[% gettext("Day of month (1-28)") %]</td><td><input name="dayinmonth" value="[% data.dayinmonth %]" /></td></tr>
+<tr><td>[% gettext("Repeat every n month") %]</td><td><input name="repeat" class="small" value="[% data.repeat %]" /></td></tr>
+<tr><td>[% gettext("Day of month (1-28)") %]</td><td><input name="dayinmonth" class="small" value="[% data.dayinmonth %]" /></td></tr>
 [% END %]
 <tr>
 <td>
