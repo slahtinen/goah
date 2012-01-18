@@ -176,6 +176,9 @@ sub FormatCurrencyNopref {
 	}
 
 	unless ($_[0]) { 
+		if(length($_[0])>0) {
+			return "0.00";
+		}
 		goah::Modules->AddMessage('error',__('No number to reformat at all.'),__FILE__,__LINE__);
 		return 0;
 	}

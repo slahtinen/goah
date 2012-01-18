@@ -787,7 +787,7 @@ sub UpdateBasketRow {
 			next;
 		}
 
-		if($q->param($fieldinfo{'field'})) {
+		if($q->param($fieldinfo{'field'}) || length($q->param($fieldinfo{'field'}))>0) {
 
 			if($fieldinfo{'field'} eq 'purchase') {
 			
