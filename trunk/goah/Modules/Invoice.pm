@@ -83,6 +83,7 @@ sub Start {
         $variables{'formatdate'} = sub { goah::GoaH::FormatDate($_[0]); };
 	$variables{'invoicestates'} = \%invoicestates;
 
+	$variables{'customers'}=goah::Modules::Customermanagement->ReadAllCompanies(1);
 	$variables{'companyinfo'} = sub { goah::Modules::Customermanagement::ReadCompanydata($_[0],1) };
 	$variables{'locationinfo'} = sub { goah::Modules::Customermanagement::ReadLocationdata($_[0]) };
 	$variables{'locations'} = sub { goah::Modules::Customermanagement::ReadCompanylocations($_[0]) };
