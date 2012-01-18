@@ -3,7 +3,9 @@
 <thead>
 <tr>
 	<th>[% gettext("Customer") %]</th>
+	<th>[% gettext("Value VAT0%") %]</th>
 	<th>[% gettext("Value") %]</th>
+	<th>[% gettext("Rows") %]</th>
 	<th>[% gettext("Dates") %]</th>
 	<th class="medium">[% gettext("Description") %]</th>
 	<th class="icon">[% gettext("Open") %]</th>
@@ -34,7 +36,9 @@
 		, [% linfo.postalcode %] [% linfo.postaloffice %]
 	[% END %]
 	</td>
-	<td>[% gettext("Total") %]: [% basket.total %]&euro;<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
+	<td>[% basket.total %]</td>
+	<td>[% basket.total_vat %]</td>
+	<td>[% basket.rows %]</td>
 	<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
 	[% gettext("Updated") %]: [% formatdate(basket.updated) %]</td>
 	<td >[% basket.info %]
@@ -47,7 +51,9 @@
 	[% END %]
 [% END %]
 <tr class='[% rclass %]'>
-<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]&euro;</td><td colspan=3>&nbsp;</td></tr>
+<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]</td>
+<td>[% baskets.-1.totalvat %]</td>
+<td colspan=2>&nbsp;</td></tr>
 </tbody>
 
 </table>

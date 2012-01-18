@@ -554,6 +554,7 @@ sub ReadBaskets {
 		my %basketrows;
 		my @rows;
 		my $total=0;
+		my $totalvat=0;
 		foreach (@data) {
 			foreach my $k (keys(%basketdbfields)) {
 				$f=$basketdbfields{$k}{'field'};		
@@ -566,7 +567,9 @@ sub ReadBaskets {
 			}
 			%basketrows=%$br;
 			$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
+			$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal'};
 			$total+=$basketrows{-1}{'baskettotal'};
+			$totalvat+=$basketrows{-1}{'baskettotal_vat'};
 			@rows=sort keys(%basketrows);
 			$baskets{$i}{'rows'}=pop @rows;
 			$baskets{$i}{'rows'}++;
@@ -580,7 +583,8 @@ sub ReadBaskets {
 
 			$i++;
 		} 
-		$baskets{-1}{'total'}=goah::GoaH->FormatCurrency($total,0,$uid,'out',$settref);
+		$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
+		$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,1,1,'out',1);
 		return \%baskets;
 	} else {
 		@data = $db->search_where({ id => $_[0] });
