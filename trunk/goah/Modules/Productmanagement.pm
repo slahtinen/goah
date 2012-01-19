@@ -422,8 +422,13 @@ sub WriteNewItem {
 	my %fieldinfo;
 	while(my($key,$value) = each (%dbschema)) {
 		%fieldinfo = %$value;
-		if($fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) ) {
+		if( $fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) ) {
 			goah::Modules->AddMessage('warn',__('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!'));
+			return 1;
+		}
+
+		if( $fieldinfo{'required'} == '1' && $fieldinfo{'type'} eq 'selectbox' && $q->param($fieldinfo{'field'}) eq "-1" ) {
+			goah::Modules->AddMessage('warn',__('Required dropdown field').' <b>'.$fieldinfo{'name'}.'</b> '.__("unselected!"));
 			return 1;
 		}
 
@@ -543,6 +548,10 @@ sub WriteEditedItem {
 			my $errstr = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!')." ";
 			$errstr.= __("Leaving value unaltered.");
 			 goah::Modules->AddMessage('warn',$errstr);
+		} elsif($fieldinfo{'required'} == '1' && $fieldinfo{'type'} eq 'selectbox' && $q->param($fieldinfo{'field'}) eq "-1") {
+			my $errstr = __('Required dropdown field').' <b>'.$fieldinfo{'name'}.'</b> '.__('unselected!').' ';
+			$errstr.= __("Leaving value unaltered.");
+			goah::Modules->AddMessage('warn',$errstr);
 		} else {
 			if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
 			

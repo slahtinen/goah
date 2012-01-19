@@ -49,6 +49,13 @@
 				[% EXT = 'selected' %]
 			[% END %]
 
+			[%# Another ugly fix to keep VAT classes on order, this way 23.00 == 23 %]
+			[% IF field.field == 'vat' %] 
+				[% IF item.item - data.$fieldname == 0 %]
+					[% EXT = 'selected' %]
+				[% END %]
+			[% END %]
+
 			[% IF item.item != '' %]
 				<option value="[% item.value %]" [% EXT %]>[% item.item %]</option>
 			[% ELSE %]
