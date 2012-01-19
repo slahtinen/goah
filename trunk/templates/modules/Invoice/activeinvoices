@@ -23,7 +23,7 @@
 [% IF selected == 1 %]
 <input type='checkbox' name='states' value='[% option %]' checked='checked'>[% gettext(invoicestates.$option) %] <br />
 [% ELSE %]
-<input type='checkbox' name='states' value='[% option %]'>[% invoicestates.$option %] <br />
+<input type='checkbox' name='states' value='[% option %]'>[% gettext(invoicestates.$option) %] <br />
 [% END %]
 [% IF lcount == 2 %] </td><td> [% lcount = 0 %][% END %]
 [% IF loop.last %] </td>[% END %]
