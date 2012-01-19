@@ -567,7 +567,7 @@ sub ReadBaskets {
 			}
 			%basketrows=%$br;
 			$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
-			$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal'};
+			$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
 			$total+=$basketrows{-1}{'baskettotal'};
 			$totalvat+=$basketrows{-1}{'baskettotal_vat'};
 			@rows=sort keys(%basketrows);
