@@ -68,10 +68,13 @@ sub InitVars {
 
 	$initvars=1;
 
-	%submenu = (	
-			0 => {title => __("Add new product"), action => 'addnew&type=products'},
-			1 => {title => __("Manufacturers"),action => 'manufacturers'},
+	%submenu = (		
+			0 => {title => __("Products")},		
+			1 => {title => __("Manufacturers"),action => 'manufacturers'},		
 			2 => {title => __("Groups"), action => 'productgroups'},
+			3 => {title => __("Add new product"), action => 'addnew&type=products'},
+			4 => {title => __("Add new manufacturer"), action => 'addnew&type=manuf'},
+			5 => {title => __("Add new group"), action => 'addnew&type=productgroups'}
 		);
 
 	#

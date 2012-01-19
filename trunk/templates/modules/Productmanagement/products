@@ -69,8 +69,11 @@
 		</td>
 		</tr>
 	[% END %]
-	<tr><th colspan="6">[% gettext("Group total value:") %]</th><th>[% group.group_total_value %]</th><th colspan="2">&nbsp;</th></tr>
+	<tr><th colspan="6" class='right'>[% gettext("Group total value:") %]</th><th>[% group.group_total_value %]</th><th colspan="2">&nbsp;</th></tr>
 	</tbody>
+	[% IF loop.last %]
+		<tr><td colspan='6'>[% gettext("Total storage value") %] [% storagetotalvalue %]</td></tr>
+	[% END %]
 	</table>
 [% END %]
-<p>[% gettext("Total storage value") %] [% storagetotalvalue %]</p>
+

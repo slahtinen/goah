@@ -62,11 +62,12 @@
 				<option value="[% item.id %]">[% item.name %]</option>
 			[% END %]
 			</select>
+			</td>
 			[% IF data.field == "manufacturer" || data.field == "groupid" %]
-				[% gettext("OR add new") %] <input name="[% data.field %].new" value="[% prefill.$prefillfield %]" />
+				<tr><td class="right">[% gettext("Add new") %] </td>
+				<td> <input name="[% data.field %].new" value="[% prefill.$prefillfield %]" /></td></tr>
 			[% END %]
 		[% END %]
-		</td>
 	[% ELSE %]
 		<td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
 	[% END %]

@@ -8,7 +8,7 @@
 [% FOREACH key IN companydbfields.keys.sort %]
 [% data = companydbfields.$key %]
 [% IF data.type != "hidden" %]
-	<tr class="[% row %]"><td class="medium">[% data.name %]</td>
+	<tr class="[% row %]"><td class="medium">[% gettext(data.name) %]</td>
 	[% field = data.field %]
 	<td>
 	[% IF field == 'custtype' %] 

@@ -228,6 +228,10 @@ th.medium {
 	width: 230px;
 }
 
+th.right {
+	text-align: right;	
+}
+
 td.small {
 	width: 30px;	
 }

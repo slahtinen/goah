@@ -10,9 +10,6 @@
 </tr>
 </thead>
 <tbody class="rowdata">
-<tr>
-<td colspan='4'><a href="?module=[% module %]&amp;action=addnew&amp;type=manuf">[% gettext("Add new manufacturer") %]</a></td>
-</tr>
 [% odd = 0 %]
 [% FOREACH k IN manufacturers.keys.sort %]
 	[% manuf = manufacturers.$k %]

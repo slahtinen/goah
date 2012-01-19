@@ -8,7 +8,7 @@
 [% FOREACH key IN dbfields.keys.sort %]
 [% data = dbfields.$key %]
 [% IF data.type != "hidden" %]
-	<tr class="[% row %]"><td class="medium">[% data.name %]
+	<tr class="[% row %]"><td class="medium">[% gettext(data.name) %]
 	[% IF data.required == 1 %]
 		*
 	[% END %]

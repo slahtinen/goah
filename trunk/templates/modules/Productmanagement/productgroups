@@ -9,9 +9,6 @@
 </tr>
 </thead>
 <tbody>
-<tr>
-  <td colspan='3'><a href="?module=[% module %]&amp;action=addnew&amp;type=productgroups">[% gettext("Add new group") %]</a></td>
-</tr>
 [% odd = 0 %]
 [% deletetxt= gettext("Delete") %]
 [% edittxt = gettext("Edit") %]

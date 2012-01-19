@@ -15,12 +15,12 @@
 [% event = invoicehistory.$key %]
 <tr class="[% rclass %]">
 	<td>[% event.time %]</td>
-	<td>[% event.action %]</td>
+	<td>[% gettext(event.action) %]</td>
 	[% state1 = event.startstate %]
 	[% state2 = event.endstate %]
-	<td>[% invoicestates.$state1 %]</td>
-	<td>[% invoicestates.$state2 %]</td>
-	<td>[% event.info %]</td>
+	<td>[% gettext(invoicestates.$state1) %]</td>
+	<td>[% gettext(invoicestates.$state2) %]</td>
+	<td>[% gettext(event.info) %]</td>
 </tr>
 	[% IF rclass == 'odd' %]
 		[% rclass = 'even' %]

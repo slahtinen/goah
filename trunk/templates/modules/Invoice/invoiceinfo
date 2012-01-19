@@ -61,13 +61,11 @@
 		</select>
 		</td>
 	[% ELSE %]
-		<td>
 		[% FOREACH item IN paymentconditions %]
-			[% IF item.id == invoice.payment_condition || item.value == invoice.payment_condition %]
-				[% item.item %]
+			[% IF item.id == invoice.payment_condition %]
+					<td>[% item.item %]</td>
 			[% END %]
 		[% END %]
-		</td>
 	[% END %]
 </tr>
 <tr class="odd">
