@@ -147,7 +147,7 @@ msgstr "Yrityksen id puuttuu! Pankkitilin lisäys epäonnistui!"
 
 #: ../goah/Modules/Systemsettings.pm:41
 msgid "Company info & users"
-msgstr "Yritystiedot ja käyttäjät"
+msgstr "Yritys ja käyttäjät"
 
 #: ../templates/modules/Systemsettings/companypersons:1
 msgid "Company personnell"
@@ -327,7 +327,7 @@ msgstr "Nimi"
 
 #: ../templates/modules/Systemsettings/newlocation:1
 msgid "New address for company"
-msgstr "Uusi osoite yritykselle"
+msgstr "Uusi sijainti yritykselle"
 
 #: ../goah/Modules/Systemsettings.pm:166
 msgid "New bank account created"
@@ -343,7 +343,7 @@ msgstr "Uusi käyttäjä lisätty"
 
 #: ../templates/modules/Systemsettings/newperson:1
 msgid "New person data for company"
-msgstr "Uusi henkilötieto yritykselle"
+msgstr "Uusi henkilö yritykselle"
 
 #: ../templates/modules/Systemsettings/companylocations:11 ../templates/modules/Systemsettings/companypersons:11
 msgid "Open"

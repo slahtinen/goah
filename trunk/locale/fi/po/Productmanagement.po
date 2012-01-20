@@ -43,7 +43,7 @@ msgstr "Lisää uusi ryhmä"
 
 #: ../goah/Modules/Productmanagement.pm:76
 msgid "Add new manufacturer"
-msgstr "Lisää uusi toimittaja"
+msgstr "Lisää uusi valmistaja"
 
 #: ../templates/modules/Productmanagement/manufacturers.new:1
 msgid "Add new manufacturer to database"
@@ -355,7 +355,7 @@ msgstr "Tuntematon parametri funktiolle: "
 
 #: ../templates/modules/Productmanagement/products:19
 msgid "VAT class"
-msgstr ""
+msgstr "ALV-luokka"
 
 #: ../goah/Modules/Productmanagement.pm:130
 msgid "Vat class"

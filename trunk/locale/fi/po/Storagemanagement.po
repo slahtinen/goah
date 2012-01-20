@@ -207,7 +207,7 @@ msgstr "Oletus"
 
 #: ../goah/Modules/Storagemanagement.pm:54
 msgid "Default storage"
-msgstr "Oletus varasto"
+msgstr "Oletusvarasto"
 
 #: ../templates/modules/Storagemanagement/inventory.productlist:12 ../templates/modules/Storagemanagement/shipments.productlist:19 ../templates/modules/Storagemanagement/shipments.show:74 ../templates/modules/Storagemanagement/storages:48 ../templates/modules/Storagemanagement/storages:9 ../templates/modules/Storagemanagement/suppliers:10 ../templates/modules/Storagemanagement/suppliers:46
 msgid "Delete"
@@ -235,11 +235,11 @@ msgstr "Kohde"
 
 #: ../goah/Modules/Storagemanagement.pm:79
 msgid "Destination storage"
-msgstr "Kohde varasto"
+msgstr "Kohdevarasto"
 
 #: ../templates/modules/Storagemanagement/shipments.show:22
 msgid "Destination storage:"
-msgstr "Kohde varasto:"
+msgstr "Kohdevarasto:"
 
 #: ../goah/Modules/Storagemanagement.pm:1129
 msgid "Didn't find product code. Can't add product to inventory."

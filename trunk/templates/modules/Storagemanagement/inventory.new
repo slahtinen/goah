@@ -6,7 +6,7 @@
 [% data = inventorydbfields.$key %]
 [% IF data.type != 'hidden' && key != 3 && key != 1 %]
 	<tr>
-	<td>[% data.name %]
+	<td>[% gettext(data.name) %]
 	[% IF data.required == 1 %]
 		*
 	[% END %]
