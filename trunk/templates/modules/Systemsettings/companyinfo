@@ -8,7 +8,7 @@
 [% field = data.field %]
 [% IF data.type != "hidden" %]
 	<tr class="[% rowc %]">
-	<td class="medium">[% data.name %]
+	<td class="medium">[% gettext(data.name) %]
 	[% IF data.required == 1 %]
 		*
 	[% END %]
