@@ -63,9 +63,11 @@
 <tr>
 <td>
 <input type="submit" value="[% gettext("Save") %]" />
+</td>
 </form>
 [% END %]
 [% IF shipmentrows == 0 %]
+<td> 
 <form action="" method="post">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="action" value="delete" />
@@ -74,12 +76,13 @@
 <input type="submit" value="[% gettext("Delete") %]" 
 onclick="return confirm('[% gettext("Delete shipment from database?") %]')" />
 </form>
+</td>
 [% END %]
-</td></tr>
+</tr>
 </table>
 
 [% IF shipment.received != 1 %]
-<h2>[% gettext("Add products to shipment") %]</h2>
+<h3>[% gettext("Add products to shipment") %]</h3>
 <table>
 <thead>
 <tr><th>[% gettext("Select product group") %]</th>
