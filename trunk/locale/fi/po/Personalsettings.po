@@ -21,15 +21,15 @@ msgstr ""
 msgid "Active basket select rows"
 msgstr "Aktiivisen korin valintarivit"
 
-#: ../goah/Modules/Personalsettings.pm:116
+#: ../goah/Modules/Personalsettings.pm:112
 msgid "Can't read personal settings. User id is missing."
 msgstr "Omien asetusten luku epäonnistui. Käyttäjä id puuttuu."
 
-#: ../goah/Modules/Personalsettings.pm:72
+#: ../goah/Modules/Personalsettings.pm:68
 msgid "Can't update personal settings."
 msgstr "Omien asetusten päivitys epäonnistui."
 
-#: ../goah/Modules/Personalsettings.pm:156
+#: ../goah/Modules/Personalsettings.pm:152
 msgid "Can't write personal settings. User id is missing."
 msgstr "Omien asetusten tallennus epäonnistui! Käyttäjä id puuttuu."
 
@@ -53,7 +53,7 @@ msgstr "Jos tämä valinta on valittuna, niin kaikki hinnat jotka näet sisält�
 msgid "Language"
 msgstr "Kieli"
 
-#: ../goah/Modules/Personalsettings.pm:76
+#: ../goah/Modules/Personalsettings.pm:72
 msgid "Module doesn't have function "
 msgstr "Modulilla ei ole funktiota"
 
@@ -61,7 +61,7 @@ msgstr "Modulilla ei ole funktiota"
 msgid "Password"
 msgstr "Salasana"
 
-#: ../goah/Modules/Personalsettings.pm:186
+#: ../goah/Modules/Personalsettings.pm:182
 msgid "Passwords doesn't match. Won't change password."
 msgstr "Salasanat eivät täsmää. Salasanaa ei vaihdeta."
 
@@ -69,7 +69,7 @@ msgstr "Salasanat eivät täsmää. Salasanaa ei vaihdeta."
 msgid "Personal settings"
 msgstr "Omat asetukset"
 
-#: ../goah/Modules/Personalsettings.pm:70
+#: ../goah/Modules/Personalsettings.pm:66
 msgid "Personal settings updated."
 msgstr "Omat asetukset päivitetty."
 

@@ -17,11 +17,7 @@ msgstr ""
 "X-Poedit-Country: FINLAND\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../templates/modules/Systemsettings/companybankaccounts:67
-#: ../templates/modules/Systemsettings/goahsettings:116
-#: ../templates/modules/Systemsettings/goahsettings:197
-#: ../templates/modules/Systemsettings/goahsettings:279
-#: ../templates/modules/Systemsettings/goahsettings:356
+#: ../templates/modules/Systemsettings/companybankaccounts:67 ../templates/modules/Systemsettings/goahsettings:116 ../templates/modules/Systemsettings/goahsettings:197 ../templates/modules/Systemsettings/goahsettings:279 ../templates/modules/Systemsettings/goahsettings:356
 msgid "Add"
 msgstr "Lisää"
 
@@ -33,91 +29,95 @@ msgstr "Lisää uusi sijainti"
 msgid "Add new person"
 msgstr "Lisää uusi henkilö"
 
-#: ../goah/Modules/Systemsettings.pm:74
+#: ../goah/Modules/Systemsettings.pm:70
 msgid "Address, line 1"
 msgstr "Osoite, rivi 1"
 
-#: ../goah/Modules/Systemsettings.pm:75
+#: ../goah/Modules/Systemsettings.pm:71
 msgid "Address, line 2"
 msgstr "Osoite, rivi 2"
 
-#: ../goah/Modules/Systemsettings.pm:120
+#: ../goah/Modules/Systemsettings.pm:116
 msgid "BIC"
 msgstr "BIC"
 
-#: ../goah/Modules/Systemsettings.pm:671
-#: ../goah/Modules/Systemsettings.pm:738
+#: ../goah/Modules/Systemsettings.pm:730 ../goah/Modules/Systemsettings.pm:797
 msgid "BIC for bank account missing!"
 msgstr "Pankkitilin BIC puuttuu!"
 
-#: ../goah/Modules/Systemsettings.pm:721
+#: ../goah/Modules/Systemsettings.pm:780
 msgid "Bank account information removed"
 msgstr "Pankkitilin tiedot poistettu"
 
-#: ../goah/Modules/Systemsettings.pm:187
+#: ../goah/Modules/Systemsettings.pm:183
 msgid "Bank account information updated"
 msgstr "Pankkitilin tiedot päivitetty"
 
-#: ../goah/Modules/Systemsettings.pm:185
+#: ../goah/Modules/Systemsettings.pm:181
 msgid "Bank account removed successfully"
 msgstr "Pankkitili poistettu onnistuneesti"
 
+#:
 msgid "Bank accounts"
 msgstr "Pankkitilit"
 
-#: ../goah/Modules/Systemsettings.pm:117
+#: ../goah/Modules/Systemsettings.pm:113
 msgid "Bank name"
 msgstr "Pankin nimi"
 
-#: ../goah/Modules/Systemsettings.pm:237
+#: ../goah/Modules/Systemsettings.pm:233
 msgid "Can't add new person to database!"
 msgstr "Henkilön lisääminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:172
+#: ../goah/Modules/Systemsettings.pm:168
 msgid "Can't create new bank account!"
 msgstr "Uuden pankkitilin lisäys epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:190
+#: ../goah/Modules/Systemsettings.pm:186
 msgid "Can't modify bank account information"
 msgstr "Pankkitilin muokkaus epäonnistui"
 
-#: ../goah/Modules/Systemsettings.pm:283
+#: ../goah/Modules/Systemsettings.pm:279
 msgid "Can't remove location data!"
 msgstr "Sijaintitiedon poistaminen epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:324
+#: ../goah/Modules/Systemsettings.pm:320
 msgid "Can't remove setting from database."
 msgstr "Asetusten poistaminen tietokannasta epäonnistui."
 
-#: ../goah/Modules/Systemsettings.pm:360
+#: ../goah/Modules/Systemsettings.pm:356
 msgid "Can't remove setting from database. ID is missing."
 msgstr "Asetusten poistaminen tietokannasta epäonnistui. ID puuttuu."
 
-#: ../goah/Modules/Systemsettings.pm:272
+#: ../goah/Modules/Systemsettings.pm:268
 msgid "Can't update location data!"
 msgstr "Sijaintitiedon päivittäminen epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:203
+#: ../goah/Modules/Systemsettings.pm:199
 msgid "Can't update owner information"
 msgstr "Omistajan tietojen päivitys epäonnistui"
 
-#: ../goah/Modules/Systemsettings.pm:535
+#: ../goah/Modules/Systemsettings.pm:594
 msgid "Can't update owner information. Id for company isn't correct."
 msgstr "Omistajan tietojen päivitys epäonnistui. Virheellinen id."
 
-#: ../goah/Modules/Systemsettings.pm:260
+#: ../goah/Modules/Systemsettings.pm:256
 msgid "Can't update person information!"
 msgstr "Henkilön tietojen päivitys epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:225
+#: ../goah/Modules/Systemsettings.pm:522
+msgid "Can't update system settings. Either item or value is missing!"
+msgstr ""
+
+#: ../goah/Modules/Systemsettings.pm:221
 msgid "Can't write new location data!"
 msgstr "Sijaintitiedon lisääminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:875
+#: ../goah/Modules/Systemsettings.pm:934
 msgid "Can't write new person to database!"
 msgstr "Henkilön lisääminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:309
+#: ../goah/Modules/Systemsettings.pm:305
 msgid "Can't write setting to database."
 msgstr "Asetusten tallentaminen tietokantaan epäonnistui."
 
@@ -129,7 +129,7 @@ msgstr ""
 "Katso manuaalit, päivitykset ja\n"
 "muut lisätieto GoaH-projektin www-sivuilta http://www.goah.org."
 
-#: ../goah/Modules/Systemsettings.pm:121
+#: ../goah/Modules/Systemsettings.pm:117
 msgid "Comment"
 msgstr "Kommentti"
 
@@ -141,11 +141,11 @@ msgstr "Yrityksen osoitteet"
 msgid "Company bank accounts"
 msgstr "Yrityksen pankkitilit"
 
-#: ../goah/Modules/Systemsettings.pm:666
+#: ../goah/Modules/Systemsettings.pm:725
 msgid "Company id is missing! Can't add bank account!"
 msgstr "Yrityksen id puuttuu! Pankkitilin lisäys epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:45
+#: ../goah/Modules/Systemsettings.pm:41
 msgid "Company info & users"
 msgstr "Yritystiedot ja käyttäjät"
 
@@ -153,26 +153,23 @@ msgstr "Yritystiedot ja käyttäjät"
 msgid "Company personnell"
 msgstr "Yrityksen henkilöt"
 
-#: ../goah/Modules/Systemsettings.pm:714
+#: ../goah/Modules/Systemsettings.pm:773
 msgid "Coudln't read account information from the database!"
 msgstr "Tilitiedon luku tietokannasta epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:78
+#: ../goah/Modules/Systemsettings.pm:74
 msgid "Country"
 msgstr "Maa"
 
-#: ../templates/modules/Systemsettings/goahsettings:131
-#: ../templates/modules/Systemsettings/goahsettings:212
-#: ../templates/modules/Systemsettings/goahsettings:294
-#: ../templates/modules/Systemsettings/goahsettings:49
+#: ../templates/modules/Systemsettings/goahsettings:131 ../templates/modules/Systemsettings/goahsettings:212 ../templates/modules/Systemsettings/goahsettings:294 ../templates/modules/Systemsettings/goahsettings:49
 msgid "Default"
 msgstr "Oletus"
 
+#:
 msgid "Default address"
 msgstr "Oletusosoite"
 
-#: ../goah/Modules/Systemsettings.pm:73
-#: ../templates/modules/Systemsettings/companylocations:30
+#: ../goah/Modules/Systemsettings.pm:69 ../templates/modules/Systemsettings/companylocations:30
 msgid "Default billing address"
 msgstr "Laskutusosoite (oletus)"
 
@@ -180,7 +177,7 @@ msgstr "Laskutusosoite (oletus)"
 msgid "Default language"
 msgstr "Oletuskieli"
 
-#: ../goah/Modules/Systemsettings.pm:72
+#: ../goah/Modules/Systemsettings.pm:68
 msgid "Default shipping address"
 msgstr "Toimitusosoite (oletus)"
 
@@ -192,19 +189,7 @@ msgstr "Toimitusosoite (oletus)"
 msgid "Delay interests"
 msgstr "Viivästyskorko"
 
-#: ../templates/modules/Systemsettings/companybankaccounts:11
-#: ../templates/modules/Systemsettings/companylocations:12
-#: ../templates/modules/Systemsettings/companylocations:65
-#: ../templates/modules/Systemsettings/companypersons:12
-#: ../templates/modules/Systemsettings/companypersons:53
-#: ../templates/modules/Systemsettings/goahsettings:133
-#: ../templates/modules/Systemsettings/goahsettings:171
-#: ../templates/modules/Systemsettings/goahsettings:214
-#: ../templates/modules/Systemsettings/goahsettings:252
-#: ../templates/modules/Systemsettings/goahsettings:296
-#: ../templates/modules/Systemsettings/goahsettings:334
-#: ../templates/modules/Systemsettings/goahsettings:51
-#: ../templates/modules/Systemsettings/goahsettings:89
+#: ../templates/modules/Systemsettings/companybankaccounts:11 ../templates/modules/Systemsettings/companylocations:12 ../templates/modules/Systemsettings/companylocations:65 ../templates/modules/Systemsettings/companypersons:12 ../templates/modules/Systemsettings/companypersons:53 ../templates/modules/Systemsettings/goahsettings:133 ../templates/modules/Systemsettings/goahsettings:171 ../templates/modules/Systemsettings/goahsettings:214 ../templates/modules/Systemsettings/goahsettings:252 ../templates/modules/Systemsettings/goahsettings:296 ../templates/modules/Systemsettings/goahsettings:334 ../templates/modules/Systemsettings/goahsettings:51 ../templates/modules/Systemsettings/goahsettings:89
 msgid "Delete"
 msgstr "Poista"
 
@@ -216,22 +201,19 @@ msgstr "Poista yrityksen osoite tietokannasta?"
 msgid "Delete company person  from database?"
 msgstr "Poista yrityksen henkilö tietokannasta?"
 
-#: ../goah/Modules/Systemsettings.pm:118
+#: ../goah/Modules/Systemsettings.pm:114
 msgid "Domestic"
 msgstr "Tilinumero"
 
-#: ../goah/Modules/Systemsettings.pm:656
-#: ../goah/Modules/Systemsettings.pm:726
+#: ../goah/Modules/Systemsettings.pm:715 ../goah/Modules/Systemsettings.pm:785
 msgid "Domestic format for bank account missing!"
 msgstr "Pankkitilin tilinumero puuttuu!"
 
-#: ../goah/Modules/Systemsettings.pm:102
+#: ../goah/Modules/Systemsettings.pm:98
 msgid "E-mail"
 msgstr "Sähköposti"
 
-#: ../templates/modules/Systemsettings/companybankaccounts:43
-#: ../templates/modules/Systemsettings/companylocations:53
-#: ../templates/modules/Systemsettings/companypersons:41
+#: ../templates/modules/Systemsettings/companybankaccounts:43 ../templates/modules/Systemsettings/companylocations:53 ../templates/modules/Systemsettings/companypersons:41
 msgid "Edit"
 msgstr "Muokkaa"
 
@@ -247,15 +229,15 @@ msgstr "Muokkaa omistajan lisätietoja"
 msgid "Edit person information"
 msgstr "Muokkaa henkilön lisätietoja"
 
-#: ../goah/Modules/Systemsettings.pm:81
+#: ../goah/Modules/Systemsettings.pm:77
 msgid "Email"
 msgstr "Sähköposti"
 
+#:
 msgid "Faulty id for updating setting!"
 msgstr "Asetuksen päivitys epäonnistui. Virheellinen id!"
 
-#: ../goah/Modules/Systemsettings.pm:101
-#: ../goah/Modules/Systemsettings.pm:80
+#: ../goah/Modules/Systemsettings.pm:76 ../goah/Modules/Systemsettings.pm:97
 msgid "Fax"
 msgstr "Fax"
 
@@ -263,35 +245,31 @@ msgstr "Fax"
 msgid "Field marked with * are required"
 msgstr "* Pakollinen kenttä"
 
-#: ../templates/modules/Systemsettings/editlocation:5
-#: ../templates/modules/Systemsettings/editperson:5
-#: ../templates/modules/Systemsettings/newlocation:5
-#: ../templates/modules/Systemsettings/newperson:5
+#: ../templates/modules/Systemsettings/editlocation:5 ../templates/modules/Systemsettings/editperson:5 ../templates/modules/Systemsettings/newlocation:5 ../templates/modules/Systemsettings/newperson:5
 msgid "Fields marked with * are required"
 msgstr "* Pakolliset kentät"
 
-#: ../goah/Modules/Systemsettings.pm:96
+#: ../goah/Modules/Systemsettings.pm:92
 msgid "First name"
 msgstr "Etunimi"
 
-#: ../goah/Modules/Systemsettings.pm:46
+#: ../goah/Modules/Systemsettings.pm:42
 msgid "GoaH settings"
 msgstr "GoaH asetukset"
 
-#: ../goah/Modules/Systemsettings.pm:60
+#: ../goah/Modules/Systemsettings.pm:56
 msgid "Homepage address"
 msgstr "Kotisivut"
 
-#: ../goah/Modules/Systemsettings.pm:119
+#: ../goah/Modules/Systemsettings.pm:115
 msgid "IBAN"
 msgstr "IBAN"
 
-#: ../goah/Modules/Systemsettings.pm:661
-#: ../goah/Modules/Systemsettings.pm:732
+#: ../goah/Modules/Systemsettings.pm:720 ../goah/Modules/Systemsettings.pm:791
 msgid "IBAN format for bank account missing!"
 msgstr "Pankkitilin IBAN puuttuu!"
 
-#: ../goah/Modules/Systemsettings.pm:431
+#: ../goah/Modules/Systemsettings.pm:447
 msgid "Invalid id for setting update!"
 msgstr "Virheellinen id päivitykselle!"
 
@@ -299,55 +277,51 @@ msgstr "Virheellinen id päivitykselle!"
 msgid "Language"
 msgstr "Kieli"
 
-#: ../goah/Modules/Systemsettings.pm:97
+#: ../goah/Modules/Systemsettings.pm:93
 msgid "Last name"
 msgstr "Sukunimi"
 
-#: ../goah/Modules/Systemsettings.pm:544
+#: ../goah/Modules/Systemsettings.pm:603
 msgid "Leaving value unaltered."
 msgstr "Arvoa ei muuteta."
 
-#: ../goah/Modules/Systemsettings.pm:103
+#: ../goah/Modules/Systemsettings.pm:99
 msgid "Location"
 msgstr "Sijainti"
 
-#: ../goah/Modules/Systemsettings.pm:281
+#: ../goah/Modules/Systemsettings.pm:277
 msgid "Location data removed!"
 msgstr "Sijaintitieto poistettu!"
 
-#: ../goah/Modules/Systemsettings.pm:270
+#: ../goah/Modules/Systemsettings.pm:266
 msgid "Location data updated."
 msgstr "Sijaintitieto päivitetty."
 
-#: ../goah/Modules/Systemsettings.pm:903
+#: ../goah/Modules/Systemsettings.pm:962
 msgid "Login information missing. Can't update or create credientials."
 msgstr "Kirjautumistieto puuttuu. Päivitys tai lisäys epäonnistui."
 
-#: ../goah/Modules/Systemsettings.pm:888
+#: ../goah/Modules/Systemsettings.pm:947
 msgid "Login information missing. Newly created person can't log in!"
 msgstr "Kirjautumistieto puuttuu. Uusi käyttäjä ei voi kirjautua järjestelmään!"
 
-#: ../goah/Modules/Systemsettings.pm:104
+#: ../goah/Modules/Systemsettings.pm:100
 msgid "Login name"
 msgstr "Kirjautumisnimi"
 
-#: ../goah/Modules/Systemsettings.pm:392
+#: ../goah/Modules/Systemsettings.pm:391
 msgid "Missing category to search settings"
 msgstr "Asetusten haku ei onnistu, asetuskategoria puuttuu."
 
-#: ../goah/Modules/Systemsettings.pm:100
+#: ../goah/Modules/Systemsettings.pm:96
 msgid "Mobile"
 msgstr "Matkapuhelin"
 
-#: ../goah/Modules/Systemsettings.pm:333
+#: ../goah/Modules/Systemsettings.pm:329
 msgid "Module doesn't have function '"
 msgstr "Modulilla ei ole funktiota"
 
-#: ../goah/Modules/Systemsettings.pm:59
-#: ../templates/modules/Systemsettings/goahsettings:128
-#: ../templates/modules/Systemsettings/goahsettings:209
-#: ../templates/modules/Systemsettings/goahsettings:291
-#: ../templates/modules/Systemsettings/goahsettings:46
+#: ../goah/Modules/Systemsettings.pm:55 ../templates/modules/Systemsettings/goahsettings:128 ../templates/modules/Systemsettings/goahsettings:209 ../templates/modules/Systemsettings/goahsettings:291 ../templates/modules/Systemsettings/goahsettings:46
 msgid "Name"
 msgstr "Nimi"
 
@@ -355,15 +329,15 @@ msgstr "Nimi"
 msgid "New address for company"
 msgstr "Uusi osoite yritykselle"
 
-#: ../goah/Modules/Systemsettings.pm:170
+#: ../goah/Modules/Systemsettings.pm:166
 msgid "New bank account created"
 msgstr "Uusi pankkitili luotu"
 
-#: ../goah/Modules/Systemsettings.pm:223
+#: ../goah/Modules/Systemsettings.pm:219
 msgid "New location added"
 msgstr "Uusi sijainti lisätty"
 
-#: ../goah/Modules/Systemsettings.pm:235
+#: ../goah/Modules/Systemsettings.pm:231
 msgid "New person added"
 msgstr "Uusi käyttäjä lisätty"
 
@@ -371,20 +345,19 @@ msgstr "Uusi käyttäjä lisätty"
 msgid "New person data for company"
 msgstr "Uusi henkilötieto yritykselle"
 
-#: ../templates/modules/Systemsettings/companylocations:11
-#: ../templates/modules/Systemsettings/companypersons:11
+#: ../templates/modules/Systemsettings/companylocations:11 ../templates/modules/Systemsettings/companypersons:11
 msgid "Open"
 msgstr "Avaa"
 
-#: ../goah/Modules/Systemsettings.pm:82
+#: ../goah/Modules/Systemsettings.pm:78
 msgid "Other information"
 msgstr "Lisätietoja"
 
-#: ../goah/Modules/Systemsettings.pm:201
+#: ../goah/Modules/Systemsettings.pm:197
 msgid "Owner information updated"
 msgstr "Omistajan tiedot päivitetty"
 
-#: ../goah/Modules/Systemsettings.pm:105
+#: ../goah/Modules/Systemsettings.pm:101
 msgid "Password"
 msgstr "Salasana"
 
@@ -392,20 +365,19 @@ msgstr "Salasana"
 msgid "Payment conditions"
 msgstr "Maksuehdot"
 
-#: ../goah/Modules/Systemsettings.pm:258
+#: ../goah/Modules/Systemsettings.pm:254
 msgid "Person information updated to database."
 msgstr "Käyttäjätieto päivitetty tietokantaan."
 
-#: ../goah/Modules/Systemsettings.pm:79
-#: ../goah/Modules/Systemsettings.pm:99
+#: ../goah/Modules/Systemsettings.pm:75 ../goah/Modules/Systemsettings.pm:95
 msgid "Phone"
 msgstr "Puhelin"
 
-#: ../goah/Modules/Systemsettings.pm:77
+#: ../goah/Modules/Systemsettings.pm:73
 msgid "Post office"
 msgstr "Postitoimipaikka"
 
-#: ../goah/Modules/Systemsettings.pm:76
+#: ../goah/Modules/Systemsettings.pm:72
 msgid "Postal code"
 msgstr "Postinumero"
 
@@ -429,27 +401,11 @@ msgstr "Poista maksuehto tietokannasta?"
 msgid "Remove reclamation time from database?"
 msgstr "Poista reklamaatioaika tietokannasta?"
 
-#: ../goah/Modules/Systemsettings.pm:543
-#: ../goah/Modules/Systemsettings.pm:561
+#: ../goah/Modules/Systemsettings.pm:602 ../goah/Modules/Systemsettings.pm:620
 msgid "Required field"
 msgstr "Pakollinen kenttä"
 
-#: ../templates/modules/Systemsettings/companybankaccounts:12
-#: ../templates/modules/Systemsettings/companyinfo:42
-#: ../templates/modules/Systemsettings/editlocation:50
-#: ../templates/modules/Systemsettings/editperson:42
-#: ../templates/modules/Systemsettings/goahsettings:132
-#: ../templates/modules/Systemsettings/goahsettings:159
-#: ../templates/modules/Systemsettings/goahsettings:213
-#: ../templates/modules/Systemsettings/goahsettings:240
-#: ../templates/modules/Systemsettings/goahsettings:295
-#: ../templates/modules/Systemsettings/goahsettings:323
-#: ../templates/modules/Systemsettings/goahsettings:33
-#: ../templates/modules/Systemsettings/goahsettings:50
-#: ../templates/modules/Systemsettings/goahsettings:6
-#: ../templates/modules/Systemsettings/goahsettings:77
-#: ../templates/modules/Systemsettings/newlocation:45
-#: ../templates/modules/Systemsettings/newperson:40
+#: ../templates/modules/Systemsettings/companybankaccounts:12 ../templates/modules/Systemsettings/companyinfo:42 ../templates/modules/Systemsettings/editlocation:50 ../templates/modules/Systemsettings/editperson:42 ../templates/modules/Systemsettings/goahsettings:132 ../templates/modules/Systemsettings/goahsettings:159 ../templates/modules/Systemsettings/goahsettings:213 ../templates/modules/Systemsettings/goahsettings:240 ../templates/modules/Systemsettings/goahsettings:295 ../templates/modules/Systemsettings/goahsettings:323 ../templates/modules/Systemsettings/goahsettings:33 ../templates/modules/Systemsettings/goahsettings:50 ../templates/modules/Systemsettings/goahsettings:6 ../templates/modules/Systemsettings/goahsettings:77 ../templates/modules/Systemsettings/newlocation:45 ../templates/modules/Systemsettings/newperson:40
 msgid "Save"
 msgstr "Tallenna"
 
@@ -457,18 +413,15 @@ msgstr "Tallenna"
 msgid "Select language"
 msgstr "Valitse kieli"
 
-#: ../goah/Modules/Systemsettings.pm:322
+#: ../goah/Modules/Systemsettings.pm:318
 msgid "Setting removed from database."
 msgstr "Asetus poistettu tietokannasta."
 
-#: ../goah/Modules/Systemsettings.pm:307
+#: ../goah/Modules/Systemsettings.pm:303
 msgid "Setting stored to database."
 msgstr "Asetus tallennettu tietokantaan."
 
-#: ../templates/modules/Systemsettings/goahsettings:130
-#: ../templates/modules/Systemsettings/goahsettings:211
-#: ../templates/modules/Systemsettings/goahsettings:293
-#: ../templates/modules/Systemsettings/goahsettings:48
+#: ../templates/modules/Systemsettings/goahsettings:130 ../templates/modules/Systemsettings/goahsettings:211 ../templates/modules/Systemsettings/goahsettings:293 ../templates/modules/Systemsettings/goahsettings:48
 msgid "Sort"
 msgstr "Lajittele"
 
@@ -480,23 +433,19 @@ msgstr ""
 "Järjestelmäasetukset sisältävät valintoja joilla voi muokata ohjelman käyttäytymistä, sekä muita\n"
 "järjestelmänlaajuisia asetuksia, kuten käyttäjätunnukset."
 
-#: ../goah/Modules/Systemsettings.pm:706
+#: ../goah/Modules/Systemsettings.pm:765
 msgid "Target id missing! Can't edit account information!"
 msgstr "Kohde id puuttuu! Tilin tietojen muokkaus epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:98
+#: ../goah/Modules/Systemsettings.pm:94
 msgid "Title"
 msgstr "Asema"
 
-#: ../templates/modules/Systemsettings/companyinfo:21
-#: ../templates/modules/Systemsettings/editlocation:31
-#: ../templates/modules/Systemsettings/editperson:23
-#: ../templates/modules/Systemsettings/newlocation:26
-#: ../templates/modules/Systemsettings/newperson:22
+#: ../templates/modules/Systemsettings/companyinfo:21 ../templates/modules/Systemsettings/editlocation:31 ../templates/modules/Systemsettings/editperson:23 ../templates/modules/Systemsettings/newlocation:26 ../templates/modules/Systemsettings/newperson:22
 msgid "Unknown field type"
 msgstr "Tuntematon kenttätyyppi"
 
-#: ../goah/Modules/Systemsettings.pm:58
+#: ../goah/Modules/Systemsettings.pm:54
 msgid "VAT -id"
 msgstr "Alv-tunnus"
 
@@ -504,10 +453,7 @@ msgstr "Alv-tunnus"
 msgid "VAT Classes"
 msgstr "Alv-luokat"
 
-#: ../templates/modules/Systemsettings/goahsettings:129
-#: ../templates/modules/Systemsettings/goahsettings:210
-#: ../templates/modules/Systemsettings/goahsettings:292
-#: ../templates/modules/Systemsettings/goahsettings:47
+#: ../templates/modules/Systemsettings/goahsettings:129 ../templates/modules/Systemsettings/goahsettings:210 ../templates/modules/Systemsettings/goahsettings:292 ../templates/modules/Systemsettings/goahsettings:47
 msgid "Value"
 msgstr "Arvo"
 
@@ -515,8 +461,6 @@ msgstr "Arvo"
 msgid "You're running GoaH version"
 msgstr "Käytät GoaH-versiota"
 
-#: ../goah/Modules/Systemsettings.pm:543
-#: ../goah/Modules/Systemsettings.pm:561
+#: ../goah/Modules/Systemsettings.pm:602 ../goah/Modules/Systemsettings.pm:620
 msgid "empty!"
 msgstr "tyhjä!"
-

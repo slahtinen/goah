@@ -1,4 +1,4 @@
-<h2>[% gettext("My baskets") %]</h2>
+<h2>[% gettext("Baskets") %]</h2>
 <table>
 <thead>
 <tr>
