@@ -56,8 +56,8 @@
 [% END %]
 [% END %]
 [% IF state == 2 %]
-<tr><td>[% gettext("Last triggered") %]</td><td>[% data.lasttrigger %]</td></tr>
-<tr><td>[% gettext("Next trigger") %]</td><td>[% data.nexttrigger %].</td></tr>
+<tr><td>[% gettext("Last triggered") %]</td><td>[% formatdate(data.lasttrigger) %]</td></tr>
+<tr><td>[% gettext("Next trigger") %]</td><td>[% formatdate(data.nexttrigger) %]</td></tr>
 <tr>
 <td>[% gettext("Change next trigger to") %]</td>
 <td>[% gettext("Year") %] <input name="nexttrigger_year" class="small" /> 

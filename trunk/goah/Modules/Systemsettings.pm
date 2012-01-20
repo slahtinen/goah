@@ -150,6 +150,11 @@ sub Start {
 	use CGI;
 	my $q = new CGI;
 	
+	# Load companyinfo as default submodule. This should be added to module settings when it's implemented.
+	unless ($q->param('action')) {
+		$q->param( action => 'companyinfo');
+	}
+	
 	if($q->param('action')) {
 
 		if($q->param('action') eq 'companyinfo') {
