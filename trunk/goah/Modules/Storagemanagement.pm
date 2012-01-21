@@ -176,6 +176,11 @@ sub Start {
 
 	my $q = CGI->new();
 	
+	# Load storages as default submodule. This should be added to module settings when it's implemented.
+	unless ($q->param('action')) {
+		$q->param( action => 'storages');
+	}
+	
 	if($q->param('action')) {
 		my $function = 'modules/Storagemanagement/';
 		my $action = $q->param('action');

@@ -11,7 +11,7 @@
 
 [% IF field.type != 'hidden' %]
 	<tr class="[% row %]">
-	<td class="medium">[% field.name %]
+	<td class="medium">[% gettext(field.name) %]
 	[% IF field.required == 1 %]
 		*
 	[% END %]

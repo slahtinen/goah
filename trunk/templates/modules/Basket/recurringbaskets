@@ -61,7 +61,7 @@
 [% FOREACH key IN basketdbfields.keys.sort %]
 [% data = basketdbfields.$key %]
 [% IF data.type != "hidden" && data.field !='locationid' && data.field != 'billingid' %]
-	<td>[% data.name %]
+	<td>[% gettext(data.name) %]
 	[% IF data.required == 1 %]
 		*
 	[% END %]

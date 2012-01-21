@@ -6,7 +6,7 @@
 [% FOREACH key IN shipmentdbfields.keys.sort %]
 [% data = shipmentdbfields.$key %]
 [% IF data.type != 'hidden' && (key <= 2 || key > 7) %]
-	<td>[% data.name %]
+	<td>[% gettext(data.name) %]
 	[% IF data.required == 1 %]
 		*
 	[% END %]

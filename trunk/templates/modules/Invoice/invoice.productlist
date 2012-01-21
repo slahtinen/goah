@@ -42,9 +42,9 @@
 [% total = readtotal(invoice.id) %]
 
 <tr class="[% rowc %]">
-<td colspan='8'>[% gettext("Total") %] [% gettext("VAT 0%") %]</td>
+<td colspan='9' class='right'>[% gettext("Total") %] [% gettext("VAT 0%") %]</td>
 <td class="number">[% total.vat0 %]</td>
-<td colspan='2'>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
 [% IF rowc == 'odd' %]
 	[% rowc = 'even' %]
@@ -52,9 +52,9 @@
 	[% rowc = 'odd' %]
 [% END %]
 <tr class="[% rowc %]">
-<td colspan='8'>[% gettext("VAT") %]</td>
+<td colspan='9' class='right'>[% gettext("VAT") %]</td>
 <td class="number">[% total.vat %]</td>
-<td colspan='2'>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
 [% IF rowc == 'odd' %]
 	[% rowc = 'even' %]
@@ -62,9 +62,9 @@
 	[% rowc = 'odd' %]
 [% END %]
 <tr class="[% rowc %]">
-<td colspan='8'>[% gettext("Total") %] [% gettext("Incl. VAT") %]</td>
+<td colspan='9' class='right'>[% gettext("Total") %] [% gettext("Incl. VAT") %]</td>
 <td class="number">[% total.inclvat %]</td>
-<td colspan='2'>&nbsp;</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>

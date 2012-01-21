@@ -58,8 +58,7 @@
 <th>[% gettext("Due") %]</th>
 <th>[% gettext("Total") %] [% gettext("VAT 0%") %]</th>
 <th>[% gettext("Total") %] [% gettext("Incl. VAT") %]</th>
-<th>[% gettext("State") %]</th>
-<th class="icon">[% gettext("Open") %]</th>
+<th colspan="2">[% gettext("State") %]</th>
 </tr>
 </thead>
 <tbody class="rowdata">

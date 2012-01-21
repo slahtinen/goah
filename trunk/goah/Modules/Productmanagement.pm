@@ -172,6 +172,7 @@ sub Start {
 	$variables{'manufdbfields'} = \%manufdbfields;
 	$variables{'groupdbfields'} = \%groupdbfields;
 	$variables{'productsdbfields'} = \%productsdbfields;
+	$variables{'productgroups'} = ReadData('productgroups');
 
 	my $q = CGI->new();
 	

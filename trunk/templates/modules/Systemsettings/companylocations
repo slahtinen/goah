@@ -5,7 +5,7 @@
 [% FOREACH key IN locationdbfields.keys.sort %]
 [% field = locationdbfields.$key %]
 [% IF field.type != "hidden" && key != '2' && key != '3' %]
-	<th>[% field.name %]</th>
+	<th>[% gettext(field.name) %]</th>
 [% END %]
 [% END %]
 <th class="icon">[% gettext("Open") %]</th>

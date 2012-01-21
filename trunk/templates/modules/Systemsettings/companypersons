@@ -5,7 +5,7 @@
 [% FOREACH key IN persondbfields.keys.sort %]
 [% field = persondbfields.$key %]
 [% IF field.type != "hidden" && field.field != "pass" %]
-	<th>[% field.name %]</th>
+	<th>[% gettext(field.name) %]</th>
 [% END %]
 [% END %]
 <th class="icon">[% gettext("Open") %]</th>
