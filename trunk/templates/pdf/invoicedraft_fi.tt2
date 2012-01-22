@@ -1,4 +1,5 @@
 \documentclass[8pt,a4paper]{article}
+\usepackage{eurosym}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[finnish]{babel}
@@ -86,7 +87,7 @@
 \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 [% FOREACH key IN invoicerows.keys.sort %]
 [% row = invoicerows.$key %]
-\\ [% escape(row.code) %] & [% row.name %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
+\\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
 [% IF row.rowinfo != '' %]
 \scriptsize Lisätietoja: & \multicolumn{6}{p{7cm}}{\scriptsize [% escape(row.rowinfo) %]} \\
 [% END %]

@@ -689,6 +689,7 @@ sub ReadInvoicerows {
 		$rowdata{$i}{'amount'} = sprintf("%.02f",$row->amount);
 		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref);
 		$rowdata{$i}{'rowinfo'} = $row->rowinfo;
+		$rowdata{$i}{'rowinfo'} =~s/€/&euro;/g;
 
 		$pdata = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref);
 		if($pdata==0) {
