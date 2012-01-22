@@ -131,6 +131,7 @@
 </form>
 </td>
 <td>
+<!-- NOT IN USE! DO NOT USE! 
 <form action='' method='post'>
 <input type='hidden' name='module' value='[% module %]' />
 <input type='hidden' name='target' value='[% data.id %]' />
@@ -138,6 +139,7 @@
 <input type='submit' value="[% gettext("Create shipment") %]" onclick="return confirm('[% gettext("Create shipment from basket?") %]')" />
 </form>
 </td>
+-->
 [% END %]
 [% IF state == 2 %]
 <td>

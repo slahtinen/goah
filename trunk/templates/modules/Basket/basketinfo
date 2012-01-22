@@ -23,7 +23,7 @@
 <input type='hidden' name='module' value='[% module %]'>
 <input type='hidden' name='target' value='[% data.id %]'>
 <input type='hidden' name='action' value='basket2shipment'>
-<input type='submit' value="[% gettext("Create shipment") %]" />
+<input type='submit' value="[% gettext("Create shipment") %] diidii" />
 </form>
 </td>
 <td>
