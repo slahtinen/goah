@@ -26,7 +26,10 @@
 <input type='checkbox' name='states' value='[% option %]'>[% gettext(invoicestates.$option) %] <br />
 [% END %]
 [% IF lcount == 2 %] </td><td> [% lcount = 0 %][% END %]
-[% IF loop.last %] </td>[% END %]
+[% IF loop.last %]
+<input type="radio" name="showrows" value="invoices" checked/>[% gettext("Show invoices") %]<br/>
+<input type="radio" name="showrows" value="rows" />[% gettext("Show rows") %]<br/>
+</td>[% END %]
 [% END %]
 <td><input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" /></td>
 <td>

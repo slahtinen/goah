@@ -3,7 +3,7 @@
 <thead>
 <tr>
 	<th>[% gettext("Customer") %]</th>
-	<th>[% gettext("Value") %]</th>
+	<th>[% gettext("Value VAT0%") %]</th>
 	<th>[% gettext("Dates") %]</th>
 	<th>[% gettext("Triggers") %]</th>
 	<th>[% gettext("Repeats") %]</th>
@@ -29,15 +29,25 @@
 	[% IF linfo == 0 %] 
 		[% gettext("Not selected!") %]
 	[% ELSE %]
-		[% linfo.addr1 %]<br />[% linfo.addr2 %]<br />[% linfo.postalcode %] [% linfo.postaloffice %]<br />[% linfo.country %]
+		[% linfo.addr1 %]
+		[% IF linfo.addr2 != "" %]
+			, [% linfo.addr2 %]<br/>
+		[% END %]
+		, [% linfo.postalcode %] [% linfo.postaloffice %]
 	[% END %]
 	</td>
 	<td>[% gettext("Total") %]: [% basket.total %]&euro;<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
-	<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
-	[% gettext("Updated") %]: [% formatdate(basket.updated) %]</td>
-	<td>[% gettext("Previous") %]: [% formatdate(basket.lasttrigger) %]<br/>
+	<td>[% gettext("Creat.") %]: [% formatdate(basket.created) %]<br/>
+	[% gettext("Upd.") %]: [% formatdate(basket.updated) %]</td>
+	<td>[% gettext("Prev.") %]: [% formatdate(basket.lasttrigger) %]<br/>
 	[% gettext("Next") %]: [% formatdate(basket.nexttrigger) %]</td>
-	<td>[% gettext("Every") %] [% basket.repeat %] [% gettext("months") %], [% basket.dayinmonth %] [% gettext("th day") %]</td>
+	<td>[% gettext("Every") %] [% basket.repeat %][% gettext("mo") %], [% basket.dayinmonth %] 
+	[% IF basket.dayinmonth == 1 %]
+		[% gettext("st day") %]
+	[% ELSE %]
+		[% gettext("th day") %]
+	[% END %]
+	</td>
 	<td >[% basket.info %]
 	[% uinfo = userinfo(basket.ownerid) %]
 	<br/>[% gettext("Owner:") %] [% uinfo.firstname %] [% uinfo.lastname %]
@@ -48,7 +58,7 @@
 	[% END %]
 [% END %]
 <tr class='[% rclass %]'>
-<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]&euro;</td></tr>
+<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]&euro;</td><td colspan=5>&nbsp;</td></tr>
 </tbody>
 
 </table>

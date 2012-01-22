@@ -255,7 +255,17 @@ sub Start {
 		}
 
 	} else {
-		$variables{'invoices'} = ReadInvoices();
+		if($q->param('showrows') && $q->param('showrows') eq 'rows') {
+			if($q->param('customer') eq '*') {
+				goah::Modules->AddMessage('warn',__("Can't search invoice rows unless customer is selected!"));
+				$variables{'invoices'} = ReadInvoices();
+			} else {
+				$variables{'function'} = 'modules/Invoice/invoices.rows';
+				$variables{'invoices'} = ReadInvoices('',1);
+			}
+		} else {
+			$variables{'invoices'} = ReadInvoices();
+		}
 
 		my @tmp;
 		my $csvurl="module=Invoice";
@@ -514,6 +524,7 @@ sub AddRowToInvoice {
 # Parameters
 #
 #   id - If ID is empty read all invoices, either read invoice by ID number
+#   rows - If 1 include invoice rows into hash
 #
 sub ReadInvoices {
 
@@ -623,6 +634,18 @@ sub ReadInvoices {
 			}
 		}
 
+		# Check and if needed read invoice rows into hash as well
+		if($_[1] && $_[1]==1) {
+
+			foreach my $k (keys(%invoices)) {
+				my $i=$invoices{$k};
+				my $r = goah::Modules::Invoice->ReadInvoicerows($i->id);
+				my %rows=%$r;
+				$invoices{'rows'}{$k}=$r;
+			}
+
+		}
+
 		$invoices{'total'}{'vat0'}=goah::GoaH->FormatCurrency($totalsum{'vat0'},0,$uid,'out',$settref);
 		$invoices{'total'}{'inclvat'}=goah::GoaH->FormatCurrency($totalsum{'inclvat'},0,$uid,'out',$settref);
 		$invoices{'total'}{'vat'}=goah::GoaH->FormatCurrency($totalsum{'vat'},0,$uid,'out',$settref);
@@ -654,6 +677,11 @@ sub ReadInvoices {
 #
 sub ReadInvoicerows {
 
+
+	if($_[0]=~/goah::Modules::Invoice/) {
+		shift;
+	}
+
 	unless($_[0]) {
 		goah::Modules->AddMessage('error',__("Can't read rows for invoice!")." ".__("Invoice id is missing!"));
 		return 0;
@@ -672,8 +700,14 @@ sub ReadInvoicerows {
 	#my @rows = goah::Database::Invoicerows->search_where( { invoiceid => $_[0] }, { order_by => 'id' } );
 	use goah::Db::Invoicerows::Manager;
 	my $rowp=goah::Db::Invoicerows::Manager->get_invoicerows( query => [ invoiceid => $_[0] ], sort_by => 'id' );
-
+	
+	unless($rowp) {
+		goah::Modules->AddMessage('error',__("Couldn't find any rows for invoice id")." ".$_[0],__FILE__,__LINE__);
+		return 0;
+	}
 	my @rows = @$rowp;
+
+	#goah::Modules->AddMessage('debug',"Got ".scalar(@rows)." rows for invoice id ".$_[0],__FILE__,__LINE__);
 
 	my $i=0;
 	my %rowdata;
