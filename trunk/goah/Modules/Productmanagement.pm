@@ -349,7 +349,11 @@ sub WriteNewItem {
 
 	# Check that user can't insert duplicate products
 	if($q->param('type') eq 'products') {
-		my @data = $db->search_where( { code => uc($q->param('code')), barcode => $q->param('barcode') }, { logic => 'OR'});
+		my $code=uc($q->param('code'));
+		$code=~s/ä/Ä/g;
+		$code=~s/ö/Ö/g;
+		$code=~s/å/Å/g;
+		my @data = $db->search_where( { code => $code, barcode => $q->param('barcode') }, { logic => 'OR'});
 		if(scalar(@data)>0) {
 			goah::Modules->AddMessage('error',__("Product already exists in database!"));
 			return 1;
@@ -460,6 +464,9 @@ sub WriteNewItem {
 	if($q->param('type') eq 'products') {
 		$data{'hidden'} = 0;
 		$data{'code'} = uc($data{'code'});
+		$data{'code'} =~s/ä/Ä/g;
+		$data{'code'} =~s/ö/Ö/g;
+		$data{'code'} =~s/å/Å/g;
 	}
 
 	$db->insert(\%data);
@@ -829,17 +836,22 @@ sub ReadProductByEAN {
 #
 sub ReadProductByCode {
 
-	if($_[0]=~/Productmanagement/) {
+	if($_[0]=~/goah::Modules::Productmanagement/) {
 		shift;
 	}
 
 	my $prodcode = '-1';
 	if($_[0]) {
-		$prodcode = $_[0];
+		$prodcode = uc(decode('utf-8',$_[0]));
+		$prodcode=~s/ä/Ä/g;
+		$prodcode=~s/ö/Ö/g;
+		$prodcode=~s/å/Å/g;
 	} else {
 		goah::Modules->AddMessage('error',__("Didn't receive product code, can't search products!"),__FILE__,__LINE__);
 		return 0;
 	}
+
+	goah::Modules->AddMessage('debug',"Retrieving data with code $prodcode");
 
 	use goah::Database::Products;
 	my @product = goah::Database::Products->search_where(code => $prodcode);
