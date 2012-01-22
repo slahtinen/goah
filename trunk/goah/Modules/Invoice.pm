@@ -273,6 +273,7 @@ sub Start {
 			@tmp=$q->param('states');
 			$variables{'search_startdate'}=$q->param('fromdate');
 			$variables{'search_enddate'}=$q->param('todate');
+			$variables{'datesearch'}=$q->param('datesearch');
 			if($q->param('customer')) {
 				$variables{'search_customer'}=$q->param('customer');
 			} else {
@@ -589,7 +590,12 @@ sub ReadInvoices {
 			}
 
 			use Time::Local;
-			my @invdate=split(/-/,$inv->created);
+			my @invdate;
+			if($q->param('datesearch') && $q->param('datesearch') eq 'due') {
+				@invdate=split(/-/,$inv->due);
+			} else {
+				@invdate=split(/-/,$inv->created);
+			}
 			my $invts=timelocal("00","00","00",$invdate[2],($invdate[1]-1),$invdate[0]);
 			if($datestart!='' && $add==1) {
 				my @searchdate=split(/\./,$datestart);

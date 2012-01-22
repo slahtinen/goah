@@ -31,7 +31,18 @@
 <input type="radio" name="showrows" value="rows" />[% gettext("Show rows") %]<br/>
 </td>[% END %]
 [% END %]
-<td><input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" /></td>
+<td><input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" />
+[% IF datesearch == 'created' %] 
+[% CHECKC='checked'
+   CHECKD='' %]
+[% ELSE %]
+[% CHECKC=''
+   CHECKD='checked'
+%]
+[% END %]
+<br/><input type="radio" name="datesearch" value="created" [% CHECKC %]/>[% gettext("Date range for created dates") %]<br/>
+<input type="radio" name="datesearch" value="due" [% CHECKD %]/>[% gettext("Date range for due dates") %]
+</td>
 <td>
 <select class="medium" name="customer">
 <option  value="*">-- [% gettext("Select") %] --</option>
