@@ -1,0 +1,146 @@
+<h2>[% gettext("Invoices") %]</h2>
+<table id="activeinvoices">
+<thead>
+<th colspan='4'>[% gettext("State") %]</th>
+<th>[% gettext("From/to date") %] (dd.mm.yyyy)</th>
+<th colspan='2'>[% gettext("Customer") %]</th>
+
+<tbody>
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="subaction" value="search" />
+<tr><td>
+[% lcount = 0 %]
+[% FOREACH option IN invoicestates.keys.sort %]
+[%# Yes, this is ugly solution %]
+[% lcount = lcount+1 %]
+[% selected = 0 %]
+[% FOREACH state IN search_states %]
+[% IF state == option %]
+[% selected = 1 %]
+[% END %]
+[% END %]
+[% IF selected == 1 %]
+<input type='checkbox' name='states' value='[% option %]' checked='checked'>[% gettext(invoicestates.$option) %] <br />
+[% ELSE %]
+<input type='checkbox' name='states' value='[% option %]'>[% gettext(invoicestates.$option) %] <br />
+[% END %]
+[% IF lcount == 2 %] </td><td> [% lcount = 0 %][% END %]
+[% IF loop.last %]
+<input type="radio" name="showrows" value="invoices" checked/>[% gettext("Show invoices") %]<br/>
+<input type="radio" name="showrows" value="rows" />[% gettext("Show rows") %]<br/>
+</td>[% END %]
+[% END %]
+<td><input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" /></td>
+<td>
+<select class="medium" name="customer">
+<option  value="*">-- [% gettext("Select") %] --</option>
+[% FOREACH key IN customers.keys.sort %]
+[% item = customers.$key %]
+<option value="[% item.name %]">[% item.name %]
+[%- IF item.vat_id == '00000000' %] 
+, [% item.firstname %]
+[% END %] 
+</option>
+[% END %]
+</select>
+</td>
+<td><input type="submit" value="[% gettext("Search") %]"/></td></tr>
+</form>
+
+</tbody>
+</table>
+
+<h3>[% gettext("Customer info") %]</h3>
+<table>
+<tbody>
+<tr>
+<td>
+[% k = invoices.first.keys.0 %]
+[% cinfo = companyinfo(invoices.$k.companyid) %]
+<b>[% cinfo.name %] [% cinfo.firstname %]</b><br/>
+[% linfo = locationinfo(invoices.$k.locationid) %]
+[% IF linfo == 0 %]
+	[% gettext("Not available!") %]<br/><br/><br/>
+[% ELSE %]
+	[% linfo.addr1 %]
+	[% IF linfo.addr2 != '' %]
+	, [% linfo.addr2 %]</br>
+	[% END %]
+	, [% linfo.postalcode %] [% linfo.postaloffice %]
+[% END %]
+</td>
+</tr>
+</tbody>
+</table>
+
+<h3>[% gettext("Selected invoices") %]</h3>
+<table>
+<thead>
+<tr>
+<th>[% gettext("Inv. Number") %]</th>
+<th>[% gettext("Created") %] / [% gettext("Due") %]</th>
+<th>[% gettext("Code / Product") %]</th>
+<th colspan=2>[% gettext("Amount") %]</th>
+<th>[% gettext("Out VAT 0%") %]</th>
+<th>[% gettext("Out Incl. VAT") %]</th>
+<th colspan="2">[% gettext("State") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rclass = 'even' %]
+[% FOREACH k IN invoices.keys.sort %]
+	[% IF k != 'total' && k != 'rows' %]
+	[% invoice = invoices.$k %]
+	[% targeturl = "?module=$module&amp;action=show&amp;target=$invoice.id" %]
+	[% invoicerows = invoices.rows.$k %]
+	[% FOREACH rk IN invoicerows.keys.sort %]
+		[% row = invoicerows.$rk %]
+		[% IF rclass == 'odd' %]
+			[% rclass = 'even' %]
+		[% ELSE %]
+			[% rclass = 'odd' %]
+		[% END %]
+		<tr class="[% rclass %]">
+		[% IF invoice.invoicenumber != 0  %]
+			<td>[% invoice.invoicenumber %]</td>
+		[% ELSE  %]
+			<td>&nbsp;</td>
+		[% END %]
+		[% IF invoice.invoicenumber != 0 %]
+			<td>[% formatdate(invoice.created) %]<br/>
+			[% formatdate(invoice.due) %]</td>
+		[% ELSE %]
+			<td>&nbsp;<br/>
+			&nbsp;</td>
+		[% END %]
+		<td>[% row.code %]<br/>[% row.name %]</td>
+		<td class="number">[% row.amount %]</td><td>[% row.unit %]</td>
+		<td class="number">[% row.rowtotal %]<td class="number">[% row.rowtotalvat %]</td>
+
+		<td>[% state = invoice.state %]
+		[% gettext(invoicestates.$state) %]
+		</td>
+		<td class="center"><a href="[% targeturl %]"><img class="link" alt="open" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+		</tr>
+	[% END %]
+	[% END %]
+[% END %]
+<tr class="[% rclass %]">
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td>[% gettext("Total sum") %]</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+<td class="number">[% invoices.total.vat0 %]</td>
+<td class="number">[% invoices.total.inclvat %]</td>
+<td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<!--
+<tr><td class='right' colspan='8'>
+<a href="csv.cgi?[% csvurl %]"><img class="link" title="Download as CSV" src="themes/[% theme %]/icon/32x32/mimetypes/spreadsheet_document.png" /></a>
+</td></tr>
+-->
+</tbody>
+</table>
