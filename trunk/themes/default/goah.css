@@ -292,7 +292,7 @@ td.right {
 	text-align: right;
 }
 
-thead th {
+thead th, tbody td.heading {
     background: transparent url('gfx/bg-table-header.png') repeat-x 0 0;
     color: #fff;
     line-height: 24px;

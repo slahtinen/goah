@@ -534,7 +534,12 @@ sub ReadBaskets {
 	}
 
 	my $db;
-	my $sort = 'updated';
+	my $sort;
+	if($_[2]) {
+		$sort='nexttrigger';
+	} else {
+		$sort = 'updated';
+	}
 	use goah::Database::Baskets;
 	$db = new goah::Database::Baskets;
 
@@ -577,6 +582,14 @@ sub ReadBaskets {
 			if($state eq "2") {
 				$baskets{$i}{'lasttrigger'}=$_->lasttrigger;
 				$baskets{$i}{'nexttrigger'}=$_->nexttrigger;
+				my $nexttrigger = goah::GoaH::FormatDate($_->nexttrigger);
+				$nexttrigger=~s/^..\.//;
+				$baskets{$i}{'triggerheading'}=$nexttrigger;
+
+				my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
+				my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
+				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
+				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
 				$baskets{$i}{'repeat'}=$_->repeat;
 				$baskets{$i}{'dayinmonth'}=$_->dayinmonth;
 			}

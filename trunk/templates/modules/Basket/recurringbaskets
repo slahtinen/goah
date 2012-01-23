@@ -41,6 +41,7 @@
 <input type='hidden' name='action' value='newbasket' />
 <input type="hidden" name="state" value="2" />
 </form>
+<!--
 <table>
 <thead>
 <tr>
@@ -54,14 +55,37 @@
 </tr>
 </thead>
 <tbody class="rowdata">
+-->
 [% rclass = 'even' %]
+[% triggerheading='first' %]
 [% FOREACH key IN baskets.keys.sort %]
-	[% IF key >= 0 %]
+	[% IF key >= 0 && key != "headingtotal" && key != "headingtotal_vat" %]
 	[% basket = baskets.$key %]
 	[% IF rclass == 'odd' %]
 		[% rclass = 'even' %]
 	[% ELSE %]
 		[% rclass = 'odd' %]
+	[% END %]
+	[% IF basket.triggerheading != triggerheading %]
+		[% IF triggerheading != 'first' %]
+		<td>[% gettext("Total") %]</td><td>[% baskets.headingtotal.$triggerheading %]</td><td colspan=5>&nbsp;</td></tr>
+		</table>
+		[% END %]
+		<h3>[% basket.triggerheading %]</h3>
+		<table>
+		<thead>
+		<tr>
+		<th>[% gettext("Customer") %]</th>
+		<th>[% gettext("Value VAT0%") %]</th>
+		<th>[% gettext("Dates") %]</th>
+		<th>[% gettext("Triggers") %]</th>
+		<th>[% gettext("Repeats") %]</th>
+		<th class="medium">[% gettext("Description") %]</th>
+		<th class="icon">[% gettext("Open") %]</th>
+		</tr>
+		</thead>
+		<tbody class="rowdata">
+		[% triggerheading = basket.triggerheading %]
 	[% END %]
 	<tr class="[% rclass %]">
 	[% cinfo = companyinfo(basket.companyid) %]
@@ -78,7 +102,7 @@
 		, [% linfo.postalcode %] [% linfo.postaloffice %]
 	[% END %]
 	</td>
-	<td>[% gettext("Total") %]: [% basket.total %]&euro;<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
+	<td>[% gettext("Total") %]: [% basket.total %]<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
 	<td>[% gettext("Creat.") %]: [% formatdate(basket.created) %]<br/>
 	[% gettext("Upd.") %]: [% formatdate(basket.updated) %]</td>
 	<td>[% gettext("Prev.") %]: [% formatdate(basket.lasttrigger) %]<br/>
@@ -99,10 +123,8 @@
 	</tr>
 	[% END %]
 [% END %]
-<tr class='[% rclass %]'>
-<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]&euro;</td><td colspan=5>&nbsp;</td></tr>
+<td>[% gettext("Total") %]</td><td>[% baskets.headingtotal.$triggerheading %]</td><td colspan=5>&nbsp;</td></tr>
 </tbody>
-
 </table>
 
-
+<h3>[% gettext("Total from all baskets") %]: [% baskets.-1.total %]</h3>
