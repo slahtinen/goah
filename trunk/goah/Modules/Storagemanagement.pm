@@ -349,7 +349,9 @@ sub Start {
 
 	$variables{'storages'} = ReadData('storages');
 	$variables{'suppliers'} = ReadData('suppliers');
-	$variables{'shipments'} = ReadShipments();
+	my @show=$q->param('showreceived');
+	$variables{'shipments'} = ReadShipments('',$show[0]);
+	$variables{'showreceived'} = $show[0];
 	$variables{'inventories'} = ReadInventories();
 	$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 
@@ -654,7 +656,7 @@ sub WriteEditedItem {
 #
 #    item - Item(s) to retrieve. storages|suppliers
 #    id - Spesific id from the database so we can retrieve individual items
-#    uid - Sometimes the module isn't "started" when then function is called, so provide UID via parameter.
+#    search parameters - Optional search parameters
 #
 # Returns:
 #
@@ -663,8 +665,8 @@ sub WriteEditedItem {
 #
 sub ReadData {
 
-	if($_[0]=~/Storagemanagement$/) {
-		shift(@_);
+	if($_[0]=~/goah::Modules::Storagemanagement$/) {
+		shift;
 	}
 
 	my $db;
@@ -694,7 +696,15 @@ sub ReadData {
 	my $i=0;
 	my $field;
 	if(!($_[1]) || $_[1] eq '') {
-		@data = $db->retrieve_all_sorted_by($sort);
+		if($_[0] eq 'shipments') {
+			unless($_[2]=~/on/i) {
+				@data = $db->search_where({ received => "0" },{order_by => $sort });
+			} else {
+				@data = $db->retrieve_all_sorted_by($sort);
+			}
+		} else {
+			@data = $db->retrieve_all_sorted_by($sort);
+		}
 		return \@data;
 	} else {
 		@data = $db->retrieve($_[1]);
@@ -717,6 +727,7 @@ sub ReadData {
 # Parameters: 
 #
 #   id - Retrieve only single item, if omitted read all shipments
+#   search - Optional search parameters
 #
 # Returns:
 #
@@ -790,7 +801,11 @@ sub ReadShipments {
 
 	} else { # Read all shipments
 
-		$tmp = ReadData('shipments');
+		$tmp = ReadData('shipments','',$_[1]);
+		unless($tmp) {
+			goah::Modules->AddMessage('error',__("Couldn't read shipments from database!"),__FILE__,__LINE__);
+			return 0;
+		}
 		my @shipments = @$tmp;
 		my $ii=0;
 		foreach $row (@shipments) {

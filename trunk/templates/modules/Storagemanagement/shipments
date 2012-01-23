@@ -1,4 +1,25 @@
 <h2>[% gettext("Incoming shipments") %]</h2>
+<table id="activeshipments">
+<thead>
+<tr><th colspan=2>[% gettext("State") %]</th></tr>
+</thead>
+<tbody>
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="[% action %]" />
+<tr><td>
+[% IF showreceived == "on" %]
+<input type="checkbox" name="showreceived" value="on" checked />
+[% ELSE %]
+<input type="checkbox" name="showreceived" value="on" />
+[% END %]
+[% gettext("Show received shipments") %]
+</td>
+<td><input type="submit" value="[% gettext("Search") %]"/></td></tr>
+</form>
+</tbody>
+</table>
+<h3>[% gettext("Selected shipments") %]</h3>
 <table>
 <thead>
 <tr>
@@ -7,6 +28,7 @@
 	<th>[% gettext("Created") %]</th>
 	<th>[% gettext("Due") %]</th>
 	<th>[% gettext("Updated") %]</th>
+	<th>[% gettext("Recv.") %]</th>
 	<th class="medium">[% gettext("Description") %]</th>
 	<th class="icon">[% gettext("Open") %]</th>
 </tr>
@@ -26,6 +48,11 @@
 	<td>[% shipment.created %]</td>
 	<td>[% shipment.due %]</td>
 	<td>[% shipment.updated %]</td>
+	<td>
+	[% IF shipment.received > 0 %]
+	X
+	[% END %]
+	</td>
 	<td >[% shipment.info %]</td>
 	<td class="center"><a href="?module=[% module %]&amp;action=showshipment&amp;target=[% shipment.id %]">
 		<img class="link" alt="open" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
