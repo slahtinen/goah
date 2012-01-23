@@ -84,12 +84,10 @@ onclick="return confirm('[% gettext("Delete shipment from database?") %]')" />
 [% IF shipment.received != 1 %]
 <h3>[% gettext("Add products to shipment") %]</h3>
 <table>
-<thead>
-<tr><th>[% gettext("Select product group") %]</th>
-<th>[% gettext("Products on shipment") %]</th></tr>
-</thead>
 <tbody>
-<tr><td>
+<tr>
+<td>[% gettext("By group") %]:</td>
+<td>
 <form method="get" action="javascript:loadContent('content.cgi','contentcgi');" name="contentcgi">
 <p>
 <input type='hidden' name='module' value='[% module %]' />
@@ -111,6 +109,29 @@ onclick="return confirm('[% gettext("Delete shipment from database?") %]')" />
   <p><input type="submit" value="[% gettext("Show") %]" /></p>
 </noscript>
 </form>
+</td>
+<td>[% gettext("By barcode") %]:</td>
+<td>
+<form method="post" name="barcodeform">
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='addtoshipment' />
+<input type="hidden" name="subaction" value="ean" />
+<input type='hidden' name='shipmentid' value='[% shipment.id %]'>
+<input name="barcode" class="large" />
+<input type="submit" value="[% gettext("Add") %]" />
+</form>
+</td>
+<form method="post" name="productcodeform">
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='action' value='addtoshipment' />
+<input type="hidden" name="subaction" value="productcode" />
+<input type='hidden' name='shipmentid' value='[% shipment.id %]'>
+<td>[% gettext("By code") %]: </td>
+<td><input name="code" class="large" />
+<input type="submit" value="[% gettext("Add") %]" />
+</form>
+</td>
+</tr>
 </tbody>
 </table>
 

@@ -898,7 +898,8 @@ sub UpdateBasketRow {
 # Parameters:
 #
 #   barcode - EAN code for the product to add into basket. Optional.
-#   productcode- Manufacturer product code
+#   productcode - Manufacturer product code
+#
 # Returns:
 #
 #   Success - 0

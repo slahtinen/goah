@@ -251,7 +251,18 @@ sub Start {
 
 		} elsif($action eq 'addtoshipment') {
 
-			if(AddToShipment() == 0) {
+			my $returnvalue;
+			if($q->param('subaction') eq 'ean') {
+				goah::Modules->AddMessage('debug',"Add to shipment via EAN",__FILE__,__LINE__);
+				$returnvalue = AddToShipment($q->param('barcode'),$q->param('subaction'));
+			} elsif($q->param('subaction') eq 'productcode') {
+				goah::Modules->AddMessage('debug',"Add to shipment via product code",__FILE__,__LINE__);
+				$returnvalue = AddToShipment($q->param('code'),$q->param('subaction'));
+			} else {
+				$returnvalue = AddToShipment();
+			}
+
+			if($returnvalue == 0) {
 				goah::Modules->AddMessage('info',__("Product(s) added to shipment"),__FILE__,__LINE__);
 			} else {
 				goah::Modules->AddMessage('error',__("Cant' add product(s) to shipment!"),__FILE__,__LINE__);
@@ -1024,12 +1035,36 @@ sub AddToShipment {
 			}
 		}
 
-	} elsif ($q->param('productid')) {
+	} elsif ($q->param('productid') || $_[0]) {
 		# Add only one product
 
-		my $prod = $q->param('productid');
-		$purchase = $q->param('purchase');
-		$amount = $q->param('amount');
+		my $prod;
+		# If we have an EAN-code, or Product code, then read product information via that
+		if($_[0]) {
+			if($_[1] eq "ean") {
+				goah::Modules->AddMessage('debug',"Adding product to shipmet via barcode".$_[0],__FILE__,__LINE__);
+				$prod = goah::Modules::Productmanagement->ReadProductByEAN($_[0]);
+			}
+			if($_[1] eq "productcode") {
+				goah::Modules->AddMessage('debug',"Adding product to shipment via product code ".$_[0],__FILE__,__LINE__);
+				$prod = goah::Modules::Productmanagement->ReadProductByCode($_[0]);
+			}
+			if($prod==0) {
+				goah::Modules->AddMessage('error',__("Product not found"),__FILE__,__LINE__);
+				return 1;
+			}
+			$amount=1;
+			my $proddataptr = goah::Modules::Productmanagement->ReadData('products',$prod,$uid);
+			if($proddataptr == 0) {
+				goah::Modules->AddMessage('error',"Something went badly wrong...",__FILE__,__LINE__);
+			}
+			my %proddata = %$proddataptr;
+			$purchase = $proddata{'purchase'};
+		} else {
+			$prod = $q->param('productid');
+			$purchase = $q->param('purchase');
+			$amount = $q->param('amount');
+		}
 
 		if(AddProductToShipment($prod,$shipmentid,$purchase,$amount)==1) {
 			goah::Modules->AddMessage('debug',"Added productid $prod to shipment",__FILE__,__LINE__);
