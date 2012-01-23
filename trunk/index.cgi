@@ -134,7 +134,7 @@ my %templatevars;
 
 $templatevars{'gettext'} = sub { return __($_[0]); };
 $templatevars{'locale'} = setlocale(LC_ALL);
-$templatevars{'goahversion'} = '2.0.0 beta';
+$templatevars{'goahversion'} = '2.1.0 beta';
 $templatevars{'theme'} = $Config{'goah.theme'};
 $templatevars{'demomode'} = $Config{'goah.demomode'};
 
