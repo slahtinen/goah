@@ -1,7 +1,7 @@
 <h2>[% gettext("Invoices") %]</h2>
 <table id="activeinvoices">
 <thead>
-<th colspan='4'>[% gettext("State") %]</th>
+<th colspan='3'>[% gettext("State") %]</th>
 <th>[% gettext("From/to date") %] (dd.mm.yyyy)</th>
 <th colspan='2'>[% gettext("Customer") %]</th>
 
@@ -25,7 +25,7 @@
 [% ELSE %]
 <input type='checkbox' name='states' value='[% option %]'>[% gettext(invoicestates.$option) %] <br />
 [% END %]
-[% IF lcount == 2 %] </td><td> [% lcount = 0 %][% END %]
+[% IF lcount == 3 %] </td><td> [% lcount = 0 %][% END %]
 [% IF loop.last %]
 <input type="radio" name="showrows" value="invoices" checked/>[% gettext("Show invoices") %]<br/>
 <input type="radio" name="showrows" value="rows" />[% gettext("Show rows") %]<br/>
@@ -40,8 +40,8 @@
    CHECKD='checked'
 %]
 [% END %]
-<br/><input type="radio" name="datesearch" value="created" [% CHECKC %]/>[% gettext("Date range for created dates") %]<br/>
-<input type="radio" name="datesearch" value="due" [% CHECKD %]/>[% gettext("Date range for due dates") %]
+<br/><input type="radio" name="datesearch" value="created" [% CHECKC %]/>[% gettext("Created") %]
+<input type="radio" name="datesearch" value="due" [% CHECKD %]/>[% gettext("Due") %]
 </td>
 <td>
 <select class="medium" name="customer">

@@ -1,5 +1,8 @@
 <h2>[% gettext("Products") %]</h2>
 <table>
+<thead>
+<th colspan='6' class='info'>[% gettext("Search products") %]</th>
+</thead>
 <tbody>
 	<tr>
 	<td>[% gettext("By group") %]:</td>

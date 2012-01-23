@@ -302,6 +302,10 @@ thead th, tbody td.heading {
     white-space: nowrap;
 }
 
+thead th.info {
+	background: transparent url('gfx/bg-table-header-info.png') repeat-x 0 0;
+}
+
 thead th.maxwidth {
     width: 100%;
 }

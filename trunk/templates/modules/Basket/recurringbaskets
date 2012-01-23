@@ -1,7 +1,10 @@
 <h2>[% gettext("Recurring baskets") %]</h2>
 <form action="" method="post">
-<h3>[% gettext("Create new recurring basket") %]</h3>
 <table>
+<thead>
+<th colspan='5' class='info'>[% gettext("Create new recurring basket") %]</th>
+</thead>
+<tbody>
 [% row = 'info' %]
 <tr>
 [% FOREACH key IN basketdbfields.keys.sort %]
@@ -36,6 +39,7 @@
 [% END %]
 <td class="center"><input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Create") %]" /></td>
 </tr>
+<tbody>
 </table>
 <input type="hidden" name="module" value="[% module %]" />
 <input type='hidden' name='action' value='newbasket' />
@@ -103,11 +107,11 @@
 	[% END %]
 	</td>
 	<td>[% gettext("Total") %]: [% basket.total %]<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
-	<td>[% gettext("Creat.") %]: [% formatdate(basket.created) %]<br/>
-	[% gettext("Upd.") %]: [% formatdate(basket.updated) %]</td>
-	<td>[% gettext("Prev.") %]: [% formatdate(basket.lasttrigger) %]<br/>
+	<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
+	[% gettext("Updated") %]: [% formatdate(basket.updated) %]</td>
+	<td>[% gettext("Previous") %]: [% formatdate(basket.lasttrigger) %]<br/>
 	[% gettext("Next") %]: [% formatdate(basket.nexttrigger) %]</td>
-	<td>[% gettext("Every") %] [% basket.repeat %][% gettext("mo") %], [% basket.dayinmonth %] 
+	<td>[% basket.repeat %] [% gettext("mo") %], [% basket.dayinmonth %] 
 	[% IF basket.dayinmonth == 1 %]
 		[% gettext("st day") %]
 	[% ELSE %]
