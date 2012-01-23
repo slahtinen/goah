@@ -25,22 +25,38 @@
 [% ELSE %]
 <input type='checkbox' name='states' value='[% option %]'>[% gettext(invoicestates.$option) %] <br />
 [% END %]
-[% IF lcount == 2 %] </td><td> [% lcount = 0 %][% END %]
+[% IF lcount == 3 %] </td><td> [% lcount = 0 %][% END %]
 [% IF loop.last %]
-<input type="radio" name="showrows" value="invoices" checked/>[% gettext("Show invoices") %]<br/>
-<input type="radio" name="showrows" value="rows" />[% gettext("Show rows") %]<br/>
+<input type="radio" name="showrows" value="invoices" />[% gettext("Show invoices") %]<br/>
+<input type="radio" name="showrows" value="rows" checked />[% gettext("Show rows") %]<br/>
 </td>[% END %]
 [% END %]
-<td><input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" /></td>
+<td><input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" />
+[% IF datesearch == 'created' %] 
+[% CHECKC='checked'
+   CHECKD='' %]
+[% ELSE %]
+[% CHECKC=''
+   CHECKD='checked'
+%]
+[% END %]
+<br/><input type="radio" name="datesearch" value="created" [% CHECKC %]/>[% gettext("Created") %]
+<input type="radio" name="datesearch" value="due" [% CHECKD %]/>[% gettext("Due") %]
+</td>
 <td>
 <select class="medium" name="customer">
 <option  value="*">-- [% gettext("Select") %] --</option>
 [% FOREACH key IN customers.keys.sort %]
 [% item = customers.$key %]
-<option value="[% item.name %]">[% item.name %]
+[% IF item.name == search_customer %]
+	<option value="[% item.name %]" selected />[% item.name %]
+[% ELSE %]
+	<option value="[% item.name %]" />[% item.name %]
+[% END %]
+
 [%- IF item.vat_id == '00000000' %] 
 , [% item.firstname %]
-[% END %] 
+[% END %]
 </option>
 [% END %]
 </select>
@@ -51,34 +67,12 @@
 </tbody>
 </table>
 
-<h3>[% gettext("Customer info") %]</h3>
-<table>
-<tbody>
-<tr>
-<td>
-[% k = invoices.first.keys.0 %]
-[% cinfo = companyinfo(invoices.$k.companyid) %]
-<b>[% cinfo.name %] [% cinfo.firstname %]</b><br/>
-[% linfo = locationinfo(invoices.$k.locationid) %]
-[% IF linfo == 0 %]
-	[% gettext("Not available!") %]<br/><br/><br/>
-[% ELSE %]
-	[% linfo.addr1 %]
-	[% IF linfo.addr2 != '' %]
-	, [% linfo.addr2 %]</br>
-	[% END %]
-	, [% linfo.postalcode %] [% linfo.postaloffice %]
-[% END %]
-</td>
-</tr>
-</tbody>
-</table>
-
 <h3>[% gettext("Selected invoices") %]</h3>
 <table>
 <thead>
 <tr>
-<th>[% gettext("Inv. Number") %]</th>
+<th>[% gettext("Invoice") %]</th>
+<th>[% gettext("Customer") %]</th>
 <th>[% gettext("Created") %] / [% gettext("Due") %]</th>
 <th>[% gettext("Code / Product") %]</th>
 <th colspan=2>[% gettext("Amount") %]</th>
@@ -107,6 +101,21 @@
 		[% ELSE  %]
 			<td>&nbsp;</td>
 		[% END %]
+		<td>
+		[% k = invoices.first.keys.0 %]
+		[% cinfo = companyinfo(invoices.$k.companyid) %]
+		<b>[% cinfo.name %] [% cinfo.firstname %]</b><br/>
+		[% linfo = locationinfo(invoices.$k.locationid) %]
+		[% IF linfo == 0 %]
+			[% gettext("Not available!") %]<br/><br/><br/>
+		[% ELSE %]
+			[% linfo.addr1 %]
+			[% IF linfo.addr2 != '' %]
+			, [% linfo.addr2 %]</br>
+			[% END %]
+			, [% linfo.postalcode %] [% linfo.postaloffice %]
+		[% END %]
+		</td>
 		[% IF invoice.invoicenumber != 0 %]
 			<td>[% formatdate(invoice.created) %]<br/>
 			[% formatdate(invoice.due) %]</td>

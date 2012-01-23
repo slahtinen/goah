@@ -48,7 +48,11 @@
 <option  value="*">-- [% gettext("Select") %] --</option>
 [% FOREACH key IN customers.keys.sort %]
 [% item = customers.$key %]
-<option value="[% item.name %]">[% item.name %]
+[% IF item.name == search_customer %]
+	<option value="[% item.name %]" selected />[% item.name %]
+[% ELSE %]
+	<option value="[% item.name %]" />[% item.name %]
+[% END %]
 [%- IF item.vat_id == '00000000' %] 
 , [% item.firstname %]
 [% END %] 
