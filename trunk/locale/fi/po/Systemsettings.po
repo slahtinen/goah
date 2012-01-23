@@ -41,19 +41,19 @@ msgstr "Osoite, rivi 2"
 msgid "BIC"
 msgstr "BIC"
 
-#: ../goah/Modules/Systemsettings.pm:730 ../goah/Modules/Systemsettings.pm:797
+#: ../goah/Modules/Systemsettings.pm:735 ../goah/Modules/Systemsettings.pm:802
 msgid "BIC for bank account missing!"
 msgstr "Pankkitilin BIC puuttuu!"
 
-#: ../goah/Modules/Systemsettings.pm:780
+#: ../goah/Modules/Systemsettings.pm:785
 msgid "Bank account information removed"
 msgstr "Pankkitilin tiedot poistettu"
 
-#: ../goah/Modules/Systemsettings.pm:183
+#: ../goah/Modules/Systemsettings.pm:188
 msgid "Bank account information updated"
 msgstr "Pankkitilin tiedot päivitetty"
 
-#: ../goah/Modules/Systemsettings.pm:181
+#: ../goah/Modules/Systemsettings.pm:186
 msgid "Bank account removed successfully"
 msgstr "Pankkitili poistettu onnistuneesti"
 
@@ -65,59 +65,59 @@ msgstr "Pankkitilit"
 msgid "Bank name"
 msgstr "Pankin nimi"
 
-#: ../goah/Modules/Systemsettings.pm:233
+#: ../goah/Modules/Systemsettings.pm:238
 msgid "Can't add new person to database!"
 msgstr "Henkilön lisääminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:168
+#: ../goah/Modules/Systemsettings.pm:173
 msgid "Can't create new bank account!"
 msgstr "Uuden pankkitilin lisäys epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:186
+#: ../goah/Modules/Systemsettings.pm:191
 msgid "Can't modify bank account information"
 msgstr "Pankkitilin muokkaus epäonnistui"
 
-#: ../goah/Modules/Systemsettings.pm:279
+#: ../goah/Modules/Systemsettings.pm:284
 msgid "Can't remove location data!"
 msgstr "Sijaintitiedon poistaminen epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:320
+#: ../goah/Modules/Systemsettings.pm:325
 msgid "Can't remove setting from database."
 msgstr "Asetusten poistaminen tietokannasta epäonnistui."
 
-#: ../goah/Modules/Systemsettings.pm:356
+#: ../goah/Modules/Systemsettings.pm:361
 msgid "Can't remove setting from database. ID is missing."
 msgstr "Asetusten poistaminen tietokannasta epäonnistui. ID puuttuu."
 
-#: ../goah/Modules/Systemsettings.pm:268
+#: ../goah/Modules/Systemsettings.pm:273
 msgid "Can't update location data!"
 msgstr "Sijaintitiedon päivittäminen epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:199
+#: ../goah/Modules/Systemsettings.pm:204
 msgid "Can't update owner information"
-msgstr "Omistajan tietojen päivitys epäonnistui"
+msgstr "Yrityksen tietojen päivitys epäonnistui"
 
-#: ../goah/Modules/Systemsettings.pm:594
+#: ../goah/Modules/Systemsettings.pm:599
 msgid "Can't update owner information. Id for company isn't correct."
-msgstr "Omistajan tietojen päivitys epäonnistui. Virheellinen id."
+msgstr "Yrityksen tietojen päivitys epäonnistui. Virheellinen id."
 
-#: ../goah/Modules/Systemsettings.pm:256
+#: ../goah/Modules/Systemsettings.pm:261
 msgid "Can't update person information!"
 msgstr "Henkilön tietojen päivitys epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:522
+#: ../goah/Modules/Systemsettings.pm:527
 msgid "Can't update system settings. Either item or value is missing!"
 msgstr ""
 
-#: ../goah/Modules/Systemsettings.pm:221
+#: ../goah/Modules/Systemsettings.pm:226
 msgid "Can't write new location data!"
 msgstr "Sijaintitiedon lisääminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:934
+#: ../goah/Modules/Systemsettings.pm:939
 msgid "Can't write new person to database!"
 msgstr "Henkilön lisääminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:305
+#: ../goah/Modules/Systemsettings.pm:310
 msgid "Can't write setting to database."
 msgstr "Asetusten tallentaminen tietokantaan epäonnistui."
 
@@ -141,7 +141,7 @@ msgstr "Yrityksen osoitteet"
 msgid "Company bank accounts"
 msgstr "Yrityksen pankkitilit"
 
-#: ../goah/Modules/Systemsettings.pm:725
+#: ../goah/Modules/Systemsettings.pm:730
 msgid "Company id is missing! Can't add bank account!"
 msgstr "Yrityksen id puuttuu! Pankkitilin lisäys epäonnistui!"
 
@@ -153,7 +153,7 @@ msgstr "Yritys ja käyttäjät"
 msgid "Company personnell"
 msgstr "Yrityksen henkilöt"
 
-#: ../goah/Modules/Systemsettings.pm:773
+#: ../goah/Modules/Systemsettings.pm:778
 msgid "Coudln't read account information from the database!"
 msgstr "Tilitiedon luku tietokannasta epäonnistui!"
 
@@ -205,7 +205,7 @@ msgstr "Poista yrityksen henkilö tietokannasta?"
 msgid "Domestic"
 msgstr "Tilinumero"
 
-#: ../goah/Modules/Systemsettings.pm:715 ../goah/Modules/Systemsettings.pm:785
+#: ../goah/Modules/Systemsettings.pm:720 ../goah/Modules/Systemsettings.pm:790
 msgid "Domestic format for bank account missing!"
 msgstr "Pankkitilin tilinumero puuttuu!"
 
@@ -223,7 +223,7 @@ msgstr "Muokkaan sijainnin lisätietoja"
 
 #: ../templates/modules/Systemsettings/companyinfo:1
 msgid "Edit owner information"
-msgstr "Muokkaa omistajan lisätietoja"
+msgstr "Muokkaa yrityksen lisätietoja"
 
 #: ../templates/modules/Systemsettings/editperson:1
 msgid "Edit person information"
@@ -265,11 +265,11 @@ msgstr "Kotisivut"
 msgid "IBAN"
 msgstr "IBAN"
 
-#: ../goah/Modules/Systemsettings.pm:720 ../goah/Modules/Systemsettings.pm:791
+#: ../goah/Modules/Systemsettings.pm:725 ../goah/Modules/Systemsettings.pm:796
 msgid "IBAN format for bank account missing!"
 msgstr "Pankkitilin IBAN puuttuu!"
 
-#: ../goah/Modules/Systemsettings.pm:447
+#: ../goah/Modules/Systemsettings.pm:452
 msgid "Invalid id for setting update!"
 msgstr "Virheellinen id päivitykselle!"
 
@@ -281,7 +281,7 @@ msgstr "Kieli"
 msgid "Last name"
 msgstr "Sukunimi"
 
-#: ../goah/Modules/Systemsettings.pm:603
+#: ../goah/Modules/Systemsettings.pm:608
 msgid "Leaving value unaltered."
 msgstr "Arvoa ei muuteta."
 
@@ -289,19 +289,19 @@ msgstr "Arvoa ei muuteta."
 msgid "Location"
 msgstr "Sijainti"
 
-#: ../goah/Modules/Systemsettings.pm:277
+#: ../goah/Modules/Systemsettings.pm:282
 msgid "Location data removed!"
 msgstr "Sijaintitieto poistettu!"
 
-#: ../goah/Modules/Systemsettings.pm:266
+#: ../goah/Modules/Systemsettings.pm:271
 msgid "Location data updated."
 msgstr "Sijaintitieto päivitetty."
 
-#: ../goah/Modules/Systemsettings.pm:962
+#: ../goah/Modules/Systemsettings.pm:967
 msgid "Login information missing. Can't update or create credientials."
 msgstr "Kirjautumistieto puuttuu. Päivitys tai lisäys epäonnistui."
 
-#: ../goah/Modules/Systemsettings.pm:947
+#: ../goah/Modules/Systemsettings.pm:952
 msgid "Login information missing. Newly created person can't log in!"
 msgstr "Kirjautumistieto puuttuu. Uusi käyttäjä ei voi kirjautua järjestelmään!"
 
@@ -309,7 +309,7 @@ msgstr "Kirjautumistieto puuttuu. Uusi käyttäjä ei voi kirjautua järjestelm�
 msgid "Login name"
 msgstr "Kirjautumisnimi"
 
-#: ../goah/Modules/Systemsettings.pm:391
+#: ../goah/Modules/Systemsettings.pm:396
 msgid "Missing category to search settings"
 msgstr "Asetusten haku ei onnistu, asetuskategoria puuttuu."
 
@@ -317,7 +317,7 @@ msgstr "Asetusten haku ei onnistu, asetuskategoria puuttuu."
 msgid "Mobile"
 msgstr "Matkapuhelin"
 
-#: ../goah/Modules/Systemsettings.pm:329
+#: ../goah/Modules/Systemsettings.pm:334
 msgid "Module doesn't have function '"
 msgstr "Modulilla ei ole funktiota"
 
@@ -329,15 +329,15 @@ msgstr "Nimi"
 msgid "New address for company"
 msgstr "Uusi sijainti yritykselle"
 
-#: ../goah/Modules/Systemsettings.pm:166
+#: ../goah/Modules/Systemsettings.pm:171
 msgid "New bank account created"
 msgstr "Uusi pankkitili luotu"
 
-#: ../goah/Modules/Systemsettings.pm:219
+#: ../goah/Modules/Systemsettings.pm:224
 msgid "New location added"
 msgstr "Uusi sijainti lisätty"
 
-#: ../goah/Modules/Systemsettings.pm:231
+#: ../goah/Modules/Systemsettings.pm:236
 msgid "New person added"
 msgstr "Uusi käyttäjä lisätty"
 
@@ -353,9 +353,9 @@ msgstr "Avaa"
 msgid "Other information"
 msgstr "Lisätietoja"
 
-#: ../goah/Modules/Systemsettings.pm:197
+#: ../goah/Modules/Systemsettings.pm:202
 msgid "Owner information updated"
-msgstr "Omistajan tiedot päivitetty"
+msgstr "Yrityksen tiedot päivitetty"
 
 #: ../goah/Modules/Systemsettings.pm:101
 msgid "Password"
@@ -365,7 +365,7 @@ msgstr "Salasana"
 msgid "Payment conditions"
 msgstr "Maksuehdot"
 
-#: ../goah/Modules/Systemsettings.pm:254
+#: ../goah/Modules/Systemsettings.pm:259
 msgid "Person information updated to database."
 msgstr "Käyttäjätieto päivitetty tietokantaan."
 
@@ -401,7 +401,7 @@ msgstr "Poista maksuehto tietokannasta?"
 msgid "Remove reclamation time from database?"
 msgstr "Poista reklamaatioaika tietokannasta?"
 
-#: ../goah/Modules/Systemsettings.pm:602 ../goah/Modules/Systemsettings.pm:620
+#: ../goah/Modules/Systemsettings.pm:607 ../goah/Modules/Systemsettings.pm:625
 msgid "Required field"
 msgstr "Pakollinen kenttä"
 
@@ -413,11 +413,11 @@ msgstr "Tallenna"
 msgid "Select language"
 msgstr "Valitse kieli"
 
-#: ../goah/Modules/Systemsettings.pm:318
+#: ../goah/Modules/Systemsettings.pm:323
 msgid "Setting removed from database."
 msgstr "Asetus poistettu tietokannasta."
 
-#: ../goah/Modules/Systemsettings.pm:303
+#: ../goah/Modules/Systemsettings.pm:308
 msgid "Setting stored to database."
 msgstr "Asetus tallennettu tietokantaan."
 
@@ -433,7 +433,7 @@ msgstr ""
 "Järjestelmäasetukset sisältävät valintoja joilla voi muokata ohjelman käyttäytymistä, sekä muita\n"
 "järjestelmänlaajuisia asetuksia, kuten käyttäjätunnukset."
 
-#: ../goah/Modules/Systemsettings.pm:765
+#: ../goah/Modules/Systemsettings.pm:770
 msgid "Target id missing! Can't edit account information!"
 msgstr "Kohde id puuttuu! Tilin tietojen muokkaus epäonnistui!"
 
@@ -461,6 +461,6 @@ msgstr "Arvo"
 msgid "You're running GoaH version"
 msgstr "Käytät GoaH-versiota"
 
-#: ../goah/Modules/Systemsettings.pm:602 ../goah/Modules/Systemsettings.pm:620
+#: ../goah/Modules/Systemsettings.pm:607 ../goah/Modules/Systemsettings.pm:625
 msgid "empty!"
 msgstr "tyhjä!"

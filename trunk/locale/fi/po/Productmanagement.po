@@ -25,13 +25,13 @@ msgstr "(sis. alv)"
 msgid "(vat 0%)"
 msgstr "(alv 0%)"
 
-#: ../templates/modules/Productmanagement/manufacturers.new:40
+#: ../templates/modules/Productmanagement/manufacturers.new:40 ../templates/modules/Productmanagement/products:36 ../templates/modules/Productmanagement/products:44
 msgid "Add"
 msgstr "Lisää"
 
 #: ../templates/modules/Productmanagement/products.new:67
 msgid "Add new"
-msgstr ""
+msgstr "Lisää uusi"
 
 #:
 msgid "Add new from barcode:"
@@ -47,7 +47,7 @@ msgstr "Lisää uusi valmistaja"
 
 #: ../templates/modules/Productmanagement/manufacturers.new:1
 msgid "Add new manufacturer to database"
-msgstr "Lisää uusi toimittaja tietokantaan"
+msgstr "Lisää uusi valmistaja"
 
 #: ../goah/Modules/Productmanagement.pm:75 ../templates/modules/Productmanagement/products.new:1
 msgid "Add new product"
@@ -57,6 +57,10 @@ msgstr "Lisää uusi tuote"
 msgid "Add new product group"
 msgstr "Lisää uusi tuoteryhmä"
 
+#: ../templates/modules/Productmanagement/products:15
+msgid "All groups"
+msgstr "Kaikki ryhmät"
+
 #: ../goah/Modules/Productmanagement.pm:137
 msgid "Amount in storage"
 msgstr "Määrä varastossa"
@@ -65,51 +69,63 @@ msgstr "Määrä varastossa"
 msgid "Barcode"
 msgstr "Viivakoodi"
 
+#: ../templates/modules/Productmanagement/products:30
+msgid "By barcode"
+msgstr "Viivakoodilla"
+
+#: ../templates/modules/Productmanagement/products:42
+msgid "By code"
+msgstr "Koodilla"
+
+#: ../templates/modules/Productmanagement/products:8
+msgid "By group"
+msgstr "Ryhmällä"
+
 #:
 msgid "Can't access product information. UID is missing"
 msgstr "Tuotteen tietojen luku epäonnistui. UID puuttuu"
 
-#: ../goah/Modules/Productmanagement.pm:238
+#: ../goah/Modules/Productmanagement.pm:239
 msgid "Can't remove database item"
 msgstr "Tietokantakohteen poisto epäonnistui"
 
-#: ../goah/Modules/Productmanagement.pm:222
+#: ../goah/Modules/Productmanagement.pm:223
 msgid "Can't update database item"
 msgstr "Tietokantakohteen päivitys epäonnistui"
 
-#: ../goah/Modules/Productmanagement.pm:489 ../goah/Modules/Productmanagement.pm:511
+#: ../goah/Modules/Productmanagement.pm:497 ../goah/Modules/Productmanagement.pm:519
 msgid "Can't update information in database!"
 msgstr "Tiedon päivittäminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Productmanagement.pm:535
+#: ../goah/Modules/Productmanagement.pm:543
 msgid "Changed manufacturer name already exists in database!"
 msgstr "Muutettu valmistajan nimi löytyy jo tietokannasta!"
 
-#: ../goah/Modules/Productmanagement.pm:521
+#: ../goah/Modules/Productmanagement.pm:529
 msgid "Changed product code already exists in database!"
 msgstr "Muutettu tuotekoodi löytyy jo tietokannasta!"
 
-#: ../goah/Modules/Productmanagement.pm:537
+#: ../goah/Modules/Productmanagement.pm:545
 msgid "Changed product group name already exists in database!"
 msgstr "Muutettu tuoteryhmä löytyy jo tietokannasta!"
 
-#: ../templates/modules/Productmanagement/products:14
+#: ../templates/modules/Productmanagement/products:63
 msgid "Code"
 msgstr "Koodi"
 
-#: ../goah/Modules/Productmanagement.pm:210
+#: ../goah/Modules/Productmanagement.pm:211
 msgid "Couldn't add new item into database"
 msgstr "Uuden tiedon lisäys tietokantaan epäonnistui"
 
-#: ../goah/Modules/Productmanagement.pm:253
+#: ../goah/Modules/Productmanagement.pm:254
 msgid "Couldn't read product groups from database!"
-msgstr ""
+msgstr "Tuoteryhmiä ei saatu luettua tietokannasta!"
 
-#: ../goah/Modules/Productmanagement.pm:736
+#: ../goah/Modules/Productmanagement.pm:744
 msgid "Couldn't retrieve info for "
-msgstr ""
+msgstr "Tietoja ei voitu hakea "
 
-#: ../templates/modules/Productmanagement/manufacturers:45 ../templates/modules/Productmanagement/manufacturers:9 ../templates/modules/Productmanagement/productgroups:13 ../templates/modules/Productmanagement/productgroups:8 ../templates/modules/Productmanagement/products:23 ../templates/modules/Productmanagement/products:6
+#: ../templates/modules/Productmanagement/manufacturers:45 ../templates/modules/Productmanagement/manufacturers:9 ../templates/modules/Productmanagement/productgroups:13 ../templates/modules/Productmanagement/productgroups:8 ../templates/modules/Productmanagement/products:55 ../templates/modules/Productmanagement/products:72
 msgid "Delete"
 msgstr "Poista"
 
@@ -117,7 +133,7 @@ msgstr "Poista"
 msgid "Delete manufacturer from database?"
 msgstr "Poista toimittaja tietokannasta?"
 
-#: ../templates/modules/Productmanagement/products:7
+#: ../templates/modules/Productmanagement/products:56
 msgid "Delete product from database?"
 msgstr "Poista tuote tietokannasta?"
 
@@ -129,11 +145,11 @@ msgstr "Poista tuoteryhmä tietokannasta?"
 msgid "Description"
 msgstr "Kuvaus"
 
-#: ../goah/Modules/Productmanagement.pm:799
+#: ../goah/Modules/Productmanagement.pm:807
 msgid "Didn't receive EAN, can't search products!"
 msgstr "Ei EAN-koodia, tuotteita ei voida etsiä!"
 
-#: ../goah/Modules/Productmanagement.pm:839
+#: ../goah/Modules/Productmanagement.pm:850
 msgid "Didn't receive product code, can't search products!"
 msgstr "Ei tuotekoodia, tuotteita ei voida etsiä!"
 
@@ -141,7 +157,7 @@ msgstr "Ei tuotekoodia, tuotteita ei voida etsiä!"
 msgid "EAN GTIN id"
 msgstr "EAN GTIN id"
 
-#: ../templates/modules/Productmanagement/manufacturers:34 ../templates/modules/Productmanagement/productgroups:14 ../templates/modules/Productmanagement/products:5
+#: ../templates/modules/Productmanagement/manufacturers:34 ../templates/modules/Productmanagement/productgroups:14 ../templates/modules/Productmanagement/products:54
 msgid "Edit"
 msgstr "Muokkaa"
 
@@ -157,7 +173,7 @@ msgstr "Muokkaa toimittajien tietoja"
 msgid "Edit product data"
 msgstr "Muokkaa tuotteen tietoja"
 
-#: ../goah/Modules/Productmanagement.pm:270
+#: ../goah/Modules/Productmanagement.pm:271
 msgid "Empty product group"
 msgstr "Tyhjä tuoteryhmä"
 
@@ -165,7 +181,7 @@ msgstr "Tyhjä tuoteryhmä"
 msgid "Field marked with * is required"
 msgstr "* Kentät pakollisia"
 
-#: ../templates/modules/Productmanagement/products:72
+#: ../templates/modules/Productmanagement/products:121
 msgid "Group total value:"
 msgstr "Ryhmän yhteissumma:"
 
@@ -173,11 +189,11 @@ msgstr "Ryhmän yhteissumma:"
 msgid "Groups"
 msgstr "Ryhmät"
 
-#: ../goah/Modules/Productmanagement.pm:489
+#: ../goah/Modules/Productmanagement.pm:497
 msgid "ID -field missing."
 msgstr "ID-kenttä puuttuu."
 
-#: ../templates/modules/Productmanagement/products:20
+#: ../templates/modules/Productmanagement/products:69
 msgid "In storage"
 msgstr "Varastossa"
 
@@ -185,31 +201,31 @@ msgstr "Varastossa"
 msgid "Information"
 msgstr "Lisätieto"
 
-#: ../goah/Modules/Productmanagement.pm:236
+#: ../goah/Modules/Productmanagement.pm:237
 msgid "Information removed from database"
 msgstr "Tieto poistettu tietokannasta"
 
-#: ../goah/Modules/Productmanagement.pm:220
+#: ../goah/Modules/Productmanagement.pm:221
 msgid "Information updated"
 msgstr "Tiedot päivitetty"
 
-#: ../goah/Modules/Productmanagement.pm:511
+#: ../goah/Modules/Productmanagement.pm:519
 msgid "Invalid DB identifier."
 msgstr "Virheellinen tietokantatunniste."
 
-#: ../goah/Modules/Productmanagement.pm:552 ../goah/Modules/Productmanagement.pm:556
+#: ../goah/Modules/Productmanagement.pm:560 ../goah/Modules/Productmanagement.pm:564
 msgid "Leaving value unaltered."
 msgstr "Arvo jätetään ennalleen"
 
-#: ../goah/Modules/Productmanagement.pm:108 ../templates/modules/Productmanagement/products:16
+#: ../goah/Modules/Productmanagement.pm:108 ../templates/modules/Productmanagement/products:65
 msgid "Manufacturer"
 msgstr "Valmistaja"
 
-#: ../goah/Modules/Productmanagement.pm:364
+#: ../goah/Modules/Productmanagement.pm:369
 msgid "Manufacturer already exists in database!"
 msgstr "Valmistaja löytyy jo tietokannasta!"
 
-#: ../goah/Modules/Productmanagement.pm:385
+#: ../goah/Modules/Productmanagement.pm:390
 msgid "Manufacturer already in database. Using manufacturer "
 msgstr "Valmistaja löytyy jo tietokannasta. Käytetään valmistajaa"
 
@@ -217,23 +233,23 @@ msgstr "Valmistaja löytyy jo tietokannasta. Käytetään valmistajaa"
 msgid "Manufacturers"
 msgstr "Valmistajat"
 
-#: ../goah/Modules/Productmanagement.pm:958
+#: ../goah/Modules/Productmanagement.pm:971
 msgid "Missing ID, can't remove data from database"
 msgstr "ID puuttuu. Tietojen poisto tietokannasta epäonnistui"
 
-#: ../goah/Modules/Productmanagement.pm:963
+#: ../goah/Modules/Productmanagement.pm:976
 msgid "Missing type, can't remove data from database"
 msgstr "Tyyppi puuttuu. Tietojen poistaminen tietokannasta epäonnistui"
 
-#: ../goah/Modules/Productmanagement.pm:242
+#: ../goah/Modules/Productmanagement.pm:243
 msgid "Module doesn't have function "
 msgstr "Modulilla ei ole funktiota"
 
-#: ../goah/Modules/Productmanagement.pm:86 ../goah/Modules/Productmanagement.pm:95 ../templates/modules/Productmanagement/manufacturers:5 ../templates/modules/Productmanagement/productgroups:5 ../templates/modules/Productmanagement/products:15
+#: ../goah/Modules/Productmanagement.pm:86 ../goah/Modules/Productmanagement.pm:95 ../templates/modules/Productmanagement/manufacturers:5 ../templates/modules/Productmanagement/productgroups:5 ../templates/modules/Productmanagement/products:64
 msgid "Name"
 msgstr "Nimi"
 
-#: ../goah/Modules/Productmanagement.pm:208
+#: ../goah/Modules/Productmanagement.pm:209
 msgid "New item added to database"
 msgstr "Uusi kohde lisätty tietokantaan"
 
@@ -241,7 +257,7 @@ msgstr "Uusi kohde lisätty tietokantaan"
 msgid "OR add new"
 msgstr "TAI lisää uusi"
 
-#: ../templates/modules/Productmanagement/manufacturers:8 ../templates/modules/Productmanagement/productgroups:7 ../templates/modules/Productmanagement/products:22
+#: ../templates/modules/Productmanagement/manufacturers:8 ../templates/modules/Productmanagement/productgroups:7 ../templates/modules/Productmanagement/products:71
 msgid "Open"
 msgstr "Avaa"
 
@@ -249,7 +265,7 @@ msgstr "Avaa"
 msgid "Other information"
 msgstr "Lisätietoja"
 
-#: ../goah/Modules/Productmanagement.pm:353
+#: ../goah/Modules/Productmanagement.pm:358
 msgid "Product already exists in database!"
 msgstr "Tuote löytyy jo tietokannasta!"
 
@@ -261,11 +277,11 @@ msgstr "Tuotekoodi"
 msgid "Product group"
 msgstr "Tuoteryhmä"
 
-#: ../goah/Modules/Productmanagement.pm:366
+#: ../goah/Modules/Productmanagement.pm:371
 msgid "Product group already exists in database!"
 msgstr "Tuotetyhmä löytyy jo tietokannasta!"
 
-#: ../goah/Modules/Productmanagement.pm:406
+#: ../goah/Modules/Productmanagement.pm:411
 msgid "Product group already in database. Using product group "
 msgstr "Tuoteryhmä löytyy jo tietokannasta. Käytetään tuoteryhmää "
 
@@ -277,23 +293,23 @@ msgstr "Tuoteryhmät"
 msgid "Product name"
 msgstr "Tuotenimi"
 
-#: ../goah/Modules/Productmanagement.pm:72 ../templates/modules/Productmanagement/products:2
+#: ../goah/Modules/Productmanagement.pm:72 ../templates/modules/Productmanagement/products:1
 msgid "Products"
 msgstr "Tuotteet"
 
-#: ../goah/Modules/Productmanagement.pm:127 ../templates/modules/Productmanagement/products:17
+#: ../goah/Modules/Productmanagement.pm:127 ../templates/modules/Productmanagement/products:66
 msgid "Purchase price"
 msgstr "Ostohinta"
 
-#: ../goah/Modules/Productmanagement.pm:434 ../goah/Modules/Productmanagement.pm:555
+#: ../goah/Modules/Productmanagement.pm:439 ../goah/Modules/Productmanagement.pm:563
 msgid "Required dropdown field"
 msgstr "Pudotusvalikon kenttä vaaditaan"
 
-#: ../goah/Modules/Productmanagement.pm:429 ../goah/Modules/Productmanagement.pm:551
+#: ../goah/Modules/Productmanagement.pm:434 ../goah/Modules/Productmanagement.pm:559
 msgid "Required field"
 msgstr "Pakollinen kenttä"
 
-#: ../templates/modules/Productmanagement/products:21
+#: ../templates/modules/Productmanagement/products:70
 msgid "Row value"
 msgstr "Rivin arvo"
 
@@ -305,17 +321,25 @@ msgstr "Tallenna"
 msgid "Save & add new"
 msgstr "Tallenna & uusi"
 
+#: ../templates/modules/Productmanagement/products:4
+msgid "Search products"
+msgstr "Etsi tuotteita"
+
 #: ../templates/modules/Productmanagement/products.edit:34 ../templates/modules/Productmanagement/products.new:32
 msgid "Select one"
 msgstr "Valitse yksi"
 
-#: ../templates/modules/Productmanagement/products:18
+#: ../templates/modules/Productmanagement/products:67
 msgid "Sell price"
 msgstr "Myyntihinta"
 
 #: ../goah/Modules/Productmanagement.pm:128
 msgid "Selling price"
 msgstr "Myyntihinta"
+
+#: ../templates/modules/Productmanagement/products:25
+msgid "Show"
+msgstr "Näytä"
 
 #: ../goah/Modules/Productmanagement.pm:118
 msgid "Storage"
@@ -325,7 +349,7 @@ msgstr "Varasto"
 msgid "Supplier"
 msgstr "Toimittaja"
 
-#: ../templates/modules/Productmanagement/products:75
+#: ../templates/modules/Productmanagement/products:124
 msgid "Total storage value"
 msgstr "Varaston yhteissumma"
 
@@ -333,7 +357,7 @@ msgstr "Varaston yhteissumma"
 msgid "UID missing, can't read products by basket."
 msgstr "UID puuttuu. Tuotteiden luku korista epäonnistui."
 
-#: ../goah/Modules/Productmanagement.pm:885
+#: ../goah/Modules/Productmanagement.pm:898
 msgid "UID missing, can't read products by group."
 msgstr "UID puuttuu, tuotteita ei pystytä lukemaan tuoteryhmällä."
 
@@ -341,7 +365,7 @@ msgstr "UID puuttuu, tuotteita ei pystytä lukemaan tuoteryhmällä."
 msgid "Unit"
 msgstr "Yksikkö"
 
-#: ../goah/Modules/Productmanagement.pm:344
+#: ../goah/Modules/Productmanagement.pm:345
 msgid "Unknow type for writing new data into database"
 msgstr "Tietojen lisäys tietokantaan epäonnistui! Tuntematon tyyppi"
 
@@ -349,11 +373,11 @@ msgstr "Tietojen lisäys tietokantaan epäonnistui! Tuntematon tyyppi"
 msgid "Unknown field type"
 msgstr "Tuntematon kenttätyyppi"
 
-#: ../goah/Modules/Productmanagement.pm:191
+#: ../goah/Modules/Productmanagement.pm:192
 msgid "Unknown parameter for function: "
 msgstr "Tuntematon parametri funktiolle: "
 
-#: ../templates/modules/Productmanagement/products:19
+#: ../templates/modules/Productmanagement/products:68
 msgid "VAT class"
 msgstr "ALV-luokka"
 
@@ -369,10 +393,10 @@ msgstr "Www-sivut"
 msgid "Website address"
 msgstr "Kotisivut"
 
-#: ../goah/Modules/Productmanagement.pm:429 ../goah/Modules/Productmanagement.pm:551
+#: ../goah/Modules/Productmanagement.pm:434 ../goah/Modules/Productmanagement.pm:559
 msgid "empty!"
 msgstr "Tyhjä!"
 
-#: ../goah/Modules/Productmanagement.pm:434 ../goah/Modules/Productmanagement.pm:555
+#: ../goah/Modules/Productmanagement.pm:439 ../goah/Modules/Productmanagement.pm:563
 msgid "unselected!"
 msgstr "valitsemattomat!"

@@ -408,7 +408,7 @@ sub NewInvoice {
 
 
 	# Add event to invoice about creation
-	AddEventToInvoice($invoice->id,"Invoice created",$invoice->state);
+	AddEventToInvoice($invoice->id,__("Invoice created"),$invoice->state);
 	
 	# Everything went ok, return 0 and let Basket module take care of 
 	# removing basket which is now transferred to invoice
