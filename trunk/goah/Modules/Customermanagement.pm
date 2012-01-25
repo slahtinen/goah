@@ -293,6 +293,7 @@ sub Start {
                                         goah::Modules->AddMessage('info',__("New customer type added to database"));
                                 }
 				$variables{'function'} = 'modules/Customermanagement/customertypes';
+				$variables{'submenuselect'}='customertypes';
                 
 		} elsif($q->param('action') eq 'deleteidentifier') {
 
@@ -302,8 +303,10 @@ sub Start {
                                 }
 				if($q->param('selector') eq 'type') {
 					$variables{'function'} = 'modules/Customermanagement/customertypes';
+					$variables{'submenuselect'}='customertypes';
 				} else {
 					$variables{'function'} = 'modules/Customermanagement/customergroups';
+					$variables{'submenuselect'}='customergroups';
 				}
                 
 		} elsif($q->param('action') eq 'edittype') {
@@ -313,6 +316,7 @@ sub Start {
                                         goah::Modules->AddMessage('info',__("Customertype updated"));
                                 }
 				$variables{'function'} = 'modules/Customermanagement/customertypes';
+				$variables{'submenuselect'}='customertypes';
                 
 		} elsif($q->param('action') eq 'newgroup') {
 
@@ -321,6 +325,7 @@ sub Start {
                                         goah::Modules->AddMessage('info',__("New customer group added to database"));
                                 }
 				$variables{'function'} = 'modules/Customermanagement/customergroups';
+				$variables{'submenuselect'}='customergroups';
                 
 		} elsif($q->param('action') eq 'editgroup') {
 
@@ -329,6 +334,7 @@ sub Start {
                                         goah::Modules->AddMessage('info', __("Customer group information updated"));
                                 }
 				$variables{'function'} = 'modules/Customermanagement/customergroups';
+				$variables{'submenuselect'}='customergroups';
                 
 		} else {
 				goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
