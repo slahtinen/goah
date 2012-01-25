@@ -534,41 +534,6 @@ sub WriteNewCompany {
 	$data{'hidden'} = 0;
 	goah::Database::Locations->insert(\%data);
 
-
-	# Process new person information as well. Since we have the same problem with this than with WriteNewLocation
-	# we'll have to do things here.
-	use goah::Database::Persons;
-	%data=();
-	my $origfield; # Temporary assist variable
-	while(my($key,$value) = each (%persondbfieldnames)) {
-		$origfield='';
-		%fieldinfo = %$value;
-
-		# Some bubblegum to fix overlapping field names on HTML form
-		if($fieldinfo{'field'} eq 'email') {
-			$origfield='email';
-			$fieldinfo{'field'}='email_person';
-		}
-
-		if($fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) ) {
-			my $str = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!');
-			$str.=' '.__("Won't write new person information");
-			goah::Modules->AddMessage('warn',$str);
-			return $tmp->id;
-		}
-
-		if($q->param($fieldinfo{'field'})) {
-			unless($origfield eq '') {
-				$data{$origfield} = decode("utf-8",$q->param($fieldinfo{'field'}));
-			} else {
-				$data{$fieldinfo{'field'}} = decode("utf-8",$q->param($fieldinfo{'field'}));
-			}
-
-		}
-	}
-	$data{'companyid'} = $tmp->id;
-	goah::Database::Persons->insert(\%data);
-
 	return $tmp->id;
 }
 

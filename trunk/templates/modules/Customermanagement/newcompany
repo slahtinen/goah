@@ -82,42 +82,6 @@
 [% END %]
 [% END %]
 </table>
-<h3>[% gettext('New person data for company') %] [% companydata.name %]</h3>
-<table>
-<tr>
-    <td>[% gettext("Fields marked with * are required") %]</td></tr>
-[% row = 'even' %]
-[% FOREACH key IN persondbfields.keys.sort %]
-[% data = persondbfields.$key %]
-[% IF data.type != "hidden" %]
-	<tr class="[% row %]">
-	<td class="medium">[% gettext(data.name) %]
-	[% IF data.required == 1 %]
-		*
-	[% END %]
-	</td>
-	[% IF data.type == 'textfield' %]
-		[% IF data.field == "email" %]
-			<td><input class="big" name="[% data.field %]_person" /></td>
-		[% ELSE %]
-			<td><input class="big" name="[% data.field %]" /></td>
-		[% END %]
-	[% ELSIF data.type == 'textarea' %]
-		<td><textarea name="[% data.field %]"></textarea></td>
-	[% ELSE %]
-		<td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
-	[% END %]
-	</tr>
-
-	[% IF row == 'odd' %]
-		[% row = 'even' %]
-	[% ELSE %]
-		[% row = 'odd' %]	
-	[% END %]
-		
-[% END %]
-[% END %]
-</table>
 <p>
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="action" value="writenewcompany" />
