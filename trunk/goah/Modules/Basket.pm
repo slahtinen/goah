@@ -316,7 +316,7 @@ sub WriteNewBasket {
 		if($fieldinfo{'field'} eq 'billingid' || $fieldinfo{'field'} eq 'locationid') {
 			next;
 		}
-		if($fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) ) {
+		if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) ) {
 			goah::Modules->AddMessage('warn',__('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!'));
 			return 0;
 		}

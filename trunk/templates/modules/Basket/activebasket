@@ -65,7 +65,11 @@
 	[% compinfo = companyinfo(data.companyid) %]
 	<input type='hidden' name='target' value="[% data.companyid %]">
 	<input type='hidden' name='companyid' value="[% data.companyid %]">
-	<tr class="[% row %]"><td>[% gettext(field.name) %]</td><td>[% compinfo.name %]</td></tr>
+	<tr class="[% row %]"><td>[% gettext(field.name) %]</td><td>[% compinfo.name %]
+	[% IF compinfo.vat_id == "00000000" %]
+	[% compinfo.firstname %]
+	[% END %]
+	</td></tr>
 [% ELSE %]
 	<input name='[% field.field %]' value='[% data.$fieldname %]' type='hidden'> 
 [% END %]

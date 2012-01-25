@@ -28,7 +28,11 @@
 	<tr class="[% rclass %]">
 	[% cinfo = companyinfo(basket.companyid) %]
 	<td>
-	<b>[% cinfo.name %]</b><br/>
+	<b>[% cinfo.name %]
+	[% IF cinfo.vat_id == "00000000" %]
+	[% cinfo.firstname %]
+	[% END %]
+	</b><br/>
 	[% linfo = locationinfo(basket.locationid) %]
 	[% IF linfo == 0 %] 
 		[% gettext("Not selected!") %]
