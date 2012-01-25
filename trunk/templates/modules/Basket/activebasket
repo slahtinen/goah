@@ -25,19 +25,34 @@
 	[% ELSIF field.type == 'selectbox' %]
 		<td><select class="big" name="[% field.field %]">
 		<option value="-1">-- [% gettext("Select") %] --</option>
+		[%# Fix to handle both array and class::dbi results in select box
+		    This should be removed once migration to rose::db is complete %]
 		[% fielddata = field.data %]
-		[% IF field.field == 'locationid' || field.field == 'billingid' %]
-			[% fielddata = locations(data.companyid) %]
-		[% END %]
-		[% FOREACH item IN fielddata %]
-			[% itemname = item.name %]
+		[% IF fielddata.keys.count == 0 %]
 			[% IF field.field == 'locationid' || field.field == 'billingid' %]
-				[% itemname = "$item.addr1 $item.addr2 $item.postalcode $item.postaloffice" %]
+				[% fielddata = locations(data.companyid) %]
 			[% END %]
-			[% IF item.id == data.$fieldname %]
-				<option value="[% item.id %]" selected>[% itemname %]</option>
-			[% ELSE %]
-				<option value="[% item.id %]">[% itemname %]</option> 
+				[% FOREACH item IN fielddata %]
+					[% itemname = item.name %]
+					[% IF field.field == 'locationid' || field.field == 'billingid' %]
+						[% itemname = "$item.addr1 $item.addr2 $item.postalcode $item.postaloffice" %]
+					[% END %]
+					[% IF item.id == data.$fieldname %]
+						<option value="[% item.id %]" selected>[% itemname %]</option>
+					[% ELSE %]
+						<option value="[% item.id %]">[% itemname %]</option> 
+					[% END %]
+				[% END %]
+		[% ELSE %]
+			[% FOREACH k IN fielddata.keys.sort %]
+				[% item = fielddata.$k %]
+				[% IF item.hidden == 0 %] 
+					[% IF item.id == data.$fieldname %]
+						<option value="[% item.id %]" selected>[% item.name %]</option>
+					[% ELSE %]
+						<option value="[% item.id %]">[% item.name %]</option> 
+					[% END %]
+				[% END %]
 			[% END %]
 		[% END %]
 		</select></td>
@@ -121,7 +136,7 @@
 <h3>[% gettext("Basket functions") %]</h3>
 <table>
 <tr>
-[% IF state != 2 && state != 3 %]
+[% IF state == 0 %]
 <td>
 <form action='' method='post'>
 <input type='hidden' name='module' value='[% module %]' />

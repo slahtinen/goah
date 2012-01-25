@@ -26,6 +26,11 @@ use Encode;
 use goah::Modules::Customermanagement;
 use goah::Modules::Productmanagement;
 
+my %baskettypes = ( 0 => { id => 0, name => __("Sell"), selected => 1, hidden => 0 },
+		    1 => { id => 1, name => __("Sold"), selected => 0, hidden => 1 },
+		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 1 },
+		    3 => { id => 3, name => __("Offer"), selected => 0, hidden => 0 } );
+
 #
 # Hash: basketdbfields
 #
@@ -36,10 +41,11 @@ my %basketdbfields = (
 		1 => { field => 'companyid', name => __('Customer'), type => 'selectbox', required => '1', data => goah::Modules::Customermanagement->ReadAllCompanies(1) },
 		2 => { field => 'locationid', name => __('Shipping address'), type => 'selectbox', required => '1', data => '0' },
 		3 => { field => 'billingid', name => __('Billing address') , type => 'selectbox', required => '1', data => '0' },
-		4 => { field => 'created', name => 'created', type => 'hidden', required => '0' },
-		5 => { field => 'updated', name => 'updated', type => 'hidden', required => '0' },
-		6 => { field => 'info', name => __('Description'), type => 'textarea', required => '0' },
-		7 => { field => 'ownerid', name => 'ownerid', type => 'hidden', required => '0' }
+		4 => { field => 'state', name => __("Basket type"), type => 'selectbox', required => '1', data => \%baskettypes },
+		5 => { field => 'created', name => 'created', type => 'hidden', required => '0' },
+		6 => { field => 'updated', name => 'updated', type => 'hidden', required => '0' },
+		7 => { field => 'info', name => __('Description'), type => 'textarea', required => '0' },
+		8 => { field => 'ownerid', name => 'ownerid', type => 'hidden', required => '0'}
 	);
 
 #
@@ -131,7 +137,7 @@ sub Start {
 
 		if($q->param('action') eq 'showbaskets') {
 
-				$variables{'baskets'} = ReadBaskets('',$uid);
+				$variables{'baskets'} = ReadBaskets('',$uid,"0,3",1);
 				$variables{'function'} = 'modules/Basket/showbaskets';
 
 		} elsif($q->param('action') eq 'selectbasket') {
@@ -265,7 +271,7 @@ sub Start {
 		}
 
 	} else {
-		$variables{'baskets'} = ReadBaskets('',$uid);
+		$variables{'baskets'} = ReadBaskets('',$uid,"0,3",1);
 
 	}
 		
@@ -521,7 +527,8 @@ sub WriteRecurringBasket {
 #
 #   id - Id to retrieve from database. If omitted every basket is returned
 #   ownerid - UID to search baskets since we show only 'owned' baskets to users (temporarily disabled)
-#   state - Which basket states to include (open, recurring ...)
+#   state - Which basket states to include (open, recurring ...), optionally separated with commas
+#   separate - If set separate basket states into different hashes
 #
 # Returns:
 #
@@ -529,6 +536,7 @@ sub WriteRecurringBasket {
 #   Fail - 0 
 #
 sub ReadBaskets {
+
 	if($_[0] && $_[0]=~/goah::Modules::Basket/) {
 		shift;
 	}
@@ -551,7 +559,8 @@ sub ReadBaskets {
 		if($_[2]) {
 			$state=$_[2];
 		}
-		@data = $db->search_where({ state => $state }, { order_by => $sort });
+		my @states=split(/,/,$state);
+		@data = $db->search_where({ state => [ @states ] }, { order_by => $sort });
 		my %baskets;
 		my $i=10000;
 		my $f;
@@ -560,38 +569,56 @@ sub ReadBaskets {
 		my @rows;
 		my $total=0;
 		my $totalvat=0;
-		foreach (@data) {
+		my $groupstates=$_[3];
+		foreach my $b (@data) {
 			foreach my $k (keys(%basketdbfields)) {
-				$f=$basketdbfields{$k}{'field'};		
-				$baskets{$i}{$f}=$_->get($f);
+				if($groupstates) {
+					my $state=$b->state;
+					my $statename=$basketstates{$state};
+					$f=$basketdbfields{$k}{'field'};		
+					$baskets{$state}{$i}{$f}=$b->get($f);
+					$baskets{$state}{'name'}=$statename;
+				} else {
+					$f=$basketdbfields{$k}{'field'};		
+					$baskets{$i}{$f}=$b->get($f);
+				}
 			}
-			$br=ReadBasketrows($_->id);
+			$br=ReadBasketrows($b->id);
 			unless($br) {
-				goah::Modules->AddMessage('error',__("Couldn't read basket's rows with basket id ").$_->id."!",__FILE__,__LINE__);
+				goah::Modules->AddMessage('error',__("Couldn't read basket's rows with basket id ").$b->id."!",__FILE__,__LINE__);
 				return 0;
 			}
 			%basketrows=%$br;
-			$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
-			$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
 			$total+=$basketrows{-1}{'baskettotal'};
 			$totalvat+=$basketrows{-1}{'baskettotal_vat'};
 			@rows=sort keys(%basketrows);
-			$baskets{$i}{'rows'}=pop @rows;
-			$baskets{$i}{'rows'}++;
+			if($groupstates) {
+				my $state=$b->state;
+				$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
+				$baskets{$state}{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
+				$baskets{$state}{$i}{'rows'}=pop @rows;
+				$baskets{$state}{$i}{'rows'}++;
+			} else {
+				goah::Modules->AddMessage('debug',"normal basket add");
+				$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
+				$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
+				$baskets{$i}{'rows'}=pop @rows;
+				$baskets{$i}{'rows'}++;
 
-			if($state eq "2") {
-				$baskets{$i}{'lasttrigger'}=$_->lasttrigger;
-				$baskets{$i}{'nexttrigger'}=$_->nexttrigger;
-				my $nexttrigger = goah::GoaH::FormatDate($_->nexttrigger);
-				$nexttrigger=~s/^..\.//;
-				$baskets{$i}{'triggerheading'}=$nexttrigger;
+				if($state eq "2") {
+					my $nexttrigger = goah::GoaH::FormatDate($_->nexttrigger);
+					$nexttrigger=~s/^..\.//;
 
-				my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
-				my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
-				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
-				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
-				$baskets{$i}{'repeat'}=$_->repeat;
-				$baskets{$i}{'dayinmonth'}=$_->dayinmonth;
+					my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
+					my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
+					$baskets{$i}{'triggerheading'}=$nexttrigger;
+					$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
+					$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
+					$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
+					$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
+					$baskets{$i}{'repeat'}=$b->repeat;
+					$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
+				}
 			}
 
 			$i++;
@@ -639,13 +666,13 @@ sub UpdateBasket {
 	my %fieldinfo;
 	while(my($key,$value) = each (%basketdbfields)) {
 		%fieldinfo = %$value;
-		 if($fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) ) {
+		 if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) ) {
 		 	# Using variable just to make source look nicer
 			my $errstr = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!')." ";
 			$errstr.= __("Leaving value unaltered.");
 			goah::Modules->AddMessage('warn',$errstr);
 		} else {
-			if($q->param($fieldinfo{'field'})) {
+			if(length($q->param($fieldinfo{'field'}))) {
 				$data->set($fieldinfo{'field'} => decode('utf-8',$q->param($fieldinfo{'field'})));
 			} else {
 				 $data->set($fieldinfo{'field'} => '');

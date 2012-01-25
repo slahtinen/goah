@@ -17,14 +17,20 @@
 		<td><textarea class="medium" name="[% data.field %]"></textarea></td>
 	[% ELSIF data.type == 'selectbox' %]
 		<td><select class="medium" name="[% data.field %]">
-		<option  value="-1">-- [% gettext("Select") %] --</option>
+		<option value="-1">-- [% gettext("Select") %] --</option>
 		[% FOREACH key IN data.data.keys.sort %]
 			[% item = data.data.$key %]
-			<option value="[% item.id %]">[% item.name %]
+			[% IF item.hidden != 1 %]
+			[% IF item.selected == 1 %]
+				<option selected value="[% item.id %]">[% item.name %]
+			[% ELSE %] 
+				<option value="[% item.id %]">[% item.name %]
+			[% END %]
 			[%- IF item.vat_id == '00000000' %]
 			, [% item.firstname %]
 			[% END %]
 			</option> 
+			[% END %]
 		[% END %]
 		</select>
 		</td>
