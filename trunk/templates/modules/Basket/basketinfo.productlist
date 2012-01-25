@@ -59,11 +59,11 @@
 		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% instorealerttxt %]" title="[% instorealerttxt %]" />
 	[% END %]
 	</td>
-	<td><input class="number" style='width: 35px;' name='amount' value='[% row.amount %]'></td>
+	<td><input class="number" name='amount' value='[% row.amount %]'></td>
 	<td>[% prodinfo.unit %]</td>
 	<td class="number">[% row.total %]</td>
 	<td class="number">[% row.total_vat %]</td>
-	<td><input name='rowinfo' value='[% row.rowinfo %]'></td>
+	<td><input name='rowinfo' class="big" value='[% row.rowinfo %]'></td>
 	<td class="center"><input type='checkbox' name='delete' title="[% deleterowtxt %]" /></td>
 	<td class="center"><input type='image' src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="Update"/></td>
 	</form>

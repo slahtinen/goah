@@ -1,0 +1,52 @@
+@page {
+	size: landscape;
+}
+
+body {
+	margin:0; 
+	padding:0; 
+	line-height: 1.4em; 
+	word-spacing:1px; 
+	letter-spacing:0.2px; 
+	font: 13px Arial, 
+	Helvetica,"Lucida Grande", serif; 
+	color: #000;
+}
+
+#contents {
+	margin: 0px;
+	padding: 0px;
+	border: none;
+}
+
+#activeinvoices {
+	display: none;
+}
+
+form {
+	display: none;
+}
+
+img {
+	display: none;
+}
+
+table {
+	border: none;
+}
+
+tbody td {
+	border: none;
+}
+
+br {
+	display: none;
+}
+
+#navi, p.naviseparator {
+	display: none;
+}
+
+#footer {
+	display: none;
+}

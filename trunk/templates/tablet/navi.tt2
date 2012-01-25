@@ -1,0 +1,54 @@
+<div id="menubtn"><h2><a href="#" class="show_hide">#</a></h2></div>
+<!-- Navigation DIV starts -->
+<div id="navi">
+<h2>[% gettext("Modules") %]</h2>
+<ul>
+[% IF navi == 0 %]
+	<p class="warn">[% gettext("No modules") %]!</p>
+[% ELSE %]
+[% FOREACH key IN navi.modules.keys.sort %]
+[% mainitem = navi.modules.$key %]
+[% IF module == mainitem.module %]
+	<li class="active"><a href="?module=[% mainitem.module %]">[% mainitem.name %]</a></li>
+[% ELSE %]
+	<li><a href="?module=[% mainitem.module %]">[% mainitem.name %]</a></li>
+[% END %]
+
+[% IF submenu == 0 %]
+	<li>[% gettext("No submenu") %]!</li>
+[% ELSE %]
+[% FOREACH subkey IN submenu.keys.sort %]
+[% item = submenu.$subkey %]
+[% IF mainitem.module == module %]
+	[% "<li><ul class=\"subcat1\">" IF loop.first %]
+[% IF item.action == action || item.action == submenuselect %]
+	<li class="subcat1_active"><a href="?module=[% module %]&amp;action=[% item.action %]">[% gettext(item.title) %]</a></li>
+[% ELSE %]
+	<li><a href="?module=[% module %]&amp;action=[% item.action %]">[% gettext(item.title) %]</a></li>
+[% END %]
+	[% "</ul></li>" IF loop.last %]
+[% END %]
+
+[% END %] [%# Submenu loop end %]
+
+[% END %] [%# If submenu==0 else block %]
+[% END %] [%# Menu foreach loop end %]
+[% END %] [%# If navi==0 block %]
+</ul>
+
+<h2>[% gettext("Settings") %]</h2>
+<ul>
+[% FOREACH key IN navi.settings.keys.sort %]
+[% item = navi.settings.$key %]
+[% IF module == item.module %]
+	<li class='active'><a href="?module=[% item.module %]">[% item.name %]</a></li>
+[% ELSE %]
+	<li><a href="?module=[% item.module %]">[% item.name %]</a></li>
+[% END %]
+[% END %]
+</ul>
+<p class='naviseparator'>&nbsp;</p>
+
+</div>
+<!-- Navigation DIV ends -->
+
