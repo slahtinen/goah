@@ -971,6 +971,13 @@ sub UpdateInvoiceinfo {
 		}
 		$invoice->referencenumber($refnro);
 
+		goah::Modules->AddMessage('debug',"Payment condition: ".$q->param('payment_condition'));
+		unless($q->param('payment_condition') >= 0) {
+			goah::Modules->AddMessage('error',__("Payment condition isn't selected! Can't update invoice!"),__FILE__,__LINE__);
+			return 0;
+		}
+                $invoice->payment_condition($q->param('payment_condition'));
+
                 # Change billing date as well for today, unless user has 
                 # changed the date
                 if( !($q->param('created'))) {
@@ -987,7 +994,6 @@ sub UpdateInvoiceinfo {
                         goah::Modules->AddMessage('debug','Changed billing date to user setting',__FILE__,__LINE__);
                 }
 
-                $invoice->payment_condition($q->param('payment_condition'));
                 my @created = split("-",$invoice->created);
                 my ($dyear,$dmon,$dmday) = Add_Delta_Days($created[0],$created[1],$created[2],$invoice->payment_condition);
                 my $due = sprintf("%04d-%02d-%02d",$dyear,$dmon,$dmday);
@@ -997,6 +1003,11 @@ sub UpdateInvoiceinfo {
 	$invoice->state($state);
 	if($invoice->state==0 && $state == 0) {
 		$invoice->created(goah::GoaH->FormatDate($q->param('created')));
+
+		unless($q->param('payment_condition') >= 0) {
+			goah::Modules->AddMessage('error',__("Payment condition isn't selected! Can't update invoice!"),__FILE__,__LINE__);
+			return 0;
+		}
 		$invoice->payment_condition($q->param('payment_condition'));
 	
 		use Date::Calc qw(Add_Delta_Days);
