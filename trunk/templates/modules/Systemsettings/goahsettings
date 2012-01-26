@@ -1,8 +1,8 @@
-<h3>[% gettext("Default language") %]</h3>
+<h2>[% gettext("GoaH settings") %]</h2>
 <table>
 <thead>
 <tr>
-  <th>[% gettext("Language") %]</th>
+  <th>[% gettext("Default language") %]</th>
   <th class="icon">[% gettext("Save") %]</th>
 </tr>
 </thead>

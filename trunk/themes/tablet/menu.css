@@ -1,5 +1,5 @@
 #navi {
-    	width: 163px;
+    	width: 173px;
 		position: absolute;
     	top: 38px;
     	left: -7px;
@@ -25,7 +25,7 @@
 #menubtn a {
 		display: block;
 		width: 40px;
-		height: 30px;
+		height: 38px;
     	color: #FFF;
    	font-weight: normal;
 		text-decoration: none;
@@ -45,7 +45,7 @@
 		text-indent: 12px;
     	font-size: small;
     	line-height: 37px;
-    	width: 163px;
+    	width: 173px;
     	border-left: 2px solid #dae8f1;
     	border-right: 2px solid #dae8f1;
 }
@@ -62,7 +62,7 @@
     	background-color: #fff;
     	color: #6aa4c6;
 		list-style: none;
-		width: 163px; /* CSS2-standardin mukaan pakko olla */
+		width: 173px; /* CSS2-standardin mukaan pakko olla */
 }
 
 #navi li.active > a {
@@ -80,8 +80,8 @@
 
 #navi a {
 		display: block;
-		width: 163px;
-		height: 32px;
+		width: 173px;
+		height: 35px;
     	color: #6aa4c6;
    	font-weight: normal;
 		text-decoration: none;

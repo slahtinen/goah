@@ -1,39 +1,74 @@
+[% # Almost static menu for tablet template %]
+[% # This needs to be fixed when we have some way to loop all submenu items. Right now its only possible for active module %]
+
 <div id="menubtn"><h2><a href="#" class="show_hide">#</a></h2></div>
+
 <!-- Navigation DIV starts -->
 <div id="navi">
 <h2>[% gettext("Modules") %]</h2>
 <ul>
-[% IF navi == 0 %]
-	<p class="warn">[% gettext("No modules") %]!</p>
-[% ELSE %]
-[% FOREACH key IN navi.modules.keys.sort %]
+
+[% FOREACH key IN navi.modules.keys.sort %]	
 [% mainitem = navi.modules.$key %]
-[% IF module == mainitem.module %]
-	<li class="active"><a href="?module=[% mainitem.module %]">[% mainitem.name %]</a></li>
-[% ELSE %]
-	<li><a href="?module=[% mainitem.module %]">[% mainitem.name %]</a></li>
+	[% IF module == mainitem.module %]
+		[% class = 'class="active"' %]
+	[% ELSE %]
+		[% class = '' %]
+	[% END %]
+	
+	[% IF mainitem.module == 'Basket' %]
+		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="basket_sub">
+		<li><a href="?module=Basket&amp;action=recurring">[% gettext("Recurring baskets") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Invoice' %]
+		<li [% class %]><a href="?module=Invoice">[% mainitem.name %]</a></li>
+		
+	[% ELSIF mainitem.module == 'Customermanagement' %]
+		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="customermanagement_sub">
+		<li><a href="?module=Customermanagement">[% gettext("Customers") %]</a></li>
+		<li><a href="?module=Customermanagement&amp;action=addnewcompany">[% gettext("Add new customer") %]</a></li>
+		<li><a href="?module=Customermanagement&amp;action=customertypes">[% gettext("Customer types") %]</a></li>
+		<li><a href="?module=Customermanagement&amp;action=customergroups">[% gettext("Customer groups") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Productmanagement' %]
+		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="productmanagement_sub">
+		<li><a href="?module=Productmanagement">[% gettext("Products") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=manufacturers">[% gettext("Manufacturers") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=productgroups">[% gettext("Groups") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=addnew&amp;type=products">[% gettext("Add new product") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=addnew&amp;type=manuf">[% gettext("Add new manufacturer") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=addnew&amp;type=productgroups">[% gettext("Add new group") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Systemsettings' %]
+		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="systemsettings_sub">
+		<li><a href="?module=Systemsettings&amp;action=companyinfo">[% gettext("Company info & users") %]</a></li>
+		<li><a href="?module=Systemsettings&amp;action=goahsettings">[% gettext("GoaH settings") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Storagemanagement' %]
+		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="storagemanagement_sub">
+		<li><a href="?module=Storagemanagement&amp;action=storages">[% gettext("Storages") %]</a></li>
+		<li><a href="?module=Storagemanagement&amp;action=suppliers">[% gettext("Suppliers") %]</a></li>
+		<li><a href="?module=Storagemanagement&amp;action=shipments">[% gettext("Incoming orders") %]</a></li>
+		<li><a href="?module=Storagemanagement&amp;action=inventory">[% gettext("Inventory") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Personalsettings' %]
+		<li [% class %]><a href="?module=personalsettings" class="[% mainitem.module %]">[% mainitem.name %]</a></li>
+		
+	[% ELSIF mainitem.module == 'Logout' %]
+		<li [% class %]><a href="?module=logout" class="[% mainitem.module %]">[% mainitem.name %]</a></li>
+		
 [% END %]
-
-[% IF submenu == 0 %]
-	<li>[% gettext("No submenu") %]!</li>
-[% ELSE %]
-[% FOREACH subkey IN submenu.keys.sort %]
-[% item = submenu.$subkey %]
-[% IF mainitem.module == module %]
-	[% "<li><ul class=\"subcat1\">" IF loop.first %]
-[% IF item.action == action || item.action == submenuselect %]
-	<li class="subcat1_active"><a href="?module=[% module %]&amp;action=[% item.action %]">[% gettext(item.title) %]</a></li>
-[% ELSE %]
-	<li><a href="?module=[% module %]&amp;action=[% item.action %]">[% gettext(item.title) %]</a></li>
 [% END %]
-	[% "</ul></li>" IF loop.last %]
-[% END %]
-
-[% END %] [%# Submenu loop end %]
-
-[% END %] [%# If submenu==0 else block %]
-[% END %] [%# Menu foreach loop end %]
-[% END %] [%# If navi==0 block %]
 </ul>
 
 <h2>[% gettext("Settings") %]</h2>
