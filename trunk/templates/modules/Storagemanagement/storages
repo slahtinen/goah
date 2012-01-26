@@ -53,7 +53,7 @@
 	</tr>
 [% END %]
 <tr>
-<td><a href="?module=[% module %]&amp;action=addnew&amp;type=storages">[% gettext("Add new storage") %]</a></td>
+<td colspan='5'><a href="?module=[% module %]&amp;action=addnew&amp;type=storages">[% gettext("Add new storage") %]</a></td>
 </tr>
 </tbody>
 </table>

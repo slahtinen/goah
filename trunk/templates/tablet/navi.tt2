@@ -19,6 +19,7 @@
 	[% IF mainitem.module == 'Basket' %]
 		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
 		<li><ul class="subcat1" id="basket_sub">
+		<li><a href="?module=Basket">[% gettext("Baskets") %]</a></li>
 		<li><a href="?module=Basket&amp;action=recurring">[% gettext("Recurring baskets") %]</a></li>
 		</ul></li>
 		
