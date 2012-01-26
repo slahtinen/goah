@@ -28,21 +28,21 @@
 		[%# Fix to handle both array and class::dbi results in select box
 		    This should be removed once migration to rose::db is complete %]
 		[% fielddata = field.data %]
-		[% IF fielddata.keys.count == 0 %]
+		[% IF fielddata.keys.join(";") == "" %]
 			[% IF field.field == 'locationid' || field.field == 'billingid' %]
 				[% fielddata = locations(data.companyid) %]
 			[% END %]
-				[% FOREACH item IN fielddata %]
-					[% itemname = item.name %]
-					[% IF field.field == 'locationid' || field.field == 'billingid' %]
-						[% itemname = "$item.addr1 $item.addr2 $item.postalcode $item.postaloffice" %]
-					[% END %]
-					[% IF item.id == data.$fieldname %]
-						<option value="[% item.id %]" selected>[% itemname %]</option>
-					[% ELSE %]
-						<option value="[% item.id %]">[% itemname %]</option> 
-					[% END %]
+			[% FOREACH item IN fielddata %]
+				[% itemname = item.name %]
+				[% IF field.field == 'locationid' || field.field == 'billingid' %]
+					[% itemname = "$item.addr1 $item.addr2 $item.postalcode $item.postaloffice" %]
 				[% END %]
+				[% IF item.id == data.$fieldname %]
+					<option value="[% item.id %]" selected>[% itemname %]</option>
+				[% ELSE %]
+					<option value="[% item.id %]">[% itemname %]</option> 
+				[% END %]
+			[% END %]
 		[% ELSE %]
 			[% FOREACH k IN fielddata.keys.sort %]
 				[% item = fielddata.$k %]
