@@ -4,9 +4,9 @@
 <thead>
 <tr>
 <th>[% gettext("Code") %] / [% gettext("Product") %]</th>
+<th>[% gettext("In stor.") %]</th>
 <th class="center" colspan='2'>[% gettext("IN") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
 <th class="center" colspan='2'>[% gettext("OUT") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
-<th>[% gettext("In stor.") %]</th>
 <th colspan='2'>[% gettext("Amount") %]</th>
 <th>[% gettext("VAT 0%") %]</th>
 <th>[% gettext("Inc. VAT") %]</th>
@@ -38,6 +38,12 @@
 	<input type='hidden' name='productid' value="[% row.productid %]"/>
 	<td>[% prodinfo.code %]<br/>
 	[% prodinfo.name %]</td>
+	<td>
+	[% prodinfo.in_store %]
+	[% IF prodinfo.in_store < row.amount %]
+		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% instorealerttxt %]" title="[% instorealerttxt %]" />
+	[% END %]
+	</td>
 	<td class="right"><input type="hidden" name="purchase_orig" value="[% row.purchase %]"/>
 	    <input class="number" name='purchase' value='[% row.purchase %]'></td>
 	<td><input type="hidden" name="purchase_vat_orig" value='[% row.purchase_vat %]'/>
@@ -54,11 +60,6 @@
 	[% END %]
 	</td>
 	<!--<td>[% prodinfo.vat %]&#37;</td>-->
-	<td>[% prodinfo.in_store %]
-	[% IF prodinfo.in_store < row.amount %]
-		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png" alt="[% instorealerttxt %]" title="[% instorealerttxt %]" />
-	[% END %]
-	</td>
 	<td><input class="number" name='amount' value='[% row.amount %]'></td>
 	<td>[% prodinfo.unit %]</td>
 	<td class="number">[% row.total %]</td>
