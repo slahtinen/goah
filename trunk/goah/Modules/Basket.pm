@@ -599,14 +599,13 @@ sub ReadBaskets {
 				$baskets{$state}{$i}{'rows'}=pop @rows;
 				$baskets{$state}{$i}{'rows'}++;
 			} else {
-				goah::Modules->AddMessage('debug',"normal basket add");
 				$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 				$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
 				$baskets{$i}{'rows'}=pop @rows;
 				$baskets{$i}{'rows'}++;
 
 				if($state eq "2") {
-					my $nexttrigger = goah::GoaH::FormatDate($_->nexttrigger);
+					my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
 					$nexttrigger=~s/^..\.//;
 
 					my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
