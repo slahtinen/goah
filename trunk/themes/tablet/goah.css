@@ -163,25 +163,26 @@ blockquote.helptext {
 
 
 #container {
-	padding-bottom:172px;
+	padding-bottom: 50px;
 }
 
 
 #contents {
     margin:0 0 0 0px;
-    padding: 7px 20px 82px 7px;
+    padding: 7px 20px 2px 7px;
     border-left: 1px solid #dae8f1;
 }
 
 
 #footer {
-	background: transparent url('gfx/bg-bottom.png') repeat-x;
-	height: 172px;
+	background: transparent;
+	height: 72px;
 	position: absolute;
 	bottom: 0;
 	width: 100%;
 }
 
+/*
 #goah-logo {
 	background: transparent url('gfx/goah-logo-mirror.png') no-repeat center bottom;
 	width: 180px;
@@ -189,18 +190,18 @@ blockquote.helptext {
 	height: 172px;
 	float: left;
 }
+*/
 
-/*#goah-logo img {
+*#goah-logo img {
     display: none;
-}*/
+}
 
 #footer-text {
-	padding:141px 20px 0 230px;
+	padding:141px 20px 0 0px;
 	text-align: center;
 }
 
 #footer-text p {
-    	border-top: 2px solid #acb8c0;
     	margin: 0;
 }
 

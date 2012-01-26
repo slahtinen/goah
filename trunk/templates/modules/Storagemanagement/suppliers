@@ -51,7 +51,7 @@
 	</tr>
 [% END %]
 <tr>
-<td><a href="?module=[% module %]&amp;action=addnew&amp;type=suppliers">[% gettext("Add new supplier") %]</a></td>
+<td colspan='5'><a href="?module=[% module %]&amp;action=addnew&amp;type=suppliers">[% gettext("Add new supplier") %]</a></td>
 </tr>
 </tbody>
 </table>

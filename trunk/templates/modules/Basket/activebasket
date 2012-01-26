@@ -86,7 +86,7 @@
 <tr><td>[% gettext("Day of month (1-28)") %]</td><td><input name="dayinmonth" class="small" value="[% data.dayinmonth %]" /></td></tr>
 [% END %]
 <tr>
-<td>
+<td colspan='2'>
 <input type="submit" value="[% gettext("Save") %]" /></td></tr>
 </table>
 
