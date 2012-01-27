@@ -78,7 +78,7 @@ my %submenu = (
 #
 #   Text representations of basket states
 #
-my %basketstates = ( 0 => __("Open"),
+my %basketstates = ( 0 => __("Sell"),
 		     1 => __("Sent/Closed"),
 		     2 => __("Recurring"),
 		     3 => __("Offer") 

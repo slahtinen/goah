@@ -255,6 +255,12 @@ input.number {
 	font-size: 0.9em;
 }
 
+input.number_small {
+	text-align: right;
+	width: 40px;
+	font-size: 0.9em;
+}
+
 input.number_sell {
 	text-align: right;
 	width: 52px;
@@ -352,6 +358,10 @@ input {
 
 input.date {
 	width: 85px;
+}
+
+input.tiny {
+	width: 40px;	
 }
 
 input.small {
