@@ -65,7 +65,7 @@ msgstr "Uuden laskun luominen epäonnistui!"
 msgid "Can't create reference number for the bill! Invoice number is missing!"
 msgstr "Viitenumeron luonti laskuun epäonnistui! Laskunumero puuttuu!"
 
-#: ../goah/Modules/Invoice.pm:1067
+#: ../goah/Modules/Invoice.pm:1078
 msgid "Can't delete invoice! Id is missing!"
 msgstr "Laskua ei voi poistaa! Id on hukassa!"
 
@@ -169,7 +169,7 @@ msgstr "Rivejä ei löytynyt laskulla"
 msgid "Couldn't read customer data from the database. Can't calculate due date."
 msgstr "Asiakastiedon luku tietokannasta epäonnistui. Eräpäivää ei pystytty laskemaan."
 
-#: ../goah/Modules/Invoice.pm:1005
+#: ../goah/Modules/Invoice.pm:1016
 msgid "Couldn't read payment condition! Can't calculate due date."
 msgstr "Maksuehdon luku epäonnistui! Eräpäivää ei pystytty laskemaan."
 
@@ -376,6 +376,10 @@ msgstr "Myynti Alv 0%"
 #: ../templates/modules/Invoice/invoiceinfo:50
 msgid "Payment condition"
 msgstr "Maksuehto"
+
+#: ../goah/Modules/Invoice.pm:1008 ../goah/Modules/Invoice.pm:976
+msgid "Payment condition isn't selected! Can't update invoice!"
+msgstr "Maksuehto ei ole valittuna! Laskua ei voi päivittää!"
 
 #: ../templates/modules/Invoice/invoiceinfo:106 ../templates/modules/Invoice/invoiceinfo:15
 msgid "Payment received"
