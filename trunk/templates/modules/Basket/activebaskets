@@ -2,10 +2,8 @@
 <table id="activebaskets">
 <thead>
 <tr>
-<th>[% gettext("State") %]</th>
-<th>[% gettext("Customer") %]</th>
-<th>[% gettext("Owners") %]</th>
-<th>&nbsp;</th>
+<th colspan='4' class='info'>[% gettext("Search baskets") %]</th>
+<th colspan='3' class='info'>[% gettext("Create new basket") %]</th>
 </tr>
 </thead><tbody>
 <form action="" method=post>
@@ -23,17 +21,17 @@
 		[% END %]
 	[% END %] [%# FOREACH s IN search_states %]
 	[% IF selected == 1 %]
-		<input checked="yes" type="checkbox" name="states" value="[% state.id %]" /> [% state.name %]<br/>
+		<input checked="yes" type="checkbox" name="states" value="[% state.id %]" /> [% gettext(state.name) %]<br/>
 	[% ELSE %]
-		<input type="checkbox" name="states" value="[% state.id %]" /> [% state.name %]<br/>
+		<input type="checkbox" name="states" value="[% state.id %]" /> [% gettext(state.name) %]<br/>
 	[% END %]
 	[% END %] [%# IF state.hidden != 1 %]
 [% END %]
 </td>
-<td>
+<td class="small">
 [% customers = basketdbfields.1.data %]
 <select class="medium" name="customer">
-<option  value="*">-- [% gettext("Select") %] --</option>
+<option  value="*">-- [% gettext("Customer") %] --</option>
 [% FOREACH key IN customers.keys.sort %]
 	[% item = customers.$key %]
 	[% IF item.id == search_customer %]
@@ -48,8 +46,16 @@
 [% END %]
 </select>
 </td>
-<td>
-<select name="owner" size=3 multiple>
+
+<td class="small">
+[% # Use selectbox or dropmenu based on user settings %]
+[% IF usersettings.activebasketselect <= 1 %]
+	<select name="owner">
+	<option value=''>-- [% gettext("Owner") %] --</option>
+[% ELSE %]
+	<select name="owner" size='[% usersettings.activebasketselect %]' multiple >
+[% END %]
+
 [% FOREACH key IN companypersonnel.keys.sort %]
 	[% item = companypersonnel.$key %]
 	[% selected=0 %]
@@ -65,36 +71,34 @@
 	[% END %]
 [% END %]
 </select>
-
-<td><input type="submit" value="[% gettext("Search") %]"/>
-<br/><input type="submit" value="[% gettext("Reset search ") %]" name="submit-reset" />
-</td></tr>
-
+<td><input type="submit" value="[% gettext("Search") %]" /></td>
 </form>
+
+[% INCLUDE modules/Basket/newbasket %]
+</tr>
 </tbody>
 </table>
 
-[% INCLUDE modules/Basket/newbasket %]
-
-<h3>[% gettext("Selected baskets") %]</h3>
-<table>
-<thead>
-<tr>
-	<th>[% gettext("Customer") %]</th>
-	<th>[% gettext("Value VAT0%") %]</th>
-	<th>[% gettext("Value") %]</th>
-	<th>[% gettext("Rows") %]</th>
-	<th>[% gettext("Dates") %]</th>
-	<th class="medium">[% gettext("Description") %]</th>
-	<th class="icon">[% gettext("Open") %]</th>
-</tr>
-</thead>
-<tbody class="rowdata">
 [% rclass = 'even' %]
 [% FOREACH state IN baskets.keys.sort %]
 	[% IF state >= 0 %]
 	[% basketsinstate = baskets.$state %]
-	<tr><td colspan="7" class="heading">[% basketsinstate.name %]</td></tr>
+
+	<h3>[% gettext(basketsinstate.name) %]</h3>
+	<table>
+	<thead>
+	<tr>
+		<th>[% gettext("Customer") %]</th>
+		<th>[% gettext("Value VAT0%") %]</th>
+		<th>[% gettext("Value") %]</th>
+		<th>[% gettext("Rows") %]</th>
+		<th>[% gettext("Dates") %]</th>
+		<th class="medium">[% gettext("Description") %]</th>
+		<th class="icon">[% gettext("Open") %]</th>
+	</tr>
+	</thead>
+	<tbody class="rowdata">	
+	
 	[% FOREACH key IN basketsinstate.keys.sort %]
 	[% IF key > 0 %]
 	[% basket = basketsinstate.$key %]
@@ -142,11 +146,18 @@
 	[% END %]
 	[% END %]
 [% END %]
-[% END %]
-<tr class='[% rclass %]'>
-<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]</td>
-<td>[% baskets.-1.totalvat %]</td>
-<td colspan=2>&nbsp;</td></tr>
-</tbody>
 
-</table>
+[% IF loop.last %]
+	<tr class='[% rclass %]'>
+		<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]</td>
+		<td>[% baskets.-1.totalvat %]</td>
+		<td colspan=2>&nbsp;</td></tr>
+		</tbody>
+		</table>
+[% ELSE %]
+		</tbody>
+		</table>
+[% END %]
+
+[% END %]
+

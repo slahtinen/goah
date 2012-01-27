@@ -113,7 +113,7 @@ msgstr ""
 msgid "Can't write new location data!"
 msgstr "Sijaintitiedon lisääminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Systemsettings.pm:939
+#: ../goah/Modules/Systemsettings.pm:948
 msgid "Can't write new person to database!"
 msgstr "Henkilön lisääminen tietokantaan epäonnistui!"
 
@@ -173,7 +173,7 @@ msgstr "Oletusosoite"
 msgid "Default billing address"
 msgstr "Laskutusosoite (oletus)"
 
-#: ../templates/modules/Systemsettings/goahsettings:1
+#: ../templates/modules/Systemsettings/goahsettings:5
 msgid "Default language"
 msgstr "Oletuskieli"
 
@@ -253,7 +253,7 @@ msgstr "* Pakolliset kentät"
 msgid "First name"
 msgstr "Etunimi"
 
-#: ../goah/Modules/Systemsettings.pm:42
+#: ../goah/Modules/Systemsettings.pm:42 ../templates/modules/Systemsettings/goahsettings:1
 msgid "GoaH settings"
 msgstr "GoaH asetukset"
 
@@ -273,7 +273,7 @@ msgstr "Pankkitilin IBAN puuttuu!"
 msgid "Invalid id for setting update!"
 msgstr "Virheellinen id päivitykselle!"
 
-#: ../templates/modules/Systemsettings/goahsettings:5
+#:
 msgid "Language"
 msgstr "Kieli"
 
@@ -297,11 +297,11 @@ msgstr "Sijaintitieto poistettu!"
 msgid "Location data updated."
 msgstr "Sijaintitieto päivitetty."
 
-#: ../goah/Modules/Systemsettings.pm:967
+#: ../goah/Modules/Systemsettings.pm:976
 msgid "Login information missing. Can't update or create credientials."
 msgstr "Kirjautumistieto puuttuu. Päivitys tai lisäys epäonnistui."
 
-#: ../goah/Modules/Systemsettings.pm:952
+#: ../goah/Modules/Systemsettings.pm:961
 msgid "Login information missing. Newly created person can't log in!"
 msgstr "Kirjautumistieto puuttuu. Uusi käyttäjä ei voi kirjautua järjestelmään!"
 

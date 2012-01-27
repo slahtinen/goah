@@ -25,7 +25,7 @@ msgstr "Aktivoi"
 msgid "Active basket"
 msgstr "Aktiivinen kori"
 
-#: ../templates/modules/Basket/activebasket:108 ../templates/modules/Basket/activebasket:98
+#: ../templates/modules/Basket/activebasket:117 ../templates/modules/Basket/activebasket:127
 msgid "Add"
 msgstr "Lisää"
 
@@ -37,23 +37,23 @@ msgstr "Lisää tuotteita"
 msgid "Add to basket"
 msgstr "Lisää koriin"
 
-#: ../goah/Modules/Basket.pm:56 ../templates/modules/Basket/basketinfo.productlist:10 ../templates/modules/Basket/showgroup:23
+#: ../goah/Modules/Basket.pm:62 ../templates/modules/Basket/basketinfo.productlist:10 ../templates/modules/Basket/showgroup:23
 msgid "Amount"
 msgstr "Määrä"
 
-#: ../goah/Modules/Basket.pm:853 ../goah/Modules/Basket.pm:942
+#: ../goah/Modules/Basket.pm:1029 ../goah/Modules/Basket.pm:940
 msgid "Amount field is not numeric. Setting amount to 0"
 msgstr "Määräkenttä ei ole numeerinen. Asetetaan määrä arvoon 0"
 
-#: ../goah/Modules/Basket.pm:452
+#: ../goah/Modules/Basket.pm:496
 msgid "Automatically created from recurring basket."
 msgstr "Luotu automaattisesti toistuvista koreista."
 
-#: ../goah/Modules/Basket.pm:237
+#: ../goah/Modules/Basket.pm:272
 msgid "Basket converted to invoice"
 msgstr "Kori muutettu laskuksi"
 
-#: ../goah/Modules/Basket.pm:1393
+#: ../goah/Modules/Basket.pm:1480
 msgid "Basket converted to order. Order number "
 msgstr "Kori muutettu laskuksi. Laskun numero "
 
@@ -61,11 +61,11 @@ msgstr "Kori muutettu laskuksi. Laskun numero "
 msgid "Basket created:"
 msgstr "Kori luotu:"
 
-#: ../goah/Modules/Basket.pm:226
+#: ../goah/Modules/Basket.pm:261
 msgid "Basket deleted"
 msgstr "Kori poistettu"
 
-#: ../templates/modules/Basket/activebasket:121 ../templates/modules/Basket/basketinfo:10
+#: ../templates/modules/Basket/activebasket:140 ../templates/modules/Basket/basketinfo:10
 msgid "Basket functions"
 msgstr "Korin toiminnot"
 
@@ -76,6 +76,10 @@ msgstr "Korin tiedot"
 #: ../templates/modules/Basket/activebasket:4
 msgid "Basket state:"
 msgstr "Korin tila:"
+
+#: ../goah/Modules/Basket.pm:44
+msgid "Basket type"
+msgstr "Korin tyyppi"
 
 #: ../templates/modules/Basket/activebaskets:1
 msgid "Baskets"
@@ -90,127 +94,127 @@ msgstr ""
 "Korit sisältävät tuotteita, jotka on kohdistettu yhteen asiakkaaseen. Korien kautta voit kerätä\n"
 "asiakkaalle tuotteet ja tehdä niistä tarjouksen tai tilauksen. Viimeisteltyäsi korin (esim. tehtyäsi tilauksen) kori häviää."
 
-#: ../goah/Modules/Basket.pm:174
+#: ../goah/Modules/Basket.pm:209
 msgid "Baskets customer info updated"
 msgstr "Korin asiakastieto päivitetty"
 
-#: ../goah/Modules/Basket.pm:38
+#: ../goah/Modules/Basket.pm:43
 msgid "Billing address"
 msgstr "Laskutusosoite"
 
-#: ../templates/modules/Basket/activebasket:90
+#: ../templates/modules/Basket/activebasket:109
 msgid "By barcode"
 msgstr "Viivakoodilla"
 
-#: ../templates/modules/Basket/activebasket:106
+#: ../templates/modules/Basket/activebasket:125
 msgid "By code"
 msgstr "Koodilla"
 
-#: ../templates/modules/Basket/activebasket:88
+#: ../templates/modules/Basket/activebasket:107
 msgid "By group"
 msgstr "Ryhmällä"
 
-#: ../goah/Modules/Basket.pm:1033
+#: ../goah/Modules/Basket.pm:1120
 msgid "Can't add individual product to basket. Product ID is missing."
 msgstr "Tuotetta ei voitu lisätä koriin. Tuotteen ID puuttuu."
 
-#: ../goah/Modules/Basket.pm:155
+#: ../goah/Modules/Basket.pm:190
 msgid "Can't add new basket to database"
 msgstr "Uutta koria ei voitu lisätä tietokantaan"
 
-#: ../goah/Modules/Basket.pm:992
+#: ../goah/Modules/Basket.pm:1079
 msgid "Can't add product to basket. Nothing to add!"
 msgstr "Tuotetta ei voitu lisätä koriin, koska ei ole mitään lisättävää!"
 
-#: ../goah/Modules/Basket.pm:200
+#: ../goah/Modules/Basket.pm:235
 msgid "Can't add product(s) to basket"
 msgstr "Tuotteiden lisäys koriin epäonnistui"
 
-#: ../goah/Modules/Basket.pm:921
+#: ../goah/Modules/Basket.pm:1008
 msgid "Can't add product(s) to basket. Basket id is missing."
 msgstr "Tuotteiden lisäys koriin epäonnistui. Korin ID puuttuu."
 
-#: ../goah/Modules/Basket.pm:695
+#: ../goah/Modules/Basket.pm:782
 msgid "Can't change next trigger time to past!"
 msgstr "Seuraavaa käynnistysaikaa ei voi vaihtaa menneeseen!"
 
-#: ../goah/Modules/Basket.pm:1390
+#: ../goah/Modules/Basket.pm:1477
 msgid "Can't convert basket to order!"
 msgstr "Korin muuttaminen laskuksi epäonnistui!"
 
-#: ../goah/Modules/Basket.pm:1271 ../goah/Modules/Basket.pm:1359
+#: ../goah/Modules/Basket.pm:1358 ../goah/Modules/Basket.pm:1446
 msgid "Can't convert basket! Basket id is missing!"
 msgstr "Korin ei voida muuttaa! Korin ID puuttuu!"
 
-#: ../goah/Modules/Basket.pm:1324
+#: ../goah/Modules/Basket.pm:1411
 msgid "Can't convert order back to basket. Couldn't read order info!"
 msgstr ""
 
-#: ../goah/Modules/Basket.pm:1316
+#: ../goah/Modules/Basket.pm:1403
 msgid "Can't convert order back to basket. Order ID is missing!"
 msgstr "Laskua ei voi muuntaa koriksi. Korin ID on hukassa!"
 
-#: ../goah/Modules/Basket.pm:239
+#: ../goah/Modules/Basket.pm:274
 msgid "Can't create invoice"
 msgstr "Laskun luonti epäonnistui!"
 
-#: ../goah/Modules/Basket.pm:1383
+#: ../goah/Modules/Basket.pm:1470
 msgid "Can't create invoice!"
 msgstr "Laskun luonti epäonnistui!"
 
-#: ../goah/Modules/Basket.pm:1369
+#: ../goah/Modules/Basket.pm:1456
 msgid "Can't create referral!"
 msgstr "Lähetteen luonti epäonnistui!"
 
-#: ../goah/Modules/Basket.pm:228
+#: ../goah/Modules/Basket.pm:263
 msgid "Can't delete basket!"
 msgstr "Korin poisto epäonnistui!"
 
-#: ../goah/Modules/Basket.pm:1236
+#: ../goah/Modules/Basket.pm:1323
 msgid "Can't delete basket! Basket id is missing!"
 msgstr "Korin poisto epäonnistui! Korin ID puuttuu!"
 
-#: ../goah/Modules/Basket.pm:817 ../goah/Modules/Basket.pm:836
+#: ../goah/Modules/Basket.pm:904 ../goah/Modules/Basket.pm:923
 msgid "Can't read VAT class for product id "
 msgstr "Tuotteen ALV luokkaa ei voitu lukea, id"
 
-#: ../goah/Modules/Basket.pm:787
+#: ../goah/Modules/Basket.pm:874
 msgid "Can't read row information from database."
 msgstr "Rivitiedon luku tietokannasta epäonnistu."
 
-#: ../goah/Modules/Basket.pm:1088
+#: ../goah/Modules/Basket.pm:1175
 msgid "Can't read rows for basket! Basket id is missing!"
 msgstr "Korin rivien luku epäonnistui! Korin ID puuttuu!"
 
-#: ../goah/Modules/Basket.pm:413
+#: ../goah/Modules/Basket.pm:457
 msgid "Can't run recurring basket! Basket id is missing!"
 msgstr "Toistuvaa koria ei voi ajaa! Korin id on hukassa!"
 
-#: ../goah/Modules/Basket.pm:176
+#: ../goah/Modules/Basket.pm:211
 msgid "Can't update basket information"
 msgstr "Korin tietojen päivitys epäonnistui"
 
-#: ../goah/Modules/Basket.pm:631
+#: ../goah/Modules/Basket.pm:718
 msgid "Can't update information in database!"
 msgstr "Tietojen päivitys tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Basket.pm:1376
+#: ../goah/Modules/Basket.pm:1463
 msgid "Can't update referral amounts to match ordered amount"
 msgstr "Lähetteen määrien päivittäminen vastaamaan tilattua määrää epäonnistui"
 
-#: ../goah/Modules/Basket.pm:779 ../goah/Modules/Basket.pm:787
+#: ../goah/Modules/Basket.pm:866 ../goah/Modules/Basket.pm:874
 msgid "Can't update row information in database!"
 msgstr "Rivin tietojen päivittäminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Basket.pm:212
+#: ../goah/Modules/Basket.pm:247
 msgid "Can't update row."
 msgstr "Rivin päivittäminen epäonnistui."
 
-#: ../templates/modules/Basket/activebasket:62
+#: ../templates/modules/Basket/activebasket:81
 msgid "Change next trigger to"
 msgstr "Vaihda seuraava ajo"
 
-#: ../goah/Modules/Basket.pm:1276
+#: ../goah/Modules/Basket.pm:1363
 msgid "CloseBasket called outside package goah::Modules::Basket!"
 msgstr "CloseBasket kutsuttu paketin goah::Modules::Basket ulkopuolelta!"
 
@@ -218,47 +222,47 @@ msgstr "CloseBasket kutsuttu paketin goah::Modules::Basket ulkopuolelta!"
 msgid "Code"
 msgstr "Koodi"
 
-#: ../goah/Modules/Basket.pm:379
+#: ../goah/Modules/Basket.pm:423
 msgid "Coudln't run recurring basket with id "
 msgstr "Toistuvaa koria ei voitu ajaa id"
 
-#: ../goah/Modules/Basket.pm:256
+#: ../goah/Modules/Basket.pm:291
 msgid "Couldn't create new basket via recurring basket!"
 msgstr "Uutta koria ei voitu luoda toistuvista koreista!"
 
-#: ../goah/Modules/Basket.pm:570
+#: ../goah/Modules/Basket.pm:644
 msgid "Couldn't read basket's rows with basket id "
 msgstr "Korin rivejä ei voitu lukea, korin id "
 
-#: ../goah/Modules/Basket.pm:1177
+#: ../goah/Modules/Basket.pm:1264
 msgid "Couldn't read product data for id"
 msgstr "Tuotetietoja ei voitu lukea id"
 
-#: ../goah/Modules/Basket.pm:1153
+#: ../goah/Modules/Basket.pm:1240
 msgid "Couldn't read product data for id "
 msgstr "Tuotetietoja ei voitu lukea id"
 
-#: ../goah/Modules/Basket.pm:471
+#: ../goah/Modules/Basket.pm:515
 msgid "Couldn't read rows for recurring basket! Can't create basket!"
 msgstr "Toistuvan korin rivejä ei saatu luettua! Koria ei voi luoda!"
 
-#: ../goah/Modules/Basket.pm:1168
+#: ../goah/Modules/Basket.pm:1255
 msgid "Couldn't retrieve basket row from the database!"
 msgstr "Korin rivejä ei saatua haettua tietokannasta!"
 
-#: ../templates/modules/Basket/newbasket:36 ../templates/modules/Basket/recurringbaskets:40
+#: ../templates/modules/Basket/newbasket:31 ../templates/modules/Basket/recurringbaskets:40
 msgid "Create"
 msgstr "Luo"
 
-#: ../templates/modules/Basket/activebasket:130 ../templates/modules/Basket/basketinfo:18
+#: ../templates/modules/Basket/activebasket:149 ../templates/modules/Basket/basketinfo:18
 msgid "Create invoice"
 msgstr "Luo lasku"
 
-#: ../templates/modules/Basket/activebasket:130
+#: ../templates/modules/Basket/activebasket:149
 msgid "Create invoice from basket?"
 msgstr "Luo korista lasku?"
 
-#: ../templates/modules/Basket/newbasket:2
+#: ../templates/modules/Basket/activebaskets:6
 msgid "Create new basket"
 msgstr "Luo uusi kori"
 
@@ -266,19 +270,19 @@ msgstr "Luo uusi kori"
 msgid "Create new recurring basket"
 msgstr "Luo uusi toistuva kori"
 
-#: ../templates/modules/Basket/activebasket:139 ../templates/modules/Basket/basketinfo:26
+#: ../templates/modules/Basket/activebasket:158 ../templates/modules/Basket/basketinfo:26
 msgid "Create shipment"
 msgstr "Luo lähete"
 
-#: ../templates/modules/Basket/activebasket:139
+#: ../templates/modules/Basket/activebasket:158
 msgid "Create shipment from basket?"
 msgstr "Luo korista lähete?"
 
-#: ../templates/modules/Basket/activebaskets:42 ../templates/modules/Basket/recurringbaskets:110
+#: ../templates/modules/Basket/activebaskets:132 ../templates/modules/Basket/recurringbaskets:110
 msgid "Created"
 msgstr "Luotu"
 
-#: ../goah/Modules/Basket.pm:36 ../templates/modules/Basket/activebaskets:5 ../templates/modules/Basket/recurringbaskets:52 ../templates/modules/Basket/recurringbaskets:82
+#: ../goah/Modules/Basket.pm:41 ../templates/modules/Basket/activebaskets:34 ../templates/modules/Basket/activebaskets:91 ../templates/modules/Basket/newbasket:7 ../templates/modules/Basket/recurringbaskets:52 ../templates/modules/Basket/recurringbaskets:82
 msgid "Customer"
 msgstr "Asiakas"
 
@@ -286,11 +290,11 @@ msgstr "Asiakas"
 msgid "Customer information"
 msgstr "Asiakkaan tiedot"
 
-#: ../templates/modules/Basket/activebaskets:9 ../templates/modules/Basket/recurringbaskets:54 ../templates/modules/Basket/recurringbaskets:84
+#: ../templates/modules/Basket/activebaskets:95 ../templates/modules/Basket/recurringbaskets:54 ../templates/modules/Basket/recurringbaskets:84
 msgid "Dates"
 msgstr "Päivämäärä"
 
-#: ../templates/modules/Basket/activebasket:67
+#: ../templates/modules/Basket/activebasket:86
 msgid "Day of month (1-28)"
 msgstr "Päivä (1-28)"
 
@@ -302,23 +306,23 @@ msgstr "P"
 msgid "Delete"
 msgstr "Poista"
 
-#: ../templates/modules/Basket/activebasket:159 ../templates/modules/Basket/basketinfo:34
+#: ../templates/modules/Basket/activebasket:178 ../templates/modules/Basket/basketinfo:34
 msgid "Delete basket"
 msgstr "Poista kori"
 
-#: ../templates/modules/Basket/activebasket:159 ../templates/modules/Basket/basketinfo:34
+#: ../templates/modules/Basket/activebasket:178 ../templates/modules/Basket/basketinfo:34
 msgid "Delete basket from database?"
 msgstr "Poista kori tietokannasta?"
 
 #: ../templates/modules/Basket/basketinfo.productlist:26
 msgid "Delete row from basket"
-msgstr ""
+msgstr "Poista rivi"
 
-#: ../goah/Modules/Basket.pm:1231
+#: ../goah/Modules/Basket.pm:1318
 msgid "DeleteBasket called outside package goah::Modules::Basket!"
 msgstr "DeleteBasket kutsuttu paketin goah::Modules::Basket ulkopuolelta!"
 
-#: ../goah/Modules/Basket.pm:41 ../templates/modules/Basket/activebaskets:10 ../templates/modules/Basket/recurringbaskets:57 ../templates/modules/Basket/recurringbaskets:87
+#: ../goah/Modules/Basket.pm:47 ../templates/modules/Basket/activebaskets:96 ../templates/modules/Basket/recurringbaskets:57 ../templates/modules/Basket/recurringbaskets:87
 msgid "Description"
 msgstr "Kuvaus"
 
@@ -330,23 +334,23 @@ msgstr "Joka"
 msgid "Field marked with * is required"
 msgstr "* Pakolliset rivit"
 
-#: ../goah/Modules/Basket.pm:1374
+#: ../goah/Modules/Basket.pm:1461
 msgid "Filled referral amounts."
 msgstr "Täytetyt lähetteen määrät"
 
-#: ../goah/Modules/Basket.pm:631 ../goah/Modules/Basket.pm:779
+#: ../goah/Modules/Basket.pm:718 ../goah/Modules/Basket.pm:866
 msgid "ID -field missing."
 msgstr "ID-kenttä puuttuu."
 
-#: ../templates/modules/Basket/basketinfo.productlist:7 ../templates/modules/Basket/showgroup:20
+#: ../templates/modules/Basket/basketinfo.productlist:8 ../templates/modules/Basket/showgroup:20
 msgid "IN"
 msgstr "Osto"
 
-#: ../goah/Modules/Basket.pm:1168
+#: ../goah/Modules/Basket.pm:1255
 msgid "Id not found: "
 msgstr "Id:tä ei löydy"
 
-#: ../templates/modules/Basket/basketinfo.productlist:9
+#: ../templates/modules/Basket/basketinfo.productlist:7
 msgid "In stor."
 msgstr "Varasto"
 
@@ -354,7 +358,7 @@ msgstr "Varasto"
 msgid "In storage"
 msgstr "Varasto"
 
-#: ../templates/modules/Basket/basketinfo.productlist:12 ../templates/modules/Basket/basketinfo.productlist:7 ../templates/modules/Basket/basketinfo.productlist:8
+#: ../templates/modules/Basket/basketinfo.productlist:12 ../templates/modules/Basket/basketinfo.productlist:8 ../templates/modules/Basket/basketinfo.productlist:9
 msgid "Inc. VAT"
 msgstr "sis. ALV"
 
@@ -362,15 +366,15 @@ msgstr "sis. ALV"
 msgid "Incl.VAT"
 msgstr "sis. alv"
 
-#: ../goah/Modules/Basket.pm:1040
+#: ../goah/Modules/Basket.pm:1127
 msgid "Invalid product id. Can't add product to basket."
 msgstr "Virheellinen tuote ID. Tuotetta ei voida lisätä koriin."
 
-#: ../goah/Modules/Basket.pm:1381
+#: ../goah/Modules/Basket.pm:1468
 msgid "Invoice created."
 msgstr "Lasku luotu."
 
-#: ../templates/modules/Basket/activebasket:59
+#: ../templates/modules/Basket/activebasket:78
 msgid "Last triggered"
 msgstr "Viimeisin ajo"
 
@@ -378,15 +382,15 @@ msgstr "Viimeisin ajo"
 msgid "Last update:"
 msgstr "Päivitetty viimeksi:"
 
-#: ../goah/Modules/Basket.pm:645
+#: ../goah/Modules/Basket.pm:732
 msgid "Leaving value unaltered."
 msgstr "Arvo jätetään muuttamatta."
 
-#: ../goah/Modules/Basket.pm:263
+#: ../goah/Modules/Basket.pm:298
 msgid "Module doesn't have function "
 msgstr "Modulilla ei ole funktiota"
 
-#: ../templates/modules/Basket/activebasket:64
+#: ../templates/modules/Basket/activebasket:83
 msgid "Month"
 msgstr "Kuukausi"
 
@@ -394,11 +398,11 @@ msgstr "Kuukausi"
 msgid "Name"
 msgstr "Nimi"
 
-#: ../goah/Modules/Basket.pm:153
+#: ../goah/Modules/Basket.pm:188
 msgid "New basket created"
 msgstr "Uusi kori lisätty"
 
-#: ../goah/Modules/Basket.pm:254
+#: ../goah/Modules/Basket.pm:289
 msgid "New basket created via recurring basket"
 msgstr "Uusi kori luotu toistuvista koreista"
 
@@ -406,23 +410,27 @@ msgstr "Uusi kori luotu toistuvista koreista"
 msgid "Next"
 msgstr "Seuraava"
 
-#: ../goah/Modules/Basket.pm:715 ../goah/Modules/Basket.pm:718
+#: ../goah/Modules/Basket.pm:802 ../goah/Modules/Basket.pm:805
 msgid "Next month to trigger isn't valid. Won't change the value."
 msgstr "Seuraava kuukausi ei kelpaa. Arvoa ei muuteta."
 
-#: ../templates/modules/Basket/activebasket:60
+#: ../templates/modules/Basket/activebaskets:136
+msgid "Next run"
+msgstr "seuraava ajo"
+
+#: ../templates/modules/Basket/activebasket:79
 msgid "Next trigger"
 msgstr "Seuraava ajo"
 
-#: ../goah/Modules/Basket.pm:701
+#: ../goah/Modules/Basket.pm:788
 msgid "Next year to trigger isn't valid. Won't change the value."
 msgstr "Seuraava vuosi ei kelpaa. Arvoa ei muuteta."
 
-#: ../templates/modules/Basket/activebasket:79
+#: ../templates/modules/Basket/activebasket:98
 msgid "No active basket. Choose menu option"
 msgstr "Ei aktiivista koria. Tee valinta valikosta"
 
-#: ../goah/Modules/Basket.pm:372
+#: ../goah/Modules/Basket.pm:416
 msgid "No baskets found for cron run."
 msgstr "Ei koreja cron ajo varten."
 
@@ -430,31 +438,43 @@ msgstr "Ei koreja cron ajo varten."
 msgid "Not available!"
 msgstr "Ei saatavilla"
 
-#: ../templates/modules/Basket/activebaskets:30 ../templates/modules/Basket/recurringbaskets:100
+#: ../templates/modules/Basket/activebaskets:120 ../templates/modules/Basket/recurringbaskets:100
 msgid "Not selected!"
 msgstr "Ei valittu!"
 
-#: ../templates/modules/Basket/basketinfo.productlist:8 ../templates/modules/Basket/showgroup:21
+#: ../templates/modules/Basket/basketinfo.productlist:9 ../templates/modules/Basket/showgroup:21
 msgid "OUT"
 msgstr "Myynti"
 
-#: ../goah/Modules/Basket.pm:78
+#: ../goah/Modules/Basket.pm:32 ../goah/Modules/Basket.pm:84
 msgid "Offer"
 msgstr "Tarjous"
 
-#: ../goah/Modules/Basket.pm:75 ../templates/modules/Basket/activebaskets:11 ../templates/modules/Basket/recurringbaskets:58 ../templates/modules/Basket/recurringbaskets:88
+#: ../templates/modules/Basket/activebaskets:97 ../templates/modules/Basket/recurringbaskets:58 ../templates/modules/Basket/recurringbaskets:88
 msgid "Open"
 msgstr "Avaa"
 
-#: ../templates/modules/Basket/activebaskets:46 ../templates/modules/Basket/recurringbaskets:123
+#: ../templates/modules/Basket/activebaskets:54
+msgid "Owner"
+msgstr "Omistaja"
+
+#: ../templates/modules/Basket/activebaskets:141 ../templates/modules/Basket/recurringbaskets:123
 msgid "Owner:"
 msgstr "Omistaja:"
+
+#:
+msgid "Owners"
+msgstr "Omistajat"
 
 #: ../templates/modules/Basket/recurringbaskets:112
 msgid "Previous"
 msgstr "Edellinen"
 
-#: ../goah/Modules/Basket.pm:53 ../templates/modules/Basket/basketinfo.productlist:6
+#: ../templates/modules/Basket/activebaskets:135
+msgid "Previous run"
+msgstr "Edellinen ajo"
+
+#: ../goah/Modules/Basket.pm:59 ../templates/modules/Basket/basketinfo.productlist:6
 msgid "Product"
 msgstr "Tuote"
 
@@ -462,11 +482,11 @@ msgstr "Tuote"
 msgid "Product group"
 msgstr "Tuoteryhmä"
 
-#: ../goah/Modules/Basket.pm:968
+#: ../goah/Modules/Basket.pm:1055
 msgid "Product not found"
 msgstr "Tuotetta ei löydy"
 
-#: ../goah/Modules/Basket.pm:198
+#: ../goah/Modules/Basket.pm:233
 msgid "Product(s) added to basket"
 msgstr "Tuotteet lisätty koriin"
 
@@ -474,7 +494,7 @@ msgstr "Tuotteet lisätty koriin"
 msgid "Products in basket"
 msgstr "Tuotteet korissa"
 
-#: ../goah/Modules/Basket.pm:54
+#: ../goah/Modules/Basket.pm:60
 msgid "Purchase price"
 msgstr "Ostohinta"
 
@@ -482,23 +502,23 @@ msgstr "Ostohinta"
 msgid "Purchase price lower than sell price!"
 msgstr "Ostohinta on alhaisempi kun myyntihinta!"
 
-#: ../goah/Modules/Basket.pm:77
+#: ../goah/Modules/Basket.pm:31 ../goah/Modules/Basket.pm:83
 msgid "Recurring"
 msgstr "Toistuva"
 
-#: ../goah/Modules/Basket.pm:377
+#: ../goah/Modules/Basket.pm:421
 msgid "Recurring basket ran succesfully. Id: "
 msgstr "Toistuva kori ajettu onnistuneesti. Id:"
 
-#: ../goah/Modules/Basket.pm:66 ../templates/modules/Basket/recurringbaskets:1
+#: ../goah/Modules/Basket.pm:72 ../templates/modules/Basket/recurringbaskets:1
 msgid "Recurring baskets"
 msgstr "Toistuvat korit"
 
-#: ../goah/Modules/Basket.pm:1367
+#: ../goah/Modules/Basket.pm:1454
 msgid "Referral created."
 msgstr "Lähete luotu."
 
-#: ../templates/modules/Basket/activebasket:66
+#: ../templates/modules/Basket/activebasket:85
 msgid "Repeat every n month"
 msgstr "Toista joka n kuukausi"
 
@@ -506,15 +526,19 @@ msgstr "Toista joka n kuukausi"
 msgid "Repeats"
 msgstr "Toistot"
 
-#: ../goah/Modules/Basket.pm:314 ../goah/Modules/Basket.pm:644
+#: ../goah/Modules/Basket.pm:358 ../goah/Modules/Basket.pm:731
 msgid "Required field"
 msgstr "Pakollinen kenttä"
 
-#: ../goah/Modules/Basket.pm:1331
+#:
+msgid "Reset search "
+msgstr "Tyhjennä haku "
+
+#: ../goah/Modules/Basket.pm:1418
 msgid "Returned from order"
 msgstr "Palautettu tilauksista"
 
-#: ../goah/Modules/Basket.pm:792
+#: ../goah/Modules/Basket.pm:879
 msgid "Row deleted from basket"
 msgstr "Rivi poistettu korista"
 
@@ -522,47 +546,63 @@ msgstr "Rivi poistettu korista"
 msgid "Row info"
 msgstr "Rivin lisätieto"
 
-#: ../goah/Modules/Basket.pm:57
+#: ../goah/Modules/Basket.pm:63
 msgid "Row information"
 msgstr "Rivitieto"
 
-#: ../goah/Modules/Basket.pm:210
+#: ../goah/Modules/Basket.pm:245
 msgid "Row updated"
 msgstr "Rivi päivitetty"
 
-#: ../templates/modules/Basket/activebaskets:8 ../templates/modules/Basket/recurringbaskets:109
+#: ../templates/modules/Basket/activebaskets:94 ../templates/modules/Basket/recurringbaskets:109
 msgid "Rows"
 msgstr "Rivit"
 
-#: ../templates/modules/Basket/activebasket:150
+#: ../templates/modules/Basket/activebasket:169
 msgid "Run recurring basket now"
 msgstr "Aja toistuva kori"
 
-#: ../templates/modules/Basket/activebasket:150
+#: ../templates/modules/Basket/activebasket:169
 msgid "Run recurring basket now?"
 msgstr "Aja toistuva kori?"
 
-#: ../templates/modules/Basket/activebasket:71 ../templates/modules/Basket/basketinfo.customer:59
+#: ../templates/modules/Basket/activebasket:90 ../templates/modules/Basket/basketinfo.customer:59
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../templates/modules/Basket/activebasket:84
+#: ../templates/modules/Basket/activebaskets:74
+msgid "Search"
+msgstr "Etsi"
+
+#: ../templates/modules/Basket/activebaskets:5
+msgid "Search baskets"
+msgstr "Etsi koreja"
+
+#: ../templates/modules/Basket/activebasket:103
 msgid "Search products"
 msgstr "Etsi tuotteita"
 
-#: ../templates/modules/Basket/activebasket:27 ../templates/modules/Basket/basketinfo.customer:26 ../templates/modules/Basket/newbasket:20 ../templates/modules/Basket/recurringbaskets:24 ../templates/modules/Basket/showgroup:17
+#: ../templates/modules/Basket/activebasket:27 ../templates/modules/Basket/basketinfo.customer:26 ../templates/modules/Basket/recurringbaskets:24 ../templates/modules/Basket/showgroup:17
 msgid "Select"
 msgstr "Valitse"
 
-#: ../goah/Modules/Basket.pm:55
+#:
+msgid "Selected baskets"
+msgstr "Valitut korit"
+
+#: ../goah/Modules/Basket.pm:29 ../goah/Modules/Basket.pm:81
+msgid "Sell"
+msgstr "Myynti"
+
+#: ../goah/Modules/Basket.pm:61
 msgid "Sell price"
 msgstr "Myyntihinta"
 
-#: ../goah/Modules/Basket.pm:76
+#: ../goah/Modules/Basket.pm:82
 msgid "Sent/Closed"
 msgstr "Lähetetty/Suljettu"
 
-#: ../goah/Modules/Basket.pm:37
+#: ../goah/Modules/Basket.pm:42
 msgid "Shipping address"
 msgstr "Lähetysosoite"
 
@@ -570,9 +610,17 @@ msgstr "Lähetysosoite"
 msgid "Show"
 msgstr "Näytä"
 
-#: ../templates/modules/Basket/activebasket:79
+#: ../templates/modules/Basket/activebasket:98
 msgid "Show baskets"
 msgstr "Näytä korit"
+
+#: ../goah/Modules/Basket.pm:30
+msgid "Sold"
+msgstr "Myyty"
+
+#:
+msgid "State"
+msgstr "Tila"
 
 #: ../templates/modules/Basket/basketinfo.productlist:25
 msgid "Storage count not enough!"
@@ -582,11 +630,11 @@ msgstr "Varaston saldo ei riitä!"
 msgid "Stored baskets"
 msgstr "Tallennetut korit"
 
-#: ../templates/modules/Basket/basketinfo.productlist:83 ../templates/modules/Basket/recurringbaskets:109 ../templates/modules/Basket/recurringbaskets:130 ../templates/modules/Basket/recurringbaskets:75
+#: ../templates/modules/Basket/basketinfo.productlist:84 ../templates/modules/Basket/recurringbaskets:109 ../templates/modules/Basket/recurringbaskets:130 ../templates/modules/Basket/recurringbaskets:75
 msgid "Total"
 msgstr "Yhteensä"
 
-#: ../templates/modules/Basket/activebaskets:54 ../templates/modules/Basket/recurringbaskets:134
+#: ../templates/modules/Basket/activebaskets:152 ../templates/modules/Basket/recurringbaskets:134
 msgid "Total from all baskets"
 msgstr "Korien summa"
 
@@ -594,7 +642,7 @@ msgstr "Korien summa"
 msgid "Triggers"
 msgstr "Ajot"
 
-#: ../templates/modules/Basket/activebasket:45 ../templates/modules/Basket/basketinfo.customer:44 ../templates/modules/Basket/newbasket:32 ../templates/modules/Basket/recurringbaskets:36
+#: ../templates/modules/Basket/activebasket:60 ../templates/modules/Basket/basketinfo.customer:44 ../templates/modules/Basket/newbasket:26 ../templates/modules/Basket/recurringbaskets:36
 msgid "Unknown field type"
 msgstr "Tuntematon kenttä"
 
@@ -602,7 +650,7 @@ msgstr "Tuntematon kenttä"
 msgid "Update"
 msgstr "Päivitä"
 
-#: ../templates/modules/Basket/activebaskets:43 ../templates/modules/Basket/recurringbaskets:111
+#: ../templates/modules/Basket/activebaskets:133 ../templates/modules/Basket/recurringbaskets:111
 msgid "Updated"
 msgstr "Päivitetty"
 
@@ -610,35 +658,35 @@ msgstr "Päivitetty"
 msgid "VAT"
 msgstr "ALV"
 
-#: ../templates/modules/Basket/basketinfo.productlist:11 ../templates/modules/Basket/basketinfo.productlist:7 ../templates/modules/Basket/basketinfo.productlist:8 ../templates/modules/Basket/showgroup:11
+#: ../templates/modules/Basket/basketinfo.productlist:11 ../templates/modules/Basket/basketinfo.productlist:8 ../templates/modules/Basket/basketinfo.productlist:9 ../templates/modules/Basket/showgroup:11
 msgid "VAT 0%"
 msgstr "ALV 0%"
 
-#: ../templates/modules/Basket/activebaskets:7
+#: ../templates/modules/Basket/activebaskets:93
 msgid "Value"
 msgstr "Arvo"
 
-#: ../templates/modules/Basket/activebaskets:6 ../templates/modules/Basket/recurringbaskets:53 ../templates/modules/Basket/recurringbaskets:83
+#: ../templates/modules/Basket/activebaskets:92 ../templates/modules/Basket/recurringbaskets:53 ../templates/modules/Basket/recurringbaskets:83
 msgid "Value VAT0%"
 msgstr "Arvo ALV0%"
 
-#: ../goah/Modules/Basket.pm:680
+#: ../goah/Modules/Basket.pm:767
 msgid "Value for day of month isn't in range. Setting value to 1."
 msgstr "Valittu päivä ei ole alueella. Arvoksi asetetaan 1."
 
-#: ../goah/Modules/Basket.pm:684
+#: ../goah/Modules/Basket.pm:771
 msgid "Value for day of month isn't valid. Setting value to 1."
 msgstr "Valittu päivä ei ole oikein. Arvoksi asetetaan 1."
 
-#: ../goah/Modules/Basket.pm:667
+#: ../goah/Modules/Basket.pm:754
 msgid "Value for repeat every n month isn't valid. Setting value to 1."
 msgstr "Arvo joka toistetaan joka n kuukausi ei kelpaa. Arvoksi asetetaan 1."
 
-#: ../templates/modules/Basket/activebasket:63
+#: ../templates/modules/Basket/activebasket:82
 msgid "Year"
 msgstr "Vuosi"
 
-#: ../templates/modules/Basket/activebasket:81
+#: ../templates/modules/Basket/activebasket:100
 msgid "You can't add any products without an active basket "
 msgstr "Tuotteita ei voi lisätä ilman aktiivista koria"
 
@@ -646,7 +694,7 @@ msgstr "Tuotteita ei voi lisätä ilman aktiivista koria"
 msgid "Your baskets"
 msgstr "Omat korit"
 
-#: ../goah/Modules/Basket.pm:314 ../goah/Modules/Basket.pm:644
+#: ../goah/Modules/Basket.pm:358 ../goah/Modules/Basket.pm:731
 msgid "empty!"
 msgstr "tyhjä!"
 
@@ -666,6 +714,6 @@ msgstr "päivä"
 msgid "th day"
 msgstr "päivä"
 
-#: ../templates/modules/Basket/activebasket:80
+#: ../templates/modules/Basket/activebasket:99
 msgid "to select basket."
 msgstr "valitaksesi korin"
