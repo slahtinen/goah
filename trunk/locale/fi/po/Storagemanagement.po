@@ -75,7 +75,7 @@ msgstr "Määrä ennen"
 
 #: ../templates/modules/Storagemanagement/shipments.show:113
 msgid "By barcode"
-msgstr ""
+msgstr "Viivakoodilla"
 
 #: ../templates/modules/Storagemanagement/inventory.show:62
 msgid "By barcode:"
@@ -83,7 +83,7 @@ msgstr "Viivakoodilla"
 
 #: ../templates/modules/Storagemanagement/shipments.show:129
 msgid "By code"
-msgstr ""
+msgstr "Koodilla"
 
 #: ../templates/modules/Storagemanagement/inventory.show:74
 msgid "By code:"
@@ -91,7 +91,7 @@ msgstr "Koodilla:"
 
 #: ../templates/modules/Storagemanagement/shipments.show:89
 msgid "By group"
-msgstr ""
+msgstr "Tuoteryhmällä"
 
 #: ../templates/modules/Storagemanagement/inventory.show:44
 msgid "By group:"

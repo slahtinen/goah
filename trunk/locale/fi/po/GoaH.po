@@ -26,11 +26,11 @@ msgstr "Kori"
 msgid "Customer management"
 msgstr "Asiakashallinta"
 
-#: ../templates/main.tt2:23 ../templates/main.tt2:70 ../templates/main_csv.tt2:14
+#: ../templates/main.tt2:11 ../templates/main.tt2:58 ../templates/main_csv.tt2:14
 msgid "DEMO MODE! Anonymous login prohibited!"
 msgstr ""
 
-#: ../templates/main.tt2:85 ../templates/main_content.tt2:10 ../templates/main_csv.tt2:18
+#: ../templates/main.tt2:73 ../templates/main_content.tt2:10 ../templates/main_csv.tt2:18
 msgid "Error in template file!"
 msgstr "Virhe template-tiedostossa!"
 

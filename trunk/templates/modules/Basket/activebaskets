@@ -21,9 +21,9 @@
 		[% END %]
 	[% END %] [%# FOREACH s IN search_states %]
 	[% IF selected == 1 %]
-		<input checked="yes" type="checkbox" name="states" value="[% state.id %]" /> [% state.name %]<br/>
+		<input checked="yes" type="checkbox" name="states" value="[% state.id %]" /> [% gettext(state.name) %]<br/>
 	[% ELSE %]
-		<input type="checkbox" name="states" value="[% state.id %]" /> [% state.name %]<br/>
+		<input type="checkbox" name="states" value="[% state.id %]" /> [% gettext(state.name) %]<br/>
 	[% END %]
 	[% END %] [%# IF state.hidden != 1 %]
 [% END %]
