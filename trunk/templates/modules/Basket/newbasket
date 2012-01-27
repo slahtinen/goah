@@ -4,7 +4,9 @@
 [% IF data.type != "hidden" && data.field !='locationid' && data.field != 'billingid' %]
 	[% IF data.type == 'selectbox' %]
 		<td><select class="medium" name="[% data.field %]">
-		<option value="-1">-- [% gettext("Customer") %] --</option>
+		[% IF data.field != 'state' %]
+			<option value="-1">-- [% gettext("Customer") %] --</option>
+		[% END %]
 		[% FOREACH key IN data.data.keys.sort %]
 			[% item = data.data.$key %]
 			[% IF item.hidden != 1 %]
