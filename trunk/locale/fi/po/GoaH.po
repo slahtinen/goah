@@ -20,7 +20,7 @@ msgstr ""
 
 #:
 msgid "Basket"
-msgstr "Kori"
+msgstr "Korit"
 
 #:
 msgid "Customer management"
