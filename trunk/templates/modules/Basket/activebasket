@@ -86,7 +86,9 @@
 <tr><td>[% gettext("Day of month (1-28)") %]</td><td><input name="dayinmonth" class="small" value="[% data.dayinmonth %]" /></td></tr>
 [% END %]
 <tr>
-<td colspan='2'>
+<td class="small"><a href="pdf.cgi?type=basket&amp;id=[% data.id %]">
+<img class="link" alt="Download as PDF" title="Download as PDF" src="themes/[% theme %]/icon/32x32/actions/document-print.png" /></a></td>
+<td>
 <input type="submit" value="[% gettext("Save") %]" /></td></tr>
 </table>
 

@@ -589,13 +589,13 @@ sub ReadBaskets {
 	}
 	use goah::Database::Baskets;
 	$db = new goah::Database::Baskets;
+	my %search;
 
 	my @data;
 	if(!($_[0]) || $_[0] eq '') {
 		my $state=0;
 		my @states;
 		my @owners;
-		my %search;
 
 		if($_[2]) {
 			my $tmp=$_[2];
@@ -615,85 +615,100 @@ sub ReadBaskets {
 		if($_[4]=~/^[0-9]+$/) {
 			$search{'companyid'} = $_[4];	
 		}
+	} else {
+		$search{'id'}=$_[0];
+	}
 
-		@data = $db->search_where(\%search, { order_by => $sort });
-		my %baskets;
-		my $i=10000;
-		my $f;
-		my $br;
-		my %basketrows;
-		my @rows;
-		my $total=0;
-		my $totalvat=0;
-		my $groupstates=$_[3];
-		foreach my $b (@data) {
-			foreach my $k (keys(%basketdbfields)) {
-				if($groupstates) {
-					my $state=$b->state;
-					my $statename=$basketstates{$state};
-					$f=$basketdbfields{$k}{'field'};		
-					$baskets{$state}{$i}{$f}=$b->get($f);
-					$baskets{$state}{'name'}=$statename;
-				} else {
-					$f=$basketdbfields{$k}{'field'};		
-					$baskets{$i}{$f}=$b->get($f);
-				}
-			}
-			$br=ReadBasketrows($b->id);
-			unless($br) {
-				goah::Modules->AddMessage('error',__("Couldn't read basket's rows with basket id ").$b->id."!",__FILE__,__LINE__);
-				return 0;
-			}
-			%basketrows=%$br;
-			$total+=$basketrows{-1}{'baskettotal'};
-			$totalvat+=$basketrows{-1}{'baskettotal_vat'};
-			@rows=sort keys(%basketrows);
-			my $state=$b->state;
+
+	@data = $db->search_where(\%search, { order_by => $sort });
+
+	if(scalar(@data)==0) {
+		goah::Modules->AddMessage('warn',__("No baskets found!"));
+		return 0;
+	}
+
+	my %baskets;
+	my $i=10000;
+	my $f; # Field, helper variable
+	my $br; # Basket row, helper variable
+	my %basketrows;
+	my @rows;
+	my $total=0;
+	my $totalvat=0;
+	my $groupstates=$_[3];
+	foreach my $b (@data) {
+
+		foreach my $k (keys(%basketdbfields)) {
 			if($groupstates) {
-				$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
-				$baskets{$state}{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
-				$baskets{$state}{$i}{'rows'}=pop @rows;
-				$baskets{$state}{$i}{'rows'}++;
+				my $state=$b->state;
+				my $statename=$basketstates{$state};
+				$f=$basketdbfields{$k}{'field'};		
+				$baskets{$state}{$i}{$f}=$b->get($f);
+				$baskets{$state}{'name'}=$statename;
+			} else {
+					$f=$basketdbfields{$k}{'field'};		
+					if($_[0] || length($_[0])) {
+						$baskets{$f}=$b->get($f);
+					} else {
+						$baskets{$i}{$f}=$b->get($f);
+					}
+			}
+		}
+		$br=ReadBasketrows($b->id);
+		unless($br) {
+			goah::Modules->AddMessage('error',__("Couldn't read basket's rows with basket id ").$b->id."!",__FILE__,__LINE__);
+			return 0;
+		}
+		%basketrows=%$br;
+		$total+=$basketrows{-1}{'baskettotal'};
+		$totalvat+=$basketrows{-1}{'baskettotal_vat'};
+		@rows=sort keys(%basketrows);
+		my $state=$b->state;
+		if($groupstates) {
+			$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
+			$baskets{$state}{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
+			$baskets{$state}{$i}{'rows'}=pop @rows;
+			$baskets{$state}{$i}{'rows'}++;
 
-				if($state eq "2") {
-					$baskets{$state}{$i}{'lasttrigger'}=$b->lasttrigger;
-					$baskets{$state}{$i}{'nexttrigger'}=$b->nexttrigger;
-				}
+			if($state eq "2") {
+				$baskets{$state}{$i}{'lasttrigger'}=$b->lasttrigger;
+				$baskets{$state}{$i}{'nexttrigger'}=$b->nexttrigger;
+			}
+		} else {
+			if($_[0] || length($_[0])) {
+				$baskets{'total'}=$basketrows{-1}{'baskettotal'};
+				$baskets{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
+				$baskets{'rows'}=pop @rows;
+				$baskets{'rows'}++;
 			} else {
 				$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 				$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
 				$baskets{$i}{'rows'}=pop @rows;
 				$baskets{$i}{'rows'}++;
-
-				if($state eq "2") {
-					my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
-					$nexttrigger=~s/^..\.//;
-
-					my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
-					my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
-					$baskets{$i}{'triggerheading'}=$nexttrigger;
-					$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
-					$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
-					$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
-					$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
-					$baskets{$i}{'repeat'}=$b->repeat;
-					$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
-				}
 			}
 
-			$i++;
-		} 
-		$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
-		$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,1,1,'out',1);
-		return \%baskets;
-	} else {
-		@data = $db->search_where({ id => $_[0] });
-		if(scalar(@data) == 0) {
-			return 0;
+			if($state eq "2") {
+				my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
+				$nexttrigger=~s/^..\.//;
+
+				my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
+				my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
+				$baskets{$i}{'triggerheading'}=$nexttrigger;
+				$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
+				$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
+				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
+				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
+				$baskets{$i}{'repeat'}=$b->repeat;
+				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
+			}
 		}
-		return $data[0];
-	}
-	return 0;
+
+		$i++;
+	} 
+	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
+	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,1,1,'out',1);
+	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
+	return \%baskets;
 }
 
 #
@@ -1211,6 +1226,8 @@ sub ReadBasketrows {
 							} else {
 								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$prod{'vat'},$uid,'out',$settref);
 							}
+							$rowdata{$i}{'vat'} = $prod{'vat'};
+							
 						}
 					} else {
 						$rowdata{$i}{$field}=$row->get($field);
