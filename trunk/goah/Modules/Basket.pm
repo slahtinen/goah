@@ -28,7 +28,7 @@ use goah::Modules::Productmanagement;
 
 my %baskettypes = ( 0 => { id => 0, name => __("Sell"), selected => 1, hidden => 0 },
 		    1 => { id => 1, name => __("Sold"), selected => 0, hidden => 1 },
-		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 1 },
+		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 0 },
 		    3 => { id => 3, name => __("Offer"), selected => 0, hidden => 0 } );
 
 #
@@ -125,6 +125,7 @@ sub Start {
 	$variables{'basketdbfields'} = \%basketdbfields;
 	$variables{'basketrowdbfields'} = \%basketrowdbfields;
 	$variables{'basketstates'} = \%basketstates;
+	$variables{'baskettypes'} = \%baskettypes;
 	$variables{'submenu'} = \%submenu;
 	$variables{'function'} = 'modules/Basket/showbaskets';
 	$variables{'activebasket'} = 0;
@@ -137,8 +138,36 @@ sub Start {
 
 		if($q->param('action') eq 'showbaskets') {
 
-				$variables{'baskets'} = ReadBaskets('',$uid,"0,3",1);
+				use goah::Modules::Systemsettings;
+				my @states;
+				if(length($q->param('states'))) {
+					@states=$q->param('states');
+				} else {
+					goah::Modules->AddMessage('debug',"Didn't get states! ".$q->param('states'));
+					@states=(0,3);
+				}
+				my @owners;
+				if($q->param('owner')) {
+					@owners=$q->param('owner');
+				} 
+
+				my $customer;
+				if(length($q->param('customer'))) {
+					$customer=$q->param('customer');
+				}
+
+				if($q->param('submit-reset')) {
+					@states=(0,3);
+					$customer='';
+					$#owners=-1;
+				}
+
+				$variables{'baskets'} = ReadBaskets('',\@owners,\@states,1,$customer);
+				$variables{'companypersonnel'} = goah::Modules::Systemsettings->ReadOwnerPersonnel();
 				$variables{'function'} = 'modules/Basket/showbaskets';
+				$variables{'search_states'}=\@states;
+				$variables{'search_owners'}=\@owners;
+				$variables{'search_customer'}=$customer;
 
 		} elsif($q->param('action') eq 'selectbasket') {
 
@@ -150,7 +179,7 @@ sub Start {
 		} elsif($q->param('action') eq 'recurring') {
 
 				$variables{'function'} = 'modules/Basket/recurringbaskets';
-				$variables{'baskets'} = ReadBaskets('',$uid,2);
+				$variables{'baskets'} = ReadBaskets('','',[ 2 ]);
 
 		} elsif($q->param('action') eq 'newbasket') {
 
@@ -271,7 +300,12 @@ sub Start {
 		}
 
 	} else {
-		$variables{'baskets'} = ReadBaskets('',$uid,"0,3",1);
+		use goah::Modules::Systemsettings;
+		$variables{'companypersonnel'} = goah::Modules::Systemsettings->ReadOwnerPersonnel();
+
+		my @states=(0,3);
+		$variables{'baskets'} = ReadBaskets('','',\@states,1);
+		$variables{'search_states'}=\@states;
 
 	}
 		
@@ -302,6 +336,10 @@ sub Start {
 #   Success - ID for created basket
 #
 sub WriteNewBasket {
+
+	if($_[0]=~/goah::Modules::Basket/) {
+		return 0;
+	}
 
 	my $q = CGI->new();
 	use goah::Database::Baskets;
@@ -526,9 +564,10 @@ sub WriteRecurringBasket {
 # Parameters:
 #
 #   id - Id to retrieve from database. If omitted every basket is returned
-#   ownerid - UID to search baskets since we show only 'owned' baskets to users (temporarily disabled)
+#   ownerid - UID to search baskets
 #   state - Which basket states to include (open, recurring ...), optionally separated with commas
 #   separate - If set separate basket states into different hashes
+#   customer - Customer id to fetch
 #
 # Returns:
 #
@@ -543,7 +582,7 @@ sub ReadBaskets {
 
 	my $db;
 	my $sort;
-	if($_[2]) {
+	if($_[2] && !length($_[3])) {
 		$sort='nexttrigger';
 	} else {
 		$sort = 'updated';
@@ -553,14 +592,31 @@ sub ReadBaskets {
 
 	my @data;
 	if(!($_[0]) || $_[0] eq '') {
-		# Dummy fix. This will show all baskets to all users.
-		#@data = $db->search_where({ state => '0', ownerid => $_[1] }, { order_by => $sort });
 		my $state=0;
+		my @states;
+		my @owners;
+		my %search;
+
 		if($_[2]) {
-			$state=$_[2];
+			my $tmp=$_[2];
+			@states=@$tmp;
+			goah::Modules->AddMessage('debug',"Searching states ".join(";",@states));
+			$search{'state'} = \@states;
 		}
-		my @states=split(/,/,$state);
-		@data = $db->search_where({ state => [ @states ] }, { order_by => $sort });
+
+		if($_[1]) {
+			my $tmp=$_[1];
+			my @owners=@$tmp;
+			if(scalar(@owners)>=1) {
+				$search{'ownerid'}=\@owners;
+			}
+		}
+
+		if($_[4]=~/^[0-9]+$/) {
+			$search{'companyid'} = $_[4];	
+		}
+
+		@data = $db->search_where(\%search, { order_by => $sort });
 		my %baskets;
 		my $i=10000;
 		my $f;
@@ -592,12 +648,17 @@ sub ReadBaskets {
 			$total+=$basketrows{-1}{'baskettotal'};
 			$totalvat+=$basketrows{-1}{'baskettotal_vat'};
 			@rows=sort keys(%basketrows);
+			my $state=$b->state;
 			if($groupstates) {
-				my $state=$b->state;
 				$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 				$baskets{$state}{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
 				$baskets{$state}{$i}{'rows'}=pop @rows;
 				$baskets{$state}{$i}{'rows'}++;
+
+				if($state eq "2") {
+					$baskets{$state}{$i}{'lasttrigger'}=$b->lasttrigger;
+					$baskets{$state}{$i}{'nexttrigger'}=$b->nexttrigger;
+				}
 			} else {
 				$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 				$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};

@@ -1,4 +1,82 @@
 <h2>[% gettext("Baskets") %]</h2>
+<table id="activebaskets">
+<thead>
+<tr>
+<th>[% gettext("State") %]</th>
+<th>[% gettext("Customer") %]</th>
+<th>[% gettext("Owners") %]</th>
+<th>&nbsp;</th>
+</tr>
+</thead><tbody>
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="subaction" value="search" />
+<input type="hidden" name="action" value="showbaskets" />
+<tr><td>
+[% FOREACH k IN baskettypes.keys.sort %]
+	[% state = baskettypes.$k %]
+	[% IF state.hidden != 1 %]
+	[% selected=0 %]
+	[% FOREACH s IN search_states %]
+		[% IF s == state.id %]
+			[% selected = 1 %]
+		[% END %]
+	[% END %] [%# FOREACH s IN search_states %]
+	[% IF selected == 1 %]
+		<input checked="yes" type="checkbox" name="states" value="[% state.id %]" /> [% state.name %]<br/>
+	[% ELSE %]
+		<input type="checkbox" name="states" value="[% state.id %]" /> [% state.name %]<br/>
+	[% END %]
+	[% END %] [%# IF state.hidden != 1 %]
+[% END %]
+</td>
+<td>
+[% customers = basketdbfields.1.data %]
+<select class="medium" name="customer">
+<option  value="*">-- [% gettext("Select") %] --</option>
+[% FOREACH key IN customers.keys.sort %]
+	[% item = customers.$key %]
+	[% IF item.id == search_customer %]
+		<option value="[% item.id %]" selected />[% item.name %]
+	[% ELSE %]
+		<option value="[% item.id %]" />[% item.name %]
+	[% END %]
+	[%- IF item.vat_id == '00000000' %]
+		, [% item.firstname %]
+	[% END %]
+	</option>
+[% END %]
+</select>
+</td>
+<td>
+<select name="owner" size=3 multiple>
+[% FOREACH key IN companypersonnel.keys.sort %]
+	[% item = companypersonnel.$key %]
+	[% selected=0 %]
+	[% FOREACH s IN search_owners %]
+		[% IF s == item.id %]
+			[% selected = 1 %]
+		[% END %]
+	[% END %]
+	[% IF selected == 1 %]
+		<option selected value="[% item.id %]">[% item.lastname %] [% item.firstname %]</option>
+	[% ELSE %]
+		<option value="[% item.id %]">[% item.lastname %] [% item.firstname %]</option>
+	[% END %]
+[% END %]
+</select>
+
+<td><input type="submit" value="[% gettext("Search") %]"/>
+<br/><input type="submit" value="[% gettext("Reset search ") %]" name="submit-reset" />
+</td></tr>
+
+</form>
+</tbody>
+</table>
+
+[% INCLUDE modules/Basket/newbasket %]
+
+<h3>[% gettext("Selected baskets") %]</h3>
 <table>
 <thead>
 <tr>
@@ -48,7 +126,12 @@
 	<td>[% basket.total_vat %]</td>
 	<td>[% basket.rows %]</td>
 	<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
-	[% gettext("Updated") %]: [% formatdate(basket.updated) %]</td>
+	[% gettext("Updated") %]: [% formatdate(basket.updated) %]
+	[% IF basket.state == 2 %]
+	<br/>[% gettext("Previous run") %]: [% formatdate(basket.lasttrigger) %]<br/>
+	[% gettext("Next run") %]: [% formatdate(basket.nexttrigger) %]
+	[% END %]
+	</td>
 	<td >[% basket.info %]
 	[% uinfo = userinfo(basket.ownerid) %]
 	<br/>[% gettext("Owner:") %] [% uinfo.firstname %] [% uinfo.lastname %]

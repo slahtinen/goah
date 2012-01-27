@@ -852,8 +852,11 @@ sub ReadOwnerPersonnel {
 	my @logindata;
 	my $login;
 	my $i=0;
+	goah::Modules->AddMessage('debug',"Got @persons");
 	foreach my $per (@persons) {
 
+		# Quick and dirty fix for basket search
+		if(scalar(keys(%persondbfieldnames))>0) {
 		foreach my $key (keys %persondbfieldnames) {
 			$field = $persondbfieldnames{$key}{'field'};
 			unless($field eq 'login' || $field eq 'pass') {
@@ -869,7 +872,13 @@ sub ReadOwnerPersonnel {
 			$pdata{$i}{'pass'} = $login->pass;
 
 		}
+		} else {
+			goah::Modules->AddMessage('debug',"Didn't have hash persondbfieldnames!");
+			$pdata{$i}{'firstname'}=$per->firstname;
+			$pdata{$i}{'lastname'}=$per->lastname;
+		}
 		$i++;
+
 	}
 
 	return \%pdata;

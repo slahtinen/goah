@@ -1,3 +1,2 @@
 [% INCLUDE modules/Basket/activebaskets %]
-[% INCLUDE modules/Basket/newbasket %]
 
