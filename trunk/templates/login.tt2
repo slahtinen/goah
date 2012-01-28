@@ -22,9 +22,17 @@
   <td>[% gettext("Password") %]:</td><td><input name="pass" type="password" /></td>
   </tr>
   <tr>
+  <td>[% gettext("Theme") %]:</td>
+  <td>
+  <select name="theme">
+  <option value="default">[% gettext("Desktop") %]</option>
+  <option value="tablet" [% selected %]>[% gettext("Tablet") %]</option>
+  </select>
+  </td>
+  <tr>
   <td>&nbsp;</td><td><input type="submit" value="[% gettext("Login") %]" /></td>
   </tr>
-  <tr><td>Current locale: [% locale %]</td></tr>
+  <!-- <tr><td>Current locale: [% locale %]</td></tr> -->
 
   <!-- Messages about functionality -->
   [% TRY %]

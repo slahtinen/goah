@@ -79,6 +79,12 @@ my $sessid;
 my $auth=0;
 
 #
+# String: theme
+#
+#   Theme
+my $theme;
+
+#
 # String: q
 #
 #    CGI.pm instance
@@ -97,8 +103,10 @@ if($keksi && length($keksi)>1) {
         my @tmp = split(/\./,$keksi);
         $uid = $tmp[0];
         $sessid = $tmp[1];
+        $theme = $tmp[2];
         $auth = goah::Auth->CheckSessionid($uid,$sessid);
 } 
+
 
 if($Config{'goah.demomode'} eq 1) {
 	$auth=1;
@@ -135,8 +143,16 @@ my %templatevars;
 $templatevars{'gettext'} = sub { return __($_[0]); };
 $templatevars{'locale'} = setlocale(LC_ALL);
 $templatevars{'goahversion'} = '2.1.0 beta';
-$templatevars{'theme'} = $Config{'goah.theme'};
 $templatevars{'demomode'} = $Config{'goah.demomode'};
+
+# Read theme from login, or use one from cookie. Get fallback from config.
+if ($q->param('theme')) {
+		$templatevars{'theme'} = $q->param('theme');
+} elsif (length($theme) > 1) {
+		$templatevars{'theme'} = $theme;
+} else {
+		$templatevars{'theme'} = $Config{'goah.theme'};
+}
 
 # We're logged in to system
 if($auth==1) {
@@ -153,11 +169,11 @@ if($auth==1) {
 	$sessid = goah::Auth->CreateSessionid($uid);
 	
 	# Create cookie which has only one value. Value is assembled
-	# by combining userid and session id with a dot.
+	# by combining userid, session id and theme with a dot.
 	$keksi = $q->cookie ( -name => 'goah',
-			  -value => $uid.'.'.$sessid,
+			  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'},
 			  -expires => '+2h');
-
+			  
 	print header( -cookie => $keksi,
 		      -charset => 'UTF-8');
 

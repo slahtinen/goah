@@ -135,6 +135,7 @@
 [% END %]
 
 <div id='contentcgi'>
+
 </div>
 
 [% INCLUDE modules/Basket/basketinfo.productlist %]
