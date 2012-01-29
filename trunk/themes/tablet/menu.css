@@ -65,7 +65,7 @@
 		width: 173px; /* CSS2-standardin mukaan pakko olla */
 }
 
-#navi li.active > a {
+#active > a {
     	background-color: #dae8f1;
    	font-weight: bold;
 }

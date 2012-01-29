@@ -15,35 +15,15 @@ $(document).ready(function(){
     	e.stopPropagation();
 	});
 	
-	/* Menu subnavi actions */
-	$("#basket_sub").hide();
-   $(".Basket").show();
-	$('.Basket').click(function(){
-	$("#basket_sub").slideToggle(100);
-	});
-	
-	$("#customermanagement_sub").hide();
-   $(".Customermanagement").show();
-	$('.Customermanagement').click(function(){
-	$("#customermanagement_sub").slideToggle(100);
-	});
-	
-	$("#productmanagement_sub").hide();
-   $(".Productmanagement").show();
-	$('.Productmanagement').click(function(){
-	$("#productmanagement_sub").slideToggle(100);
-	});	
-
-	$("#systemsettings_sub").hide();
-   $(".Systemsettings").show();
-	$('.Systemsettings').click(function(){
-	$("#systemsettings_sub").slideToggle(100);
-	});
-	
-	$("#storagemanagement_sub").hide();
-   $(".Storagemanagement").show();
-	$('.Storagemanagement').click(function(){
-	$("#storagemanagement_sub").slideToggle(100);
-	});
+	    jQuery( function( $ ) {
+    	$( '.toggle-next + *' ).hide();
+ 		$( '.toggle-next' ).click( function() {
+ 			$( '.toggle-next' ).removeAttr("id","active"); 
+ 			$( '.toggle-next + *' ).hide();
+			$( this ).next().slideToggle( 'fast' ); 
+			$( this ).attr("id","active");
+			return false;
+    } );
+    } );
 
 });

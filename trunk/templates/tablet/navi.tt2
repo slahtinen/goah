@@ -10,24 +10,25 @@
 
 [% FOREACH key IN navi.modules.keys.sort %]	
 [% mainitem = navi.modules.$key %]
-	[% IF module == mainitem.module %]
-		[% class = 'class="active"' %]
-	[% ELSE %]
-		[% class = '' %]
-	[% END %]
+        [% IF module == mainitem.module %]
+                [% id = 'id="active"' %]
+        [% ELSE %]
+                [% id = mainitem.name %]
+        [% END %]
+
 	
 	[% IF mainitem.module == 'Basket' %]
-		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
-		<li><ul class="subcat1" id="basket_sub">
+		<li [% id %] class="toggle-next"><a href="#">+ [% mainitem.name %]</a></li><li>
+		<ul class="subcat1">
 		<li><a href="?module=Basket">[% gettext("Baskets") %]</a></li>
 		<li><a href="?module=Basket&amp;action=recurring">[% gettext("Recurring baskets") %]</a></li>
 		</ul></li>
 		
 	[% ELSIF mainitem.module == 'Invoice' %]
-		<li [% class %]><a href="?module=Invoice">[% mainitem.name %]</a></li>
+		<li [% id %]><a href="?module=Invoice">[% mainitem.name %]</a></li>
 		
 	[% ELSIF mainitem.module == 'Customermanagement' %]
-		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li [% id %] class="toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
 		<li><ul class="subcat1" id="customermanagement_sub">
 		<li><a href="?module=Customermanagement">[% gettext("Customers") %]</a></li>
 		<li><a href="?module=Customermanagement&amp;action=addnewcompany">[% gettext("Add new customer") %]</a></li>
@@ -36,7 +37,7 @@
 		</ul></li>
 		
 	[% ELSIF mainitem.module == 'Productmanagement' %]
-		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li [% id %] class="toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
 		<li><ul class="subcat1" id="productmanagement_sub">
 		<li><a href="?module=Productmanagement">[% gettext("Products") %]</a></li>
 		<li><a href="?module=Productmanagement&amp;action=manufacturers">[% gettext("Manufacturers") %]</a></li>
@@ -47,14 +48,14 @@
 		</ul></li>
 		
 	[% ELSIF mainitem.module == 'Systemsettings' %]
-		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li [% id %] class="toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
 		<li><ul class="subcat1" id="systemsettings_sub">
 		<li><a href="?module=Systemsettings&amp;action=companyinfo">[% gettext("Company info & users") %]</a></li>
 		<li><a href="?module=Systemsettings&amp;action=goahsettings">[% gettext("GoaH settings") %]</a></li>
 		</ul></li>
 		
 	[% ELSIF mainitem.module == 'Storagemanagement' %]
-		<li [% class %]><a href="#" class="[% mainitem.module %]">+ [% mainitem.name %]</a></li>
+		<li [% id %] class="toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
 		<li><ul class="subcat1" id="storagemanagement_sub">
 		<li><a href="?module=Storagemanagement&amp;action=storages">[% gettext("Storages") %]</a></li>
 		<li><a href="?module=Storagemanagement&amp;action=suppliers">[% gettext("Suppliers") %]</a></li>
@@ -63,10 +64,10 @@
 		</ul></li>
 		
 	[% ELSIF mainitem.module == 'Personalsettings' %]
-		<li [% class %]><a href="?module=personalsettings" class="[% mainitem.module %]">[% mainitem.name %]</a></li>
+		<li [% id %]><a href="?module=personalsettings">[% mainitem.name %]</a></li>
 		
 	[% ELSIF mainitem.module == 'Logout' %]
-		<li [% class %]><a href="?module=logout" class="[% mainitem.module %]">[% mainitem.name %]</a></li>
+		<li [% id %]><a href="?module=logout">[% mainitem.name %]</a></li>
 		
 [% END %]
 [% END %]
