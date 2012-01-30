@@ -44,6 +44,7 @@ $(document).ready(function() {
   <select name="theme" id="theme">
   <option value="default" class="default" selected >[% gettext("Desktop") %]</option>
   <option value="tablet" class="tablet" >[% gettext("Tablet") %]</option>
+  <option value="GongoUI" class="tablet" >[% gettext("GongoUI (devel)") %]</option>
   </select>
   </td>
   <tr>
