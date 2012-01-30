@@ -263,8 +263,10 @@ sub Start {
 					goah::Modules->AddMessage('error',__("Can't delete basket!"));
 				}
 
-				$variables{'baskets'} = ReadBaskets('',$uid);
+				my @states=(0,3);
+				$variables{'baskets'} = ReadBaskets('','',\@states,1);
 				$variables{'function'} = 'modules/Basket/showbaskets';
+				$variables{'search_states'}=\@states;
 
 		} elsif($q->param('action') eq 'basket2invoice') {
 
@@ -273,7 +275,9 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't create invoice"));
 				}
-				$variables{'baskets'} = ReadBaskets('',$uid);
+				my @states=(0,3);
+				$variables{'baskets'} = ReadBaskets('','',\@states,1);
+				$variables{'search_states'}=\@states;
 
 		} elsif($q->param('action') eq 'showgroup') {
 
@@ -291,8 +295,10 @@ sub Start {
 					goah::Modules->AddMessage('error',__("Couldn't create new basket via recurring basket!"),__FILE__,__LINE__);
 				}
 
-				$variables{'baskets'} = ReadBaskets('',$uid);
+				my @states=(0,3);
+				$variables{'baskets'} = ReadBaskets('','',\@states,1);
 				$variables{'function'} = 'modules/Basket/showbaskets';
+				$variables{'search_states'}=\@states;
 
 		} else {
 				goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
