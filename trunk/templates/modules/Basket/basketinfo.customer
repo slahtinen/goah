@@ -34,9 +34,9 @@
 				[% itemname = "$item.addr1 $item.addr2 $item.postalcode $item.postaloffice" %]
 			[% END %]
 			[% IF item.id == data.$fieldname %]
-				<option value="[% item.id %]" selected>[% itemname %]</option>
+				<option value="[% item.id %]" selected>[% item.name %]</option>
 			[% ELSE %]
-				<option value="[% item.id %]">[% itemname %]</option> 
+				<option value="[% item.id %]">[% item.name %]</option> 
 			[% END %]
 		[% END %]
 		</select></td>

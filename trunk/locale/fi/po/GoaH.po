@@ -28,7 +28,11 @@ msgstr "Asiakashallinta"
 
 #: ../templates/main.tt2:11 ../templates/main.tt2:58 ../templates/main_csv.tt2:14
 msgid "DEMO MODE! Anonymous login prohibited!"
-msgstr ""
+msgstr "Demo Moodi! Anonyymi kirjautumienn kielletty!"
+
+#: ../templates/login.tt2:45
+msgid "Desktop"
+msgstr "Työpöytä"
 
 #: ../templates/main.tt2:73 ../templates/main_content.tt2:10 ../templates/main_csv.tt2:18
 msgid "Error in template file!"
@@ -46,7 +50,7 @@ msgstr "Virheellinen käyttäjänimi tai salasana!"
 msgid "Invoices"
 msgstr "Laskut"
 
-#: ../templates/login.tt2:15 ../templates/login.tt2:25
+#: ../templates/login.tt2:32 ../templates/login.tt2:50
 msgid "Login"
 msgstr "Kirjaudu"
 
@@ -70,7 +74,7 @@ msgstr "Ei alanavigointia"
 msgid "Old browser"
 msgstr "Vanha selain"
 
-#: ../templates/login.tt2:22
+#: ../templates/login.tt2:39
 msgid "Password"
 msgstr "Salasana"
 
@@ -94,7 +98,15 @@ msgstr "Varastonhallinta"
 msgid "System settings"
 msgstr "Järjestelmän asetukset"
 
-#: ../templates/login.tt2:19
+#: ../templates/login.tt2:46
+msgid "Tablet"
+msgstr "Tabletti"
+
+#: ../templates/login.tt2:42
+msgid "Theme"
+msgstr "Teema"
+
+#: ../templates/login.tt2:36
 msgid "Username"
 msgstr "Käyttäjänimi"
 
