@@ -24,7 +24,7 @@
 \pagestyle{fancy}
 
 \lhead{\includegraphics{[% logo %]}}
-\rhead{\makebox[6.5cm][l]{\textbf{KÄTEISKUITTI: [% invoicedata.invoicenumber %]}} sivu \thepage\ / \pageref{LastPage}} 
+\rhead{\makebox[6.5cm][l]{\textbf{KÄTEISKUITTI: [% data.invoicenumber %]}} sivu \thepage\ / \pageref{LastPage}} 
 
 \renewcommand{\footrulewidth}{0.5pt}
 
@@ -56,7 +56,7 @@
 
 \hspace{-0.5cm}
 \begin{tabular}{p{3cm} p{6cm} p{3cm} p{4cm}}
-\textbf{Maksupvm} & [% formatdate(invoicedata.received) %] & \textbf{Viitteenne} & [% escape(invoicedata.customerreference) %] \\
+\textbf{Maksupvm} & [% formatdate(data.received) %] & \textbf{Viitteenne} & [% escape(data.customerreference) %] \\
 \textbf{Maksutapa} & [% paymentoption %] & \\
 \end{tabular}
 
@@ -66,8 +66,8 @@
 \rowcolors{0}{white}{tableShade}
 \footnotesize \begin{tabular*}{18cm}{p{2cm}p{7cm}rrrrr}
 \rowcolor[rgb]{0.8,0.8,0.8} \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
-[% FOREACH key IN invoicerows.keys.sort %]
-[% row = invoicerows.$key %]
+[% FOREACH key IN rows.keys.sort %]
+[% row = rows.$key %]
 [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
 [% IF row.info != '' %]
 \multicolumn{7}{p{7cm}}{Lisätied: [% escape(row.info) %]} \\
