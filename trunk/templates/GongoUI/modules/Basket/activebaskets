@@ -156,7 +156,7 @@
 
 [% IF loop.last %]
 	<tr class='[% rclass %]'>
-		<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]</td>
+		<td colspan='2'>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]</td>
 		<td>[% baskets.-1.totalvat %]</td>
 		<td colspan=2>&nbsp;</td></tr>
 		</tbody>
