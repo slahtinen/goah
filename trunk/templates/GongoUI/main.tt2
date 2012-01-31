@@ -1,0 +1,87 @@
+[% INCLUDE header.tt2 %]
+
+[%# An ugly fix for inventory autofocus. This needs to be fixed soon. %]
+[% IF (module == 'Storagemanagement' && function == 'modules/Storagemanagement/inventory.show') || (module == 'Productmanagement') || (module == 'Basket' && function == 'modules/Basket/activebasket') %]
+	<body onLoad="document.barcodeform.barcode.focus();">
+[% ELSE %]
+	<body>
+[% END %]
+	<div id="wrap">
+	[% IF demomode == 1 %]
+		<p style="color: red; font-size: 15pt; font-weight: bold; text-align: center;">
+		[% gettext("DEMO MODE! Anonymous login prohibited!") %]
+		</p>
+	[% END %]
+	
+<div id='container'>
+
+<!-- Navigation divs -->
+[% # Select navigation divs between desktop and tablet navigation %]
+[% IF viewport == desktop %]
+	<div id="navi">
+[% ELSE %]
+	<div id="menubtn"><h2><a href="#" class="toggle-navi">#</a></h2></div>
+	<div id="navi-tablet">
+[% END %]
+
+[% TRY %]
+	[% INCLUDE navi.tt2 %]
+[% CATCH %]
+	[% PROCESS templateerror %]
+[% END %]
+
+<!-- Main content -->
+<div id="contents">
+
+<!-- Messages from different functions -->
+[% TRY %]
+	[% INCLUDE messages.tt2 %]
+[% CATCH %]
+	[% PROCESS templateerror %]
+[% END %]
+
+[% IF function != '' %]
+	[% TRY %]
+        	[% INCLUDE $function %]
+	[% CATCH %]
+		[% PROCESS templateerror %]
+	[% END %]
+[% ELSE %]
+        <blockquote class="helptext">
+	<p><b>Development version</b><br/>This installation is running development code of the GoaH -project. Some
+	features are still missing, mainly the option to select modules per user basis. Please feel free
+	to participate to project via our <a href="https://sorsavoima.fi/">project management tool</a>.</p>
+	<p>Project management tool requires an account and due to problems with spammers we've restricted the 
+	login to the remine installation. If you wish to have an account, please feel free to contact us via email
+	to address <a href="mailto:helpdesk@tietovirta.fi">helpdesk@tietovirta.fi</a>.</p>
+	</blockquote>
+[% END %]
+
+</div><!-- contents end -->
+
+<br class="clearfix"/>
+</div> <!-- container end -->
+
+	<div id="footer">
+		<div id="goah-logo"></div>
+		[% IF demomode == 1 %]
+			<p style="color: red; font-size: 15pt; font-weight: bold; text-align: center;">
+			[% gettext("DEMO MODE! Anonymous login prohibited!") %]
+			</p>
+		[% END %]
+		<div id="footer-text">
+		<p><small>Powered by <a href="http://www.goah.org" target="_blank">GoaH [% goahversion %]</a>. 
+			Sponsored by <a href="http://www.tietovirta.fi" target="_blank">Tietovirta Oy</a></small></p>
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>
+[% BLOCK templateerror %]
+	<div class="error"><img src="themes/[% theme %]/icon/32x32/status/dialog-error.png" alt="Error" class="msgbox" />
+	<b>[% gettext("Error in template file!") %]</b><br/>
+	Error: [% error %]<br/>
+	</div>
+[% END %]

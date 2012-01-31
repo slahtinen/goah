@@ -1,42 +1,21 @@
+/* Global text-indent for content h2 elements */
+h2 {
+		text-indent: 9px;
+}
+
 #navi {
+		float: left;
     	width: 173px;
-		position: absolute;
-    	top: 38px;
-    	left: -7px;
-		margin: 0px 0 0 10px;
+		margin: 7px 5px 0px 5px;
 }
 
-#menubtn {
-		position: absolute;
-    	top: 0px;
-    	left: 0px;
-}
-
-#menubtn h2 {
-    background: transparent url('../gfx/bg-menu-header.png') repeat-x 0 0;
-    color: #FFF;
-    width: 40px;
-    height: 35px;
-    border: 2px solid #FFF;
-    text-indent: 0px;
-    text-align: center;
-}
-
-#menubtn a {
-		display: block;
-		width: 40px;
-		height: 38px;
-    	color: #FFF;
-   	font-weight: normal;
-		text-decoration: none;
-}
 
 #navi h2 {
-    	/* background: transparent url('gfx/bg-menu-header.png') repeat-x 0 0;
+    	background: transparent url('../gfx/bg-menu-header.png') repeat-x 0 0;
     	color: #FFF;
-    	width: 163px;
-    	text-indent: 12px */
-    	display: none;
+    	width: 176px;
+    	text-indent: 12px;
+    	text-align: left;
 }
 
 #navi ul {

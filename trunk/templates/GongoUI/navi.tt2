@@ -1,10 +1,6 @@
 [% # Almost static menu for tablet template %]
 [% # This needs to be fixed when we have some way to loop all submenu items. Right now its only possible for active module %]
 
-<div id="menubtn"><h2><a href="#" class="toggle-navi">#</a></h2></div>
-
-<!-- Navigation DIV starts -->
-<div id="navi">
 <h2>[% gettext("Modules") %]</h2>
 <ul>
 

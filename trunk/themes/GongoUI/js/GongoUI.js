@@ -2,14 +2,13 @@ $(document).ready(function(){
 	
 // Add datepicker to date inputs. For more information and localizations 
 // visit to http://http://keith-wood.name/datepick.html
-	$('.date').datepick();
+	$('.date').datepick();	
 	
-	
-// Show and hide navigation
+// Show and hide tablet-navigation
 	jQuery( function( $ ) {
-		$('#navi').hide();
+		$('#navi-tablet').hide();
 		$( '.toggle-navi' ).click( function() {
-			$('#navi').slideToggle( 'fast' );
+			$('#navi-tablet').slideToggle( 'fast' );
 			return false;
     	} );
     } );

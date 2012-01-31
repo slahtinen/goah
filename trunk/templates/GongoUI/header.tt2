@@ -1,13 +1,20 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"       "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fi">
 <head>
 <title>GoaH [% goahversion %] - Development</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/GongoUI.css" />
-<link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/menu.css" />
 <link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/print.css" media="print" />
 <link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/jquery.jnotify.css" />
 <link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/jquery.datepick.css" />
+
+[%# Select style between GongoUI and GongoUI-tablet styles %]
+
+[% IF viewport == desktop %]
+	<link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/navi.css" />
+[% ELSE %]
+	<link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/navi-tablet.css" />
+[% END %]
 
 <script type='text/javascript' src='themes/[% theme %]/js/jquery-1.7.1.min.js'></script>
 <script type='text/javascript' src='themes/[% theme %]/js/jquery.datepick.js'></script>
@@ -16,9 +23,5 @@
 <script type='text/javascript' src='themes/[% theme %]/js/GongoUI.js'></script>
 <script type='text/javascript' src='themes/[% theme %]/js/jquery.jnotify.js'></script>
 <script type='text/javascript' src='themes/[% theme %]/js/goah-dyncontent.js'></script>
-
-
-
-
 
 </head>

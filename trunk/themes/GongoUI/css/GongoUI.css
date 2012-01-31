@@ -25,14 +25,16 @@ body {
 }
 
 #container {
+	width: 100%;
 	padding-bottom: 50px;
 }
 
 
 #contents {
-    margin:0 0 0 0px;
-    padding: 7px 5px 2px 7px;
-    border-left: 1px solid #dae8f1;
+	overflow: hidden;
+	margin:0 0 0 0px;
+ 	padding: 7px 5px 2px 7px;
+ 	border-left: 1px solid #dae8f1;
 }
 
 #footer {
@@ -100,7 +102,10 @@ a, :link {
 
 /* ------------------------ TEXT-STYLES --------------------------- */
 
-/* -- Header which is used as first element every page -- */
+/* -- Header which is used as first element every page -- 
+	NOTE: h2 text-indent is specified in navi.css and navi-tablet.css
+	because this needs to be changed between layouts */
+
 h2 {
     	font-size: 1.2em;
 		font-weight: normal;
@@ -110,7 +115,6 @@ h2 {
     	margin: 0px;
     	padding: 0px;
     	line-height: 37px;
-		text-indent: 42px;
 		text-transform: uppercase;
 }
 
