@@ -436,7 +436,7 @@ msgstr "Ei koreja cron ajo varten."
 
 #: ../goah/Modules/Basket.pm:626
 msgid "No baskets found!"
-msgstr ""
+msgstr "Koreja ei löytynyt!"
 
 #:
 msgid "Not available!"
@@ -570,7 +570,7 @@ msgstr "Aja toistuva kori"
 msgid "Run recurring basket now?"
 msgstr "Aja toistuva kori?"
 
-#: ../templates/modules/Basket/activebasket:92 ../templates/modules/Basket/basketinfo.customer:59
+#: ../templates/modules/Basket/activebasket:92 ../templates/modules/Basket/basketinfo.customer:58
 msgid "Save"
 msgstr "Tallenna"
 
@@ -594,7 +594,7 @@ msgstr "Valitse"
 msgid "Selected baskets"
 msgstr "Valitut korit"
 
-#: ../goah/Modules/Basket.pm:29 ../goah/Modules/Basket.pm:81
+#: ../goah/Modules/Basket.pm:29 ../goah/Modules/Basket.pm:81 ../templates/modules/Basket/basketinfo.customer:52
 msgid "Sell"
 msgstr "Myynti"
 

@@ -365,7 +365,7 @@ msgstr "Nimi asiakasryhmälle tai tyypille on tyhjä."
 
 #: ../templates/modules/Customermanagement/newcompany:52 ../templates/modules/Customermanagement/newlocation:1
 msgid "New address for company"
-msgstr "Uusi osoite yritykselle"
+msgstr "Uusi osoite"
 
 #: ../goah/Modules/Customermanagement.pm:233
 msgid "New address stored to database"
