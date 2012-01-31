@@ -10,7 +10,7 @@
 
 [%# Select style between GongoUI and GongoUI-tablet styles %]
 
-[% IF viewport == desktop %]
+[% IF viewport == "desktop" %]
 	<link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/navi.css" />
 [% ELSE %]
 	<link rel="stylesheet" type="text/css" href="themes/[% theme %]/css/navi-tablet.css" />

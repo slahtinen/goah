@@ -119,7 +119,7 @@ if($keksi && length($keksi)>1) {
 #  Viewport cookie from login. This is used to switch GongoUI theme
 #	between desktop/tablet layouts.
 #
-my $viewcookie = $q->cookie('goah');
+my $viewcookie = $q->cookie('viewport');
 if($viewcookie && length($viewcookie)>1) {
         my @vtmp = split(/\./,$viewcookie);
         $viewport = $vtmp[0];

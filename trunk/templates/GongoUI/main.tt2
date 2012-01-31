@@ -14,10 +14,9 @@
 	[% END %]
 	
 <div id='container'>
-
 <!-- Navigation divs -->
 [% # Select navigation divs between desktop and tablet navigation %]
-[% IF viewport == desktop %]
+[% IF viewport == "desktop" %]
 	<div id="navi">
 [% ELSE %]
 	<div id="menubtn"><h2><a href="#" class="toggle-navi">#</a></h2></div>
