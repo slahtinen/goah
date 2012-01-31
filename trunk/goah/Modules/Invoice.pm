@@ -334,12 +334,16 @@ sub NewInvoice {
 	my $refinfo = goah::Database::Referrals->retrieve($_[0]);
 	
 	use goah::Modules::Basket;
-	my $basketinfo = goah::Modules::Basket::ReadBaskets($refinfo->orderid);
+	my @searchbaskets;
+	push(@searchbaskets,$refinfo->orderid);
+	my $basketinforef = goah::Modules::Basket::ReadBaskets(\@searchbaskets);
 
-	unless($basketinfo) {
+	unless($basketinforef) {
 		goah::Modules->AddMessage('error',__("Can't create new invoice!")." ".__("Can't read order contents!"));
 		return 0;
 	}
+
+	my %basketinfo=%$basketinforef;
 
 	# Search for next invoice number first
 	#my @tmp = goah::Database::Invoices->retrieve_all_sorted_by('invoicenumber');
@@ -363,7 +367,7 @@ sub NewInvoice {
 	my $created = sprintf("%04d-%02d-%02d",$year+1900,$mon+1,$mday);
 
 	use Date::Calc qw(Add_Delta_Days);
-	my $customerdata = goah::Modules::Customermanagement->ReadCompanydata($basketinfo->companyid);
+	my $customerdata = goah::Modules::Customermanagement->ReadCompanydata($basketinfo{'companyid'});
 	my $due;
 	if($customerdata == 0) {
 		goah::Modules->AddMessage('error',__("Couldn't read customer data from the database. Can't calculate due date."));
@@ -376,9 +380,9 @@ sub NewInvoice {
 
 	my $invoice = goah::Database::Invoices->insert( { 	invoicenumber => $lastnumber,
 								referralid => $refinfo->id,
-								companyid => $basketinfo->companyid,
-								locationid => $basketinfo->locationid,
-								billingid => $basketinfo->billingid,
+								companyid => $basketinfo{'companyid'},
+								locationid => $basketinfo{'locationid'},
+								billingid => $basketinfo{'billingid'},
 								state => '0',
 								referencenumber => $refnro,
 								created => $created,

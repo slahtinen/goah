@@ -63,12 +63,16 @@ sub NewReferral {
 	use goah::Database::Referrals;
 	
 	use goah::Modules::Basket;
-	my $basketinfo = goah::Modules::Basket::ReadBaskets($_[0]);
+	my @searchbaskets;
+	push(@searchbaskets,$_[0]);
+	my $basketinforef = goah::Modules::Basket::ReadBaskets(\@searchbaskets);
 
-	if($basketinfo==0) {
+	if($basketinforef==0) {
 		goah::Modules->AddMessage('error',__("Can't create new referral!")." ".__("Can't read basket contents!"));
 		return 0;
 	}
+
+	my %basketinfo=%$basketinforef;
 
 	# Search for next referral number first
 	my @tmp = goah::Database::Referrals->retrieve_all_sorted_by('refnum');
@@ -84,7 +88,7 @@ sub NewReferral {
 
 
 	my $referral = goah::Database::Referrals->insert( { 	refnum => ($lastnumber+1),
-								orderid => $basketinfo->id,
+								orderid => $basketinfo{'id'},
 								created => $now });
 
 	# Read rows from basket as well, so they can be written into referral rows

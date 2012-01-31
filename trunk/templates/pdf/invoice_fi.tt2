@@ -24,7 +24,7 @@
 \pagestyle{fancy}
 
 \lhead{\includegraphics{[% logo %]}}
-\rhead{\makebox[6.5cm][l]{\textbf{LASKU: [% invoicedata.invoicenumber %]}} sivu \thepage\ / \pageref{LastPage}} 
+\rhead{\makebox[6.5cm][l]{\textbf{LASKU: [% data.invoicenumber %]}} sivu \thepage\ / \pageref{LastPage}} 
 
 \renewcommand{\footrulewidth}{0.5pt}
 
@@ -62,10 +62,10 @@
 
 \hspace{-0.5cm}
 \begin{tabular}{p{2.3cm} p{6.6cm} p{2.8cm} p{6cm}}
-\textbf{Laskutuspvm} & [% formatdate(invoicedata.created) %] & \textbf{Maksuehto} & [% customerinfo.payment_condition %] pv \\
-\textbf{Eräpäivä} & [% formatdate(invoicedata.due) %] & \textbf{Viivästyskorko} & [% customerinfo.delay_interest %] \% \\
-\textbf{Viitenumero} & [% invoicedata.referencenumber %] & \textbf{Huomautusaika} & [% customerinfo.reclamation_time %] pv \\
-\textbf{Viitteenne} & [% escape(invoicedata.customerreference) %] \\
+\textbf{Laskutuspvm} & [% formatdate(data.created) %] & \textbf{Maksuehto} & [% customerinfo.payment_condition %] pv \\
+\textbf{Eräpäivä} & [% formatdate(data.due) %] & \textbf{Viivästyskorko} & [% customerinfo.delay_interest %] \% \\
+\textbf{Viitenumero} & [% data.referencenumber %] & \textbf{Huomautusaika} & [% customerinfo.reclamation_time %] pv \\
+\textbf{Viitteenne} & [% escape(data.customerreference) %] \\
 \\
 \end{tabular}
 
@@ -81,8 +81,8 @@
 \hspace{-0.5cm}
 \footnotesize \begin{tabular*}{18cm}{p{2cm}p{7cm}rrrrr}
 \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
-[% FOREACH key IN invoicerows.keys.sort %]
-[% row = invoicerows.$key %]
+[% FOREACH key IN rows.keys.sort %]
+[% row = rows.$key %]
 \\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
 [% IF row.rowinfo != '' %]
 \scriptsize Lisätietoja: & \multicolumn{6}{p{7cm}}{\scriptsize [% escape(row.rowinfo) %]} \\

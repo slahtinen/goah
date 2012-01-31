@@ -182,8 +182,6 @@ if($auth==1) {
 
 	}
 
-
-
 	$templatevars{'data'} = $data;
 	$templatevars{'rows'} = $rows;
 	$templatevars{'customerinfo'} = $customerinfo;
