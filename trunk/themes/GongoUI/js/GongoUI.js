@@ -15,16 +15,16 @@ $(document).ready(function(){
 
 // Toggle subnavi. Close previous and add class active to selected menu item.
 	jQuery( function( $ ) {
-		$( '.nav-toggle-next + *' ).hide();
+		$( '.nav-toggle-next:not(#active) + *' ).hide();
 		$( '.nav-toggle-next' ).click( function() {
-			$( '.nav-toggle-next + *' ).hide();
 			$('li').removeAttr("id");
 			$( this ).attr("id","active");
 			$( this ).next().slideToggle( 'fast' );
+			$( '.nav-toggle-next:not(#active) + *' ).hide();			
 			return false;
     	} );
     } );
-
+    
 /* Toggle next tr which is after <tr class="toggle-next-tr">. Default action is set to hide following tr.
 	Action is tied to first cell of class=toggle-next-tr.
 

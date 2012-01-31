@@ -53,7 +53,7 @@ h2 {
 	text-indent: 28px;
 }
 
-#navi li.subcat1_active > a, li.subcat1_active > a:hover {
+#navi a:active {
     	background: transparent url('../gfx/menu-active.png') no-repeat 12px 12px;
 }
 
@@ -67,7 +67,7 @@ h2 {
     	border-bottom: 2px solid #dae8f1;
 }
 
-#navi a:hover, #navi .current a {
+#navi a:active, a:hover, #navi .current a {
     	background-color: #dae8f1;
 }
 
