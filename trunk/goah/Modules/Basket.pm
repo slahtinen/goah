@@ -712,7 +712,7 @@ sub ReadBaskets {
 		$i++;
 	} 
 	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
-	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,1,1,'out',1);
+	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 	return \%baskets;
 }
@@ -1208,16 +1208,20 @@ sub ReadBasketrows {
 		# We don't have id for individual row, read all rows for
 		# the basket
 		my @data = goah::Database::Basketrows->search_where({basketid => $_[0]}, { order_by => 'id' });
-		my $i=-1;
+		my $i=10000;
 		foreach my $row (@data) {
 			
 			$i++;
 			
+			my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref,$_[2]); 
+			unless($prodpoint) {
+				goah::Modules->AddMessage('error',__("Couldn't read product data for id ").$row->get('productid')."!",__FILE__,__LINE__);
+				return 0;
+			}
+			my %prod = %$prodpoint;
 			foreach my $key (keys %basketrowdbfields) {
 				$field = $basketrowdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
-					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref,$_[2]); 
-					my %prod = %$prodpoint;
 					unless($_[2]) {
 						if($_[1]==-1) {
 							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),0,$uid,'in',$settref);
@@ -1254,16 +1258,9 @@ sub ReadBasketrows {
 			}
 			$baskettotal+=($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'});
 			$baskettotal_vat+=($rowdata{$i}{'sell_vat'}*$rowdata{$i}{'amount'});
-			$rowdata{$i}{'code'} = $row->get('code');
-			$rowdata{$i}{'name'} = $row->get('name');
-
-			my $proddata=goah::Database::Products->retrieve($row->get('productid'));
-
-			unless($proddata) {
-				goah::Modules->AddMessage('error',__("Couldn't read product data for id ").$row->get('productid')."!",__FILE__,__LINE__);
-				return 0;
-			}
-			$rowdata{$i}{'in_store'}=$proddata->get('in_store');
+			$rowdata{$i}{'code'} = $prod{'code'};
+			$rowdata{$i}{'name'} = $prod{'name'};
+			$rowdata{$i}{'in_store'}=$prod{'in_store'};
 		}
 		unless($_[2]) {
 			$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrencyNopref($baskettotal,0,'out',0);

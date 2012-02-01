@@ -24,7 +24,11 @@
 \pagestyle{fancy}
 
 \lhead{\includegraphics{[% logo %]}}
+[% IF data.state == "2" %]
 \rhead{\makebox[6.5cm][l]{\textbf{TARJOUS: [% data.id %]}} sivu \thepage\ / \pageref{LastPage}} 
+[% ELSE %]
+\rhead{\makebox[6.5cm][l]{\textbf{KORI: [% data.id %]}} sivu \thepage\ / \pageref{LastPage}} 
+[% END %]
 
 \renewcommand{\footrulewidth}{0.5pt}
 
@@ -64,10 +68,12 @@
 \footnotesize \begin{tabular*}{18cm}{p{2cm}p{7cm}rrrrr}
 \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 [% FOREACH key IN rows.keys.sort %]
+[% IF key > 0 %]
 [% row = rows.$key %]
 \\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sell_vat %] & [% row.total_vat %] \\
 [% IF row.rowinfo != '' %]
 \scriptsize Lisätietoja: & \multicolumn{6}{p{7cm}}{\scriptsize [% escape(row.rowinfo) %]} \\
+[% END %]
 [% END %]
 [% END %]
 \\ \multicolumn{6}{r}{\textbf{Yht. ALV 0\%}} & [% data.-1.total %] \\
