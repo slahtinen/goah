@@ -229,6 +229,7 @@ sub Start {
 			$variables{'function'} = 'modules/Systemsettings/companyinfo';
 			$variables{'locations'} = ReadOwnerLocations();
 			$variables{'companypersonnel'} = ReadOwnerPersonnel();
+			$variables{'bankaccounts'} = ReadBankAccounts();
 
 		} elsif($q->param('action') eq 'writenewperson') {
 
@@ -242,6 +243,7 @@ sub Start {
 			$variables{'function'} = 'modules/Systemsettings/companyinfo';
 			$variables{'locations'} = ReadOwnerLocations();
 			$variables{'companypersonnel'} = ReadOwnerPersonnel();
+			$variables{'bankaccounts'} = ReadBankAccounts();
 		
 		} elsif($q->param('action') eq 'editlocation') {
 
@@ -264,6 +266,7 @@ sub Start {
 			$variables{'function'} = 'modules/Systemsettings/companyinfo';
 			$variables{'locations'} = ReadOwnerLocations();
 			$variables{'companypersonnel'} = ReadOwnerPersonnel();
+			$variables{'bankaccounts'} = ReadBankAccounts();
 
 		} elsif($q->param('action') eq 'writelocationdata') {
 
@@ -286,6 +289,8 @@ sub Start {
 			$variables{'companydata'} = ReadOwnerInfo();
 			$variables{'function'} = 'modules/Systemsettings/companyinfo';
 			$variables{'locations'} = ReadOwnerLocations();
+			$variables{'companypersonnel'} = ReadOwnerPersonnel();
+
 
 		} elsif($q->param('action') eq 'usermanagement') {
 

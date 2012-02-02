@@ -278,6 +278,17 @@ sub Start {
 				$variables{'function'} = 'modules/Customermanagement/companyinfo';
 				goah::Modules->AddMessage('info',__("Information updated"));
 		
+		} elsif($q->param('action') eq 'deleteperson') {
+
+				if(DeletePerson($q->param('target'))) {
+					goah::Modules->AddMessage('info',__("Person removed."));
+				} else {
+					goah::Modules->AddMessage('error',__("Couldn't remove person info from database!"));
+				}
+				$variables{'function'} = 'modules/Customermanagement/companyinfo';
+				$variables{'companydata'} = ReadCompanydata($q->param('companyid'));
+				$variables{'companypersonnel'} = ReadCompanypersonnel($q->param('companyid'));
+
 		} elsif($q->param('action') eq 'customertypes') {
 
 				$variables{'function'} = 'modules/Customermanagement/customertypes';
@@ -1099,6 +1110,44 @@ sub WritePersondata {
 	return 0;
 }
 
+# 
+# Function: DeletePerson
+#  
+#   Function to retrieve and delete person information from the database
+#
+# Parameters:
+#
+#   id - User id from database to remove
+#
+# Returns:
+#
+#   0 - Fail
+#   1 - Success
+#
+sub DeletePerson {
+
+	shift if($_[0]=~/goah::Modules::Customermanagement/);
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("Person ID missing! Can't remove person from database!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	use goah::Database::Persons;
+	my $data = goah::Database::Persons->retrieve($_[0]);
+
+	goah::Modules->AddMessage('debug',"Got id ".$data->id.", retrieved id ".$_[0],__FILE__,__LINE__);
+
+	unless($data->id == $_[0]) {
+		goah::Modules->AddMessage('error',__("Couldn't retrieve user information from the database!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	$data->delete;
+	goah::Database::Persons->commit;
+
+	return 1;
+}
 
 # 
 # Function: ReadCustomerIdentifiers

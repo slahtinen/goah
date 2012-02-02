@@ -55,18 +55,14 @@
 </form>
 </td>
 <td class="center">
-<!-- <form action="" method="post" class="table"> -->
-<p>Incomplete
-<!-- THIS FUNCTION ISN'T CORRECTLY BUILT ON CODE
+<form action="" method="post" class="table"> 
 <input type="hidden" name="module" value="[% module %]">
 <input type="hidden" name="action" value="deletelocation">
 <input type="hidden" name="target" value="[% location.id %]">
 <input type="hidden" name="companyid" value="[% companydata.id %]">
 <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]" 
     onclick="return confirm('[% gettext("Delete company address  from database?") %]')"/>
--->
-</p>
-<!-- </form> -->
+</form> 
 </td>
 </tr>
 [% END %]
