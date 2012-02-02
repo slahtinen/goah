@@ -38,6 +38,41 @@
 		</td>
 	[% END %]
 	</tr>
+
+[% compinfo = companyinfo(invoice.companyid) %]
+<tr>
+	<td>[% gettext("Billing address") %]</td>
+	<td>
+	[% compinfo.name %] [% compinfo.firstname %] <br />
+	[% loc = locationinfo(invoice.billingid) %] 
+	[% loc.addr1 %] 
+	[% IF loc.addr2 %]	
+		<br />[% loc.addr2 %]<br />
+	[% ELSE %],
+	[% END %]
+	[% loc.postalcode %] [% loc.postaloffice %]
+	[% IF loc.country %]
+		<br />[% loc.country %]
+	[% END %]
+	</td>
+	[% loc = locationinfo(invoice.locationid) %]
+<tr>
+	<td>[% gettext("Shipping address") %]</td>
+	<td>
+	[% compinfo.name %] [% compinfo.firstname %]<br />
+	[% loc.addr1 %]
+	[% IF loc.addr2 %]	
+		<br />[% loc.addr2 %]<br />
+	[% ELSE %],
+	[% END %]
+	[% loc.postalcode %] [% loc.postaloffice %] 
+	[% IF loc.country %]	
+		<br />[% loc.country %]
+	[% END %]
+	</td>
+</tr>
+
+
 <tr class="odd">
 	<td class="medium">[% gettext("Created") %] </td>
 	[% IF state == '0' %]
@@ -111,7 +146,6 @@
 </tr>
 </table>
 
-[% INCLUDE modules/Invoice/invoice.customer %]
 [% INCLUDE modules/Invoice/invoice.productlist %]
 [% INCLUDE modules/Invoice/invoice.history %]
 

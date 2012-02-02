@@ -1,0 +1,87 @@
+[% # Almost static menu for tablet template %]
+[% # This needs to be fixed when we have some way to loop all submenu items. Right now its only possible for active module %]
+
+<h2>[% gettext("Modules") %]</h2>
+<ul>
+
+[% FOREACH key IN navi.modules.keys.sort %]	
+[% mainitem = navi.modules.$key %]
+        [% IF module == mainitem.module %]
+                [% id = 'id="active"' %]
+        [% ELSE %]
+                [% id = mainitem.name %]
+        [% END %]
+
+	
+	[% IF mainitem.module == 'Basket' %]
+		<li [% id %] class="nav-toggle-next"><a href="#">+ [% mainitem.name %]</a></li><li>
+		<ul class="subcat1">
+		<li><a href="?module=Basket">[% gettext("Baskets") %]</a></li>
+		<li><a href="?module=Basket&amp;action=recurring">[% gettext("Recurring baskets") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Invoice' %]
+		<li [% id %]><a href="?module=Invoice">[% mainitem.name %]</a></li>
+		
+	[% ELSIF mainitem.module == 'Customermanagement' %]
+		<li [% id %] class="nav-toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="customermanagement_sub">
+		<li><a href="?module=Customermanagement">[% gettext("Customers") %]</a></li>
+		<li><a href="?module=Customermanagement&amp;action=addnewcompany">[% gettext("Add new customer") %]</a></li>
+		<li><a href="?module=Customermanagement&amp;action=customertypes">[% gettext("Customer types") %]</a></li>
+		<li><a href="?module=Customermanagement&amp;action=customergroups">[% gettext("Customer groups") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Productmanagement' %]
+		<li [% id %] class="nav-toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="productmanagement_sub">
+		<li><a href="?module=Productmanagement">[% gettext("Products") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=manufacturers">[% gettext("Manufacturers") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=productgroups">[% gettext("Groups") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=addnew&amp;type=products">[% gettext("Add new product") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=addnew&amp;type=manuf">[% gettext("Add new manufacturer") %]</a></li>
+		<li><a href="?module=Productmanagement&amp;action=addnew&amp;type=productgroups">[% gettext("Add new group") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Systemsettings' %]
+		<li [% id %] class="nav-toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="systemsettings_sub">
+		<li><a href="?module=Systemsettings&amp;action=companyinfo">[% gettext("Company info & users") %]</a></li>
+		<li><a href="?module=Systemsettings&amp;action=goahsettings">[% gettext("GoaH settings") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Storagemanagement' %]
+		<li [% id %] class="nav-toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="storagemanagement_sub">
+		<li><a href="?module=Storagemanagement&amp;action=storages">[% gettext("Storages") %]</a></li>
+		<li><a href="?module=Storagemanagement&amp;action=suppliers">[% gettext("Suppliers") %]</a></li>
+		<li><a href="?module=Storagemanagement&amp;action=shipments">[% gettext("Incoming orders") %]</a></li>
+		<li><a href="?module=Storagemanagement&amp;action=inventory">[% gettext("Inventory") %]</a></li>
+		</ul></li>
+		
+	[% ELSIF mainitem.module == 'Personalsettings' %]
+		<li [% id %]><a href="?module=personalsettings">[% mainitem.name %]</a></li>
+		
+	[% ELSIF mainitem.module == 'Logout' %]
+		<li [% id %]><a href="?module=logout">[% mainitem.name %]</a></li>
+		
+[% END %]
+[% END %]
+</ul>
+
+<h2>[% gettext("Settings") %]</h2>
+<ul>
+[% FOREACH key IN navi.settings.keys.sort %]
+[% item = navi.settings.$key %]
+[% IF module == item.module %]
+	<li class='active'><a href="?module=[% item.module %]">[% item.name %]</a></li>
+[% ELSE %]
+	<li><a href="?module=[% item.module %]">[% item.name %]</a></li>
+[% END %]
+[% END %]
+</ul>
+<p class='naviseparator'>&nbsp;</p>
+
+</div>
+<!-- Navigation DIV ends -->
+

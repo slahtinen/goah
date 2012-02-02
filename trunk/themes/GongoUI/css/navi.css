@@ -1,0 +1,75 @@
+/* Global text-indent for content h2 elements */
+h2 {
+		text-indent: 9px;
+}
+
+#navi {
+		float: left;
+    	width: 173px;
+		margin: 7px 5px 0px 5px;
+}
+
+
+#navi h2 {
+    	background: transparent url('../gfx/bg-menu-header.png') repeat-x 0 0;
+    	color: #FFF;
+    	width: 176px;
+    	text-indent: 12px;
+    	text-align: left;
+}
+
+#navi ul {
+    	margin: 0;
+    	padding: 0;
+		text-indent: 12px;
+    	font-size: small;
+    	line-height: 37px;
+    	width: 173px;
+    	border-left: 2px solid #dae8f1;
+    	border-right: 2px solid #dae8f1;
+}
+
+#navi ul ul {
+		border-bottom: 0px;
+		border-left: 0px;
+}
+
+
+#navi li {
+    	margin: 0;
+    	padding: 0;
+    	background-color: #fff;
+    	color: #6aa4c6;
+		list-style: none;
+		width: 173px; /* CSS2-standardin mukaan pakko olla */
+}
+
+#active > a {
+    	background-color: #dae8f1;
+   	font-weight: bold;
+}
+
+#navi ul.subcat1 {
+	text-indent: 28px;
+}
+
+#navi a:active {
+    	background: transparent url('../gfx/menu-active.png') no-repeat 12px 12px;
+}
+
+#navi a {
+		display: block;
+		width: 173px;
+		height: 35px;
+    	color: #6aa4c6;
+   	font-weight: normal;
+		text-decoration: none;
+    	border-bottom: 2px solid #dae8f1;
+}
+
+#navi a:active, a:hover, #navi .current a {
+    	background-color: #dae8f1;
+}
+
+
+

@@ -1,0 +1,457 @@
+/* ------------------------ GENERAL -------------------------- */
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	background: #fff url('../gfx/bg-vertical-line.png') repeat-y 0% 0%;
+	margin: 0;
+	padding: 0;
+	font-family: "Arial", sans-serif;
+}
+
+#wrap {
+    position: relative;
+    min-height: 100%;
+    background: transparent url('../gfx/bg-top.png') repeat-x;
+
+}
+
+* html #wrap {
+    height: 100%;
+    margin: 0;
+}
+
+#container {
+	width: 100%;
+	padding-bottom: 50px;
+}
+
+
+#contents {
+	overflow: hidden;
+	margin:0 0 0 0px;
+ 	padding: 7px 5px 2px 7px;
+ 	border-left: 1px solid #dae8f1;
+}
+
+#footer {
+	background: transparent;
+	height: 72px;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+#footer-text {
+	padding:141px 20px 0 0px;
+	text-align: center;
+}
+
+#footer-text p {
+    	margin: 0;
+}
+
+p {
+	margin-top: 0;
+}
+
+*#goah-logo img {
+    display: none;
+}
+
+/*
+#goah-logo {
+	background: transparent url('gfx/goah-logo-mirror.png') no-repeat center bottom;
+	width: 180px;
+	border-right: 0px solid #dae8f1;
+	height: 172px;
+	float: left;
+}
+*/
+
+
+/* ------------------------ LINKS ------------------------------- */
+
+a, :link { 
+	text-decoration: none; 
+	font-weight: bold; 
+}
+
+:link {color: #6aa4c6;}
+:visited {color: #6aa4c6;}
+:link:hover, :visited:hover {color: #000; text-decoration: underline;}
+:link:active, :link:active {color: #cdf5ff;}
+
+
+/* ------------------------ CLASSES ------------------------------- */
+
+.number {
+	text-align: right;
+	font-size: 0.9em;
+}
+
+
+.clearfix {
+	clear: both;
+	float: none;
+}
+
+
+/* ------------------------ TEXT-STYLES --------------------------- */
+
+/* -- Header which is used as first element every page -- 
+	NOTE: h2 text-indent is specified in navi.css and navi-tablet.css
+	because this needs to be changed between layouts */
+
+h2 {
+    	font-size: 1.2em;
+		font-weight: normal;
+    	background: transparent url('../gfx/bg-header.png') repeat-x 0 0;
+    	color: #fff;
+    	height: 37px;
+    	margin: 0px;
+    	padding: 0px;
+    	line-height: 37px;
+		text-transform: uppercase;
+}
+
+/* -- Basic header for submodules -- */
+h3 {
+    	font-size: 0.8em;
+		font-weight: bold;
+    	background: transparent url('../gfx/bg-header.png') repeat-x 0 0;
+    	color: #fff;
+    	height: 27px;
+    	margin: 0px;
+		margin-top: 10px;
+    	padding: 0px;
+    	line-height: 27px;
+		text-indent: 12px;
+		text-transform: none;
+}
+
+
+/* ----------------- INPUT, SELECT, TEXTAREA ------------------------ */
+
+/* -- input -- */
+input {
+	padding-right: 3px;
+}
+
+input.date {
+	width: 85px;
+}
+
+input.tiny {
+	width: 40px;	
+}
+
+input.small {
+	width: 65px;
+}
+
+input.medium {
+	width: 120px;
+}
+
+input.large {
+	width: 140px;
+}
+
+input.big {
+	width: 175px;
+}
+
+input.number {
+	text-align: right;
+	width: 52px;
+	font-size: 0.9em;
+}
+
+input.number_small {
+	text-align: right;
+	width: 40px;
+	font-size: 0.9em;
+}
+
+input.number_sell {
+	text-align: right;
+	width: 52px;
+	font-size: 0.9em;
+	background-color: #dae8f1;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 1px solid #707070;
+	-moz-border-radius: 3px;
+}
+
+input.number_buy {
+	text-align: right;
+	width: 52px;
+	font-size: 0.9em;
+	background-color: #dae8f1;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 1px solid #707070;
+	-moz-border-radius: 3px;
+}
+
+input.number_alert {
+	text-align: right;
+	width: 52px;
+	font-size: 0.9em;
+	color: #920000;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border: 2px solid #920000;
+	-moz-border-radius: 3px;
+}
+
+/* -- textarea -- */
+
+textarea.small {
+	width: 100px;
+	height: 50px;
+}
+
+
+textarea.medium {
+	width: 250px;
+	height: 50px;
+}
+
+/* -- select -- */
+
+select.small {
+	width: 75px;
+}
+
+select.medium {
+	width: 150px;
+}
+
+select.big {
+	width: 250px;
+}
+
+
+/* ---------------------------- TABLE ---------------------------------- */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #6d6e71;
+    font-size: small;
+}
+
+table p {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* -- thead -- */
+
+thead th  {
+    background: transparent url('../gfx/bg-table-header.png') repeat-x 0 0;
+    color: #fff;
+    line-height: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0 6px;
+    white-space: nowrap;
+}
+
+thead th.info {
+	background: transparent url('../gfx/bg-table-header-info.png') repeat-x 0 0;
+}
+
+thead th.maxwidth {
+    width: 100%;
+}
+
+th {
+    text-align: left;
+    font-size: 0.9em;
+}
+
+th.icon {
+	width: 30px;
+}
+
+th.medium {
+	width: 230px;
+}
+
+th.right {
+	text-align: right;	
+}
+
+th.center {
+	text-align: center;
+}
+
+/*-- tbody -- */
+
+tbody td.heading {
+    background: transparent url('../gfx/bg-table-header.png') repeat-x 0 0;
+    color: #fff;
+    line-height: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0 6px;
+    white-space: nowrap;
+}
+
+tbody tr {
+   border-bottom: 2px solid #dae8f1;
+}
+
+tbody.rowdata tr:hover{
+   background-color: #f1f5f7;
+}
+
+tbody th{
+   padding: 6px;
+}
+
+tbody td {
+   padding: 6px;
+   border-left: 1px solid #dae8f1;
+}
+
+/* -- tr and td -- */
+
+td.hidden {
+	background: #f7f7f7;
+}
+
+td.empty {
+	background: #f7f7f7;
+	font-style: italic;
+}
+
+td.show-hidden {
+	width: 5px;
+	text-align: center;
+}
+
+td.small {
+	width: 30px;	
+}
+
+td.medium {
+	width: 230px;
+}
+
+td.center {
+	text-align: center;
+}
+
+td.right {
+	text-align: right;
+}
+
+
+
+
+
+/* -------------------------- MESSAGES -------------------------------- */
+
+.msg-info {
+    background: #d8e7f0 url('../icon/16x16/status/dialog-information.png') no-repeat 12px 6px;
+    color: #6d6e71;
+    font-weight: bold;
+    font-size: small;
+    margin: 12px 0;
+    padding: 6px 6px 6px 32px;
+    border-top: 1px solid #dfded2;
+    border-bottom: 1px solid #dfded2;
+}
+
+.msg-error {
+    background: #d8e7f0 url('../icon/16x16/status/dialog-error.png') no-repeat 12px 6px;
+    color: #6d6e71;
+    font-weight: bold;
+    font-size: small;
+    margin: 12px 0;
+    padding: 6px 6px 6px 32px;
+    border-top: 1px solid #dfded2;
+    border-bottom: 1px solid #dfded2;
+}
+
+.msg-warning {
+    background: #d8e7f0 url('../icon/16x16/status/dialog-warning.png') no-repeat 12px 6px;
+    color: #6d6e71;
+    font-weight: bold;
+    font-size: small;
+    margin: 12px 0;
+    padding: 6px 6px 6px 32px;
+    border-top: 1px solid #dfded2;
+    border-bottom: 1px solid #dfded2;
+}
+
+.msg-development {
+    background: #d8e7f0 url('../icon/16x16/categories/applications-development.png') no-repeat 12px 6px;
+    color: #6d6e71;
+    font-weight: bold;
+    font-size: small;
+    margin: 12px 0;
+    padding: 6px 6px 6px 32px;
+    border-top: 1px solid #dfded2;
+    border-bottom: 1px solid #dfded2;
+}
+
+.msg-system {
+    background: #d8e7f0 url('../icon/16x16/categories/applications-system.png') no-repeat 12px 6px;
+    color: #6d6e71;
+    font-weight: bold;
+    font-size: small;
+    margin: 12px 0;
+    padding: 6px 6px 6px 32px;
+    border-top: 1px solid #dfded2;
+    border-bottom: 1px solid #dfded2;
+}
+
+.msg-mininfo {
+    font-weight: normal;
+}
+
+/* -- Helptext box, which can be used for share information to user -- */
+div, blockquote p {
+    margin: 0;
+    padding: 0;
+}
+
+blockquote.helptext {
+	background: #c9de94 url('../gfx/help-text.png') no-repeat 12px 12px;
+	color: #fff;
+	font-weight: bold;
+	font-size: small;
+	margin: 12px 0;
+	padding: 12px 12px 12px 42px;
+	min-height: 40px;
+}
+
+/* ---------------------------- IMAGES ------------------------------ */
+
+img {
+    border: none;
+}
+
+img.right {
+    float: right;
+}
+
+img.left {
+    float: left;
+    margin-right: 1em;
+}
+
+.hidden {
+	display: hidden;	
+}

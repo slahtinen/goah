@@ -1,0 +1,104 @@
+body {
+	background: transparent url('../gfx/bg-top.png') repeat-x 0% 0%;;
+	margin: 0;
+	padding: 0;
+	font-family: "Arial", sans-serif;
+}
+
+p {
+	margin-top: 0;
+}
+
+img {
+	border: none;
+}
+
+div, blockquote p {
+	margin: 0;
+	padding: 0;
+}
+
+div {
+	width: 350px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+h2 {
+    	font-size: 1.2em;
+	font-weight: normal;
+    	background: transparent url('../gfx/bg-top.png') repeat-x 0 0;
+    	color: #fff;
+    	height: 37px;
+    	margin: 0px;
+    	padding: 0px;
+    	line-height: 37px;
+	text-indent: 12px;
+	text-transform: uppercase;
+}
+
+#loginbox {
+	height: 280px;
+	margin-top: 50px;
+}
+
+#loginbox p.logo {
+	background: url('../gfx/bg-login-header.png');
+	margin-bottom: 0px;
+	text-align: center;
+}
+
+#loginbox img {
+	margin-top: 23px;
+	margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    color: #6d6e71;
+    font-size: small;
+}
+
+thead th {
+    background: transparent url('../gfx/bg-table-header.png') repeat-x 0 0;
+    color: #fff;
+    line-height: 24px;
+    height: 24px;
+    margin: 0;
+    padding: 0;
+    padding: 0 12px;
+    text-align: left;
+}
+
+tbody tr {
+   border-bottom: 2px solid #dae8f1;
+}
+
+tbody td {
+   padding: 6px;
+   border-left: 1px solid #dae8f1;
+}
+
+tbody td.login {
+    padding-top: 10px;
+}
+
+tbody td.error {
+    color: #6d6e71;
+    font-weight: bold;
+    font-size: small;
+    border-left: 0px;
+    text-align: center;
+}
+
+tbody tr.footer {
+      border: 0px;
+}
+
+tbody td.footer {
+	font-size: 0.7em;
+	text-align: center;
+	border: 0px;
+}

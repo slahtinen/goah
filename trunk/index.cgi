@@ -85,6 +85,12 @@ my $auth=0;
 my $theme;
 
 #
+# String: viewport
+#
+#   Users viewport (currently desktop or tablet)
+my $viewport;
+
+#
 # String: q
 #
 #    CGI.pm instance
@@ -107,6 +113,17 @@ if($keksi && length($keksi)>1) {
         $auth = goah::Auth->CheckSessionid($uid,$sessid);
 } 
 
+# 
+# String: viewcookie
+#
+#  Viewport cookie from login. This is used to switch GongoUI theme
+#	between desktop/tablet layouts.
+#
+my $viewcookie = $q->cookie('viewport');
+if($viewcookie && length($viewcookie)>1) {
+        my @vtmp = split(/\./,$viewcookie);
+        $viewport = $vtmp[0];
+}
 
 if($Config{'goah.demomode'} eq 1) {
 	$auth=1;
@@ -145,6 +162,9 @@ $templatevars{'locale'} = setlocale(LC_ALL);
 $templatevars{'goahversion'} = '2.1.0 beta';
 $templatevars{'demomode'} = $Config{'goah.demomode'};
 
+# Store users viewport information to switch between GongoUI desktop or tablet modes
+$templatevars{'viewport'} = $viewport;
+
 # Read theme from login, or use one from cookie. Get fallback from config.
 if ($q->param('theme')) {
 		$templatevars{'theme'} = $q->param('theme');
@@ -153,6 +173,7 @@ if ($q->param('theme')) {
 } else {
 		$templatevars{'theme'} = $Config{'goah.theme'};
 }
+
 
 # We're logged in to system
 if($auth==1) {
@@ -201,6 +222,11 @@ if($auth==1) {
 		$keksi = cookie ( -name => 'goah',
 				  -value => '0',
 				  -expires => '0');
+				  
+		$viewport = cookie ( -name => 'viewport',
+				  -value => '0',
+				  -expires => '0');
+				  
 		$templatevars{'page'} = 'login.tt2';
 		$templatevars{'function'} = 'logout';
 	}
