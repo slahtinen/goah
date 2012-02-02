@@ -258,7 +258,7 @@ if($auth==1) {
 		#  be several database queries when navigation is constructed
 		#  on HTML-document
 		#
-		my $topmenu = goah::Modules->ReadTopNavi();
+		my $topmenu = goah::Modules->ReadTopNavi($uid);
 
 		$templatevars{'navi'} = $topmenu;
 

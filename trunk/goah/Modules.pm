@@ -55,7 +55,7 @@ use Locale::TextDomain ('GoaH', getcwd()."/locale");
 #
 # Parameters:
 #
-#   None
+#   uid - User id so that we can check if user has disabled some of the modules
 #
 # Returns:
 #
@@ -63,6 +63,10 @@ use Locale::TextDomain ('GoaH', getcwd()."/locale");
 #   Success - Hash reference to top menu structure
 #
 sub ReadTopNavi {
+
+	if($_[0]=~/goah::Modules/) {
+		shift;
+	}
 
 	# Read active modules first
 	my $modref = __PACKAGE__->GetActiveModules();
@@ -72,6 +76,20 @@ sub ReadTopNavi {
 		return 0;
 	} else {
 		@modules = @$modref;
+	}
+
+	# Read user settings from the database
+	# NOTE: At this point we only check if user has enabled debug mode
+	my $debugmode=0;
+	if($_[0]) {
+		use goah::Modules::Personalsettings;
+		my $settref=goah::Modules::Personalsettings->ReadSettings($_[0]);
+		if($settref) {
+			my %settings=%$settref;
+			if($settings{'showdebug'} eq 'on') {
+				$debugmode=1;
+			}
+		}
 	}
 
 	# Loop trough modules and assign them to category
@@ -89,6 +107,11 @@ sub ReadTopNavi {
 			$sort = $_->sort.'.'.$_->id;
 		}
 
+		# Hardcoded module to skip depending on debug mode. This will be removed
+		# with proper module selection
+		if($debugmode == 0 && $mod=~/Sandbox/) {
+			next;
+		}
 		$topmenu{'modules'}{$sort}{'module'} = $mod;
 		$topmenu{'modules'}{$sort}{'name'} =__($_->name);
 	}
