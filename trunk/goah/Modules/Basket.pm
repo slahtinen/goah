@@ -173,7 +173,7 @@ sub Start {
 
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $q->param('target');
-				$variables{'data'} = ReadBaskets($q->param('target'));
+				$variables{'basketdata'} = ReadBaskets($q->param('target'));
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 
 		} elsif($q->param('action') eq 'recurring') {
@@ -191,7 +191,7 @@ sub Start {
 				}
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $basket;
-				$variables{'data'} = ReadBaskets($basket);
+				$variables{'basketdata'} = ReadBaskets($basket);
 				$variables{'basketrows'} = ReadBasketrows($basket);
 
 		} elsif($q->param('action') eq 'showbasket') {
@@ -202,7 +202,7 @@ sub Start {
 				$variables{'function'} = 'modules/Basket/basketinfo';
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'activebasket'} = '0';
-	
+
 		} elsif($q->param('action') eq 'editcustomerinfo') {
 
 				if(UpdateBasket() == 0) {
@@ -210,7 +210,7 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't update basket information"));
 				}
-				$variables{'data'} = ReadBaskets($q->param('id'));
+				$variables{'basketdata'} = ReadBaskets($q->param('id'));
 				$variables{'activebasket'} = $q->param('id');
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'basketrows'} = ReadBasketrows($q->param('id'));
@@ -652,12 +652,15 @@ sub ReadBaskets {
 				$baskets{$state}{$i}{$f}=$b->get($f);
 				$baskets{$state}{'name'}=$statename;
 			} else {
-					$f=$basketdbfields{$k}{'field'};		
-					if($_[0] || length($_[0])) {
-						$baskets{$f}=$b->get($f);
-					} else {
-						$baskets{$i}{$f}=$b->get($f);
+				$f=$basketdbfields{$k}{'field'};		
+				if($_[0] || length($_[0])) {
+					if($f=~/state/i) {
+						goah::Modules->AddMessage('debug',"Got state: ".$b->get($f));
 					}
+					$baskets{$f}=$b->get($f);
+				} else {
+					$baskets{$i}{$f}=$b->get($f);
+				}
 			}
 		}
 		$br=ReadBasketrows($b->id);
@@ -714,6 +717,7 @@ sub ReadBaskets {
 	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
 	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
+	$baskets{'diipa'}="Daapa";
 	return \%baskets;
 }
 
