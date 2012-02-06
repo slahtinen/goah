@@ -269,9 +269,25 @@ sub FormatDate {
 		# Without timestamp
 		my @date = split(/-/,$_[0]);
 		return $date[2].'.'.$date[1].'.'.$date[0];
-	} elsif ($_[0]=~/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/) {
+	} elsif ($_[0]=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
 		my @date = split(/\./,$_[0]);
-		return $date[2].'-'.$date[1].'-'.$date[0];
+
+		# Check that there's reasonable month
+		if($date[1]>12) {
+			goah::Modules->AddMessage('warn',__("There's only 12 months in year!"));
+			$date[1]=12;
+		}
+	
+		# Check and override given value if date is bigger than there's days in 
+		# current month.
+		use Date::Calc;
+		my $days_in_month=Date::Calc::Days_in_Month(sprintf("%04d",$date[2]),sprintf("%02d",$date[1]));
+		if($date[0]>$days_in_month) {
+			goah::Modules->AddMessage('warn',__("Given day is bigger than there's days in given month."));
+			$date[0]=$days_in_month;
+		}
+
+		return sprintf("%04d-%02d-%02d",$date[2],$date[1],$date[0]);
 	} else {
 		goah::Modules->AddMessage('error',__("Given variable isn't in supported format"),__FILE__,__LINE__);
 		return 0;
