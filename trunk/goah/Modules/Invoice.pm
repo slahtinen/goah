@@ -955,6 +955,7 @@ sub UpdateInvoiceinfo {
 		AddEventToInvoice($_[0],'Invoice information updated.',$state,'update');
 	}
 
+	# Convert open invoice to sent, or directly paid as well
 	if($invoice->state==0 && $state != 0) {
 	
 		# Search for next invoice number first
@@ -1004,6 +1005,7 @@ sub UpdateInvoiceinfo {
                 $invoice->due($due);
 	}
 
+	# Don't change invoice state, just update date and recalc due dates
 	$invoice->state($state);
 	if($invoice->state==0 && $state == 0) {
 		$invoice->created(goah::GoaH->FormatDate($q->param('created')));
