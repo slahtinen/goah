@@ -875,12 +875,10 @@ sub ReadProductsByName {
 	my $prodname=$_[0];
 	$prodname=~s/\*/%/g;
 	my %search;
-	$search{'name'}{ like => $prodname };
+	$search{'name'} = { like => $prodname };
 	if($_[1]) {
 		$search{'groupid'}=$_[1];
 	}
-
-	goah::Modules->AddMessage('debug',"Searching product names.");
 
 	use goah::Db::Products::Manager;
 	my $datap=goah::Db::Products::Manager->get_products(\%search, sort_by => 'code' );

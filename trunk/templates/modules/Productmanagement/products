@@ -27,17 +27,15 @@
 	</form>
 	
 	</td>
-	<!--
 	<td>[% gettext("By name") %]</td>
 	<td>
 	<form method="post">
 	<input type='hidden' name='module' value='[% module %]' />
 	<input type="hidden" name="action" value="searchbyname" />
-	<input name="name" class="large" />
+	<input name="name" class="large" value="[% searchname %]" />
 	<input type="submit" value=">" />
 	</form>
 	</td>		
-	-->
 	<form method="post">
 	<input type='hidden' name='module' value='[% module %]' />
 	<input type="hidden" name="action" value="searchbycode" />
