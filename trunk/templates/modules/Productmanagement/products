@@ -7,41 +7,43 @@
 	<tr>
 	<td>[% gettext("By group") %]:</td>
 	<td>
-	<form method="get" action="javascript:loadContent('content.cgi','contentcgi');" name="contentcgi">
+	<form method="post" action="">
 	<p>
 	<input type='hidden' name='module' value='[% module %]' />
-	<input type='hidden' name='action' value='showall' />
+	<input type='hidden' name='action' value='selectgroup' />
 	<select name="groupid" class="medium" onchange="submit()" >
 	<option value='-1'>-- [% gettext("All groups") %] --</option>
 	[% FOREACH key IN productgroups.keys.sort %]
 	[% data = productgroups.$key %]
-		<option value="[% data.id %]">[% data.name %]</option>
+		[% IF data.id == groupid %]
+			<option selected value="[% data.id %]">[% data.name %]</option>
+		[% ELSE %]
+			<option value="[% data.id %]">[% data.name %]</option>
+		[% END %]
 	[% END %]
 	</select>
 	<input type="submit" value=">" />
 	</p>
-
-	<noscript>
-  		<p><input type="submit" value="[% gettext("Show") %]" /></p>
-	</noscript>
 	</form>
 	
 	</td>
-	<td>[% gettext("By barcode") %]</td>
+	<!--
+	<td>[% gettext("By name") %]</td>
 	<td>
-	<form method="post" name="barcodeform">
+	<form method="post">
 	<input type='hidden' name='module' value='[% module %]' />
-	<input type="hidden" name="subaction" value="ean" />
-	<input name="barcode" class="large" />
-	<input type="submit" value="[% gettext("Add") %]" />
+	<input type="hidden" name="action" value="searchbyname" />
+	<input name="name" class="large" />
+	<input type="submit" value=">" />
 	</form>
 	</td>		
-	<form method="post" name="productcodeform">
+	-->
+	<form method="post">
 	<input type='hidden' name='module' value='[% module %]' />
-	<input type="hidden" name="subaction" value="productcode" />
+	<input type="hidden" name="action" value="searchbycode" />
 	<td>[% gettext("By code") %]: </td>
-	<td><input name="code" class="large" />
-	<input type="submit" value="[% gettext("Add") %]" />
+	<td><input name="code" value="[% searchcode %]" class="large" />
+	<input type="submit" value=">" />
 	</form>
 	</td>
 	</tr>

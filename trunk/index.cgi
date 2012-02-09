@@ -350,7 +350,6 @@ if($ENV{'HTTP_USER_AGENT'}=~/msie (\d)/) {
 	}
 }
 
-
 # Create Template, which moves users to login page or in the system
 #
 # Get path, so we can find template-files

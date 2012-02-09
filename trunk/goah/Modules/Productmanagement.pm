@@ -7,9 +7,6 @@ Package: goah::Modules::Productmanagement
   This package has functions to handle products and their
   related information.
 
-  This file has quite good structure about coding style,
-  or atleast I like it :)
-
 About: License
 
   This software is copyright (c) 2009 by Tietovirta Oy and associates.
@@ -239,6 +236,9 @@ sub Start {
 				goah::Modules->AddMessage('error',__("Can't remove database item"));
 			}
 			$variables{'function'} = $function;
+		} elsif($action eq 'selectgroup' || $action eq 'searchbyname' || $action eq 'searchbycode') {
+			# Dummy placeholder so that search-functions can be ran
+
 		} else {
 			goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
 			$variables{'function'} = 'modules/blank';
@@ -247,7 +247,7 @@ sub Start {
 		$action='showall';
 	}
 
-	if($action eq 'showall') {
+	if($action eq 'showall' || $action eq 'selectgroup' || $action eq 'searchbyname' || $action eq 'searchbycode') {
 		# List all products on groups if no other action is defined
 		my $prodgroupref = ReadData('productgroups');
 		unless($prodgroupref) {
@@ -263,14 +263,41 @@ sub Start {
 			foreach my $key (keys %productgroups) {
 				my $gpoint = $productgroups{$key};
 				my %group=%$gpoint;
-				$productspergroup{$key}{'name'}=$group{'name'};
-				$productspergroup{$key}{'group_total_value'}=0;
 
-				my $prodpointer = ReadProductsByGroup($group{'id'},$uid);
-				unless($prodpointer) {
-					goah::Modules->AddMessage('warn',__("Empty product group")." ".$group{'name'});
-					$productspergroup{$key}{'products'}=0;
+				# Test if we have group selected on dropdown. This is 
+				# somewhat dummy way to handle the situation, but 
+				# should work
+				if($action eq 'selectgroup') {
+					unless($q->param('groupid') eq '-1') {
+						unless($q->param('groupid') == $group{'id'}) {
+							next;
+						}
+					}
+					$variables{'groupid'}=$q->param('groupid');
+				}
+
+
+				my $prodpointer;
+				if($action eq 'searchbyname') {
+					$prodpointer=ReadProductsByName($q->param('name'));
+					$variables{'searchname'}=$q->param('name');
+				} elsif($action eq 'searchbycode') {
+					$prodpointer=ReadProductByCode($q->param('code'),$group{'id'},1);
+					$variables{'searchcode'}=$q->param('code');
 				} else {
+					$prodpointer=ReadProductsByGroup($group{'id'},$uid);
+				}
+
+				unless($prodpointer) {
+					unless($action=~/search/) {
+						goah::Modules->AddMessage('warn',__("Empty product group")." ".$group{'name'});
+						$productspergroup{$key}{'products'}=0;
+						$productspergroup{$key}{'name'}=$group{'name'};
+						$productspergroup{$key}{'group_total_value'}=0;
+					}
+				} else {
+					$productspergroup{$key}{'name'}=$group{'name'};
+					$productspergroup{$key}{'group_total_value'}=0;
 					$productspergroup{$key}{'products'}=$prodpointer;
 					my %groupprods = %$prodpointer;
 					foreach my $prodkey (keys %groupprods) {
@@ -819,6 +846,81 @@ sub ReadProductByEAN {
 	return $prod->id;
 }
 
+# Function: ReadProductByName
+#
+#   Additional function to retrieve product data based on the product
+#   name. This is separate function, since ReadProductByCode has alternative
+#   uses and there's no way to know if search-by-name functionality causes
+#   any issues.
+#
+# Parameters:
+#
+#   Name - Product name to search, * allowed as an wildcard
+#   Group id - Product group id to search
+#
+# Returns:
+#   
+#   Fail - 0
+#   Success - Hash -reference to found products
+#
+sub ReadProductsByName {
+
+	shift if($_[0]=~/goah::Modules::Productmanagement/);
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("No search parameters given! Can't search products by name."));
+		return 0;
+	}
+
+	my $prodname=$_[0];
+	$prodname=~s/\*/%/g;
+	my %search;
+	$search{'name'}{ like => $prodname };
+	if($_[1]) {
+		$search{'groupid'}=$_[1];
+	}
+
+	goah::Modules->AddMessage('debug',"Searching product names.");
+
+	use goah::Db::Products::Manager;
+	my $datap=goah::Db::Products::Manager->get_products(\%search, sort_by => 'code' );
+
+	return 0 unless($datap);
+	my @data=@$datap;
+
+	# Pack found data into hash and return data
+	my %pdata;
+	my $field;
+	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat',1);
+	my %vat=%$vatp;
+	my $i=100000;
+	foreach my $prod (@data) {
+		foreach my $key (keys %productsdbfields) {
+			$field = $productsdbfields{$key}{'field'};
+			if($field eq 'purchase' || $field eq 'sell') {
+				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+			} else {
+				$pdata{$i}{$field} = $prod->$field;
+			}
+		}
+		my $manuf = ReadData('manuf',$prod->manufacturer);
+		if($manuf) {
+			my %m=%$manuf;
+			$pdata{$i}{'manufacturer_name'}=$m{'name'};
+		}
+		while (my ($key,$value) = each(%vat)) {
+			my %tmp=%$value;
+			if($tmp{'value'} == $pdata{$i}{'vat'}) {
+				$pdata{$i}{'vatclass'}=$tmp{'item'};
+			}
+		}
+		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
+		$i++;
+	}
+
+	return \%pdata;
+}
+
 #
 # Function: ReadProductByCode
 #
@@ -828,6 +930,8 @@ sub ReadProductByEAN {
 # Parameters
 #
 #   Product code - Manufacturer's code
+#   Product group - Group id to search, if omitted deafults to all
+#   Format - Return data in old/new format, if omitted defaults to 0 (=old)
 #
 # Returns:
 #
@@ -851,17 +955,75 @@ sub ReadProductByCode {
 		return 0;
 	}
 
-	goah::Modules->AddMessage('debug',"Retrieving data with code $prodcode");
+	unless($_[1]) {
+		goah::Modules->AddMessage('debug',"Using old version of ReadProductByCode",__LINE__,__FILE__);
+	}
 
-	use goah::Database::Products;
-	my @product = goah::Database::Products->search_where(code => $prodcode);
+	#goah::Modules->AddMessage('debug',"Retrieving data with code $prodcode",__LINE__,__FILE__);
+
+	# If we're using old format then return single item found
+	unless($_[2]) {
+		use goah::Database::Products;
+		my @product = goah::Database::Products->search_where(code => $prodcode);
 	
-	if(scalar(@product)==0) {
+		if(scalar(@product)==0) {
+			return 0;
+		}
+		
+		my $prod = $product[0];
+		return $prod->id;
+	}
+
+	$prodcode=~s/\*/%/g;
+	my %search;
+	$search{'code'}= { like => $prodcode };
+	if($_[1]) {
+		$search{'groupid'}=$_[1];
+	}
+
+	use goah::Db::Products::Manager;
+	my $datap=goah::Db::Products::Manager->get_products(\%search, sort_by => 'code' );
+
+	unless($datap) {
+		return 0;
+	}
+	my @data=@$datap;
+
+	# Don't return empty hash, if we don't have products, we don't have products.
+	if(scalar(@data)==0) {
 		return 0;
 	}
 
-	my $prod = $product[0];
-	return $prod->id;
+	# Pack found data into hash and return data in new format
+	my %pdata;
+	my $field;
+	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat',1);
+	my %vat=%$vatp;
+	my $i=100000;
+	foreach my $prod (@data) {
+		foreach my $key (keys %productsdbfields) {
+			$field = $productsdbfields{$key}{'field'};
+			if($field eq 'purchase' || $field eq 'sell') {
+				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+			} else {
+				$pdata{$i}{$field} = $prod->$field;
+			}
+		}
+		my $manuf = ReadData('manuf',$prod->manufacturer);
+		if($manuf) {
+			my %m=%$manuf;
+			$pdata{$i}{'manufacturer_name'}=$m{'name'};
+		}
+		while (my ($key,$value) = each(%vat)) {
+			my %tmp=%$value;
+			if($tmp{'value'} == $pdata{$i}{'vat'}) {
+				$pdata{$i}{'vatclass'}=$tmp{'item'};
+			}
+		}
+		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
+		$i++
+	}
+	return \%pdata;
 }
 
 
@@ -919,7 +1081,7 @@ sub ReadProductsByGroup {
 	
 	my %pdata;
 	my $field;
-	my $i=0;
+	my $i=100000;
 	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat',1);
 	my %vat=%$vatp;
 	foreach my $prod (@data) {
