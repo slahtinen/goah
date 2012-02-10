@@ -113,6 +113,8 @@ if($keksi && length($keksi)>1) {
         $auth = goah::Auth->CheckSessionid($uid,$sessid);
 } 
 
+goah::Modules->AddMessage('debug',"Auth: $auth",__FILE__,__LINE__);
+
 # 
 # String: viewcookie
 #
@@ -140,6 +142,8 @@ if($auth == 0) {
 		$uid = goah::Auth->CheckLogin($q->param('user'),$q->param('pass'));
 		if($uid!=0) {
 			$auth=1; # Login ok
+		} elsif($uid==-1) {
+			$auth=-2;
 		} else {
 			$auth=-1; # Incorrect username/password
 		}
@@ -189,18 +193,6 @@ if($auth==1) {
 	# Create new (renew) session id
 	$sessid = goah::Auth->CreateSessionid($uid);
 	
-	# Create cookie which has only one value. Value is assembled
-	# by combining userid, session id and theme with a dot.
-	$keksi = $q->cookie ( -name => 'goah',
-			  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'},
-			  -expires => '+2h');
-			  
-	print header( -cookie => $keksi,
-		      -charset => 'UTF-8');
-
-	$templatevars{'page'} = 'main.tt2';
-	$templatevars{'uid'} = $uid;
-
 	# Move q->param('action') into own variable
 	my $action = '';
 	if($q->param('action')) {
@@ -208,33 +200,57 @@ if($auth==1) {
 		$templatevars{'action'}=$action;
 	}
 
-	# Make an extra check so that logout works as it should
-	if($q->param('module') && $q->param('module') eq 'logout') {
-		$action = 'logout';
-	}
+	if($sessid==-1) {
+		$action='disabled';
 
-	# Check if user want's to log out
-	if ($action eq 'logout') {
-
-		# Destroy session from database
-		goah::Auth->DestroySessionid($uid);
-
-		$keksi = cookie ( -name => 'goah',
-				  -value => '0',
-				  -expires => '0');
-				  
-		$viewport = cookie ( -name => 'viewport',
-				  -value => '0',
-				  -expires => '0');
-				  
+		$keksi = cookie ( -name => 'goah', -value => '0', -expires => '0' );
+		$viewport = cookie ( -name => 'viewport', -value => '0', -expires => '0' );
 		$templatevars{'page'} = 'login.tt2';
-		$templatevars{'function'} = 'logout';
+		$templatevars{'function'} = 'disabled';
+
+
+	} else {
+		# Create cookie which has only one value. Value is assembled
+		# by combining userid, session id and theme with a dot.
+		$keksi = $q->cookie ( -name => 'goah',
+				  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'},
+				  -expires => '+2h');
+				  
+
+		$templatevars{'page'} = 'main.tt2';
+		$templatevars{'uid'} = $uid;
+
+
+		# Make an extra check so that logout works as it should
+		if($q->param('module') && $q->param('module') eq 'logout') {
+			$action = 'logout';
+		}
+
+		# Check if user want's to log out
+		if ($action eq 'logout') {
+
+			# Destroy session from database
+			goah::Auth->DestroySessionid($uid);
+
+			$keksi = cookie ( -name => 'goah',
+					  -value => '0',
+					  -expires => '0');
+					  
+			$viewport = cookie ( -name => 'viewport',
+					  -value => '0',
+					  -expires => '0');
+					  
+			$templatevars{'page'} = 'login.tt2';
+			$templatevars{'function'} = 'logout';
+		}
 	}
 
+	print header( -cookie => $keksi,
+		      -charset => 'UTF-8');
 
 	# Check that information isn't processed if there's no
 	# need for that
-	unless ($action eq 'logout') {
+	unless ($action eq 'logout' || $action eq 'disabled') {
 
 		# goah::Modules contains functions for reading active modules
 		# from database and it triggers execution of active modules
@@ -334,12 +350,19 @@ if($auth==1) {
 	print header( -charset => 'UTF-8');
 	$templatevars{'page'} = 'login.tt2';
 	$templatevars{'function'} = 'wronglogin';
+} elsif( $auth == -2) {
+	print header( -charset => 'UTF-8');
+	$templatevars{'page'} = 'login.tt2';
+	$templatevars{'function'} = 'accountdisabled';
 } else {
 	# Normal login
 	print header( -charset => 'UTF-8');
 	$templatevars{'page'} = 'login.tt2';
 	$templatevars{'messages'} = \&goah::Modules::GetMessages;	
 }
+
+
+print "<h1>Auth: $auth</h1>\n";
 
 #
 # Browser version check

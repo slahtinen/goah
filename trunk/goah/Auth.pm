@@ -57,10 +57,16 @@ sub CheckLogin {
 	# Mikäli annetuilla ehdoilla löytyy rivi tietokannasta kirjautuminen on ok,
 	# muuten ei.
 	if(@logininfo >= 1) {
+		if($logininfo[0]->disabled) {
+			return -1;
+		}
                 return $logininfo[0]->accountid;
 	} else {
 		@logininfo = goah::Database::users->search( login => $login, pass => $pass );
 		if(@logininfo >= 1) {
+			if($logininfo[0]->disabled eq '1') {
+				return -1;
+			}
 			goah::Modules->AddMessage('warn',__("Your password is stored in unencrypted format. Please change password."));
 			return $logininfo[0]->accountid;
 		} else {
@@ -98,6 +104,18 @@ sub CreateSessionid {
 	use goah::Database::users;
 	my @user = goah::Database::users->search(accountid => $uid);
 
+	unless(scalar(@user)) {
+		goah::Modules->AddMessage('error',__("Can't read session data from the database!"));
+		return -1;
+	}
+
+	my $u=$user[0];
+
+	if($u->get('disabled')) {
+		if($user[0]->disabled == 1) {
+			return -1;
+		}
+	}
 	# Store created session id and other information into database
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 	$user[0]->set('last_active' => sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
@@ -164,6 +182,10 @@ sub CheckSessionid {
 
 	# If given parameters return an line from the database login is vaid. 
 	if(@logininfo >= 1) {
+		if ($logininfo[0]->disabled) {
+			$logininfo[0]->session_id('');
+			return -2;
+		}
 		return 1;
 	} else {
 		return 0;

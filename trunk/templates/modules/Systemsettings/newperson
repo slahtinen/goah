@@ -7,7 +7,7 @@
 [% row = 'even' %]
 [% FOREACH key IN persondbfields.keys.sort %]
 [% data = persondbfields.$key %]
-[% IF data.type != "hidden" %]
+[% IF data.type != "hidden" && data.field != 'disabled' %]
 	<tr class="[% row %]">
 	<td class="medium">[% gettext(data.name) %]
 	[% IF data.required == 1 %]

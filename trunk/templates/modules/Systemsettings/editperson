@@ -5,6 +5,8 @@
   <td>[% gettext("Fields marked with * are required") %]</td>
 </tr>
 [% row = 'even' %]
+[% k = persondata.keys.first %]
+[% persondata = persondata.$k %]
 [% FOREACH key IN persondbfields.keys.sort %]
 [% data = persondbfields.$key %]
 [% field = data.field %]
@@ -19,6 +21,13 @@
 		<td><input class="big" name="[% data.field %]" value="[% persondata.$field %]" /></td>
 	[% ELSIF data.type == 'textarea' %]
 		<td><textarea class="medium" name="[% data.field %]">[% persondata.$field %]</textarea></td>
+	[% ELSIF data.type == 'checkbox' %]
+		<td>
+		[% IF persondata.$field == 1 %]
+			<input checked type="checkbox" name="[% data.field %]" />
+		[% ELSE %]
+			<input type="checkbox" name="[% data.field %]" />
+		[% END %]
 	[% ELSE %]
 		<td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
 	[% END %]

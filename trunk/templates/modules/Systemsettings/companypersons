@@ -4,12 +4,11 @@
 <tr>
 [% FOREACH key IN persondbfields.keys.sort %]
 [% field = persondbfields.$key %]
-[% IF field.type != "hidden" && field.field != "pass" %]
+[% IF field.type != "hidden" && field.field != "pass" && field.field != 'disabled' %]
 	<th>[% gettext(field.name) %]</th>
 [% END %]
 [% END %]
 <th class="icon">[% gettext("Open") %]</th>
-<th class="icon">[% gettext("Delete") %]</th>
 </tr>
 </thead>
 <tbody>
@@ -19,7 +18,7 @@
 <tr class="[% row %]">
 [% FOREACH key IN persondbfields.keys.sort %]
 [% field = persondbfields.$key %]
-	[% IF field.type != "hidden" && field.field != "pass" %]
+	[% IF field.type != "hidden" && field.field != "pass" && field.field != 'disabled' %]
 		[% field = field.field %]
 		<td>[% person.$field %]
 		</td>
@@ -41,20 +40,6 @@
 <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-open.png" alt="[% gettext("Edit") %]" />
 </p>
 </form>
-</td>
-<td class="center">
-<!-- <form action="" method="post"> -->
-<p>Incomplete
-<!-- THIS FUNCTION ISN'T CORRECTLY WRITTEN IN CODE
-<input type="hidden" name="module" value="[% module %]" />
-<input type="hidden" name="action" value="deleteperson" />
-<input type="hidden" name="target" value="[% person.id %]" />
-<input type="hidden" name="companyid" value="[% companydata.id %]" />
-<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" alt="[% gettext("Delete") %]" 
-    onclick="return confirm('[% gettext("Delete company person  from database?") %]')" />
--->
-</p>
-<!-- </form>-->
 </td>
 </tr>
 [% END %]

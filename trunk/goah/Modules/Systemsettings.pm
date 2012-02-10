@@ -98,7 +98,8 @@ my %persondbfieldnames = (
                         8 => { field => 'email', name => __('E-mail'), type => 'textfield', required => '1' },
                         9 => { field => 'locationid', name => __('Location'), type => 'textfield', required => '0' },
 			91 => { field => 'login', name => __("Login name"), type=> 'textfield', required => '0' },
-			92 => { field => 'pass', name => __("Password"), type => 'textfield', required => '0' }
+			92 => { field => 'pass', name => __("Password"), type => 'textfield', required => '0' },
+			93 => { field => 'disabled', name => __("Disabled"), type => 'checkbox', required => '0' },
                 );
 
 
@@ -253,7 +254,7 @@ sub Start {
 		} elsif($q->param('action') eq 'editperson') {
 
 			$variables{'function'}  = 'modules/Systemsettings/editperson';
-			$variables{'persondata'} = goah::Modules::Customermanagement::ReadPersondata($q->param('target'));
+			$variables{'persondata'} = ReadOwnerPersonnel($q->param('target'));
 
 		} elsif($q->param('action') eq 'writepersondata') {
 
@@ -837,7 +838,7 @@ sub EditBankAccount {
 #
 # Parameters:
 #
-#   None
+#   ID - User id to search for
 #
 # Returns:
 #
@@ -846,17 +847,19 @@ sub EditBankAccount {
 #
 sub ReadOwnerPersonnel {
 
+	shift if ($_[0]=~/goah::Modules::Systemsettings/);
+
 	use goah::Database::Companies;
 	use goah::Database::users;
 	my @data = goah::Database::Companies->search_where( isowner => '1' );
-	my $personspointer = goah::Modules::Customermanagement::ReadCompanypersonnel($data[0]->id);
+	my $personspointer = goah::Modules::Customermanagement::ReadCompanypersonnel($data[0]->id,$_[0]);
 	my @persons = @$personspointer;
 
 	my %pdata;
 	my $field;
 	my @logindata;
 	my $login;
-	my $i=0;
+	my $i=100000;
 	goah::Modules->AddMessage('debug',"Got @persons");
 	foreach my $per (@persons) {
 
@@ -864,8 +867,8 @@ sub ReadOwnerPersonnel {
 		if(scalar(keys(%persondbfieldnames))>0) {
 		foreach my $key (keys %persondbfieldnames) {
 			$field = $persondbfieldnames{$key}{'field'};
-			unless($field eq 'login' || $field eq 'pass') {
-				$pdata{$i}{$field} = $per->get($field);
+			unless($field eq 'login' || $field eq 'pass' || $field eq 'disabled') {
+					$pdata{$i}{$field} = $per->get($field);
 			}
 		}
 
@@ -875,6 +878,7 @@ sub ReadOwnerPersonnel {
 			$login = $logindata[0];
 			$pdata{$i}{'login'} = $login->login;
 			$pdata{$i}{'pass'} = $login->pass;
+			$pdata{$i}{'disabled'} = $login->disabled;
 
 		}
 		} else {
@@ -989,6 +993,12 @@ sub WritePersonData {
 
 			if($q->param('pass')) {
 				$login->pass($q->param('pass'));
+			}
+
+			if($q->param('disabled') eq 'on') {
+				$login->disabled(1);
+			} else {
+				$login->disabled(0);
 			}
 		
 			$login->update();

@@ -972,14 +972,28 @@ sub DeleteCompany {
 # Parameters:
 #
 #  id - company id
+#  uid - User id to search for
 #
 sub ReadCompanypersonnel {
 
+	shift if ($_[0]=~/goah::Modules::Customermanagement/);
+
 	my $id = $_[0];
+	my $uid = $_[1];
+
+	unless($id) {
+		goah::Modules->AddMesage('error',__("Can't read company personnel! Company id is missing!"));
+		return 0;
+	}
+
+	my %search;
+
+	$search{'companyid'}=$id;
+	$search{'id'}=$uid if($uid);
 
 	use goah::Database::Persons;
 
-	my @data = goah::Database::Persons->search_where({ companyid => $id });
+	my @data = goah::Database::Persons->search_where(\%search);
 
 	if(scalar(@data) == 0) {
 		return 0;

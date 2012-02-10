@@ -20,6 +20,6 @@ package goah::Database::users;
 use base 'goah::Database';
 
 __PACKAGE__->table('users');
-__PACKAGE__->columns(All => qw/id accountid login pass last_active remote_addr session_id/);  
+__PACKAGE__->columns(All => qw/id accountid login pass last_active remote_addr session_id disabled/);  
 
 1;
