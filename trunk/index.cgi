@@ -113,8 +113,6 @@ if($keksi && length($keksi)>1) {
         $auth = goah::Auth->CheckSessionid($uid,$sessid);
 } 
 
-goah::Modules->AddMessage('debug',"Auth: $auth",__FILE__,__LINE__);
-
 # 
 # String: viewcookie
 #

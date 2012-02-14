@@ -1,3 +1,9 @@
+<!-- Messages from different functions -->
+[% TRY %]
+	[% INCLUDE messages.tt2 %]
+[% CATCH %]
+	[% PROCESS templateerror %]
+[% END %]
 [% IF function != '' %]
 	[% TRY %]
         	[% INCLUDE $function %]

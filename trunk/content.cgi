@@ -68,8 +68,11 @@ unless($q->param('module')) {
 	exit;
 }
 
+use goah::Modules::Personalsettings;
+my $settref = goah::Modules::Personalsettings->ReadSettings($uid);
+
 use goah::Modules;
-my $modref = goah::Modules->StartModule($q->param('module'),$uid);
+my $modref = goah::Modules->StartModule($q->param('module'),$uid,$settref);
 
 # Process return value from module and assign them into
 # templatevars -hash
@@ -83,6 +86,7 @@ unless($modref == 0) {
 		$templatevars{$key} = $value;
 	}
 } else {
+	print "Error with module ".$q->param('module')."\n";
 	goah::Modules->AddMessage('error',"Error with module ".$q->param('module'));
 }
 
@@ -90,6 +94,7 @@ unless($modref == 0) {
 #
 # Get path, so we can find template-files
 #use Template::Constants qw( :debug );
+$templatevars{'messages'} = sub { goah::Modules::GetMessages($uid); };
 $templatevars{'page'} = 'main_content.tt2';
 my $templateinc = getcwd().'/templates/';
 my $templatevariables = \%templatevars;

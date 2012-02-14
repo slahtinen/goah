@@ -104,7 +104,9 @@ use CGI;
 #
 # Parameters:
 #
-#   None
+#   0 - ??
+#   id - User ID
+#   settref - Reference to user settings
 #
 # Returns:
 #
@@ -234,7 +236,7 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error', __("Can't add product(s) to basket"));
 				}
-				$variables{'data'} = ReadBaskets($q->param('basketid'));
+				$variables{'basketdata'} = ReadBaskets($q->param('basketid'));
 				$variables{'basketrows'} = ReadBasketrows($q->param('basketid'));
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $q->param('basketid');
@@ -618,6 +620,7 @@ sub ReadBaskets {
 			}
 		}
 
+		print "<br>YES.";
 		if($_[4]=~/^[0-9]+$/) {
 			$search{'companyid'} = $_[4];	
 		}
@@ -676,24 +679,26 @@ sub ReadBaskets {
 		if($groupstates) {
 			$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 			$baskets{$state}{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
-			$baskets{$state}{$i}{'rows'}=pop @rows;
-			$baskets{$state}{$i}{'rows'}++;
+			$baskets{$state}{$i}{'rows'}=scalar(@rows);
+			$baskets{$state}{$i}{'rows'}--; # This since @rows has index -1 which contains sums from rows
 
 			if($state eq "2") {
 				$baskets{$state}{$i}{'lasttrigger'}=$b->lasttrigger;
 				$baskets{$state}{$i}{'nexttrigger'}=$b->nexttrigger;
 			}
 		} else {
+			# Check if we're reading individual basket or do we need additional 
+			# counter included
 			if($_[0] || length($_[0])) {
 				$baskets{'total'}=$basketrows{-1}{'baskettotal'};
 				$baskets{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
-				$baskets{'rows'}=pop @rows;
-				$baskets{'rows'}++;
+				$baskets{'rows'}=scalar(@rows);
+				$baskets{'rows'}--;
 			} else {
 				$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 				$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
-				$baskets{$i}{'rows'}=pop @rows;
-				$baskets{$i}{'rows'}++;
+				$baskets{$i}{'rows'}=scalar(@rows);
+				$baskets{$i}{'rows'}--;
 			}
 
 			if($state eq "2") {
@@ -717,7 +722,6 @@ sub ReadBaskets {
 	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
 	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
-	$baskets{'diipa'}="Daapa";
 	return \%baskets;
 }
 
