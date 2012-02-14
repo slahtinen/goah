@@ -35,6 +35,14 @@ $(document).ready(function() {
   <thead>
   <tr><th colspan='2'>[% gettext("Login") %]</th></tr>
   </thead>
+  [% IF function == 'wronglogin' %]
+        [% INCLUDE wronglogin.tt2 %]
+  [% ELSIF function == 'accountdisabled' %]
+  	[% INCLUDE accountdisabled.tt2 %]
+  [% ELSIF function == 'logout' %]
+        [% INCLUDE logout.tt2 %]
+  [% END %]
+
   <tbody>
   <tr>
   <td class="login">[% gettext("Username") %]:</td><td class="login"><input name="user" /></td>
@@ -62,12 +70,6 @@ $(document).ready(function() {
 	[% INCLUDE messages.tt2 %]
   [% END %]
   <!-- Messages about functionality -->
-
-  [% IF function == 'wronglogin' %]
-        [% INCLUDE wronglogin.tt2 %]
-  [% ELSIF function == 'logout' %]
-        [% INCLUDE logout.tt2 %]
-  [% END %]
 
   <tr class="footer">
   <td colspan='2' class="footer">

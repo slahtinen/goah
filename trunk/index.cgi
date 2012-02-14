@@ -206,8 +206,7 @@ if($auth==1) {
 		$keksi = cookie ( -name => 'goah', -value => '0', -expires => '0' );
 		$viewport = cookie ( -name => 'viewport', -value => '0', -expires => '0' );
 		$templatevars{'page'} = 'login.tt2';
-		$templatevars{'function'} = 'disabled';
-
+		$templatevars{'function'} = 'accountdisabled';
 
 	} else {
 		# Create cookie which has only one value. Value is assembled
@@ -361,8 +360,6 @@ if($auth==1) {
 	$templatevars{'messages'} = \&goah::Modules::GetMessages;	
 }
 
-
-print "<h1>Auth: $auth</h1>\n";
 
 #
 # Browser version check
