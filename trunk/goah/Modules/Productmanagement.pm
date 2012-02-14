@@ -581,7 +581,7 @@ sub WriteEditedItem {
 	my %fieldinfo;
 	while(my($key,$value) = each (%dbschema)) {
 		%fieldinfo = %$value;
-		if($fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) ) {
+		if($fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) && !($fieldinfo{'field'} eq 'purchase') && !($fieldinfo{'field'} eq 'sell')) {
 			# Using variable just to make source look nicer
 			my $errstr = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!')." ";
 			$errstr.= __("Leaving value unaltered.");
@@ -600,6 +600,8 @@ sub WriteEditedItem {
 					
 					$data->set($fieldinfo{'field'} => goah::GoaH->FormatCurrency($sum,$vat,$uid,'in',$settref));
 
+				} else {
+					$data->set($fieldinfo{'field'} => '0.00');
 				}
 
 			} else {
