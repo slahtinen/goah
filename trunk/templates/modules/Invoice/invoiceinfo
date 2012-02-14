@@ -98,7 +98,7 @@
 		</td>
 	[% ELSE %]
 		[% FOREACH item IN paymentconditions %]
-			[% IF item.id == invoice.payment_condition %]
+			[% IF item.value == invoice.payment_condition %]
 					<td>[% item.item %]</td>
 			[% END %]
 		[% END %]
