@@ -561,7 +561,7 @@ sub ReadInvoices {
 
 		if($q->param('fromdate')) {
 			$datestart=$q->param('fromdate');
-			unless($datestart=~/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/) {
+			unless($datestart=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
 				goah::Modules->AddMessage('error',__("Start date isn't formatted correctly. Ignoring filter."));
 				$datestart='';
 			}
@@ -569,7 +569,7 @@ sub ReadInvoices {
 
 		if($q->param('todate')) {
 			$dateend=$q->param('todate');
-			unless($dateend=~/[0-9]{2}\.[0-9]{2}\.[0-9]{4}/) {
+			unless($dateend=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
 				goah::Modules->AddMessage('error',__("End date isn't formatted correctly. Ignoring filter."));
 				$dateend='';
 			}
