@@ -66,8 +66,9 @@ my %companydbfieldnames = (
 				data => ReadSetup('reclamationtime')
 				},
 			7 => { field => 'custtype', name => __("Customer type"), type => 'selectbox', required => '0', data => ReadCustomerIdentifiers('1') },
-			8 => { field => 'www', name => __('Homepage address'), type => 'textfield', required => '0' },
-			9 => { field => 'description', name => __('Other information'), type => 'textarea', required => '0' } 
+			8 => { field => 'customerreference', name => __("Customer reference"), type => 'textfield', required => '0' },
+			9 => { field => 'www', name => __('Homepage address'), type => 'textfield', required => '0' },
+			10 => { field => 'description', name => __('Other information'), type => 'textarea', required => '0' } 
 		);
 
 #
@@ -982,7 +983,7 @@ sub ReadCompanypersonnel {
 	my $uid = $_[1];
 
 	unless($id) {
-		goah::Modules->AddMesage('error',__("Can't read company personnel! Company id is missing!"));
+		goah::Modules->AddMessage('error',__("Can't read company personnel! Company id is missing!"));
 		return 0;
 	}
 
