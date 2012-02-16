@@ -164,33 +164,6 @@
 
 [% INCLUDE modules/Basket/basketinfo.productlist %]
 
-<h3>[% gettext("Additional information") %]</h3>
-<table>
-<thead>
-<tr><th>[% gettext("Formatting: <i>= Heading =</i>") %]</th></tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<form action="" method=post>    
-<input type="hidden" name="module" value="[% module %]">
-<input type="hidden" name="action" value="editcustomerinfo" />
-<input type='hidden' name='target' value="[% basketdata.companyid %]">
-
-[% FOREACH key IN basketdbfields.keys.sort %]
-	[% field = basketdbfields.$key %]
-	[% fieldname = field.field %]   
-	[% IF fieldname != 'longinfo' %]
-		<input type="hidden" name="[% field.field %]" value="[% basketdata.$fieldname %]" />
-	[% END %]
-[% END %]
-<textarea class="huge" name='longinfo'>[% basketdata.longinfo %]</textarea>
-</td>
-</tr>
-<tr><td><input type="submit" value="[% gettext("Save") %]" /></td></tr>
-</tbody>
-</table>
-
 <h3>[% gettext("Basket functions") %]</h3>
 <table>
 <tr>
@@ -234,3 +207,34 @@
 </td>
 </tr>
 </table>
+
+<h3>[% gettext("Additional information") %]</h3>
+<table>
+<thead>
+<tr><th>[% gettext("Formatting: <i>= Heading =</i>") %]</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<form action="" method=post>    
+<input type="hidden" name="module" value="[% module %]">
+<input type="hidden" name="action" value="editcustomerinfo" />
+<input type='hidden' name='target' value="[% basketdata.companyid %]">
+
+[% FOREACH key IN basketdbfields.keys.sort %]
+	[% field = basketdbfields.$key %]
+	[% fieldname = field.field %]   
+	[% IF fieldname != 'longinfo' %]
+		<input type="hidden" name="[% field.field %]" value="[% basketdata.$fieldname %]" />
+	[% END %]
+[% END %]
+<textarea class="huge" name='longinfo'>[% basketdata.longinfo %]</textarea>
+</td>
+</tr>
+<tr><td><input type="submit" value="[% gettext("Save") %]" />
+</td></tr>
+</form>
+</tbody>
+</table>
+
+
