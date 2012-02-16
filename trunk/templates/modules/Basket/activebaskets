@@ -71,7 +71,8 @@
 	[% END %]
 [% END %]
 </select>
-<td><input type="submit" value="[% gettext("Search") %]" /></td>
+<td><input type="submit" value="[% gettext("Search") %]" />
+<br/><input type="submit" name="submit-reset" value="[% gettext("Reset") %]" /></td>
 </form>
 
 [% INCLUDE modules/Basket/newbasket %]

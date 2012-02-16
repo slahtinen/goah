@@ -26,10 +26,11 @@ use Encode;
 use goah::Modules::Customermanagement;
 use goah::Modules::Productmanagement;
 
-my %baskettypes = ( 0 => { id => 0, name => __("Sell"), selected => 1, hidden => 0 },
+my %baskettypes = ( 0 => { id => 0, name => __("Sell"), selected => 1, hidden => 0, validstates => (4) },
 		    1 => { id => 1, name => __("Sold"), selected => 0, hidden => 1 },
-		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 0 },
-		    3 => { id => 3, name => __("Offer"), selected => 0, hidden => 0 } );
+		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 0, validstates => () },
+		    3 => { id => 3, name => __("Offer"), selected => 0, hidden => 0, validstates => (4) },
+		    4 => { id => 4, name => __("Order"), selected => 0, hidden => 0, validstates => (0,4) });
 
 #
 # Hash: basketdbfields
@@ -82,7 +83,8 @@ my %submenu = (
 my %basketstates = ( 0 => __("Sell"),
 		     1 => __("Sent/Closed"),
 		     2 => __("Recurring"),
-		     3 => __("Offer") 
+		     3 => __("Offer"),
+		     4 => __("Order")
 	);
 
 #
@@ -147,7 +149,7 @@ sub Start {
 					@states=$q->param('states');
 				} else {
 					goah::Modules->AddMessage('debug',"Didn't get states! ".$q->param('states'));
-					@states=(0,3);
+					@states=(0,3,4);
 				}
 				my @owners;
 				if($q->param('owner')) {
@@ -160,7 +162,7 @@ sub Start {
 				}
 
 				if($q->param('submit-reset')) {
-					@states=(0,3);
+					@states=(0,3,4);
 					$customer='';
 					$#owners=-1;
 				}
@@ -266,7 +268,7 @@ sub Start {
 					goah::Modules->AddMessage('error',__("Can't delete basket!"));
 				}
 
-				my @states=(0,3);
+				my @states=(0,3,4);
 				$variables{'baskets'} = ReadBaskets('','',\@states,1);
 				$variables{'function'} = 'modules/Basket/showbaskets';
 				$variables{'search_states'}=\@states;
@@ -278,7 +280,7 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't create invoice"));
 				}
-				my @states=(0,3);
+				my @states=(0,3,4);
 				$variables{'baskets'} = ReadBaskets('','',\@states,1);
 				$variables{'search_states'}=\@states;
 
@@ -298,7 +300,7 @@ sub Start {
 					goah::Modules->AddMessage('error',__("Couldn't create new basket via recurring basket!"),__FILE__,__LINE__);
 				}
 
-				my @states=(0,3);
+				my @states=(0,3,4);
 				$variables{'baskets'} = ReadBaskets('','',\@states,1);
 				$variables{'function'} = 'modules/Basket/showbaskets';
 				$variables{'search_states'}=\@states;
@@ -312,7 +314,7 @@ sub Start {
 		use goah::Modules::Systemsettings;
 		$variables{'companypersonnel'} = goah::Modules::Systemsettings->ReadOwnerPersonnel();
 
-		my @states=(0,3);
+		my @states=(0,3,4);
 		$variables{'baskets'} = ReadBaskets('','',\@states,1);
 		$variables{'search_states'}=\@states;
 
