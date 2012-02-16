@@ -348,6 +348,11 @@ textarea.medium {
 	height: 50px;
 }
 
+textarea.huge {
+	width: 90%;
+	height: 300px;
+}
+
 input {
 	padding-right: 3px;
 }

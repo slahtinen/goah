@@ -178,6 +178,14 @@ if($auth==1) {
 		}
 		$customerinfo = goah::Modules::Customermanagement::ReadCompanydata($basketdata{'companyid'});
 
+		# Reformat longinfo for latex
+		$basketdata{'longinfo'}=~s/&euro;/\\euro/g;
+		$basketdata{'longinfo'}=~s/([\#\$\%\&\_\^\{\}\~])/\\$1/g;
+		$basketdata{'longinfo'}=~s/= (.*) =/\\textbf{\1}\\\\/gi;
+		#$basketdata{'longinfo'}=~s/_(.*)_/\\uline{\1}/gi;
+		$basketdata{'longinfo'}=~s/\n/\\\\/g;
+
+		$data=\%basketdata;
 		$templatevars{'file'}='offer_fi.tt2';
 
 	}
@@ -195,7 +203,7 @@ if($auth==1) {
 	$templatevars{'logo'} = getcwd()."/pdflogo.jpg";
 
 	# Debugging, print only the tex -code
-	if(0==1) {
+	if(1==0) {
 		print $q->header( -type => 'text/plain', -charset => 'utf-8' );
 		$tt->process($templatevars{'file'},\%templatevars) or
 			die "ERR! ".$tt->error();

@@ -39,13 +39,14 @@ my %baskettypes = ( 0 => { id => 0, name => __("Sell"), selected => 1, hidden =>
 my %basketdbfields = ( 
 		0 => { field => 'id', name => 'id', type => 'hidden', required => '0' },
 		1 => { field => 'companyid', name => __('Customer'), type => 'selectbox', required => '1', data => goah::Modules::Customermanagement->ReadAllCompanies(1) },
-		2 => { field => 'locationid', name => __('Shipping address'), type => 'selectbox', required => '1', data => '0' },
-		3 => { field => 'billingid', name => __('Billing address') , type => 'selectbox', required => '1', data => '0' },
-		4 => { field => 'state', name => __("Basket type"), type => 'selectbox', required => '1', data => \%baskettypes },
-		5 => { field => 'created', name => 'created', type => 'hidden', required => '0' },
-		6 => { field => 'updated', name => 'updated', type => 'hidden', required => '0' },
-		7 => { field => 'info', name => __('Description'), type => 'textarea', required => '0' },
-		8 => { field => 'ownerid', name => 'ownerid', type => 'hidden', required => '0'}
+		2 => { field => 'locationid', name => __('Shipping address'), type => 'selectbox', required => '1', data => '0', hidden => 0 },
+		3 => { field => 'billingid', name => __('Billing address') , type => 'selectbox', required => '1', data => '0', hidden => 0 },
+		4 => { field => 'state', name => __("Basket type"), type => 'selectbox', required => '1', data => \%baskettypes, hidden => 0 },
+		5 => { field => 'created', name => 'created', type => 'hidden', required => '0', hidden => 0 },
+		6 => { field => 'updated', name => 'updated', type => 'hidden', required => '0', hidden => 0 },
+		7 => { field => 'info', name => __('Description'), type => 'textarea', required => '0', hidden => 0 },
+		8 => { field => 'ownerid', name => 'ownerid', type => 'hidden', required => '0', hidden => 0 },
+		9 => { field => 'longinfo', name => __("Additional information"), type => 'textarea', required => '0', hidden => 1 }
 	);
 
 #
@@ -620,7 +621,6 @@ sub ReadBaskets {
 			}
 		}
 
-		print "<br>YES.";
 		if($_[4]=~/^[0-9]+$/) {
 			$search{'companyid'} = $_[4];	
 		}
@@ -1220,7 +1220,7 @@ sub ReadBasketrows {
 		foreach my $row (@data) {
 			
 			$i++;
-			
+
 			my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref,$_[2]); 
 			unless($prodpoint) {
 				goah::Modules->AddMessage('error',__("Couldn't read product data for id ").$row->get('productid')."!",__FILE__,__LINE__);
@@ -1231,7 +1231,7 @@ sub ReadBasketrows {
 				$field = $basketrowdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
 					unless($_[2]) {
-						if($_[1]==-1) {
+						if($_[1] && $_[1]==-1) {
 							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),0,$uid,'in',$settref);
 						} else {
 							# Calculate rows sums for display

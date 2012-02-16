@@ -201,7 +201,7 @@ sub FormatCurrencyNopref {
 	}
 
 	my $sum=$_[0];
-	if($_[2] == 1) {
+	if($_[2]=~/^([0-9])+$/ && $_[2] == 1) {
 		goah::Modules->AddMessage('debug',"Removing VAT from amount",__FILE__,__LINE__);
 		$sum=$sum/$vat;
 	}
@@ -210,7 +210,7 @@ sub FormatCurrencyNopref {
 	if($_[3] && $_[3] eq 'in') {
 		$ret = sprintf("%.05f",($_[0]/$vat));
 	} else {
-		if($_[4] == 1) {
+		if($_[4] && $_[4] == 1) {
 			$ret = sprintf("%.02f",($_[0]*$vat) );
 		} else {
 			$ret = sprintf("%.02f",$_[0]);

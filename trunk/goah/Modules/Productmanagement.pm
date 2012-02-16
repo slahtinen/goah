@@ -788,7 +788,7 @@ sub ReadData {
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
-				unless($_[4] eq "1") {
+				unless($_[4] && $_[4] eq "1") {
 					#$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
 					$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$dbdata->vat,$uid,'out',$settref);
 				} else {

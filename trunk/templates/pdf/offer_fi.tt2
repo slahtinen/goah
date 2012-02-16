@@ -9,6 +9,7 @@
 \usepackage{fancyhdr}
 \usepackage{verbatim}
 \usepackage{tabularx}
+\usepackage{ulem}
 \usepackage[table]{xcolor}
 \renewcommand{\footrulewidth}{0.5pt}
 \renewcommand{\rmdefault}{phv}
@@ -80,4 +81,11 @@
 \multicolumn{6}{r}{\textbf{ALV osuus}} & [% data.-1.vat %] \\
 \multicolumn{6}{r}{\textbf{Maksettava}} & \textbf{[% data.-1.totalvat %]} \\
 \end{tabular*}
+\\
+\hspace{-0.5cm}
+[% IF data.longinfo.length > 0 %]
+\textbf{LISÄTIETOJA} \\
+[% data.longinfo %]
+[% END %]
+\\
 \end{document} 

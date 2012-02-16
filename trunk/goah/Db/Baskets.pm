@@ -21,7 +21,7 @@ use base qw(goah::Db::Object);
 __PACKAGE__->meta->setup
         (
 	table      => 'Baskets',
-	columns    => [ qw(id companyid locationid billingid created updated ordernum state info ownerid lasttrigger dayinmonth repeat nexttrigger) ],
+	columns    => [ qw(id companyid locationid billingid created updated ordernum state info ownerid lasttrigger dayinmonth repeat nexttrigger longinfo) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );
