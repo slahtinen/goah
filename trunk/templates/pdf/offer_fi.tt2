@@ -9,6 +9,7 @@
 \usepackage{fancyhdr}
 \usepackage{verbatim}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{ulem}
 \usepackage[table]{xcolor}
 \renewcommand{\footrulewidth}{0.5pt}
@@ -85,12 +86,13 @@
 \vspace*{0.5cm}
 \\
 [% IF data.longinfo.length > 0 %]
-\begin{tabular*}{18cm}{p{18cm}}
-\hline
-\textbf{LISÄTIETOJA} \\
+\begin{longtable}{p{17.8cm}}
+\setlength\LTleft\parindent
+\setlength\LTright\fill
+\textbf{LISÄTIETOJA}
 \vspace*{0.2cm}
-[% data.longinfo %]
-\end{tabular*}
+\hrule\vspace{5mm}
+[% data.longinfo %] \\
+\end{longtable}
 [% END %]
-\\
 \end{document} 
