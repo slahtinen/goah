@@ -82,10 +82,15 @@
 \multicolumn{6}{r}{\textbf{Maksettava}} & \textbf{[% data.-1.totalvat %]} \\
 \end{tabular*}
 \\
-\hspace{-0.5cm}
+\vspace*{0.5cm}
+\\
 [% IF data.longinfo.length > 0 %]
+\begin{tabular*}{18cm}{p{18cm}}
+\hline
 \textbf{LISÄTIETOJA} \\
+\vspace*{0.2cm}
 [% data.longinfo %]
+\end{tabular*}
 [% END %]
 \\
 \end{document} 
