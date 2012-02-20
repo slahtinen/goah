@@ -26,7 +26,7 @@ use Encode;
 use goah::Modules::Customermanagement;
 use goah::Modules::Productmanagement;
 
-my %baskettypes = ( 0 => { id => 0, name => __("Sell"), selected => 1, hidden => 0, validstates => (4) },
+my %baskettypes = ( 0 => { id => 0, name => __("Pending"), selected => 1, hidden => 0, validstates => (4) },
 		    1 => { id => 1, name => __("Sold"), selected => 0, hidden => 1 },
 		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 0, validstates => () },
 		    3 => { id => 3, name => __("Offer"), selected => 0, hidden => 0, validstates => (4) },
@@ -80,7 +80,7 @@ my %submenu = (
 #
 #   Text representations of basket states
 #
-my %basketstates = ( 0 => __("Sell"),
+my %basketstates = ( 0 => __("Pending"),
 		     1 => __("Sent/Closed"),
 		     2 => __("Recurring"),
 		     3 => __("Offer"),

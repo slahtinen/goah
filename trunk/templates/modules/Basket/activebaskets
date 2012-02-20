@@ -2,7 +2,7 @@
 <table id="activebaskets">
 <thead>
 <tr>
-<th colspan='4' class='info'>[% gettext("Search baskets") %]</th>
+<th colspan='5' class='info'>[% gettext("Search baskets") %]</th>
 <th colspan='3' class='info'>[% gettext("Create new basket") %]</th>
 </tr>
 </thead><tbody>
@@ -11,6 +11,7 @@
 <input type="hidden" name="subaction" value="search" />
 <input type="hidden" name="action" value="showbaskets" />
 <tr><td>
+[% lcount = 0 %]
 [% FOREACH k IN baskettypes.keys.sort %]
 	[% state = baskettypes.$k %]
 	[% IF state.hidden != 1 %]
@@ -25,6 +26,12 @@
 	[% ELSE %]
 		<input type="checkbox" name="states" value="[% state.id %]" /> [% gettext(state.name) %]<br/>
 	[% END %]
+		[% IF lcount == 1 && NOT loop.last %]
+			</td><td>
+			[% lcount = 0 %]
+		[% ELSE %]
+			[% lcount = lcount + 1 %]
+		[% END %]
 	[% END %] [%# IF state.hidden != 1 %]
 [% END %]
 </td>
@@ -71,8 +78,9 @@
 	[% END %]
 [% END %]
 </select>
-<td><input type="submit" value="[% gettext("Search") %]" />
-<br/><input type="submit" name="submit-reset" value="[% gettext("Reset") %]" /></td>
+<td>
+<input type="submit" name="submit-reset" value="[% gettext("Reset") %]" />
+<input type="submit" value="[% gettext("Search") %]" /></td>
 </form>
 
 [% INCLUDE modules/Basket/newbasket %]
@@ -94,8 +102,7 @@
 		<th>[% gettext("Value") %]</th>
 		<th>[% gettext("Rows") %]</th>
 		<th>[% gettext("Dates") %]</th>
-		<th class="medium">[% gettext("Description") %]</th>
-		<th class="icon">[% gettext("Open") %]</th>
+		<th class="medium" colspan=2>[% gettext("Description") %]</th>
 	</tr>
 	</thead>
 	<tbody class="rowdata">	
