@@ -251,7 +251,7 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't update row."));
 				}
-				$variables{'data'} = ReadBaskets($q->param('target'));
+				$variables{'basketdata'} = ReadBaskets($q->param('target'));
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'activebasket'} = $q->param('activebasket');
 				if($q->param('activebasket') == '0') {
