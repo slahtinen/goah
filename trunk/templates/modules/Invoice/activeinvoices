@@ -102,11 +102,11 @@
 	[% IF linfo == 0 %] 
 		[% gettext("Not available!") %]<br/><br/><br/>
 	[% ELSE %]
-		[% linfo.addr1 %]
+		[% linfo.addr1 %],
 		[% IF linfo.addr2 != '' %]
-		, [% linfo.addr2 %]</br>
+			[% linfo.addr2 %]</br>
 		[% END %]
-		, [% linfo.postalcode %] [% linfo.postaloffice %]
+		[% linfo.postalcode %] [% linfo.postaloffice %]
 	[% END %]
 	</td>
 	[% IF invoice.invoicenumber != 0 %]

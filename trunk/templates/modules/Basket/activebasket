@@ -205,6 +205,15 @@
 </form>
 </td>
 [% END %]
+[% IF state == 4 %]
+<td>
+<form action='' method='post'>
+<input type='hidden' name='module' value='[% module %]' />
+<input type='hidden' name='target' value='[% basketdata.id %]' />
+<input type='hidden' name='action' value='basket2invoice' />
+<input type='submit' value="[% gettext("Create invoice") %]" onclick="return confirm('[% gettext("Create invoice from basket?") %]')" />
+</form>
+[% END %]
 <td>
 <form action='' method='post'>
 <input type='hidden' name='module' value="[% module %]" />
