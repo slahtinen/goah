@@ -1,0 +1,101 @@
+<h2>[% gettext("Time tracking") %]</h2>
+<form action="" method="post">
+<table>
+<tr>
+  <td class='info' colspan='2'>[% gettext("Fields marked with * are required") %]</td>
+</tr>
+[% row = 'even' %]
+[% FOREACH key IN timetrackingdb.keys.sort %]
+<tr class="[% row %]">
+[% data = timetrackingdb.$key %]
+[% IF data.type != "hidden" %]
+        <td>[% gettext(data.name) %]
+        [% IF data.required == 1 %]
+                *
+        [% END %]
+        </td>
+        [% IF data.type == 'textfield' %]
+                <td><input  name="[% data.field %]"></td>
+        [% ELSIF data.type == 'textarea' %]
+                <td><textarea class="medium" name="[% data.field %]"></textarea></td>
+        [% ELSIF data.type == 'selectbox' %]
+                <td><select class="medium" name="[% data.field %]">
+                <option  value="-1">-- [% gettext("Select") %] --</option>
+                [% FOREACH key IN data.data.keys.sort %]
+                        [% item = data.data.$key %]
+			[% IF item.hidden != 1 %]
+				[% IF item.selected == 1 %]
+					<option value="[% item.id %]" selected>[% item.name %]
+				[% ELSE %]
+					<option value="[% item.id %]">[% item.name %]
+				[% END %]
+				[%- IF item.vat_id == '00000000' %]
+					, [% item.firstname %]
+				[% END %]
+				</option>
+			[% END %] 
+                [% END %]
+                </select>
+                </td>
+        [% ELSE %]
+                <td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
+        [% END %]
+[% END %]
+</tr>
+[% IF row == 'even' %]
+	[% row = 'odd' %]
+[% ELSE %]
+	[% row = 'even' %]
+[% END %]
+[% END %]
+<tr>
+<td colspan='2'>
+<p>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="writenewhours" />
+<input type="hidden" name="userid" value="[% uid %]" />
+<input type="submit" value="[% gettext("Save") %]" />
+</p>
+</td>
+</tr>
+</table>
+</form>
+<br>
+<h3>[% gettext("Your latest tracked hours") %]</h3>
+[% trow='even' %]
+<table>
+<thead>
+<tr><th>[% gettext("Date") %]</th><th>[% gettext("Customer") %]</th><th>[% gettext("Hours") %]</th><th colspan=2>[% gettext("Type") %]</th>
+</thead>
+<tbody class="rowdata">
+[% FOREACH key IN latesthours.keys.sort %]
+[% row = latesthours.$key %]
+
+[% IF trow=='odd' %]
+	[% trow = 'even' %]
+[% ELSE %]
+	[% trow = 'odd' %]
+[% END %]
+
+<tr class="[% trow %]">
+<td>[% row.day %]</td>
+<td>[% row.companyname %]</td>
+<td>[% row.hours %]</td>
+
+<td>
+[% FOREACH statkey IN timetrackstatuses.keys %]
+[% timetrackstatus = timetrackstatuses.$statkey %]
+[% IF row.type == timetrackstatus.id %]
+[% timetrackstatus.name %] 
+[% LAST %]
+[% ELSE %]
+[% END %]
+[% END %]
+</td>
+
+<td class='center'>
+<a href="?module=[% module %]&amp;action=edithourtracking&amp;target=[% row.id %]">
+<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+
+</tr>
+[% END %]
