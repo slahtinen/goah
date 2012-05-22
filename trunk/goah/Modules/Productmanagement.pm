@@ -166,6 +166,7 @@ sub Start {
 	$variables{'module'} = 'Productmanagement';
 	$variables{'gettext'} = sub { return __($_[0]); };
 	$variables{'submenu'} = \%submenu;
+	$variables{'submenuselect'} = '-1';
 	$variables{'manufdbfields'} = \%manufdbfields;
 	$variables{'groupdbfields'} = \%groupdbfields;
 	$variables{'productsdbfields'} = \%productsdbfields;
@@ -201,7 +202,19 @@ sub Start {
 				$variables{'prefill'}=ReadProductPrefill($q->param('barcode'),$uid);
 			}
 			$variables{'storages'} = goah::Modules::Storagemanagement->ReadData('storages');
+
+			goah::Modules->AddMessage('debug',"type: ".$q->param('type'));
+			if($q->param('type') eq 'products') {
+				$variables{'submenuselect'} = 'addnew&type=products';
+			} elsif($q->param('type') eq 'manuf') {
+				$variables{'submenuselect'}='addnew&type=manuf'
+			} elsif($q->param('type') eq 'productgroups') {
+				$variables{'submenuselect'} = 'addnew&type=productgroups'
+			}
+
+
 		} elsif($action eq 'writenew') {
+
 			if(WriteNewItem() == 0) {
 				goah::Modules->AddMessage('info',__("New item added to database"));
 			} else {
@@ -209,11 +222,28 @@ sub Start {
 			}
 			if($q->param('submit_addnew')) {
 				$variables{'function'} = $function.'.new';
+				if($q->param('type') eq 'products') {
+					$variables{'submenuselect'} = 'addnew&type=products';
+				} elsif($q->param('type') eq 'manuf') {
+					$variables{'submenuselect'}='addnew&type=manuf'
+				} elsif($q->param('type') eq 'productgroups') {
+					$variables{'submenuselect'} = 'addnew&type=productgroups'
+				}
 			} else {
 				$variables{'function'} = $function;
+				if($q->param('type') eq 'products') {
+					$variables{'submenuselect'} = '';
+				} elsif($q->param('type') eq 'manuf') {
+					$variables{'submenuselect'}='manufacturers';
+				} elsif($q->param('type') eq 'productgroups') {
+					$variables{'submenuselect'} = 'productgroups';
+				}
 			}
 			$action='showall';
+
+
 		} elsif($action eq 'writeedited') {
+
 			if(WriteEditedItem() == 0) {
 				goah::Modules->AddMessage('info',__("Information updated"));
 			} else {
@@ -222,13 +252,30 @@ sub Start {
 			$variables{'function'} = $function;
 			$variables{'storages'} = goah::Modules::Storagemanagement->ReadData('storages');
 			$action='showall';
+			if($q->param('type') eq 'products') {
+				$variables{'submenuselect'} = '';
+			} elsif($q->param('type') eq 'manuf') {
+				$variables{'submenuselect'}='manufacturers';
+			} elsif($q->param('type') eq 'productgroups') {
+				$variables{'submenuselect'} = 'productgroups';
+			}
+
 		} elsif($action eq 'edit') {
+
 			$variables{'data'} = ReadData($q->param('type'),$q->param('id'));
 			$variables{'function'} = $function.'.edit';
-			if($q->param('type') eq 'product') {
+			goah::Modules->AddMessage('debug',"type: ".$q->param('type'));
+			if($q->param('type') eq 'products') {
 				$variables{'manufacturers'} = ReadData('manuf');
 				$variables{'productgroups'} = ReadData('productgroups');
+				goah::Modules->AddMessage('debug','Changed submenuselect');
+				$variables{'submenuselect'} = '';
+			} elsif($q->param('type') eq 'manuf') {
+				$variables{'submenuselect'}='manufacturers';
+			} elsif($q->param('type') eq 'productgroups') {
+				$variables{'submenuselect'} = 'productgroups';
 			}
+
 		} elsif($action eq 'delete') {
 			if(DeleteItem($q->param('type'),$q->param('id')) == 0) {
 				goah::Modules->AddMessage('info',__("Information removed from database"));

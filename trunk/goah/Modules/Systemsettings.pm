@@ -142,6 +142,7 @@ sub Start {
 	$variables{'module'} = $module;
 	$variables{'gettext'} = sub { return __($_[0]); };
 	$variables{'submenu'} = \%submenu;
+	$variables{'submenuselect'}=-1;
 	$variables{'companydbfields'} = \%companydbfieldnames;
 	$variables{'locationdbfields'} = \%locationdbfieldnames;
 	$variables{'persondbfields'} = \%persondbfieldnames;
@@ -158,6 +159,7 @@ sub Start {
 	
 	if($q->param('action')) {
 
+		$variables{'submenuselect'}="companyinfo";
 		if($q->param('action') eq 'companyinfo') {
 
 			$variables{'companydata'} = ReadOwnerInfo();
@@ -305,6 +307,7 @@ sub Start {
 			$variables{'reclamationtimes'} = ReadSetup('reclamationtime');
 			$variables{'delayinterests'} = ReadSetup('delayinterests');
 			$variables{'syslocale'} = ReadSetup('locale');
+			$variables{'submenuselect'}="goahsettings";
 
 			$variables{'languages'} = goah::GoaH->ReadLanguages();
 
@@ -322,6 +325,7 @@ sub Start {
 			$variables{'syslocale'} = ReadSetup('locale');
 			$variables{'languages'} = goah::GoaH->ReadLanguages();
 			$variables{'delayinterests'} = ReadSetup('delayinterests');
+			$variables{'submenuselect'}="goahsettings";
 
 		} elsif($q->param('action') eq 'deletesetting') {
 
@@ -335,6 +339,7 @@ sub Start {
 			$variables{'paymentconditions'} = ReadSetup('paymentcondition');
 			$variables{'reclamationtimes'} = ReadSetup('reclamationtime');
 			$variables{'delayinterests'} = ReadSetup('delayinterests');
+			$variables{'submenuselect'}="goahsettings";
 		} else {
 
 			goah::Modules->AddMessage('error',__("Module doesn't have function '").$q->param('action')."'.");
