@@ -16,7 +16,11 @@
         [% END %]
         </td>
         [% IF data.type == 'textfield' %]
+		[% IF field == 'hours' %]
+		<td><input class="small" name="[% data.field %]" value="[% dbdata.$field %]" />h <input class="small" name="minutes" value="[% dbdata.minutes %]" />min</td>
+		[% ELSE %]
                 <td><input  name="[% data.field %]" value="[% dbdata.$field %]" /></td>
+		[% END %]
         [% ELSIF data.type == 'textarea' %]
                 <td><textarea class="medium" name="[% data.field %]">[% dbdata.$field %]</textarea></td>
         [% ELSIF data.type == 'selectbox' %]

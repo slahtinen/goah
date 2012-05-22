@@ -17,6 +17,8 @@
         [% IF data.type == 'textfield' %]
 		[% IF data.field == 'day' %]
                 <td><input  name="[% data.field %]" value="[% datenow %]" /></td>
+		[% ELSIF data.field == 'hours' %]
+		<td><input  class="small" name="[% data.field %]" />h <input class="small" name="minutes" />min</td>
 		[% ELSE %]
                 <td><input  name="[% data.field %]" /></td>
 		[% END %]
@@ -84,7 +86,11 @@
 <tr class="[% trow %]">
 <td>[% row.day %]</td>
 <td>[% row.companyname %]</td>
-<td>[% row.hours %]</td>
+<td>[% row.hours %]h 
+[% IF row.minutes > 0 %]
+[% row.minutes %]min
+[% END %]
+</td>
 
 <td>
 [% FOREACH statkey IN timetrackstatuses.keys %]

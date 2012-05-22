@@ -195,6 +195,9 @@ sub WriteHours {
 						goah::Modules->AddMessage('error',__("Hours column not numeric! Setting hours -value to 0!"));
 						$dbdata{$tmpcol}="0";
 					}
+					if($q->param('minutes')>0) {
+						$dbdata{$tmpcol}+=$q->param('minutes')/60;
+					}
 				}	
 				if($fieldinfo{'field'} eq 'day') {
 					if($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
@@ -266,6 +269,12 @@ sub ReadData {
 		$field = $timetrackingdb{$key}{'field'};
 		if($field eq 'day') {
 			$data{$field} = goah::GoaH::FormatDate($datap->$field);
+		} elsif ($field eq 'hours') {
+			$data{$field}=$datap->$field;
+			$data{$field}=~s/\.\d*$//;
+			$data{'minutes'}=$datap->$field;
+			$data{'minutes'}=~s/^\d*/0/;
+			$data{'minutes'}=sprintf("%.0f",60*$data{'minutes'});
 		} else {
 			$data{$field} = $datap->$field;	
 		}
@@ -322,6 +331,17 @@ sub ReadOwnLatesthours {
 			}
 			if($field eq 'day') {
 				$tdata{$i}{$field} = goah::GoaH::FormatDate($row->$field);
+			}
+			if ($field eq 'hours') {
+				$tdata{$i}{$field}=$row->$field;
+				$tdata{$i}{$field}=~s/\.\d*$//;
+				$tdata{$i}{'minutes'}=$row->$field;
+				$tdata{$i}{'minutes'}=~s/^\d*/0/;
+				if($tdata{$i}{'minutes'} > 0) {
+					$tdata{$i}{'minutes'}=sprintf("%.0f",60*$tdata{$i}{'minutes'});
+				} else {
+					$tdata{$i}{'minutes'}=0;
+				}
 			}
 		}
 		$i++;
