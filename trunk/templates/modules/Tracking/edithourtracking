@@ -16,7 +16,7 @@
         [% END %]
         </td>
         [% IF data.type == 'textfield' %]
-                <td><input  name="[% data.field %]" value="[% dbdata.$field %]"></td>
+                <td><input  name="[% data.field %]" value="[% dbdata.$field %]" /></td>
         [% ELSIF data.type == 'textarea' %]
                 <td><textarea class="medium" name="[% data.field %]">[% dbdata.$field %]</textarea></td>
         [% ELSIF data.type == 'selectbox' %]
@@ -41,6 +41,8 @@
         [% ELSE %]
                 <td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
         [% END %]
+[% ELSE %]
+	<input type="hidden" name="[% data.field %]" value="[% dbdata.$field %]" />
 [% END %]
 </tr>
 [% IF row == 'even' %]
@@ -49,12 +51,14 @@
 	[% row = 'even' %]
 [% END %]
 [% END %]
+<tr><td>[% gettext("Delete") %]</td><td><input type='checkbox' name='delete' /> [% gettext("Warning! No further confirmation!") %]</td></tr> 
 <tr>
 <td colspan='2'>
 <p>
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="action" value="writeeditedhours" />
 <input type="hidden" name="userid" value="[% uid %]" />
+<input type="hidden" name="target" value="[% dbdata.id %]" />
 <input type="submit" value="[% gettext("Save") %]" />
 </p>
 </td>
