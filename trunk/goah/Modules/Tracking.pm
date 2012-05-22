@@ -167,32 +167,32 @@ sub WriteHours {
 			goah::Modules->AddMessage('error',__("Couldn't delete item from the database."),__FILE__,__LINE__);
 			return 0;
 		}
-	} else {
-		goah::Modules->AddMessage('debug',"No target! '".$q->param('target')."'",__FILE__,__LINE__);
 	}
 
         my %fieldinfo;
         while(my($key,$value) = each (%timetrackingdb)) {
                 %fieldinfo = %$value;
-                if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) ) {
-                        # Using variable just to make source look nicer
-                        my $errstr = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!')." ";
- 			goah::Modules->AddMessage('error',$errstr);
+                if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) && !($fieldinfo{'field'} eq 'hours') ) {
+
+			# Using variable just to make source look nicer
+			my $errstr = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!')." ";
+			goah::Modules->AddMessage('error',$errstr);
 			return 0;
+
                 } elsif($fieldinfo{'required'} == '1' && $fieldinfo{'type'} eq 'selectbox' && $q->param($fieldinfo{'field'}) eq "-1") {
                         my $errstr = __('Required dropdown field').' <b>'.$fieldinfo{'name'}.'</b> '.__('unselected!').' ';
                         $errstr.= __("Leaving value unaltered.");
                         goah::Modules->AddMessage('error',$errstr);
 			return 0;
                 } else {
-			if(length($q->param($fieldinfo{'field'}))) {
+			if(length($q->param($fieldinfo{'field'})) || $fieldinfo{'field'} eq 'hours') {
 				my $tmpcol=$fieldinfo{'field'};
 				$dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
 				if($fieldinfo{'field'} eq 'hours') {
 					my $hours = $q->param($fieldinfo{'field'});
 					$hours=~s/,/\./g;
 					unless($hours=~/\d+\.?\d*/) {
-						goah::Modules->AddMessage('error',__("Hours column not numeric! Setting hours -value to 0!"));
+						goah::Modules->AddMessage('warn',__("Hours column not numeric! Setting hours -value to 0!"));
 						$dbdata{$tmpcol}="0";
 					}
 					if($q->param('minutes')>0) {
