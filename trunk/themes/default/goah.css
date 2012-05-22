@@ -338,10 +338,9 @@ tbody td {
 }
 
 textarea.small {
-	width: 100px;
+	width: 150px;
 	height: 50px;
 }
-
 
 textarea.medium {
 	width: 250px;
@@ -361,6 +360,10 @@ input.date {
 	width: 85px;
 }
 
+input.tiny {
+	width: 35px;
+}
+
 input.small {
 	width: 65px;
 }
@@ -378,7 +381,7 @@ input.big {
 }
 
 select.small {
-	width: 75px;
+	width: 98px;
 }
 
 select.medium {

@@ -1,31 +1,33 @@
 <h2>[% gettext("Time tracking") %]</h2>
 <form action="" method="post">
 <table>
-<tr>
-  <td class='info' colspan='2'>[% gettext("Fields marked with * are required") %]</td>
-</tr>
-[% row = 'even' %]
-[% FOREACH key IN timetrackingdb.keys.sort %]
-<tr class="[% row %]">
-[% data = timetrackingdb.$key %]
-[% IF data.type != "hidden" %]
-        <td>[% gettext(data.name) %]
-        [% IF data.required == 1 %]
-                *
-        [% END %]
-        </td>
+  <thead>
+    <th>[% gettext("Customer") %]</th>
+    <th>[% gettext("Type") %]</th>
+    <th>[% gettext("Date") %]</th>
+    <th>[% gettext("Time") %]</th>
+    <th>[% gettext("Description") %]</th>
+    <th>[% gettext("Project") %]</th>
+    <th>[% gettext("Related personnel") %]</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody
+  <tr>
+  [% FOREACH key IN timetrackingdb.keys.sort %]
+  [% data = timetrackingdb.$key %]
+  [% IF data.type != "hidden" %]
         [% IF data.type == 'textfield' %]
 		[% IF data.field == 'day' %]
-                <td><input  name="[% data.field %]" value="[% datenow %]" /></td>
+                <td><input  name="[% data.field %]" class="small" value="[% datenow %]" /></td>
 		[% ELSIF data.field == 'hours' %]
-		<td><input  class="small" name="[% data.field %]" />h <input class="small" name="minutes" />min</td>
+		<td><input  class="tiny" name="[% data.field %]" /> h <input class="tiny" name="minutes" /> min</td>
 		[% ELSE %]
                 <td><input  name="[% data.field %]" /></td>
 		[% END %]
         [% ELSIF data.type == 'textarea' %]
-                <td><textarea class="medium" name="[% data.field %]"></textarea></td>
+                <td><textarea class="small" name="[% data.field %]"></textarea></td>
         [% ELSIF data.type == 'selectbox' %]
-                <td><select class="medium" name="[% data.field %]">
+                <td><select class="small" name="[% data.field %]">
                 <option  value="-1">-- [% gettext("Select") %] --</option>
                 [% FOREACH key IN data.data.keys.sort %]
                         [% item = data.data.$key %]
@@ -46,32 +48,27 @@
         [% ELSE %]
                 <td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
         [% END %]
+  [% END %]
 [% END %]
-</tr>
-[% IF row == 'even' %]
-	[% row = 'odd' %]
-[% ELSE %]
-	[% row = 'even' %]
-[% END %]
-[% END %]
-<tr>
-<td colspan='2'>
-<p>
+<td class="center">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="action" value="writenewhours" />
 <input type="hidden" name="userid" value="[% uid %]" />
-<input type="submit" value="[% gettext("Save") %]" />
-</p>
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Create") %]" />
 </td>
 </tr>
+</tbody>
 </table>
 </form>
-<br>
 <h3>[% gettext("Your latest tracked hours") %]</h3>
 [% trow='even' %]
 <table>
 <thead>
-<tr><th>[% gettext("Date") %]</th><th>[% gettext("Customer") %]</th><th>[% gettext("Hours") %]</th><th colspan=2>[% gettext("Type") %]</th>
+  <th>[% gettext("Date") %]</th>
+  <th>[% gettext("Customer") %]</th>
+  <th>[% gettext("Time") %]</th>
+  <th>[% gettext("Type") %]</th>
+  <th colspan=2>[% gettext("Description") %]</th>
 </thead>
 <tbody class="rowdata">
 [% FOREACH key IN latesthours.keys.sort %]
@@ -86,12 +83,11 @@
 <tr class="[% trow %]">
 <td>[% row.day %]</td>
 <td>[% row.companyname %]</td>
-<td>[% row.hours %]h 
+<td>[% row.hours %] h 
 [% IF row.minutes > 0 %]
-[% row.minutes %]min
+[% row.minutes %] min
 [% END %]
 </td>
-
 <td>
 [% FOREACH statkey IN timetrackstatuses.keys %]
 [% timetrackstatus = timetrackstatuses.$statkey %]
@@ -102,6 +98,7 @@
 [% END %]
 [% END %]
 </td>
+<td>[% row.description %]</td>
 
 <td class='center'>
 <a href="?module=[% module %]&amp;action=edithourtracking&amp;target=[% row.id %]">
@@ -109,3 +106,5 @@
 
 </tr>
 [% END %]
+</tbody>
+</table>
