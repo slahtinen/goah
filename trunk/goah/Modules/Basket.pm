@@ -984,6 +984,8 @@ sub UpdateBasketRow {
 				$rowinfo->set('purchase' => $prodinfo->purchase);
 			} elsif($fieldinfo{'field'} eq 'sell') {
 				$rowinfo->set('sell' => $prodinfo->sell);
+			} elsif($fieldinfo{'field'} eq 'rowinfo') {
+				$rowinfo->set('rowinfo' => '');
 			}
 		}
 	}
