@@ -191,7 +191,7 @@ sub WriteHours {
 				if($fieldinfo{'field'} eq 'hours') {
 					my $hours = $q->param($fieldinfo{'field'});
 					$hours=~s/,/\./g;
-					unless($hours=~/\d+\.?\d+/) {
+					unless($hours=~/\d+\.?\d*/) {
 						goah::Modules->AddMessage('error',__("Hours column not numeric! Setting hours -value to 0!"));
 						$dbdata{$tmpcol}="0";
 					}
