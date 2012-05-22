@@ -193,9 +193,21 @@ sub WriteHours {
 					$hours=~s/,/\./g;
 					unless($hours=~/\d+\.?\d+/) {
 						goah::Modules->AddMessage('error',__("Hours column not numeric! Setting hours -value to 0!"));
-						$dbdata{$tmpcol}=0;
+						$dbdata{$tmpcol}="0";
 					}
 				}	
+				if($fieldinfo{'field'} eq 'day') {
+					if($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+						$dbdata{$tmpcol}=goah::GoaH::FormatDate($q->param('day')." 00:00:01");
+					} else {
+						goah::Modules->AddMessage('warn',__("Incorrectly formatted date!  Using current date."),__LINE__,__FILE__);
+						my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+						$year+=1900;    
+						$mon++; 
+						$dbdata{$tmpcol}=sprintf("%04d-%02d-%02d",$year,$mon,$mday);
+					}
+
+				}
 				$prod->$tmpcol($dbdata{$tmpcol}) if $update;
 			}
                 }
@@ -252,7 +264,11 @@ sub ReadData {
 	my $field;
 	foreach my $key (keys %timetrackingdb) {
 		$field = $timetrackingdb{$key}{'field'};
-		$data{$field} = $datap->$field;	
+		if($field eq 'day') {
+			$data{$field} = goah::GoaH::FormatDate($datap->$field);
+		} else {
+			$data{$field} = $datap->$field;	
+		}
 	}
 
 	return \%data;
@@ -303,6 +319,9 @@ sub ReadOwnLatesthours {
 				} else {
 					$tdata{$i}{'companyname'}=__("Not available!");
 				}
+			}
+			if($field eq 'day') {
+				$tdata{$i}{$field} = goah::GoaH::FormatDate($row->$field);
 			}
 		}
 		$i++;
