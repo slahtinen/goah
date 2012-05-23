@@ -46,6 +46,7 @@ my %timetrackingdb = (
 
 
 my %submenu = (
+	0 => { title => __("Reporting"), action => 'reporting' }
 );
 
 my $uid;
@@ -111,6 +112,59 @@ sub Start {
 			$variables{'function'} = "modules/Tracking/edithourtracking";
 			$variables{'dbdata'} = ReadData('hours',"id".$q->param('target'));
 
+		} elsif($q->param('action') eq 'reporting') {
+			$variables{'function'} = "modules/Tracking/reporting";
+			$variables{'dbdata'} = ReadHours('all','all');
+			$variables{'dbcompanies'}=goah::Modules::Customermanagement->ReadAllCompanies(1);
+			$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
+			$variables{'timetrackstatuses'}=\%timetrackstatuses;
+
+			if($q->param('subaction') && $q->param('subaction') eq 'search' && !($q->param('submit-reset'))) {
+				my $company;
+				my $uid;
+				my $startdate;
+				my $enddate;
+				my $searchdatestart;
+				my $searchdateend;
+
+				$company = $q->param('customer') if($q->param('customer') && !($q->param('customer')=~/\*/) );
+				$uid = $q->param('user') if($q->param('user'));
+				$startdate = $q->param('fromdate') if($q->param('fromdate'));
+				$enddate = $q->param('todate') if($q->param('todate'));
+				
+				if(length($startdate)) {
+					unless($startdate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+						goah::Modules->AddMessage('error',__("Start date isn't formatted correctly. Ignoring filter."));
+						$startdate='';
+					} else {
+						my @searchdate=split(/\./,$startdate);
+						$searchdatestart=sprintf("%04d-%02d-%02d",$searchdate[2],$searchdate[1],$searchdate[0]);
+						$startdate=sprintf("%02d.%02d.%04d",@searchdate);
+					}
+				} 
+
+				if(length($enddate)) {
+					unless($enddate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+						goah::Modules->AddMessage('error',__("End date isn't formatted correctly. Ignoring filter."));
+						$enddate='';
+					} else {
+						my @searchdate=split(/\./,$enddate);
+						$searchdateend=sprintf("%04d-%02d-%02d",$searchdate[2],$searchdate[1],$searchdate[0]);
+						$enddate=sprintf("%02d.%02d.%04d",@searchdate);
+					}
+				}
+
+				$variables{'dbdata'}=ReadHours($uid,$company,$searchdatestart,$searchdateend);
+				$variables{'search_customer'}=$company;
+				$variables{'search_owners'}=$uid;
+				$variables{'search_startdate'}=$startdate;
+				$variables{'search_enddate'}=$enddate;
+				
+
+			} else {
+				$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$year,$mon,'01'));
+			}
+
                 } else {
                         goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
                         $variables{'function'} = 'modules/blank';
@@ -119,7 +173,8 @@ sub Start {
 	}
 
 	if($variables{'function'}=~/modules\/Tracking\/timetracking/) {
-		$variables{'latesthours'}=ReadOwnLatesthours($uid);
+		#$variables{'latesthours'}=ReadHours($uid,'',$year.'-'.$mon.'-01');
+		$variables{'latesthours'}=ReadHours($uid,'',sprintf("%04d-%02d-%02d",$year,$mon,'01'));
 		$variables{'timetrackstatuses'}=\%timetrackstatuses;
 	}
 		
@@ -283,30 +338,53 @@ sub ReadData {
 	return \%data;
 }
 
+
+# 
+# Function: ReadHours
 #
-# Function: ReadOwnLatesthours
-#
-#   An search function to retrieve latest markings from the 
-#   hour tracking database for the user to review his work
-#   when inserting new hours to database
+#   Function to maintain searches for hour tracking
 #
 # Parameters:
 #
-#   uid - User id who's trackings we should read
+#   0 - user id's, either single value or array reference
+#   1 - customer id's, either single value or array reference
+#   2 - starting day, in YYYY-MM-DD
+#   3 - ending day, in YYYY-MM-DD
 #
-# Retrurns:
+# Returns:
 #
-#   Success - Pointer to hash-variable
+#   Success - Hash reference to retrieved data
 #   Fail - 0
 #
-sub ReadOwnLatesthours {
+sub ReadHours {
 
 	shift if ($_[0]=~/goah::Modules::Tracking/);
 	
-	my $uid = $_[0];
-	
 	use goah::Db::Timetracking::Manager;
-	my $datap = goah::Db::Timetracking::Manager->get_timetracking({ userid => $uid }, sort_by => 'day DESC', limit => 20);
+
+	my %dbsearch;
+	if($_[0]) {
+		$dbsearch{'userid'}=$_[0];
+		goah::Modules->AddMessage('debug',"Searching with uid ".$dbsearch{'userid'},__FILE__,__LINE__);
+	}
+	if($_[1]) {
+		$dbsearch{'companyid'}=$_[1];
+		goah::Modules->AddMessage('debug',"Searching with companyid ".$dbsearch{'companyid'},__FILE__,__LINE__);
+	}
+	if($_[2]) {
+		$dbsearch{'day'} = { gt => $_[2] };
+		goah::Modules->AddMessage('debug',"Searching with startdate ".$_[2],__FILE__,__LINE__);
+	}
+	if($_[3]) {
+		$dbsearch{'day'} = { lt => $_[3] };
+		goah::Modules->AddMessage('debug',"Searching with enddate ".$dbsearch{'day'},__FILE__,__LINE__);
+	}
+	if($_[2] && $_[3]) {
+		$dbsearch{'day'} = { [ gt => $_[2],lt => $_[3] ] };
+		goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
+	}
+		
+	my $datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC');
 	
 	return 0 unless $datap;
 

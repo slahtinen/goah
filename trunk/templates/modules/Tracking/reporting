@@ -1,0 +1,125 @@
+<h2>[% gettext("Search time tracking") %]</h2>
+<table>
+<thead>
+<tr>
+<th>[% gettext("By customer") %]</th>
+<th>[% gettext("By user") %]</th>
+<th>[% gettext("From/to date (dd.mm.yyyy)") %]</th>
+<th>&nbsp;</th>
+</tr>
+</thead><tbody>
+<form action="" method=post>
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="subaction" value="search" />
+<input type="hidden" name="action" value="reporting" />
+<tr>
+[% lcount = 0 %]
+<td class="small">
+<select class="medium" name="customer">
+<option  value="*">-- [% gettext("Customer") %] --</option>
+[% FOREACH key IN dbcompanies.keys.sort %]
+	[% item = dbcompanies.$key %]
+	[% IF item.id == search_customer %]
+		<option value="[% item.id %]" selected />[% item.name %]
+	[% ELSE %]
+		<option value="[% item.id %]" />[% item.name %]
+	[% END %]
+	[%- IF item.vat_id == '00000000' %]
+		, [% item.firstname %]
+	[% END %]
+	</option>
+[% END %]
+</select>
+</td>
+
+<td class="small">
+[% # Use selectbox or dropmenu based on user settings %]
+[% IF usersettings.activebasketselect <= 1 %]
+	<select name="user">
+	<option value=''>-- [% gettext("User") %] --</option>
+[% ELSE %]
+	<select name="user" size='[% usersettings.activebasketselect %]' multiple >
+[% END %]
+
+[% FOREACH key IN dbusers.keys.sort %]
+	[% item = dbusers.$key %]
+	[% selected=0 %]
+	[% FOREACH s IN search_owners %]
+		[% IF s == item.id %]
+			[% selected = 1 %]
+		[% END %]
+	[% END %]
+	[% IF selected == 1 %]
+		<option selected value="[% item.id %]">[% item.lastname %] [% item.firstname %]</option>
+	[% ELSE %]
+		<option value="[% item.id %]">[% item.lastname %] [% item.firstname %]</option>
+	[% END %]
+[% END %]
+</select>
+<td>
+<input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" />
+</td>
+<td>
+<!-- <input type="submit" name="submit-reset" value="[% gettext("Reset") %]" /> -->
+<input type="submit" value="[% gettext("Search") %]" /></td>
+</form>
+</tr>
+</tbody>
+</table>
+
+<h3>[% gettext("Tracked hours") %]</h3>
+[% trow='even' %]
+<table>
+<thead>
+<th>[% gettext("Date") %]</th>
+<th>[% gettext("Customer") %]</th>
+<th>[% gettext("User") %]</th>
+<th>[% gettext("Time") %]</th>
+<th>[% gettext("Type") %]</th>
+<th>[% gettext("Description") %]</th>
+</thead>
+<tbody class="rowdata">
+[% FOREACH key IN dbdata.keys.sort %]
+	[% row = dbdata.$key %]
+
+	[% IF trow=='odd' %]
+		[% trow = 'even' %]
+	[% ELSE %]
+		[% trow = 'odd' %]
+	[% END %]
+
+	<tr class="[% trow %]">
+	<td>[% row.day %]</td>
+	<td>[% row.companyname %]</td>
+	<td>
+	[% FOREACH ukey IN dbusers.keys %]
+		[% user = dbusers.$ukey %]
+		[% IF row.userid == user.id %]
+			[% user.lastname %] [% user.firstname %]
+			[% LAST %]
+		[% END %]
+	[% END %]
+	</td>
+		
+	<td>[% row.hours %] h
+	[% IF row.minutes > 0 %]
+		[% row.minutes %] min
+	[% END %]
+	[% IF row.hours <= 0 && row.minutes <= 0 %]
+		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
+	[% END %]
+	</td>
+	<td>
+	[% FOREACH statkey IN timetrackstatuses.keys %]
+		[% timetrackstatus = timetrackstatuses.$statkey %]
+		[% IF row.type == timetrackstatus.id %]
+			[% timetrackstatus.name %]
+			[% LAST %]
+		[% END %]
+	[% END %]
+	</td>
+	<td>[% row.description %]</td>
+	</tr>
+[% END %]
+</tbody>
+</table>
