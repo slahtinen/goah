@@ -394,7 +394,7 @@ sub ReadHours {
 	# Pack found data into hash and return data
 	my %tdata;
 	my $i=10000000;
-	my $totalhours=0;
+	my %totalhours;
 	foreach my $row (@data) {
 		$i++;
 		my $field;
@@ -424,19 +424,31 @@ sub ReadHours {
 				} else {
 					$tdata{$i}{'minutes'}=0;
 				}
-				$totalhours+=$row->$field;
+				$totalhours{$row->type}+=$row->$field;
 			}
 		}
 	}	
 
-	$tdata{-1}{'hours'}=$totalhours;
-	$tdata{-1}{'hours'}=~s/\.\d*$//;
-	$tdata{-1}{'minutes'}=$totalhours;
-	$tdata{-1}{'minutes'}=~s/^\d*/0/;
-	if($tdata{-1}{'minutes'} > 0) {
-		$tdata{-1}{'minutes'}=sprintf("%.0f",60*$tdata{-1}{'minutes'});
+	foreach my $t (keys(%totalhours)) {
+		goah::Modules->AddMessage('debug',"Total hour count for key $t ".$totalhours{$t},__FILE__,__LINE__);
+		$tdata{-1}{$t}{'hours'}=$totalhours{$t};
+		$tdata{-1}{-1}{'hours'}+=$totalhours{$t};
+		$tdata{-1}{$t}{'hours'}=~s/\.\d*$//;
+		$tdata{-1}{$t}{'minutes'}=$totalhours{$t};
+		$tdata{-1}{$t}{'minutes'}=~s/^\d*/0/;
+		if($tdata{-1}{$t}{'minutes'} > 0) {
+			$tdata{-1}{$t}{'minutes'}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'});
+		} else {
+			$tdata{-1}{$t}{'minutes'}=0;
+		}
+	}
+	$tdata{-1}{-1}{'minutes'}=$tdata{-1}{-1}{'hours'};
+	$tdata{-1}{-1}{'hours'}=~s/\.\d*$//;
+	$tdata{-1}{-1}{'minutes'}=~s/^\d*/0/;
+	if($tdata{-1}{-1}{'minutes'}>0) {
+		$tdata{-1}{-1}{'minutes'}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'});
 	} else {
-		$tdata{-1}{'minutes'}=0;
+		$tdata{-1}{-1}{'minutes'}=0;
 	}
 
 	return \%tdata;

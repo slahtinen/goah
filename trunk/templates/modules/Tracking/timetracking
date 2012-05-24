@@ -113,10 +113,28 @@
 </tr>
 [% END %]
 [% total = latesthours.-1 %]
-<tr><td colspan=2>[% gettext("Total") %]</td>
-<td>[% total.hours %]h [% total.minutes %]min</td>
+[% FOREACH t IN total.keys.sort %] 
+	[% IF t < 0 %]
+		[% NEXT %]
+	[% END %]
+	[% totcount = total.$t %]
+	<tr><td colspan=3>
+	[% FOREACH statkey IN timetrackstatuses.keys %]
+		[% timetrackstatus = timetrackstatuses.$statkey %]
+		[% IF t == timetrackstatus.id %]
+			[% gettext("Total ") %] [% timetrackstatus.name %]
+			[% LAST %]
+		[% END %]
+	[% END %]
+	</td>
+	<td>[% totcount.hours %]h [% totcount.minutes %]min</td>
+	<td colspan=3>&nbsp;</td>
+	</tr>
+[% END %]
+<tr><td colspan=3>[% gettext("Total") %]</td>
+[% totcount = total.-1 %]
+<td>[% totcount.hours %]h [% totcount.minutes %]min</td>
 <td colspan=3>&nbsp;</td>
 </tr>
-
 </tbody>
 </table>
