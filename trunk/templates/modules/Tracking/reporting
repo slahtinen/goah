@@ -92,7 +92,7 @@
 	[% END %]
 
 	<tr class="[% trow %]">
-	<td>[% key %] - [% row.day %]</td>
+	<td>[% row.day %]</td>
 	<td>[% row.companyname %]</td>
 	<td>
 	[% FOREACH ukey IN dbusers.keys %]
