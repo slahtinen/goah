@@ -25,7 +25,7 @@
                 <td><input  name="[% data.field %]" /></td>
 		[% END %]
         [% ELSIF data.type == 'textarea' %]
-                <td><textarea class="small" name="[% data.field %]"></textarea></td>
+                <td><input class="huge" name="[% data.field %]" /></td>
         [% ELSIF data.type == 'selectbox' %]
                 <td><select class="small" name="[% data.field %]">
                 <option  value="-1">-- [% gettext("Select") %] --</option>
