@@ -3,14 +3,14 @@
 }
 
 body {
-	margin:0; 
-	padding:0; 
+	margin: 0px; 
+	padding: 0px; 
 	line-height: 1.4em; 
 	word-spacing:1px; 
 	letter-spacing:0.2px; 
-	font: 13px Arial, 
-	Helvetica,"Lucida Grande", serif; 
+	font: 13px Arial, Helvetica,"Lucida Grande", serif; 
 	color: #000;
+	background: none;
 }
 
 #contents {
@@ -20,6 +20,10 @@ body {
 }
 
 #activeinvoices {
+	display: none;
+}
+
+#moduleheader {
 	display: none;
 }
 
@@ -33,9 +37,26 @@ img {
 
 table {
 	border: none;
+	color: #000;
+}
+
+h2 {
+	color: #000;
+}
+
+h3 {
+	color: #000;
+}
+
+thead th {
+	color: #000;
 }
 
 tbody td {
+	border: none;
+}
+
+tbody tr {
 	border: none;
 }
 
