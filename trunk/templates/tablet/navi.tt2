@@ -63,6 +63,13 @@
 		<li><a href="?module=Storagemanagement&amp;action=inventory">[% gettext("Inventory") %]</a></li>
 		</ul></li>
 		
+	[% ELSIF mainitem.module == 'Tracking' %]
+		<li [% id %] class="toggle-next"><a href="#">+ [% mainitem.name %]</a></li>
+		<li><ul class="subcat1" id="tracking_sub">
+		<li><a href="?module=Tracking">[% gettext("Tracking") %]</a></li>
+		<li><a href="?module=Tracking&amp;action=reporting">[% gettext("Reporting") %]</a></li>
+		</ul></li>
+
 	[% ELSIF mainitem.module == 'Personalsettings' %]
 		<li [% id %]><a href="?module=personalsettings">[% mainitem.name %]</a></li>
 		

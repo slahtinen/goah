@@ -380,8 +380,12 @@ input.big {
 	width: 175px;
 }
 
+input.huge {
+	width: 300px;
+}
+
 select.small {
-	width: 75px;
+	width: 97px;
 }
 
 select.medium {
@@ -390,6 +394,10 @@ select.medium {
 
 select.big {
 	width: 250px;
+}
+
+select.huge {
+	width: 300px;
 }
 
 .clearfix {
