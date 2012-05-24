@@ -40,8 +40,10 @@ my %timetrackingdb = (
 	4 => { field => 'day', name => __('Date'), type => 'textfield', required => '1' },
 	5 => { field => 'hours', name => __("Working hours"), type => 'textfield', required => '1' },
 	6 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1' },
-	7 => { field => 'project', name => __("Project"), type => "textarea", required => '0' },
-	8 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
+	#7 => { field => 'project', name => __("Project"), type => "textarea", required => '0' },
+	#8 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
+	7 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
+	8 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
 );
 
 
@@ -392,7 +394,9 @@ sub ReadHours {
 	# Pack found data into hash and return data
 	my %tdata;
 	my $i=10000000;
+	my $totalhours=0;
 	foreach my $row (@data) {
+		$i++;
 		my $field;
 		foreach my $key (keys %timetrackingdb) {
 			$field = $timetrackingdb{$key}{'field'};
@@ -420,10 +424,20 @@ sub ReadHours {
 				} else {
 					$tdata{$i}{'minutes'}=0;
 				}
+				$totalhours+=$row->$field;
 			}
 		}
-		$i++;
 	}	
+
+	$tdata{-1}{'hours'}=$totalhours;
+	$tdata{-1}{'hours'}=~s/\.\d*$//;
+	$tdata{-1}{'minutes'}=$totalhours;
+	$tdata{-1}{'minutes'}=~s/^\d*/0/;
+	if($tdata{-1}{'minutes'} > 0) {
+		$tdata{-1}{'minutes'}=sprintf("%.0f",60*$tdata{-1}{'minutes'});
+	} else {
+		$tdata{-1}{'minutes'}=0;
+	}
 
 	return \%tdata;
 }

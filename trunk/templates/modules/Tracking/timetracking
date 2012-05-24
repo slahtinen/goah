@@ -7,11 +7,11 @@
     <th>[% gettext("Date") %]</th>
     <th>[% gettext("Time") %]</th>
     <th>[% gettext("Description") %]</th>
-    <th>[% gettext("Project") %]</th>
-    <th>[% gettext("Related personnel") %]</th>
+<!--    <th>[% gettext("Project") %]</th>
+    <th>[% gettext("Related personnel") %]</th> -->
     <th>&nbsp;</th>
   </thead>
-  <tbody
+  <tbody>
   <tr>
   [% FOREACH key IN timetrackingdb.keys.sort %]
   [% data = timetrackingdb.$key %]
@@ -72,6 +72,9 @@
 </thead>
 <tbody class="rowdata">
 [% FOREACH key IN latesthours.keys.sort %]
+[% IF key < 0 %]
+	[% NEXT %]
+[% END %]
 [% row = latesthours.$key %]
 
 [% IF trow=='odd' %]
@@ -109,5 +112,11 @@
 
 </tr>
 [% END %]
+[% total = latesthours.-1 %]
+<tr><td colspan=2>[% gettext("Total") %]</td>
+<td>[% total.hours %]h [% total.minutes %]min</td>
+<td colspan=3>&nbsp;</td>
+</tr>
+
 </tbody>
 </table>

@@ -80,6 +80,9 @@
 </thead>
 <tbody class="rowdata">
 [% FOREACH key IN dbdata.keys.sort %]
+	[% IF key < 0 %]
+		[% NEXT %]
+	[% END %]
 	[% row = dbdata.$key %]
 
 	[% IF trow=='odd' %]
@@ -89,7 +92,7 @@
 	[% END %]
 
 	<tr class="[% trow %]">
-	<td>[% row.day %]</td>
+	<td>[% key %] - [% row.day %]</td>
 	<td>[% row.companyname %]</td>
 	<td>
 	[% FOREACH ukey IN dbusers.keys %]
@@ -121,5 +124,10 @@
 	<td>[% row.description %]</td>
 	</tr>
 [% END %]
+[% total = dbdata.-1 %]
+<tr><td colspan=3>[% gettext("Total") %]</td>
+<td>[% total.hours %]h [% total.minutes %]min</td>
+<td colspan=3>&nbsp;</td>
+</tr>
 </tbody>
 </table>
