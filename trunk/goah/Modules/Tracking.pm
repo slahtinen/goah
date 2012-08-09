@@ -176,7 +176,7 @@ sub Start {
 
 	if($variables{'function'}=~/modules\/Tracking\/timetracking/) {
 		#$variables{'latesthours'}=ReadHours($uid,'',$year.'-'.$mon.'-01');
-		$variables{'latesthours'}=ReadHours($uid,'',sprintf("%04d-%02d-%02d",$year,$mon,'01'));
+		$variables{'latesthours'}=ReadHours($uid,'','-20','');
 		$variables{'timetrackstatuses'}=\%timetrackstatuses;
 	}
 		
@@ -350,7 +350,7 @@ sub ReadData {
 #
 #   0 - user id's, either single value or array reference
 #   1 - customer id's, either single value or array reference
-#   2 - starting day, in YYYY-MM-DD
+#   2 - starting day, in YYYY-MM-DD, or negative value to read -1*n last entries
 #   3 - ending day, in YYYY-MM-DD
 #
 # Returns:
@@ -376,8 +376,10 @@ sub ReadHours {
 	}
 	# Start date, no end date
 	if($_[2] && !($_[3])) {
-		$dbsearch{'day'} = { ge => $_[2] };
-		goah::Modules->AddMessage('debug',"Searching with startdate ".$_[2],__FILE__,__LINE__);
+		unless($_[2]<0) {
+			$dbsearch{'day'} = { ge => $_[2] };
+			goah::Modules->AddMessage('debug',"Searching with startdate ".$_[2],__FILE__,__LINE__);
+		}
 	}
 	# End date, no start date
 	if($_[3] && !($_[2])) {
@@ -390,7 +392,13 @@ sub ReadHours {
 		goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
 		
-	my $datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC');
+	my $datap; 
+	
+	if($_[2]<0) {
+		$datap = goah::Db::Timetracking::Manager->get_timetracking(sort_by => 'day DESC', limit => -1*$_[2]);
+	} else {
+		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC');
+	}
 	
 	return 0 unless $datap;
 
