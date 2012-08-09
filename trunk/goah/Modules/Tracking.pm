@@ -365,6 +365,7 @@ sub ReadHours {
 	use goah::Db::Timetracking::Manager;
 
 	my %dbsearch;
+
 	if($_[0]) {
 		$dbsearch{'userid'}=$_[0];
 		goah::Modules->AddMessage('debug',"Searching with uid ".$dbsearch{'userid'},__FILE__,__LINE__);
@@ -373,14 +374,17 @@ sub ReadHours {
 		$dbsearch{'companyid'}=$_[1];
 		goah::Modules->AddMessage('debug',"Searching with companyid ".$dbsearch{'companyid'},__FILE__,__LINE__);
 	}
+	# Start date, no end date
 	if($_[2] && !($_[3])) {
-		$dbsearch{'day'} = { gt => $_[2] };
+		$dbsearch{'day'} = { ge => $_[2] };
 		goah::Modules->AddMessage('debug',"Searching with startdate ".$_[2],__FILE__,__LINE__);
 	}
+	# End date, no start date
 	if($_[3] && !($_[2])) {
-		$dbsearch{'day'} = { lt => $_[3] };
+		$dbsearch{'day'} = { le => $_[3] };
 		goah::Modules->AddMessage('debug',"Searching with enddate ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
+	# Both start and end date
 	if($_[2] && $_[3]) {
 		$dbsearch{'and'} = [ day => { ge => $_[2] }, day => { le => $_[3] } ];
 		goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
