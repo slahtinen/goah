@@ -86,9 +86,13 @@ sub InitVars {
 			4 => { field => 'ean_gtin', name => __("EAN GTIN id"), type => 'textfield', required => '0' },
 		);
 
+
+	my %grouptypes = ( 	0 => { id => 0, name => __("Normal"), selected => 1},
+				1 => { id => 1, name => __("Work") } );
+
 	%groupdbfields = (
 			0 => { field => 'id', name => 'id', type => 'hidden', required => '0' },
-			1 => { field => 'type', name => 'type', type => 'hidden', required => '0' },
+			1 => { field => 'grouptype', name => __('Type'), type => 'selectbox', required => '0', data => \%grouptypes },
 			2 => { field => 'name', name => __("Name"), type => 'textfield', required => '1' },
 			3 => { field => 'parent', name => 'parent', type => 'hidden', required => '0' },
 			4 => { field => 'info', name => __("Description"), type => 'textarea', required => '0'} 
@@ -740,6 +744,7 @@ sub ReadData {
 	my %pdata;
 	my $i=0;
 	my $field;
+	# Id not set, read all the items from the database
 	if(!($_[1]) || $_[1] eq '') {
 		unless($_[0] eq 'products') {
 			if($_[0] eq 'manuf') {
@@ -802,8 +807,8 @@ sub ReadData {
 		}
 		$pdata{'storage_total_value'}=$storagetotal;
 		return \%pdata;
-		
-	} else {
+	
+	} else { # Read items by id 
 		my $dbdata;
 		if($_[0] eq 'manuf') {
 			use goah::Db::Manufacturers;
@@ -822,14 +827,6 @@ sub ReadData {
 		unless($_[0] eq 'products') {
 			return $dbdata;
 		}
-
-		#@data = $db->retrieve($_[1]);
-		#if(scalar(@data) == 0) {
-		#	return 0;
-		#}
-		#unless($_[0] eq 'products') {
-		#	return $data[0];
-		#}
 
 		%pdata = ();
 		foreach my $key (keys %productsdbfields) {
@@ -1082,13 +1079,13 @@ sub ReadProductByCode {
 # Parameters:
 #
 #    groupid - ID number for group to read products. If groupid isn't given read all
-#    products which aren't in any group.
+#    	       products which aren't in any group.
 #    uid - Sometimes the module isn't "started" when the function is called, so we provide UID via parameter
 #
 # Returns:
 #
 #    Fail - 0 
-#    Success - Pointer to Class::DBI result set
+#    Success - Hash reference to products
 #
 sub ReadProductsByGroup {
 
@@ -1157,6 +1154,24 @@ sub ReadProductsByGroup {
 
 	return \%pdata;
 }
+
+
+#
+# Function: ReadProductsByGrouptype
+#
+#  Function to read products based on group type
+#
+# Parameters:
+#
+#   type - Group type id
+#   uid - User ID
+#
+# Returns:
+#
+#   Fail - 0
+#   Success - Hash reference to products
+#
+sub 
 
 #
 # Function: DeleteItem

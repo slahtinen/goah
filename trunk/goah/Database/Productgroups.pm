@@ -24,7 +24,7 @@ use utf8;
 use warnings;
 
 __PACKAGE__->table('Productgroups');
-__PACKAGE__->columns(All => qw/id type name parent info/);  
+__PACKAGE__->columns(All => qw/id type name parent info grouptype/);  
 
 
 

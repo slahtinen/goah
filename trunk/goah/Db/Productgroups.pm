@@ -29,7 +29,7 @@ use warnings;
 __PACKAGE__->meta->setup
         (
 	table      => 'Productgroups',
-	columns    => [ qw(id type name parent info) ],
+	columns    => [ qw(id type name parent info grouptype) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );
