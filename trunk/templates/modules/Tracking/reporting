@@ -78,6 +78,7 @@
 <th>[% gettext("User") %]</th>
 <th>[% gettext("Time") %]</th>
 <th>[% gettext("Type") %]</th>
+<th>[% gettext("Product") %]</th>
 <th>[% gettext("Description") %]</th>
 <th>[% gettext("Edit") %]</th>
 </thead>
@@ -114,6 +115,9 @@
 	[% IF row.hours <= 0 && row.minutes <= 0 %]
 		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
 	[% END %]
+	[% IF row.no_billing == 1 %]
+		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
+	[% END %]
 	</td>
 	<td>
 	[% FOREACH statkey IN timetrackstatuses.keys %]
@@ -124,6 +128,17 @@
 		[% END %]
 	[% END %]
 	</td>
+	<td>
+	[% proddata = timetrackingdb.4.data %]
+	[% FOREACH prodkey IN proddata.keys %]
+		[% prod = proddata.$prodkey %]
+		[% IF row.productcode == prod.id %]
+			[% prod.code %] - [% prod.name %]
+			[% LAST %]
+		[% END %]
+	[% END %]
+	</td>
+
 	<td>[% row.description %]</td>
 	<td class='center'>
 	[% IF row.userid == uid %]

@@ -4,11 +4,13 @@
   <thead>
     <th>[% gettext("Customer") %]</th>
     <th>[% gettext("Type") %]</th>
+    <th>[% gettext("Product") %]</th>
     <th>[% gettext("Date") %]</th>
     <th>[% gettext("Time") %]</th>
     <th>[% gettext("Description") %]</th>
 <!--    <th>[% gettext("Project") %]</th>
     <th>[% gettext("Related personnel") %]</th> -->
+    <th>[% gettext("No billing") %]</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
@@ -26,6 +28,8 @@
 		[% END %]
         [% ELSIF data.type == 'textarea' %]
                 <td><input class="huge" name="[% data.field %]" /></td>
+	[% ELSIF data.type == 'checkbox' %]
+		<td><input name="[% data.field %]" type="checkbox" /></td>
         [% ELSIF data.type == 'selectbox' %]
                 <td><select class="small" name="[% data.field %]">
                 <option  value="-1">-- [% gettext("Select") %] --</option>
@@ -33,10 +37,14 @@
                         [% item = data.data.$key %]
 			[% IF item.hidden != 1 %]
 				[% IF item.selected == 1 %]
-					<option value="[% item.id %]" selected>[% item.name %]
+					<option value="[% item.id %]" selected>
 				[% ELSE %]
-					<option value="[% item.id %]">[% item.name %]
+					<option value="[% item.id %]">
 				[% END %]
+				[% IF data.field == 'productcode' %]
+					[% item.groupname %] / [% item.code %] - 
+				[% END %]
+				[% item.name %]
 				[%- IF item.vat_id == '00000000' %]
 					, [% item.firstname %]
 				[% END %]
@@ -67,6 +75,7 @@
   <th>[% gettext("Date") %]</th>
   <th>[% gettext("Customer") %]</th>
   <th>[% gettext("Time") %]</th>
+  <th>[% gettext("Product") %]</th>
   <th>[% gettext("Type") %]</th>
   <th colspan=2>[% gettext("Description") %]</th>
 </thead>
@@ -93,15 +102,28 @@
 [% IF row.hours <= 0 && row.minutes <= 0 %]
 <img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
 [% END %]
+[% IF row.no_billing == 1 %]
+<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
+[% END %]
+</td>
+<td>
+[% proddata = timetrackingdb.4.data %]
+[% FOREACH prodkey IN proddata.keys %]
+	[% prod = proddata.$prodkey %]
+	[% IF row.productcode == prod.id %]
+		[% prod.code %] - [% prod.name %]
+		[% LAST %]
+	[% END %]
+[% END %]
 </td>
 <td>
 [% FOREACH statkey IN timetrackstatuses.keys %]
-[% timetrackstatus = timetrackstatuses.$statkey %]
-[% IF row.type == timetrackstatus.id %]
-[% timetrackstatus.name %] 
-[% LAST %]
-[% ELSE %]
-[% END %]
+	[% timetrackstatus = timetrackstatuses.$statkey %]
+	[% IF row.type == timetrackstatus.id %]
+		[% timetrackstatus.name %] 
+		[% LAST %]
+	[% ELSE %]
+	[% END %]
 [% END %]
 </td>
 <td>[% row.description %]</td>

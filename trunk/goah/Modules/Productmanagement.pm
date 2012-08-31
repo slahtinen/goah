@@ -1018,7 +1018,10 @@ sub ReadProductByCode {
 		return $prod->id;
 	}
 
+	# Wildcard search
 	$prodcode=~s/\*/%/g;
+
+	# Assemble search hash
 	my %search;
 	$search{'code'}= { like => $prodcode };
 	if($_[1]) {
@@ -1081,6 +1084,7 @@ sub ReadProductByCode {
 #    groupid - ID number for group to read products. If groupid isn't given read all
 #    	       products which aren't in any group.
 #    uid - Sometimes the module isn't "started" when the function is called, so we provide UID via parameter
+#    noprice - Ignore prices and VAT calculations when searching only for product names and codes
 #
 # Returns:
 #
@@ -1097,6 +1101,9 @@ sub ReadProductsByGroup {
 		$uid=$_[1];
 	}
 
+	# TODO: This should fall back to default settings instead of failing! It might give unexpected results
+	# ie. when user waits for an price including VAT and the returned value is without, so there needs to 
+	# be an clear notification to the user when it happens.
 	if($uid && $uid eq '') {
 		if($_[1]) {
 			$uid = $_[1];
@@ -1123,6 +1130,7 @@ sub ReadProductsByGroup {
 		InitVars();
 	}
 	
+	# Pack retrieved data to hash and return it
 	my %pdata;
 	my $field;
 	my $i=100000;
@@ -1131,7 +1139,7 @@ sub ReadProductsByGroup {
 	foreach my $prod (@data) {
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
-			if($field eq 'purchase' || $field eq 'sell') {
+			if( ($field eq 'purchase' || $field eq 'sell') && $_[2]!=1 ) {
 				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
 			} else {
 				$pdata{$i}{$field} = $prod->$field;
@@ -1148,7 +1156,12 @@ sub ReadProductsByGroup {
 				$pdata{$i}{'vatclass'}=$tmp{'item'};
 			}
 		}
-		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
+
+		if($_[2]!=1) {
+			$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
+		} else {
+			$pdata{$i}{'row_total_value'}=$prod->purchase*$prod->in_store;
+		}
 		$i++;
 	}
 
@@ -1171,7 +1184,58 @@ sub ReadProductsByGroup {
 #   Fail - 0
 #   Success - Hash reference to products
 #
-sub 
+sub ReadProductsByGrouptype {
+
+	shift if($_[0]=~/goah::Modules::Productmanagement/);
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("No group type spesified. Can't search products by product group type!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	if($uid && $uid eq '') {
+		unless($_[1]) {
+			# The message below isn't actually true yet, ReadProductsByGroup fails without UID, it should
+			# be changed to this behaviour as well. There's an ticket open.
+			goah::Modules->AddMessage('warn',__("No UID given, returning prices without VAT regardless of user setting!"),__FILE__,__LINE__);
+		} else {
+			$uid=$_[1];
+		}
+	}
+
+	use goah::Db::Productgroups::Manager;
+	my $groupsref = goah::Db::Productgroups::Manager->get_productgroups( query => [ grouptype => $_[0] ], sort_by => 'name' );
+
+	return 0 unless($groupsref);
+
+	my @groups = @$groupsref;
+
+	# Pack found data into an hash and return it
+	my %proddata;
+	my $group_prod_ref;
+	my %group_prod;
+	my $i=100000;
+	foreach my $g (@groups) {
+		$group_prod_ref = ReadProductsByGroup($g->id,$uid,1);
+		unless($group_prod_ref) {
+			goah::Modules->AddMessage('warn',__("Empty product group: ").$g->name,__FILE__,__LINE__);
+			next;
+		}
+		%group_prod=%$group_prod_ref;
+		foreach my $key (sort keys %group_prod) {
+			$i++;
+			my $prod_ref = $group_prod{$key};
+			my %tmp = %$prod_ref;
+			foreach my $field (keys %tmp) {
+				$proddata{$i}{$field}=$tmp{$field};
+			}
+			$proddata{$i}{'groupname'}=$g->name;
+		}
+	}
+		
+	return \%proddata;
+
+}
 
 #
 # Function: DeleteItem

@@ -26,6 +26,9 @@ use CGI;
 
 use goah::Modules::Customermanagement;
 
+my $uid;
+my $settref;
+
 my %timetrackstatuses = (
 	0 => { id => 0, name => __("Normal"), selected => 1, hidden => 0 },
 	1 => { id => 1, name => __("Evening"), selected => 0, hidden => 0 },
@@ -37,13 +40,19 @@ my %timetrackingdb = (
 	1 => { field => 'companyid', name => __("Customer"), type => 'selectbox', required => '1', data => goah::Modules::Customermanagement->ReadAllCompanies(1) },
 	2 => { field => 'userid', name => 'userid', type => 'hidden', required => '1' },
 	3 => { field => 'type', name => __('Work type'), type => 'selectbox', required => '1', data => \%timetrackstatuses },
-	4 => { field => 'day', name => __('Date'), type => 'textfield', required => '1' },
-	5 => { field => 'hours', name => __("Working hours"), type => 'textfield', required => '1' },
-	6 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1' },
-	#7 => { field => 'project', name => __("Project"), type => "textarea", required => '0' },
-	#8 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
-	7 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
-	8 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
+	4 => 	{ 	field => 'productcode', 
+			name => __('Product'), 
+			type => 'selectbox', 
+			required => '1', 
+			data => goah::Modules::Productmanagement->ReadProductsByGrouptype(1,$uid) },
+	5 => { field => 'day', name => __('Date'), type => 'textfield', required => '1' },
+	6 => { field => 'hours', name => __("Working hours"), type => 'textfield', required => '1' },
+	7 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1' },
+	#8 => { field => 'project', name => __("Project"), type => "textarea", required => '0' },
+	#9 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
+	8 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
+	9 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
+	91 => { field => 'no_billing', name => __("No billing"), type => 'checkbox', required => '0' },
 );
 
 
@@ -51,8 +60,6 @@ my %submenu = (
 	0 => { title => __("Reporting"), action => 'reporting' }
 );
 
-my $uid;
-my $settref;
 
 #
 # Function: Start
@@ -86,10 +93,10 @@ sub Start {
 	$variables{'timetrackingdb'} = \%timetrackingdb;
 
 
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-	$year+=1900;
+	my ($sec,$min,$hour,$mday,$mon,$yearnow,$wday,$yday,$isdst) = localtime(time);
+	$yearnow+=1900;
 	$mon++;
-	$variables{'datenow'} = sprintf("%02d.%02d.%04d",$mday,$mon,$year);
+	$variables{'datenow'} = sprintf("%02d.%02d.%04d",$mday,$mon,$yearnow);
 	
 	if($q->param('action')) {
 		
@@ -135,22 +142,28 @@ sub Start {
 				$enddate = $q->param('todate') if($q->param('todate'));
 				
 				if(length($startdate)) {
-					unless($startdate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+					unless($startdate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/ || $startdate=~/[0-9]{1,2}\.[0-9]{1,2}/) {
 						goah::Modules->AddMessage('error',__("Start date isn't formatted correctly. Ignoring filter."));
 						$startdate='';
 					} else {
 						my @searchdate=split(/\./,$startdate);
+
+						$searchdate[2]=$yearnow unless($searchdate[2]);
+
 						$searchdatestart=sprintf("%04d-%02d-%02d",$searchdate[2],$searchdate[1],$searchdate[0]);
 						$startdate=sprintf("%02d.%02d.%04d",@searchdate);
 					}
 				} 
 
 				if(length($enddate)) {
-					unless($enddate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+					unless($enddate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/ || $enddate=~/[0-9]{1,2}\.[0-9]{1,2}/) {
 						goah::Modules->AddMessage('error',__("End date isn't formatted correctly. Ignoring filter."));
 						$enddate='';
 					} else {
 						my @searchdate=split(/\./,$enddate);
+
+						$searchdate[2]=$yearnow unless($searchdate[2]);
+
 						$searchdateend=sprintf("%04d-%02d-%02d",$searchdate[2],$searchdate[1],$searchdate[0]);
 						$enddate=sprintf("%02d.%02d.%04d",@searchdate);
 					}
@@ -164,7 +177,7 @@ sub Start {
 				
 
 			} else {
-				$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$year,$mon,'01'));
+				$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$yearnow,$mon,'01'));
 			}
 
                 } else {
@@ -242,7 +255,7 @@ sub WriteHours {
                         goah::Modules->AddMessage('error',$errstr);
 			return 0;
                 } else {
-			if(length($q->param($fieldinfo{'field'})) || $fieldinfo{'field'} eq 'hours') {
+			if(length($q->param($fieldinfo{'field'})) || $fieldinfo{'field'} eq 'hours' || $fieldinfo{'type'} eq 'checkbox') {
 				my $tmpcol=$fieldinfo{'field'};
 				$dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
 				if($fieldinfo{'field'} eq 'hours') {
@@ -257,16 +270,26 @@ sub WriteHours {
 					}
 				}	
 				if($fieldinfo{'field'} eq 'day') {
+					my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+					$year+=1900;    
+					$mon++; 
+
 					if($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
 						$dbdata{$tmpcol}=goah::GoaH::FormatDate($q->param('day')." 00:00:01");
+					} elsif($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}/) {
+						$dbdata{$tmpcol}=goah::GoaH::FormatDate($q->param('day').".".$year." 00:00:01");
 					} else {
 						goah::Modules->AddMessage('warn',__("Incorrectly formatted date!  Using current date."),__LINE__,__FILE__);
-						my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-						$year+=1900;    
-						$mon++; 
 						$dbdata{$tmpcol}=sprintf("%04d-%02d-%02d",$year,$mon,$mday);
 					}
 
+				}
+				if($fieldinfo{'type'} eq 'checkbox') {
+					if($q->param($tmpcol) eq 'on') {
+						$dbdata{$tmpcol}=1;
+					} else {
+						$dbdata{$tmpcol}=0;
+					}
 				}
 				$prod->$tmpcol($dbdata{$tmpcol}) if $update;
 			}

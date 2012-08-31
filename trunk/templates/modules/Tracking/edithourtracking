@@ -23,6 +23,14 @@
 		[% END %]
         [% ELSIF data.type == 'textarea' %]
                 <td><textarea class="medium" name="[% data.field %]">[% dbdata.$field %]</textarea></td>
+	[% ELSIF data.type == 'checkbox' %]
+		<td>
+		[% IF dbdata.$field == 1 %]
+			<input type='checkbox' name="[% data.field %]" checked />
+		[% ELSE %]
+			<input type='checkbox' name="[% data.field %]" />
+		[% END %]
+		</td>
         [% ELSIF data.type == 'selectbox' %]
                 <td><select class="medium" name="[% data.field %]">
                 <option  value="-1">-- [% gettext("Select") %] --</option>
@@ -30,10 +38,14 @@
                         [% item = data.data.$key %]
 			[% IF item.hidden != 1 %]
 				[% IF item.id == dbdata.$field %]
-					<option value="[% item.id %]" selected>[% item.name %]
+					<option value="[% item.id %]" selected>
 				[% ELSE %]
-					<option value="[% item.id %]">[% item.name %]
+					<option value="[% item.id %]">
 				[% END %]
+				[% IF data.field == 'productcode' %]
+					[% item.groupname %] / [% item.code %] -
+				[% END %]
+				[% item.name %]
 				[%- IF item.vat_id == '00000000' %]
 					, [% item.firstname %]
 				[% END %]
