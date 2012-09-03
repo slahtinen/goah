@@ -396,6 +396,11 @@ select.big {
 	width: 250px;
 }
 
+select option.subhead {
+	font-weight: bold;
+	text-decoration: underline;
+}
+
 .clearfix {
 	clear: both;
 	float: none;
