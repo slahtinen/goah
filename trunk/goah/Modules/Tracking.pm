@@ -439,7 +439,7 @@ sub ReadHours {
 	my $datap; 
 	
 	if($_[2]<0) {
-		$datap = goah::Db::Timetracking::Manager->get_timetracking(sort_by => 'day DESC', limit => -1*$_[2]);
+		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC', limit => -1*$_[2]);
 	} else {
 		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC');
 	}
