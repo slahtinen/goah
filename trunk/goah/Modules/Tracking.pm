@@ -128,6 +128,13 @@ sub Start {
 			$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
 			$variables{'timetrackstatuses'}=\%timetrackstatuses;
 
+			# Helper variable to generate an selectbox for parameters
+			$variables{'yesnoselect'} = { 	0 => { key => 'yesno', value => __("All hours") },
+							1 => { key => 'yes', value => __("Only billed hours") },
+							2 => { key => 'no', value => __("Only not billed hours") } };
+
+			# Get data for actual search, or if no parameters are given, search for hours
+			# at current month
 			if($q->param('subaction') && $q->param('subaction') eq 'search' && !($q->param('submit-reset'))) {
 				my $company;
 				my $uid;
@@ -135,11 +142,13 @@ sub Start {
 				my $enddate;
 				my $searchdatestart;
 				my $searchdateend;
+				my $yesnoselect;
 
 				$company = $q->param('customer') if($q->param('customer') && !($q->param('customer')=~/\*/) );
 				$uid = $q->param('user') if($q->param('user'));
 				$startdate = $q->param('fromdate') if($q->param('fromdate'));
 				$enddate = $q->param('todate') if($q->param('todate'));
+				$yesnoselect = $q->param('yesnoselect') if($q->param('yesnoselect'));
 				
 				if(length($startdate)) {
 					unless($startdate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/ || $startdate=~/[0-9]{1,2}\.[0-9]{1,2}/) {
@@ -169,12 +178,12 @@ sub Start {
 					}
 				}
 
-				$variables{'dbdata'}=ReadHours($uid,$company,$searchdatestart,$searchdateend);
+				$variables{'dbdata'}=ReadHours($uid,$company,$searchdatestart,$searchdateend,$yesnoselect);
 				$variables{'search_customer'}=$company;
 				$variables{'search_owners'}=$uid;
 				$variables{'search_startdate'}=$startdate;
 				$variables{'search_enddate'}=$enddate;
-				
+				$variables{'search_yesnoselect'}=$yesnoselect;
 
 			} else {
 				$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$yearnow,$mon,'01'));
@@ -375,6 +384,7 @@ sub ReadData {
 #   1 - customer id's, either single value or array reference
 #   2 - starting day, in YYYY-MM-DD, or negative value to read -1*n last entries
 #   3 - ending day, in YYYY-MM-DD
+#   4 - which hours to read, all (yesno), billed(yes), unbilled(no), optional
 #
 # Returns:
 #
@@ -414,7 +424,18 @@ sub ReadHours {
 		$dbsearch{'and'} = [ day => { ge => $_[2] }, day => { le => $_[3] } ];
 		goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
-		
+
+	# Limit search by billed/unbilled
+	if($_[4]) {
+		if($_[4]=~/^yes$/i) {
+			$dbsearch{'no_billing'} = "0";
+		}
+
+		if($_[4]=~/^no$/i) {
+			$dbsearch{'no_billing'} = "1";
+		}
+	}
+
 	my $datap; 
 	
 	if($_[2]<0) {

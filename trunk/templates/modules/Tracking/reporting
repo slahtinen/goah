@@ -6,6 +6,7 @@
 <th>[% gettext("By customer") %]</th>
 <th>[% gettext("By user") %]</th>
 <th>[% gettext("From/to date (dd.mm.yyyy)") %]</th>
+<th>[% gettext("Other options") %]</th>
 <th>&nbsp;</th>
 </tr>
 </thead><tbody>
@@ -59,6 +60,18 @@
 </select>
 <td>
 <input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" />
+</td>
+<td>
+<select name="yesnoselect">
+[% FOREACH key IN yesnoselect.keys.sort %]
+[% item=yesnoselect.$key %]
+[% selected='' %]
+[% IF item.key == search_yesnoselect %]
+	[% selected='selected' %]
+[% END %]
+<option value="[% item.key %]" [% selected %]>[% item.value %]</option>
+[% END %]
+</select>
 </td>
 <td>
 <!-- <input type="submit" name="submit-reset" value="[% gettext("Reset") %]" /> -->
