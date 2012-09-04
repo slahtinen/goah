@@ -480,32 +480,69 @@ sub ReadHours {
 				} else {
 					$tdata{$i}{'minutes'}=0;
 				}
-				$totalhours{$row->type}+=$row->$field;
+				my $billing=1;
+				$billing = 0 if($row->no_billing);
+				$totalhours{$row->type}{$billing}+=$row->$field;
 			}
 		}
 	}	
 
 	foreach my $t (keys(%totalhours)) {
-		goah::Modules->AddMessage('debug',"Total hour count for key $t ".$totalhours{$t},__FILE__,__LINE__);
-		$tdata{-1}{$t}{'hours'}=$totalhours{$t};
-		$tdata{-1}{-1}{'hours'}+=$totalhours{$t};
-		$tdata{-1}{$t}{'hours'}=~s/\.\d*$//;
-		$tdata{-1}{$t}{'minutes'}=$totalhours{$t};
-		$tdata{-1}{$t}{'minutes'}=~s/^\d*/0/;
-		if($tdata{-1}{$t}{'minutes'} > 0) {
-			$tdata{-1}{$t}{'minutes'}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'});
-		} else {
-			$tdata{-1}{$t}{'minutes'}=0;
-		}
+		
+		goah::Modules->AddMessage('debug',"Total hour count for key $t ".$totalhours{$t}{1}."/".$totalhours{$t}{0},__FILE__,__LINE__);
+		$tdata{-1}{$t}{'hours'}{-1}=$totalhours{$t}{0}+$totalhours{$t}{1};
+		$tdata{-1}{-1}{'hours'}{-1}+=$totalhours{$t}{0}+$totalhours{$t}{1};
+		$tdata{-1}{$t}{'hours'}{0}=$totalhours{$t}{0};
+		$tdata{-1}{$t}{'hours'}{1}=$totalhours{$t}{1};
+		$tdata{-1}{-1}{'hours'}{0}+=$totalhours{$t}{0};
+		$tdata{-1}{-1}{'hours'}{1}+=$totalhours{$t}{1};
+
+		$tdata{-1}{$t}{'hours'}{-1}=~s/\.\d*$//; # Total
+		$tdata{-1}{$t}{'hours'}{0}=~s/\.\d*$//; # No billing
+		$tdata{-1}{$t}{'hours'}{1}=~s/\.\d*$//; # Billing
+
+		# Reset values if they're missing
+		$tdata{-1}{$t}{'hours'}{-1}=0 unless($tdata{-1}{$t}{'hours'}{-1});
+		$tdata{-1}{$t}{'hours'}{0}=0 unless($tdata{-1}{$t}{'hours'}{0});
+		$tdata{-1}{$t}{'hours'}{1}=0 unless($tdata{-1}{$t}{'hours'}{1});
+		
+		$tdata{-1}{$t}{'minutes'}{-1}=$totalhours{$t}{0}+$totalhours{$t}{1};
+		$tdata{-1}{$t}{'minutes'}{0}=$totalhours{$t}{0};
+		$tdata{-1}{$t}{'minutes'}{1}=$totalhours{$t}{1};
+
+		$tdata{-1}{$t}{'minutes'}{-1}=~s/^\d*/0/;
+
+
+		# Reset variables
+		$tdata{-1}{$t}{'minutes'}{-1}=0;
+		$tdata{-1}{$t}{'minutes'}{0}=0;
+		$tdata{-1}{$t}{'minutes'}{1}=0;
+
+		# Calculate minutes correctly
+		$tdata{-1}{$t}{'minutes'}{-1}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'}{-1}) if($tdata{-1}{$t}{'minutes'}{-1} > 0);
+		$tdata{-1}{$t}{'minutes'}{0}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'}{0}) if($tdata{-1}{$t}{'minutes'}{0} > 0);
+		$tdata{-1}{$t}{'minutes'}{1}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'}{1}) if($tdata{-1}{$t}{'minutes'}{1} > 0);
 	}
-	$tdata{-1}{-1}{'minutes'}=$tdata{-1}{-1}{'hours'};
-	$tdata{-1}{-1}{'hours'}=~s/\.\d*$//;
-	$tdata{-1}{-1}{'minutes'}=~s/^\d*/0/;
-	if($tdata{-1}{-1}{'minutes'}>0) {
-		$tdata{-1}{-1}{'minutes'}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'});
-	} else {
-		$tdata{-1}{-1}{'minutes'}=0;
-	}
+
+	# Total hour count for retrieved hours
+	$tdata{-1}{-1}{'minutes'}{-1}=$tdata{-1}{-1}{'hours'}{-1};
+	$tdata{-1}{-1}{'hours'}{-1}=~s/\.\d*$//;
+	$tdata{-1}{-1}{'minutes'}{-1}=~s/^\d*/0/;
+
+	$tdata{-1}{-1}{'minutes'}{0}=$tdata{-1}{-1}{'hours'}{0};
+	$tdata{-1}{-1}{'hours'}{0}=~s/\.\d*$//;
+	$tdata{-1}{-1}{'minutes'}{0}=~s/^\d*/0/;
+
+	$tdata{-1}{-1}{'minutes'}{1}=$tdata{-1}{-1}{'hours'}{1};
+	$tdata{-1}{-1}{'hours'}{1}=~s/\.\d*$//;
+	$tdata{-1}{-1}{'minutes'}{1}=~s/^\d*/0/;
+
+	$tdata{-1}{-1}{'minutes'}{-1}=0;
+	$tdata{-1}{-1}{'minutes'}{0}=0;
+	$tdata{-1}{-1}{'minutes'}{1}=0;
+	$tdata{-1}{-1}{'minutes'}{-1}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'}{-1}) if($tdata{-1}{-1}{'minutes'}{-1}>0);
+	$tdata{-1}{-1}{'minutes'}{0}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'}{0}) if($tdata{-1}{-1}{'minutes'}{0}>0);
+	$tdata{-1}{-1}{'minutes'}{1}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'}{1}) if($tdata{-1}{-1}{'minutes'}{1}>0);
 
 	return \%tdata;
 }

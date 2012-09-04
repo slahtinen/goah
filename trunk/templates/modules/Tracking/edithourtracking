@@ -37,13 +37,17 @@
                 [% FOREACH key IN data.data.keys.sort %]
                         [% item = data.data.$key %]
 			[% IF item.hidden != 1 %]
+				[% IF data.field == 'productcode' && groupname != item.groupname %]
+					<option value="-1" class="subhead">[% item.groupname %]</option>
+					[% groupname = item.groupname %]
+				[% END %]
 				[% IF item.id == dbdata.$field %]
 					<option value="[% item.id %]" selected>
 				[% ELSE %]
 					<option value="[% item.id %]">
 				[% END %]
 				[% IF data.field == 'productcode' %]
-					[% item.groupname %] / [% item.code %] -
+					[% item.code %] -
 				[% END %]
 				[% item.name %]
 				[%- IF item.vat_id == '00000000' %]
