@@ -534,24 +534,17 @@ sub AddRowToInvoice {
 #
 sub ReadInvoices {
 
-	#use goah::Database::Invoices;
 	use goah::Db::Invoices::Manager;
 	my @data;
 	
+	# Search all invoices
 	if(!($_[0]) || $_[0] eq '') {
 
-		my $datap=goah::Db::Invoices::Manager->get_invoices( sort_by => 'state,due' );
-		@data=@$datap;
-		#@data = goah::Database::Invoices->retrieve_all_sorted_by('state,due');
+		my %dbsearch;
 
-		# Search invoices.
-		# ---------------
-		# This is really slow approach, but let's fix this later, 
-		# since it'll require modifications to Database modules
-		# as well.
 		my @states= qw(0 1 2 3);
-		my $datestart='';
-		my $dateend='';
+		my $datestart=0;
+		my $dateend=0;
 		my $customer='';
 		my %totalsum;
 
@@ -559,10 +552,19 @@ sub ReadInvoices {
 		if($q->param('subaction') eq 'search') {
 			@states=$q->param('states');
 		}
+		$dbsearch{'state'}=\@states;
+
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+		$year+=1900;
+		$mon++;
 
 		if($q->param('fromdate')) {
 			$datestart=$q->param('fromdate');
-			unless($datestart=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+			if($datestart=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/ ) {
+				# OK!
+			} elsif($datestart=~/[0-9]{1,2}\.[0-9]{1,2}\./) {
+				$datestart.=$year;
+			} else {
 				goah::Modules->AddMessage('error',__("Start date isn't formatted correctly. Ignoring filter."));
 				$datestart='';
 			}
@@ -570,79 +572,64 @@ sub ReadInvoices {
 
 		if($q->param('todate')) {
 			$dateend=$q->param('todate');
-			unless($dateend=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+			if($dateend=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+				# OK!
+			} elsif($dateend=~/[0-9]{1,2}\.[0-9]{1,2}\./) {
+				$dateend.=$year;
+			} else {
 				goah::Modules->AddMessage('error',__("End date isn't formatted correctly. Ignoring filter."));
 				$dateend='';
 			}
 		}
 
-		goah::Modules->AddMessage('debug',"States: @states");
+		my @searchdate=split(/\./,$datestart);
+		$datestart=sprintf("%04d-%02d-%02d",$searchdate[2],$searchdate[1],$searchdate[0]);
+		@searchdate=split(/\./,$dateend);
+		$dateend=sprintf("%04d-%02d-%02d",$searchdate[2],$searchdate[1],$searchdate[0]);
+
+		# Search by due/created
+		my $duecreated='created';
+		$duecreated='due' if ($q->param('datesearch') && $q->param('datesearch') eq 'due');
+
+		# Start date, no end date 
+		if($datestart>0 && $dateend==0) {
+			$dbsearch{$duecreated} = { ge => $datestart };
+		} 
+
+		# End date, no start date
+		if($dateend>0 && $datestart==0) {
+			$dbsearch{$duecreated} = { lt => $dateend };
+		}
+
+		# Both start and end date
+		if($datestart>0 && $dateend>0) {
+			$dbsearch{'and'} = [ $duecreated => { ge => $datestart }, $duecreated => { le => $dateend } ];
+		}
+
+		if($q->param('customer') && $q->param('customer')>0) {
+			$dbsearch{'companyid'}=$q->param('customer');
+		}
+
+		my $datap=goah::Db::Invoices::Manager->get_invoices(\%dbsearch, sort_by => 'state,invoicenumber DESC' );
+		@data=@$datap;
+
+		goah::Modules->AddMessage('debug',"States: @states",__FILE__,__LINE__);
+		goah::Modules->AddMessage('debug',"Search parameters: ".join(" - ",keys(%dbsearch)),__FILE__,__LINE__);
+		#goah::Modules->AddMessage('debug',"And: ".join(" - ",keys($dbsearch{'and'})),__FILE__,__LINE__);
 		my %invoices;
 		my $add;
 		my $sortcounter=1000000;
 		foreach my $inv (@data) {
 
-			$add=-1;
-			foreach my $s (@states) {
-				if($s == $inv->state) {
-					$add=1;
-				} else {
-					if($add!=1) {
-						$add=0;
-					}
-				}
+			my $t = goah::Modules::Invoice->ReadInvoiceTotal($inv->id);
+			my %tot=%$t;
+			$totalsum{'vat0'}+=$tot{'vat0'};
+			$totalsum{'inclvat'}+=$tot{'inclvat'};
+			$totalsum{'vat'}+=$tot{'vat'};
 
-			}
-
-			use Time::Local;
-			my @invdate;
-			if($q->param('datesearch') && $q->param('datesearch') eq 'due') {
-				@invdate=split(/-/,$inv->due);
-			} else {
-				@invdate=split(/-/,$inv->created);
-			}
-			my $invts=timelocal("00","00","00",$invdate[2],($invdate[1]-1),$invdate[0]);
-			if($datestart!='' && $add==1) {
-				my @searchdate=split(/\./,$datestart);
-				my $searchts=timelocal("00","00","00",$searchdate[0],($searchdate[1]-1),$searchdate[2]);
-				if($invts<$searchts) {
-					$add=0;
-				}
-			}
-
-			if($dateend!='' && $add==1) {
-				my @searchdate=split(/\./,$dateend);
-				my $searchts=timelocal("00","00","00",$searchdate[0],($searchdate[1]-1),$searchdate[2]);
-				if($invts>$searchts) {
-					$add=0;
-				}
-			}
-
-			if($q->param('customer') && $add==1) {
-				unless($q->param('customer') eq '*') {
-					my $search=$q->param('customer');
-					$search=~s/\*/\.\*/g;
-				
-					use goah::Modules::Customermanagement;
-					my $cust=goah::Modules::Customermanagement->ReadCompanydata($inv->companyid);
-					unless($cust->name=~/^$search$/i) {
-						$add=0;
-					}
-				}
-			}	
-
-
-			if($add==1) {
-				my $t = goah::Modules::Invoice->ReadInvoiceTotal($inv->id);
-				my %tot=%$t;
-				$totalsum{'vat0'}+=$tot{'vat0'};
-				$totalsum{'inclvat'}+=$tot{'inclvat'};
-				$totalsum{'vat'}+=$tot{'vat'};
-
-				#$invoices{$inv->invoicenumber.'.'.$inv->id}=$inv;
-				$sortcounter++;
-				$invoices{$sortcounter}=$inv;
-			}
+			#$invoices{$inv->invoicenumber.'.'.$inv->id}=$inv;
+			$sortcounter++;
+			$invoices{$sortcounter}=$inv;
 		}
 
 		# Check and if needed read invoice rows into hash as well
@@ -707,8 +694,6 @@ sub ReadInvoicerows {
 		}
 	}
 
-	#use goah::Database::Invoicerows;
-	#my @rows = goah::Database::Invoicerows->search_where( { invoiceid => $_[0] }, { order_by => 'id' } );
 	use goah::Db::Invoicerows::Manager;
 	my $rowp=goah::Db::Invoicerows::Manager->get_invoicerows( query => [ invoiceid => $_[0] ], sort_by => 'id' );
 	
@@ -726,9 +711,6 @@ sub ReadInvoicerows {
 	my $pdata;
 	my $vat;
 	foreach my $row (@rows) {
-		#my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid);
-		#my %prod = %$prodpoint;
-
 		$rowdata{$i}{'purchase'} = goah::GoaH->FormatCurrency($row->purchase,0,$uid,'out',$settref);
 		$rowdata{$i}{'sell'} = goah::GoaH->FormatCurrency($row->sell,0,$uid,'out',$settref);
 		$rowdata{$i}{'amount'} = sprintf("%.02f",$row->amount);
