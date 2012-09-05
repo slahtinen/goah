@@ -639,7 +639,7 @@ sub ReadBaskets {
 	}
 
 	my %baskets;
-	my $i=10000;
+	my $i=10000; # sort counter
 	my $f; # Field, helper variable
 	my $br; # Basket row, helper variable
 	my %basketrows;
@@ -647,7 +647,21 @@ sub ReadBaskets {
 	my $total=0;
 	my $totalvat=0;
 	my $groupstates=$_[3];
+	my %sorthash; # Helper for sorting baskets by customer name
+	use goah::Modules::Customermanagement;
 	foreach my $b (@data) {
+
+		my $cust=goah::Modules::Customermanagement->ReadCompanydata($b->companyid,1);
+		my %customer=%$cust;
+		my $cname=lc($customer{'name'});
+		$cname=~s/ä/zz/g;
+		$cname=~s/ö/zzz/g;
+		$cname=~s/å/o/g;
+		$cname=~s/Ä/zz/g;
+		$cname=~s/Ö/zzz/g;
+		$cname=~s/Å/o/g;
+		$cname=~s/\ /_/g;
+
 
 		foreach my $k (keys(%basketdbfields)) {
 			if($groupstates) {
@@ -656,6 +670,7 @@ sub ReadBaskets {
 				$f=$basketdbfields{$k}{'field'};		
 				$baskets{$state}{$i}{$f}=$b->get($f);
 				$baskets{$state}{'name'}=$statename;
+				$sorthash{$state}{$cname}=$i;
 			} else {
 				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
@@ -665,6 +680,7 @@ sub ReadBaskets {
 					$baskets{$f}=$b->get($f);
 				} else {
 					$baskets{$i}{$f}=$b->get($f);
+					$sorthash{$cname}=$i;
 				}
 			}
 		}
@@ -724,7 +740,42 @@ sub ReadBaskets {
 	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
 	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
+
+	unless($_[0] || !$_[0] eq '') {
+		# Sort baskets hash by customer names
+		$i=1000000;
+		my %sortedbaskets;
+		if($groupstates) {
+			foreach my $s (keys(%baskets)) {
+				
+				next if($s<0);
+
+				my $grouppointer=$baskets{$s};
+				my %group=%$grouppointer;
+
+				my $sortpointer=$sorthash{$s};
+				my %sortgroup=%$sortpointer;
+				foreach my $sort (sort keys(%sortgroup)) {
+					my $sort_i = $sortgroup{$sort};
+					$sortedbaskets{$s}{$i}=$group{$sort_i};
+					$i++;
+				}
+			}
+		} else {
+			foreach my $sort (sort keys(%sorthash)) {
+				my $sort_i = $sorthash{$sort};
+				$sortedbaskets{$i}=$baskets{$sort_i};
+				$i++;
+			}
+		}	
+
+		$sortedbaskets{-1}=$baskets{-1};
+
+		return \%sortedbaskets;
+	} 
+	
 	return \%baskets;
+		
 }
 
 #
