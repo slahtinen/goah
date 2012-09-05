@@ -3,6 +3,7 @@
 <thead>
 <th colspan='3'>[% gettext("State") %]</th>
 <th>[% gettext("From/to date") %] (dd.mm.yyyy)</th>
+<th>[% gettext("Sorting") %]</th>
 <th colspan='2'>[% gettext("Customer") %]</th>
 
 <tbody>
@@ -43,6 +44,28 @@
 <br/><input type="radio" name="datesearch" value="created" [% CHECKC %]/>[% gettext("Created") %]
 <input type="radio" name="datesearch" value="due" [% CHECKD %]/>[% gettext("Due") %]
 </td>
+
+<td>
+[% IF sortby == "number" %]
+[% SORTBYD=''
+   SORTBYN='checked' %]
+[% ELSE %]
+[% SORTBYD='checked' 
+   SORTBYN='' %]
+[% END %]
+<input type="radio" name="sortby" value="date" [% SORTBYD %] />[% gettext("By date") %]
+<input type="radio" name="sortby" value="number" [% SORTBYN %] />[% gettext("By number") %]
+[% IF sortdir == "desc" %]
+[% SORTDASC=''
+   SORTDDES='checked' %]
+[% ELSE %]
+[% SORTDASC='checked' 
+   SORTDDES='' %]
+[% END %]
+<br/>
+<input type="radio" name="sortdir" value="asc" [% SORTDASC %] />[% gettext("Asc.") %]
+<input type="radio" name="sortdir" value="desc" [% SORTDDES %] />[% gettext("Desc") %]
+</td>
 <td>
 <select class="medium" name="customer">
 <option  value="*">-- [% gettext("Select") %] --</option>
@@ -70,10 +93,37 @@
 <table>
 <thead>
 <tr>
-<th>[% gettext("Number") %]</th>
+<th>
+[% gettext("Number") %]
+[% IF SORTBYN=='checked' %]
+[% IF SORTDASC == 'checked' %]
+&darr;
+[% ELSE %]
+&uarr;
+[% END %]
+[% END %]
+</th>
 <th>[% gettext("Customer") %]</th>
-<th>[% gettext("Created") %]</th>
-<th>[% gettext("Due") %]</th>
+
+<th>[% gettext("Created") %]
+[% IF SORTBYD=='checked' && CHECKC=='checked' %]
+[% IF SORTDASC == 'checked' %]
+&darr;
+[% ELSE %]
+&uarr;
+[% END %]
+[% END %]
+</th>
+<th>[% gettext("Due") %]
+[% IF SORTBYD=='checked' && CHECKD=='checked' %]
+[% IF SORTDASC == 'checked' %]
+&darr;
+[% ELSE %]
+&uarr;
+[% END %]
+[% END %]
+</th>
+
 <th>[% gettext("Total") %] [% gettext("VAT 0%") %]</th>
 <th>[% gettext("Total") %] [% gettext("Incl. VAT") %]</th>
 <th colspan="2">[% gettext("State") %]</th>

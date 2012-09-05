@@ -218,6 +218,7 @@ sub Start {
 			$tmp = ReadInvoicehistory($q->param('target'));
 			$variables{'invoicehistory'} = $tmp;
 			$variables{'function'} = 'modules/Invoice/invoiceinfo';
+
 		} elsif( ($q->param('action') eq 'invoicetocashreceipt') || $q->param('action') eq 'invoicetocardreceipt') {
 			if(UpdateInvoiceinfo($q->param('target'))) {
 				if($q->param('action') eq 'invoicetocashreceipt') {
@@ -235,6 +236,7 @@ sub Start {
                         $tmp = ReadInvoicehistory($q->param('target'));
                         $variables{'invoicehistory'} = $tmp;
                         $variables{'function'} = 'modules/Invoice/invoiceinfo';
+
 		} elsif($q->param('action') eq 'invoicepaymentreceived') {
 			if(UpdateInvoiceinfo($q->param('target'))) {
 				goah::Modules->AddMessage('info',__("Invoice payment received."));
@@ -248,6 +250,7 @@ sub Start {
                         $tmp = ReadInvoicehistory($q->param('target'));
                         $variables{'invoicehistory'} = $tmp;
                         $variables{'function'} = 'modules/Invoice/invoiceinfo';
+
 		} else {  
 
 			goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
@@ -274,6 +277,8 @@ sub Start {
 			$variables{'search_startdate'}=$q->param('fromdate');
 			$variables{'search_enddate'}=$q->param('todate');
 			$variables{'datesearch'}=$q->param('datesearch');
+			$variables{'sortby'}=$q->param('sortby');
+			$variables{'sortdir'}=$q->param('sortdir');
 			if($q->param('customer')) {
 				$variables{'search_customer'}=$q->param('customer');
 			} else {
@@ -591,6 +596,8 @@ sub ReadInvoices {
 		my $duecreated='created';
 		$duecreated='due' if ($q->param('datesearch') && $q->param('datesearch') eq 'due');
 
+		goah::Modules->AddMessage('debug',"Duecreated: $duecreated, http-param: ".$q->param('datesearch'),__FILE__,__LINE__);
+
 		# Start date, no end date 
 		if($datestart>0 && $dateend==0) {
 			$dbsearch{$duecreated} = { ge => $datestart };
@@ -610,7 +617,24 @@ sub ReadInvoices {
 			$dbsearch{'companyid'}=$q->param('customer');
 		}
 
-		my $datap=goah::Db::Invoices::Manager->get_invoices(\%dbsearch, sort_by => 'state,invoicenumber DESC' );
+		my $sortby='invoicenumber';
+		my $sortdir='ASC';
+
+		if($q->param('sortby') && $q->param('sortby') eq 'date') {
+			
+			$sortby='due';
+			if($duecreated eq 'created') {
+				$sortby='created';
+			} 
+		}
+
+		if($q->param('sortdir') && $q->param('sortdir') eq 'desc') {
+			$sortdir='DESC';
+		}
+		
+		my $sortrules="state,".$sortby." ".$sortdir;
+		goah::Modules->AddMessage('debug',"Sort by: $sortrules");
+		my $datap=goah::Db::Invoices::Manager->get_invoices(\%dbsearch, sort_by => $sortrules );
 		@data=@$datap;
 
 		goah::Modules->AddMessage('debug',"States: @states",__FILE__,__LINE__);
