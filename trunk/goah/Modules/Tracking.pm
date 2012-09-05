@@ -489,16 +489,23 @@ sub ReadHours {
 
 	foreach my $t (keys(%totalhours)) {
 		
+		# $t = Row type (normal/night/evening)
+		# -1 index = total sums on this index
+		# 0 index = total for internal hours
+		# 1 index = total for billed hours
+
 		goah::Modules->AddMessage('debug',"Total hour count for key $t ".$totalhours{$t}{1}."/".$totalhours{$t}{0},__FILE__,__LINE__);
-		$tdata{-1}{$t}{'hours'}{-1}=$totalhours{$t}{0}+$totalhours{$t}{1};
-		$tdata{-1}{-1}{'hours'}{-1}+=$totalhours{$t}{0}+$totalhours{$t}{1};
-		$tdata{-1}{$t}{'hours'}{0}=$totalhours{$t}{0};
-		$tdata{-1}{$t}{'hours'}{1}=$totalhours{$t}{1};
-		$tdata{-1}{-1}{'hours'}{0}+=$totalhours{$t}{0};
-		$tdata{-1}{-1}{'hours'}{1}+=$totalhours{$t}{1};
+
+		$tdata{-1}{$t}{'hours'}{-1}=$totalhours{$t}{0}+$totalhours{$t}{1}; # Total hours for current type
+		$tdata{-1}{-1}{'hours'}{-1}+=$totalhours{$t}{0}+$totalhours{$t}{1}; # Total for all types
+
+		$tdata{-1}{$t}{'hours'}{0}=$totalhours{$t}{0}; # Total internal hours for current type
+		$tdata{-1}{$t}{'hours'}{1}=$totalhours{$t}{1}; # Total billed hours for current ype
+		$tdata{-1}{-1}{'hours'}{0}+=$totalhours{$t}{0}; # Total internal hours for all types
+		$tdata{-1}{-1}{'hours'}{1}+=$totalhours{$t}{1}; # Total billed hours for all types
 
 		$tdata{-1}{$t}{'hours'}{-1}=~s/\.\d*$//; # Total
-		$tdata{-1}{$t}{'hours'}{0}=~s/\.\d*$//; # No billing
+		$tdata{-1}{$t}{'hours'}{0}=~s/\.\d*$//; # Internal
 		$tdata{-1}{$t}{'hours'}{1}=~s/\.\d*$//; # Billing
 
 		# Reset values if they're missing
@@ -506,23 +513,30 @@ sub ReadHours {
 		$tdata{-1}{$t}{'hours'}{0}=0 unless($tdata{-1}{$t}{'hours'}{0});
 		$tdata{-1}{$t}{'hours'}{1}=0 unless($tdata{-1}{$t}{'hours'}{1});
 		
-		$tdata{-1}{$t}{'minutes'}{-1}=$totalhours{$t}{0}+$totalhours{$t}{1};
-		$tdata{-1}{$t}{'minutes'}{0}=$totalhours{$t}{0};
-		$tdata{-1}{$t}{'minutes'}{1}=$totalhours{$t}{1};
-
-		$tdata{-1}{$t}{'minutes'}{-1}=~s/^\d*/0/;
-
-
 		# Reset variables
 		$tdata{-1}{$t}{'minutes'}{-1}=0;
 		$tdata{-1}{$t}{'minutes'}{0}=0;
 		$tdata{-1}{$t}{'minutes'}{1}=0;
 
-		# Calculate minutes correctly
+		# Calculate totals and strip out numbers right from decimal separator
+		$tdata{-1}{$t}{'minutes'}{-1}=$totalhours{$t}{0}+$totalhours{$t}{1};
+		$tdata{-1}{$t}{'minutes'}{0}=$totalhours{$t}{0};
+		$tdata{-1}{$t}{'minutes'}{1}=$totalhours{$t}{1};
+
+		$tdata{-1}{$t}{'minutes'}{-1}=~s/^\d*/0/;
+		$tdata{-1}{$t}{'minutes'}{0}=~s/^\d*/0/;
+		$tdata{-1}{$t}{'minutes'}{1}=~s/^\d*/0/;
+
+		# Calculate minutes correctly from decimals
 		$tdata{-1}{$t}{'minutes'}{-1}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'}{-1}) if($tdata{-1}{$t}{'minutes'}{-1} > 0);
 		$tdata{-1}{$t}{'minutes'}{0}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'}{0}) if($tdata{-1}{$t}{'minutes'}{0} > 0);
 		$tdata{-1}{$t}{'minutes'}{1}=sprintf("%.0f",60*$tdata{-1}{$t}{'minutes'}{1}) if($tdata{-1}{$t}{'minutes'}{1} > 0);
 	}
+
+	# Reset variables
+	$tdata{-1}{-1}{'minutes'}{-1}=0;
+	$tdata{-1}{-1}{'minutes'}{0}=0;
+	$tdata{-1}{-1}{'minutes'}{1}=0;
 
 	# Total hour count for retrieved hours
 	$tdata{-1}{-1}{'minutes'}{-1}=$tdata{-1}{-1}{'hours'}{-1};
@@ -537,9 +551,6 @@ sub ReadHours {
 	$tdata{-1}{-1}{'hours'}{1}=~s/\.\d*$//;
 	$tdata{-1}{-1}{'minutes'}{1}=~s/^\d*/0/;
 
-	$tdata{-1}{-1}{'minutes'}{-1}=0;
-	$tdata{-1}{-1}{'minutes'}{0}=0;
-	$tdata{-1}{-1}{'minutes'}{1}=0;
 	$tdata{-1}{-1}{'minutes'}{-1}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'}{-1}) if($tdata{-1}{-1}{'minutes'}{-1}>0);
 	$tdata{-1}{-1}{'minutes'}{0}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'}{0}) if($tdata{-1}{-1}{'minutes'}{0}>0);
 	$tdata{-1}{-1}{'minutes'}{1}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'}{1}) if($tdata{-1}{-1}{'minutes'}{1}>0);
