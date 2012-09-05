@@ -30,7 +30,8 @@ my %baskettypes = ( 0 => { id => 0, name => __("Pending"), selected => 1, hidden
 		    1 => { id => 1, name => __("Sold"), selected => 0, hidden => 1 },
 		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 0, validstates => () },
 		    3 => { id => 3, name => __("Offer"), selected => 0, hidden => 0, validstates => (4) },
-		    4 => { id => 4, name => __("Order"), selected => 0, hidden => 0, validstates => (0,4) });
+		    4 => { id => 4, name => __("Order"), selected => 0, hidden => 0, validstates => (0,4) }
+		    );
 
 #
 # Hash: basketdbfields
@@ -598,11 +599,11 @@ sub ReadBaskets {
 	} else {
 		$sort = 'updated';
 	}
-	use goah::Database::Baskets;
-	$db = new goah::Database::Baskets;
-	my %search;
 
+	my %search;
 	my @data;
+	use goah::Db::Baskets::Manager;
+
 	if(!($_[0]) || $_[0] eq '') {
 		my $state=0;
 		my @states;
@@ -623,20 +624,23 @@ sub ReadBaskets {
 			}
 		}
 
-		if($_[4]=~/^[0-9]+$/) {
+		if($_[4] && $_[4]=~/^[0-9]+$/) {
 			$search{'companyid'} = $_[4];	
 		}
 	} else {
 		$search{'id'}=$_[0];
 	}
 
+	my $datap=goah::Db::Baskets::Manager->get_baskets(\%search,sort_by => $sort);
 
-	@data = $db->search_where(\%search, { order_by => $sort });
+	#@data = $db->search_where(\%search, { order_by => $sort });
 
-	if(scalar(@data)==0) {
+	unless($datap) {
 		goah::Modules->AddMessage('warn',__("No baskets found!"));
 		return 0;
 	}
+
+	@data=@$datap;
 
 	my %baskets;
 	my $i=10000; # sort counter
@@ -651,8 +655,15 @@ sub ReadBaskets {
 	use goah::Modules::Customermanagement;
 	foreach my $b (@data) {
 
-		my $cust=goah::Modules::Customermanagement->ReadCompanydata($b->companyid,1);
-		my %customer=%$cust;
+		my $cust;
+		$cust=goah::Modules::Customermanagement->ReadCompanydata($b->companyid,1) if($b->companyid>0);
+		my %customer;
+		
+		if($cust) {
+			%customer=%$cust;
+		} else {
+			$customer{'name'}=__("Error!");
+		}
 		my $cname=lc($customer{'name'});
 		$cname=~s/ä/zz/g;
 		$cname=~s/ö/zzz/g;
@@ -668,19 +679,19 @@ sub ReadBaskets {
 				my $state=$b->state;
 				my $statename=$basketstates{$state};
 				$f=$basketdbfields{$k}{'field'};		
-				$baskets{$state}{$i}{$f}=$b->get($f);
+				$baskets{$state}{$i}{$f}=$b->$f;
 				$baskets{$state}{'name'}=$statename;
-				$sorthash{$state}{$cname}=$i;
+				$sorthash{$state}{$cname.".".$i}=$i;
 			} else {
 				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
 					if($f=~/state/i) {
 						goah::Modules->AddMessage('debug',"Got state: ".$b->get($f));
 					}
-					$baskets{$f}=$b->get($f);
+					$baskets{$f}=$b->$f;
 				} else {
-					$baskets{$i}{$f}=$b->get($f);
-					$sorthash{$cname}=$i;
+					$baskets{$i}{$f}=$b->$f;
+					$sorthash{$cname.".".$i}=$i;
 				}
 			}
 		}
@@ -728,8 +739,12 @@ sub ReadBaskets {
 				$baskets{$i}{'triggerheading'}=$nexttrigger;
 				$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
 				$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
-				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
-				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
+
+				$headingtotal=0 unless($headingtotal);
+				$headingtotalvat=0 unless($headingtotalvat);
+
+				#$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
+				#$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
 				$baskets{$i}{'repeat'}=$b->repeat;
 				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
 			}
@@ -737,9 +752,13 @@ sub ReadBaskets {
 
 		$i++;
 	} 
-	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
-	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
-	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
+
+	$total=0 unless($total);
+	$totalvat=0 unless($totalvat);
+
+	#$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
+	#$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
+	#$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
 	unless($_[0] || !$_[0] eq '') {
 		# Sort baskets hash by customer names
@@ -1260,7 +1279,7 @@ sub ReadBasketrows {
 		return 0;
 	}
 
-	use goah::Database::Basketrows;
+	use goah::Db::Basketrows::Manager;
 	use goah::Database::Products;
 	my %rowdata;
 	my $field;
@@ -1270,7 +1289,17 @@ sub ReadBasketrows {
 	if( !($_[1]) || $_[1]==-1) {
 		# We don't have id for individual row, read all rows for
 		# the basket
-		my @data = goah::Database::Basketrows->search_where({basketid => $_[0]}, { order_by => 'id' });
+		my $datap = goah::Db::Basketrows::Manager->get_basketrows({basketid => $_[0]},  sort_by => 'id' );
+		my @data;
+		
+		unless($datap) {
+			goah::Modules->AddMessage('debug',"No rows for basket id $_[0]",__FILE__,__LINE__);
+			return 0;
+		}
+
+		@data=@$datap;
+
+
 		my $i=10000;
 		foreach my $row (@data) {
 			
@@ -1291,30 +1320,41 @@ sub ReadBasketrows {
 						} else {
 							# Calculate rows sums for display
 							if($field eq 'purchase') {
-								$rowdata{$i}{'purchase'}=goah::GoaH->FormatCurrencyNopref($row->purchase,$prod{'vat'},0,'out',0);
-								$rowdata{$i}{'purchase_vat'}=goah::GoaH->FormatCurrencyNopref($row->purchase,$prod{'vat'},0,'out',1);
+								my $tmppurchase=0;
+								$tmppurchase=$row->purchase if ($row->purchase);
+								$rowdata{$i}{'purchase'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$prod{'vat'},0,'out',0);
+								$rowdata{$i}{'purchase_vat'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$prod{'vat'},0,'out',1);
 							} elsif ( $field eq 'sell' ) {
-								$rowdata{$i}{'sell'}=goah::GoaH->FormatCurrencyNopref($row->sell,$prod{'vat'},0,'out',0);
-								$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($row->sell,$prod{'vat'},0,'out',1);
+								my $tmpsell=0;
+								$tmpsell=$row->sell if ($row->sell);
+								$rowdata{$i}{'sell'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$prod{'vat'},0,'out',0);
+								$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$prod{'vat'},0,'out',1);
 							} else {
-								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$prod{'vat'},$uid,'out',$settref);
+								my $tmpfield=0;
+								$tmpfield=$row->get($field) if ($row->get($field));
+								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$prod{'vat'},$uid,'out',$settref);
 							}
 							$rowdata{$i}{'vat'} = $prod{'vat'};
 							
 						}
 					} else {
-						$rowdata{$i}{$field}=$row->get($field);
+						$rowdata{$i}{$field}=$row->$field;
 					}
 				} else {
-					$rowdata{$i}{$field} = $row->get($field);
+					$rowdata{$i}{$field} = $row->$field;
 				}
 			}
 			unless($rowdata{$i}{'amount'}) {
 				$rowdata{$i}{'amount'}=0;
 			}
 			unless($_[2]) {
-				$rowdata{$i}{'total'} = goah::GoaH->FormatCurrencyNopref( ($rowdata{$i}{'sell'}*$rowdata{$i}{'amount'}),0,'out',0);
-				$rowdata{$i}{'total_vat'} = goah::GoaH->FormatCurrencyNopref( ($rowdata{$i}{'sell_vat'}*$rowdata{$i}{'amount'}),0,'out',0);
+				my $tmpsell=0;
+				$tmpsell=$rowdata{$i}{'sell'} if ($rowdata{$i}{'sell'});
+				$rowdata{$i}{'total'} = goah::GoaH->FormatCurrencyNopref( ($tmpsell*$rowdata{$i}{'amount'}),0,'out',0);
+
+				$tmpsell=0;
+				$tmpsell=$rowdata{$i}{'sell_vat'} if ($rowdata{$i}{'sell_vat'});
+				$rowdata{$i}{'total_vat'} = goah::GoaH->FormatCurrencyNopref( ($tmpsell*$rowdata{$i}{'amount'}),0,'out',0);
 			} else {
 				$rowdata{$i}{'total'} = $rowdata{$i}{'sell'}*$rowdata{$i}{'amount'};
 				$rowdata{$i}{'total_vat'} = $rowdata{$i}{'sell_vat'}*$rowdata{$i}{'amount'};
@@ -1332,9 +1372,9 @@ sub ReadBasketrows {
 		return \%rowdata;
 	} else {
 		# Row id is set, read only single row from the database
-		my $data = goah::Database::Basketrows->retrieve($_[1]);
+		my $data = goah::Db::Basketrows->new(id =>$_[1]);
 
-		unless($data) {
+		unless($data->load(speculative => 1)) {
 			goah::Modules->AddMessage('error',__("Couldn't retrieve basket row from the database!")." ".__("Id not found: ").$_[1],__FILE__,__LINE__);
 			return 0;
 		}
@@ -1349,13 +1389,13 @@ sub ReadBasketrows {
 				}
 				my %prod = %$prodpoint;
 				unless($_[2]) {
-					$rowdata{$field} = goah::GoaH->FormatCurrency($data->get($field),$prod{'vat'},$uid,'out',$settref);
+					$rowdata{$field} = goah::GoaH->FormatCurrency($data->$field,$prod{'vat'},$uid,'out',$settref);
 				} else {
-					$rowdata{$field} = $data->get($field);
+					$rowdata{$field} = $data->$field;
 				}
 			} else {
 				if($data->$field) {
-					$rowdata{$field} = $data->get($field);
+					$rowdata{$field} = $data->$field;
 				} else {
 					$rowdata{$field} = "Empty value from db?!?";
 				}
@@ -1369,7 +1409,7 @@ sub ReadBasketrows {
 			$rowdata{'total'} = $rowdata{'sell'}*$rowdata{'amount'};
 		}
 
-		my $proddata=goah::Database::Products->retrieve($data->get('productid'));
+		my $proddata=goah::Database::Products->retrieve($data->productid);
 		$rowdata{'in_store'}=$proddata->get('in_store');
 
 		return \%rowdata;

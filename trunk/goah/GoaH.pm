@@ -92,8 +92,14 @@ sub GetConfig {
 #
 sub FormatCurrency {
 
-	shift;
-	unless ($_[0]=~/^-?([0-9\,\.\ ]+)$/) {
+	shift if ($_[0]=~/goah::GoaH/);
+
+	unless(length($_[0])) {
+		goah::Modules->AddMessage('debug',__('No number to reformat.'),__FILE__,__LINE__);
+		return 0;
+	}
+
+	unless($_[0]=~/^-?([0-9\,\.\ ]+)$/) {
 		if($_[0] eq '') {
 			return 0;
 		}

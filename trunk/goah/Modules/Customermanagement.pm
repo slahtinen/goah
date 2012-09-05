@@ -655,6 +655,12 @@ sub ReadCompanydata {
 		return $data[0];
 	}
 
+
+	unless($var && $var > 0) {
+		goah::Modules->AddMessage('warn',__("No company id given, can't read company data!"),__FILE__,__LINE__);
+		return 0;
+	}
+
 	use goah::Db::Companies;
 	my $data = goah::Db::Companies->new( id => $var );
 
