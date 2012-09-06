@@ -686,7 +686,7 @@ sub ReadBaskets {
 				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
 					if($f=~/state/i) {
-						goah::Modules->AddMessage('debug',"Got state: ".$b->get($f));
+						goah::Modules->AddMessage('debug',"Got state: ".$b->$f);
 					}
 					$baskets{$f}=$b->$f;
 				} else {
@@ -743,8 +743,8 @@ sub ReadBaskets {
 				$headingtotal=0 unless($headingtotal);
 				$headingtotalvat=0 unless($headingtotalvat);
 
-				#$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
-				#$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
+				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
+				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
 				$baskets{$i}{'repeat'}=$b->repeat;
 				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
 			}
@@ -756,9 +756,9 @@ sub ReadBaskets {
 	$total=0 unless($total);
 	$totalvat=0 unless($totalvat);
 
-	#$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
-	#$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
-	#$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
+	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
+	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
+	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
 	unless($_[0] || !$_[0] eq '') {
 		# Sort baskets hash by customer names
