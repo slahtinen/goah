@@ -1307,7 +1307,7 @@ sub ReadBasketrows {
 
 			my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid,$settref,$_[2]); 
 			unless($prodpoint) {
-				goah::Modules->AddMessage('error',__("Couldn't read product data for id ").$row->get('productid')."!",__FILE__,__LINE__);
+				goah::Modules->AddMessage('error',__("Couldn't read product data for id ").$row->productid."!",__FILE__,__LINE__);
 				return 0;
 			}
 			my %prod = %$prodpoint;
@@ -1316,7 +1316,7 @@ sub ReadBasketrows {
 				if($field eq 'purchase' || $field eq 'sell') {
 					unless($_[2]) {
 						if($_[1] && $_[1]==-1) {
-							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),0,$uid,'in',$settref);
+							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->$field,0,$uid,'in',$settref);
 						} else {
 							# Calculate rows sums for display
 							if($field eq 'purchase') {
@@ -1331,7 +1331,7 @@ sub ReadBasketrows {
 								$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$prod{'vat'},0,'out',1);
 							} else {
 								my $tmpfield=0;
-								$tmpfield=$row->get($field) if ($row->get($field));
+								$tmpfield=$row->$field if ($row->$field);
 								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$prod{'vat'},$uid,'out',$settref);
 							}
 							$rowdata{$i}{'vat'} = $prod{'vat'};
@@ -1401,8 +1401,8 @@ sub ReadBasketrows {
 				}
 			}
 		}
-		$rowdata{'code'} = $data->get('code');
-		$rowdata{'name'} = $data->get('name');
+		$rowdata{'code'} = $data->code;
+		$rowdata{'name'} = $data->name;
 		unless($_[2]) {
 			$rowdata{'total'} = goah::GoaH->FormatCurrency( ($rowdata{'sell'}*$rowdata{'amount'}),0,$uid,'out',$settref);
 		} else {
@@ -1410,7 +1410,7 @@ sub ReadBasketrows {
 		}
 
 		my $proddata=goah::Database::Products->retrieve($data->productid);
-		$rowdata{'in_store'}=$proddata->get('in_store');
+		$rowdata{'in_store'}=$proddata->in_store;
 
 		return \%rowdata;
 	}
@@ -1566,7 +1566,22 @@ sub OrderToBasket {
 sub BasketToInvoice {
 
 	unless($_[0]) {
-		goah::Modules->AddMessage('error',__("Can't convert basket! Basket id is missing!"));
+		goah::Modules->AddMessage('error',__("Can't convert basket! Basket id is missing!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	# Verify that we actually have an basket which can be transferred to invoice
+	my $basket_p=ReadBaskets($_[0],$uid);
+
+	unless($basket_p) {
+		goah::Modules->AddMessage('error',__("Can't convert basket! Can't read basket data with id!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	my %basket=%$basket_p;
+
+	unless($basket{'state'}==0) {
+		goah::Modules->AddMessage('error',__("Can't convert basket! Basket state isn't pending!"),__FILE__,__LINE__);
 		return 0;
 	}
 
