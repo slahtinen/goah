@@ -170,6 +170,8 @@
 
 </div>
 
+[% INCLUDE modules/Basket/addhours %]
+
 [% INCLUDE modules/Basket/basketinfo.productlist %]
 
 <h3>[% gettext("Basket functions") %]</h3>

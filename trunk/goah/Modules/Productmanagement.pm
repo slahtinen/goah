@@ -836,8 +836,7 @@ sub ReadData {
 					#$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
 					$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$dbdata->vat,$uid,'out',$settref);
 				} else {
-					#$pdata{$i}{$field} = $data[0]->get($field);
-					$pdata{$i}{$field} = $dbdata->$field;
+					$pdata{$field} = $dbdata->$field;
 				}
 			} elsif ($field eq 'vat') {
 				$pdata{$field} = sprintf("%.2f",$dbdata->$field);
@@ -999,7 +998,7 @@ sub ReadProductByCode {
 		return 0;
 	}
 
-	unless($_[1]) {
+	unless($_[2]) {
 		goah::Modules->AddMessage('debug',"Using old version of ReadProductByCode",__LINE__,__FILE__);
 	}
 

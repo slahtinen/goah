@@ -177,10 +177,16 @@ sub Start {
 
 		} elsif($q->param('action') eq 'selectbasket') {
 
+				my $tmpdata = ReadBaskets($q->param('target'));
+				my %tmpd=%$tmpdata;
+				use goah::Modules::Tracking;
+
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $q->param('target');
-				$variables{'basketdata'} = ReadBaskets($q->param('target'));
+				$variables{'basketdata'} = $tmpdata;
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 
 		} elsif($q->param('action') eq 'recurring') {
 
@@ -195,10 +201,16 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't add new basket to database"));
 				}
+
+				my $tmpdata=ReadBaskets($basket);
+				my %tmpd=%$tmpdata;
+
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $basket;
-				$variables{'basketdata'} = ReadBaskets($basket);
+				$variables{'basketdata'} = $tmpdata;
 				$variables{'basketrows'} = ReadBasketrows($basket);
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 
 		} elsif($q->param('action') eq 'showbasket') {
 
@@ -240,10 +252,16 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error', __("Can't add product(s) to basket"));
 				}
-				$variables{'basketdata'} = ReadBaskets($q->param('basketid'));
+
+				my $tmpdata=ReadBaskets($q->param('basketid'));
+				my %tmpd=%$tmpdata;
+
+				$variables{'basketdata'} = $tmpdata;
 				$variables{'basketrows'} = ReadBasketrows($q->param('basketid'));
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $q->param('basketid');
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 
 		} elsif($q->param('action') eq 'editrow') {
 
@@ -1114,17 +1132,55 @@ sub AddToBasket {
 	my $purchase;
 	my $sell;
 	my $amount;
+	my $desc='';
+	my $prod;
+	my $hourid;
 
 	# Loop trough an array of products
 	if($q->param('addproducts')) {
 
 		my @products = $q->param('addproducts');
-		foreach my $prod (@products) {
+		foreach my $prodrow (@products) {
 			
-			$purchase = $q->param('purchase_'.$prod);
-			$sell = $q->param('sell_'.$prod);
-			$amount = $q->param('amount_'.$prod);
-			
+			$hourid=-1;
+			# If we're adding hours we need to pull some additional info from the database
+			if($q->param('hours_'.$prodrow)) {
+				
+				use goah::Modules::Tracking;
+
+				# Read info for tracked hours
+				my $hourp=goah::Modules::Tracking->ReadData('hours','id'.$prodrow,1);
+				if($hourp==0) {
+					goah::Modules->AddMessage('error',__("Couldn't read tracked hours from database!"),__FILE__,__LINE__);
+					next;
+				}
+
+				my %hours=%$hourp;
+
+				# Read info for the product included
+				goah::Modules->AddMessage('debug','Read product info for id '.$hours{'productcode'},__FILE__,__LINE__);
+				my $prodp=goah::Modules::Productmanagement->ReadData('products',$hours{'productcode'},$uid,$settref,1);
+				if($prodp==0) {
+					goah::Modules->AddMessage('error',__("Coudln't read product data for tracked hours!"),__FILE__,__LINE__);
+					next;
+				}
+				my %product=%$prodp;
+
+				$hourid=$hours{'id'};
+				$prod=$product{'id'};
+				$purchase=$product{'purchase'};
+				$sell=$product{'sell'};
+				$amount=$hours{'hours'};
+				$desc=$hours{'day'}.' '.$hours{'username'}.': '.$hours{'description'};
+
+
+			} else {
+				$prod = $prodrow;
+				$purchase = $q->param('purchase_'.$prodrow);
+				$sell = $q->param('sell_'.$prodrow);
+				$amount = $q->param('amount_'.$prodrow);
+			}
+				
 			# Feed validation
 			$amount=~s/,/./;
 			$amount=~s/\ //;
@@ -1133,7 +1189,15 @@ sub AddToBasket {
 				$amount=0.00;
 			}
 
-			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount)==1) {
+			# Assign hours to basket
+			if($hourid!=-1) {
+				unless(goah::Modules::Tracking->AddHoursToBasket($hourid,$basketid)==1) {
+					goah::Modules->AddMessage('error',"Can't assign an basket for hours! Can't add product to basket!",__FILE__,__LINE__);
+					return 1;
+				}
+			}
+
+			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount,$desc)==1) {
 				goah::Modules->AddMessage('debug',"Added productid $prod to basket",__FILE__,__LINE__);
 			} else {
 				goah::Modules->AddMessage('error',"Can't add product id $prod to basket!",__FILE__,__LINE__);
@@ -1224,7 +1288,7 @@ sub AddProductToBasket {
 		return 0;
 	}
 
-	goah::Modules->AddMessage('debug',"Fetch product info with uid ".$uid,__FILE__,__LINE__); 
+	#goah::Modules->AddMessage('debug',"Fetch product info with uid ".$uid,__FILE__,__LINE__); 
 	my $pinfo = goah::Modules::Productmanagement->ReadData('products', $_[0], $uid,$settref);
 	if($pinfo == 0) {
 		goah::Modules->AddMessage('error', __("Invalid product id. Can't add product to basket.")." (".$_[0].")");

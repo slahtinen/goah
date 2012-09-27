@@ -865,31 +865,46 @@ sub ReadOwnerPersonnel {
 	my @logindata;
 	my $login;
 	my $i=100000;
-	goah::Modules->AddMessage('debug',"Got @persons");
 	foreach my $per (@persons) {
 
 		# Quick and dirty fix for basket search
 		if(scalar(keys(%persondbfieldnames))>0) {
-		foreach my $key (keys %persondbfieldnames) {
-			$field = $persondbfieldnames{$key}{'field'};
-			unless($field eq 'login' || $field eq 'pass' || $field eq 'disabled') {
-					$pdata{$i}{$field} = $per->get($field);
+			foreach my $key (keys %persondbfieldnames) {
+				$field = $persondbfieldnames{$key}{'field'};
+				unless($field eq 'login' || $field eq 'pass' || $field eq 'disabled') {
+
+						if($_[0]) {
+							$pdata{$field} = $per->get($field);
+						} else {
+							$pdata{$i}{$field} = $per->get($field);
+						}
+				}
 			}
-		}
 
-		@logindata = goah::Database::users->search_where({ accountid => $per->id });
-		unless(scalar(@logindata) == 0) {
+			@logindata = goah::Database::users->search_where({ accountid => $per->id });
+			unless(scalar(@logindata) == 0) {
 
-			$login = $logindata[0];
-			$pdata{$i}{'login'} = $login->login;
-			$pdata{$i}{'pass'} = $login->pass;
-			$pdata{$i}{'disabled'} = $login->disabled;
+				$login = $logindata[0];
+				if($_[0]) {
+					$pdata{'login'} = $login->login;
+					$pdata{'pass'} = $login->pass;
+					$pdata{'disabled'} = $login->disabled;
+				} else {
+					$pdata{$i}{'login'} = $login->login;
+					$pdata{$i}{'pass'} = $login->pass;
+					$pdata{$i}{'disabled'} = $login->disabled;
+				}
 
-		}
+			}
 		} else {
-			goah::Modules->AddMessage('debug',"Didn't have hash persondbfieldnames!");
-			$pdata{$i}{'firstname'}=$per->firstname;
-			$pdata{$i}{'lastname'}=$per->lastname;
+			goah::Modules->AddMessage('debug',"Didn't have hash persondbfieldnames!",__FILE__,__LINE__);
+			if($_[0]) {
+				$pdata{'firstname'}=$per->firstname;
+				$pdata{'lastname'}=$per->lastname;
+			} else {
+				$pdata{$i}{'firstname'}=$per->firstname;
+				$pdata{$i}{'lastname'}=$per->lastname;
+			}
 		}
 		$i++;
 

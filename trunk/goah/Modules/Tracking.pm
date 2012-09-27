@@ -233,6 +233,8 @@ sub WriteHours {
 
 	my $prod;
 	my $update=0;
+
+	# Check if we're updating an existing item or creating a new one
 	if($q->param('target')) {
 		$prod = goah::Db::Timetracking->new(id => $q->param('target'));
 		unless($prod->load(speculative => 1, for_update => 1)) {
@@ -248,6 +250,7 @@ sub WriteHours {
 		}
 	}
 
+	# Update values to an array from http variables
         my %fieldinfo;
         while(my($key,$value) = each (%timetrackingdb)) {
                 %fieldinfo = %$value;
@@ -300,11 +303,14 @@ sub WriteHours {
 						$dbdata{$tmpcol}=0;
 					}
 				}
+
+				# Update existing tracking item
 				$prod->$tmpcol($dbdata{$tmpcol}) if $update;
 			}
                 }
         }
 
+	# Create new tracking item
 	$prod = goah::Db::Timetracking->new(%dbdata) unless $update;
 	return 1 if ($prod->save);
 	return 0;
@@ -321,6 +327,7 @@ sub WriteHours {
 #
 #   type - Which kind of data we're reading, currently only valid format is 'hours'
 #   search - Search parameters, currently only accepted format is 'id00', where 00 is an valid database id
+#   formattime - If we should recalculate hours field to separate hours/minutes -field. 1=disable formatting, defaults to 0
 #
 # Returns:
 #   
@@ -360,10 +367,12 @@ sub ReadData {
 			$data{$field} = goah::GoaH::FormatDate($datap->$field);
 		} elsif ($field eq 'hours') {
 			$data{$field}=$datap->$field;
-			$data{$field}=~s/\.\d*$//;
-			$data{'minutes'}=$datap->$field;
-			$data{'minutes'}=~s/^\d*/0/;
-			$data{'minutes'}=sprintf("%.0f",60*$data{'minutes'});
+			if($_[2] eq '0') {
+				$data{$field}=~s/\.\d*$//;
+				$data{'minutes'}=$datap->$field;
+				$data{'minutes'}=~s/^\d*/0/;
+				$data{'minutes'}=sprintf("%.0f",60*$data{'minutes'});
+			}
 		} else {
 			$data{$field} = $datap->$field;	
 		}
@@ -384,7 +393,7 @@ sub ReadData {
 #   1 - customer id's, either single value or array reference
 #   2 - starting day, in YYYY-MM-DD, or negative value to read -1*n last entries
 #   3 - ending day, in YYYY-MM-DD
-#   4 - which hours to read, all (yesno), billed(yes), unbilled(no), optional
+#   4 - which hours to read, all (yesno), billable(yes), unbillable(no), not in basket(open), optional
 #
 # Returns:
 #
@@ -425,7 +434,7 @@ sub ReadHours {
 		goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
 
-	# Limit search by billed/unbilled
+	# Limit search by billable/unbillable
 	if($_[4]) {
 		if($_[4]=~/^yes$/i) {
 			$dbsearch{'no_billing'} = "0";
@@ -434,7 +443,16 @@ sub ReadHours {
 		if($_[4]=~/^no$/i) {
 			$dbsearch{'no_billing'} = "1";
 		}
+
+		# Limit search for only hours not moved to basket
+		# This implies billable -option
+		if($_[4]=~/^open$/i) {
+			$dbsearch{'no_billing'} = '0';
+			$dbsearch{'or'} = [ basket_id => { '' }, basket_id => { lt => 0 } ];
+		}
 	}
+
+	
 
 	my $datap; 
 	
@@ -447,6 +465,8 @@ sub ReadHours {
 	return 0 unless $datap;
 
 	my @data=@$datap;
+	return 0 unless scalar(@data);
+
 	# Pack found data into hash and return data
 	my %tdata;
 	my $i=10000000;
@@ -467,6 +487,27 @@ sub ReadHours {
 					$tdata{$i}{'companyname'}=__("Not available!");
 				}
 			}
+			if($field eq 'userid') {
+				my $personp=goah::Modules::Systemsettings->ReadOwnerPersonnel($row->userid);
+				unless($personp==0) {
+					my %person=%$personp;
+					$tdata{$i}{'username'}=$person{'lastname'}." ".$person{'firstname'};
+				} else {
+					$tdata{$i}{'username'}=__("Not available!");
+				}
+			}
+			if($field eq 'productcode') {
+				my $prodinfop=goah::Modules::Productmanagement->ReadData('products',$row->productcode,$uid,$settref,1);
+				if($prodinfop==0) {
+					$tdata{$i}{'productcode'}=__("Not available!");
+					$tdata{$i}{'productname'}=__("Not available!");
+				} else {
+					my %prodinfo=%$prodinfop;
+					$tdata{$i}{'productcode'}=$prodinfo{'code'};
+					$tdata{$i}{'productname'}=$prodinfo{'name'};
+				}
+			}
+
 			if($field eq 'day') {
 				$tdata{$i}{$field} = goah::GoaH::FormatDate($row->$field);
 			}
@@ -486,7 +527,10 @@ sub ReadHours {
 			}
 		}
 	}	
+	goah::Modules->AddMessage('debug',"Got ".($i-10000000)." rows from the database.",__FILE__,__LINE__);
 
+	# Go trough hours and cacl total hours
+	# Warning: Here be dragons.
 	foreach my $t (keys(%totalhours)) {
 		
 		# $t = Row type (normal/night/evening)
@@ -556,6 +600,45 @@ sub ReadHours {
 	$tdata{-1}{-1}{'minutes'}{1}=sprintf("%.0f",60*$tdata{-1}{-1}{'minutes'}{1}) if($tdata{-1}{-1}{'minutes'}{1}>0);
 
 	return \%tdata;
+}
+
+#
+# Function: AddHoursToBasket
+#
+#   An function to add tracked hours into an basket by assigning an
+#   basket id for individual row
+#
+# Parameters:
+#
+#   rowid - Database id for hours
+#   basketid - Basket id to assign, can be empty
+#
+# Returns:
+#
+#   Success - 1
+#   Fail - 0
+#
+sub AddHoursToBasket {
+
+	shift if ($_[0]=~/goah::Modules::Tracking/);
+
+	# Use direct database calls to speed things up
+	use goah::Db::Timetracking;
+	my $datap = goah::Db::Timetracking->new(id => $_[0]);
+
+	unless($datap->load(speculative => 1)) {
+		goah::Modules->AddMessage('error',__("Couldn't read any data from the database with id ").$_[0],__FILE__,__LINE__);
+		return 0;
+	}
+
+	if($_[1]>0) {
+		$datap->basket_id($_[1]);
+	} else {
+		$datap->basket_id('');
+	}
+
+	return 1 if($datap->save);
+	return 0;
 }
 
 1;
