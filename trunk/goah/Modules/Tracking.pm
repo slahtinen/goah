@@ -447,8 +447,10 @@ sub ReadHours {
 		# Limit search for only hours not moved to basket
 		# This implies billable -option
 		if($_[4]=~/^open$/i) {
+			goah::Modules->AddMessage('debug',"Searching open, billable hours",__FILE__,__LINE__);
 			$dbsearch{'no_billing'} = '0';
-			$dbsearch{'or'} = [ basket_id => { '' }, basket_id => { lt => 0 } ];
+			$dbsearch{'or'} = [ basket_id => '', basket_id => { lt => 0 } ];
+			$dbsearch{'productcode'} = { ne => '' };
 		}
 	}
 
@@ -639,6 +641,47 @@ sub AddHoursToBasket {
 
 	return 1 if($datap->save);
 	return 0;
+}
+
+# 
+# Function: DeleteBasket
+#
+#   An cleanup function to delete tracked hours from the
+#   basket when the basket itself is deleted.
+#
+# Parameters:
+#
+#   basketid - Basket id which is removed
+#
+# Returns:
+#
+#   Success (or no hours) - 1 
+#   Fail - 0
+#
+sub DeleteBasket {
+
+	shift if ($_[0]=~/goah::Modules::Tracking/);
+
+	unless($_[0] && $_[0]=~/^[0-9]+$/) {
+		goah::Modules->AddMessage('error',__("Given basket id not numeric!"),__FILE__,__LINE__);
+		return 0;
+	}
+	
+	use goah::Db::Timetracking::Manager;
+	my $datap = goah::Db::Timetracking::Manager->get_timetracking( { basket_id => $_[0] } );
+	
+	unless($datap) {
+		goah::Modules->AddMessage('debug',"No rows found with basketid, this is fine.",__FILE__,__LINE__);
+		return 1;
+	}
+
+	my @rows=@$datap;
+	foreach my $r (@rows) {
+		$r->basket_id('-1');
+		$r->update;
+	}
+
+	return 1;
 }
 
 1;

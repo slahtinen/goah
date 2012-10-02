@@ -1,0 +1,80 @@
+[% IF trackedhours != 0 %]
+<h3>
+<button onClick="$('#hourtable').toggle(0);">&darr;</button>
+Tracked hours</h3>
+<form action="" method='post' name="editrow[% row.id %]">
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='action' value='addtobasket'>
+<input type='hidden' name='basketid' value='[% basketdata.id %]'>
+<input type='hidden' name='target' value="[% basketdata.companyid %]">
+
+[% IF usersettings.showvat == 'on' %]
+	[% vattxt = gettext("Incl.VAT") %]
+[% ELSE %]
+	[% vattxt = gettext("VAT 0%") %]
+[% END %]
+
+<table id="hourtable">
+<thead>
+<tr>
+<th>[% gettext("Select") %]</th>
+<th>[% gettext("Product") %]</th>
+<th>[% gettext("Person") %]</th>
+<th>[% gettext("Date") %]</th>
+<th>[% gettext("Hours") %]</th>
+<th>[% gettext("Description") %]</th>
+</tr>
+</thead>
+<tbody class="rowdata">
+[% rowc='odd' %]
+[% total = 0 %]
+
+[% FOREACH key IN trackedhours.keys.sort %]
+	[% IF key < 0 %]
+		[% NEXT %]
+	[% ELSE %]
+		[% row = trackedhours.$key %]
+	[% END %]
+
+	<tr class='[% rowc %]'>
+	<td><input name="addproducts" value="[% row.id %]" type="checkbox" checked>
+	    <input type="hidden" name="hours_[% row.id %]" value="1" />
+	</td>
+	<td>[% row.productname %]<br/>
+	[% row.productcode %]</td>
+	<td>[% row.username %]</td>
+	<td>[% row.day %]</td>
+	<td>[% row.hours %]h
+	[% IF row.minutes > 0 %]
+	[% row.minutes %] min
+	[% END %]
+	</td>
+	<td>[% row.description %]</td>
+	</tr>
+
+	[% IF rowc == 'odd' %]
+		[% rowc = 'even' %]
+	[% ELSE %]
+		[% rowc = 'odd' %]
+	[% END %]
+[% END %]
+
+[% totcount = trackedhours.-1.-1 %]
+<tr class="[% rowc %]">
+<td colspan=4>[% gettext("Total") %]</td>
+<td>[% totcount.hours.-1 %] h [% totcount.minutes.-1 %] min</td>
+<td>&nbsp;</td>
+</tr>
+
+[% rowc = 'info' %]
+
+<tr class="[% rowc %]">
+<td colspan='7'><input type='submit' value="[% gettext("Add to basket") %]"></td>
+</tr>
+</tbody>
+</table>
+<script>
+$('#hourtable').hide();
+</script>
+</form>
+[% END %]

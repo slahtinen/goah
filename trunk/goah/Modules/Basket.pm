@@ -1502,12 +1502,21 @@ sub ReadBasketrows {
 sub DeleteBasket {
 	
 	if($_[0]=~/goah::Modules::Basket/) {
-		goah::Modules->AddMessage('error',__("DeleteBasket called outside package goah::Modules::Basket!"));
+		goah::Modules->AddMessage('error',__("DeleteBasket called outside package goah::Modules::Basket!"),__FILE__,__LINE__);
 		return 0;
 	}
 	
 	unless($_[0]) {
-		goah::Modules->AddMessage('error',__("Can't delete basket! Basket id is missing!"));
+		goah::Modules->AddMessage('error',__("Can't delete basket! Basket id is missing!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	# First try to delete hours associated to basket
+	use goah::Modules::Tracking;
+	my $hoursremoved=goah::Modules::Tracking->DeleteBasket($_[0]);
+
+	if($hoursremoved==0) {
+		goah::Modules->AddMessage('error',__("Couldn't delete hours associated to an basket. Can't delete basket!"),__FILE__,__LINE__);
 		return 0;
 	}
 
