@@ -121,7 +121,7 @@ sub Start {
 
 		} elsif($q->param('action') eq 'edithourtracking') {
 			$variables{'function'} = "modules/Tracking/edithourtracking";
-			$variables{'dbdata'} = ReadData('hours',"id".$q->param('target'));
+			$variables{'dbdata'} = ReadData('hours',"id".$q->param('target'),0);
 
 		} elsif($q->param('action') eq 'reporting') {
 			$variables{'function'} = "modules/Tracking/reporting";
