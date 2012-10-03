@@ -70,6 +70,9 @@
 [% IF item.key == search_yesnoselect %]
 	[% selected='selected' %]
 [% END %]
+[%# IF search_yesnoselect=='' && item.key=='yes' %]
+	[%# selected='selected' %]
+[%# END %]
 <option value="[% item.key %]" [% selected %]>[% item.value %]</option>
 [% END %]
 </select>
@@ -218,8 +221,8 @@
 <tr><td colspan=3 class="right">[% gettext("Total") %]</td>
 [% totcount = total.-1 %]
 <td>[% totcount.hours.-1 %]h&nbsp;[% totcount.minutes.-1 %]min</td>
-<td>[% gettext("Billed:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
-<td>[% gettext("Not billed:") %]&nbsp;[% totcount.hours.0 %]h&nbsp;[% totcount.minutes.0 %]min</td>
+<td>[% gettext("Debit:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
+<td>[% gettext("Internal:") %]&nbsp;[% totcount.hours.0 %]h&nbsp;[% totcount.minutes.0 %]min</td>
 <td>&nbsp;</td>
 </tr>
 

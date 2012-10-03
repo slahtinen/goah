@@ -149,7 +149,7 @@ sub Start {
 				my $enddate;
 				my $searchdatestart;
 				my $searchdateend;
-				my $yesnoselect;
+				my $yesnoselect='yes';
 				my $debitselect;
 
 				$company = $q->param('customer') if($q->param('customer') && !($q->param('customer')=~/\*/) );
@@ -198,7 +198,7 @@ sub Start {
 
 			} else {
 				#$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$yearnow,$mon,'01'),'','','unimported');
-				$variables{'dbdata'}=ReadHours('','','','','','unimported');
+				$variables{'dbdata'}=ReadHours('','','','','yes','unimported');
 			}
 
                 } else {
@@ -455,10 +455,12 @@ sub ReadHours {
 	# Limit search by billable/internal
 	if($_[4]) {
 		if($_[4]=~/^yes$/i) {
+			goah::Modules->AddMessage('debug',"Searching debit hours",__FILE__,__LINE__);
 			$dbsearch{'no_billing'} = "0";
 		}
 
 		if($_[4]=~/^no$/i) {
+			goah::Modules->AddMessage('debug',"Searching internal hours",__FILE__,__LINE__);
 			$dbsearch{'no_billing'} = "1";
 		}
 
