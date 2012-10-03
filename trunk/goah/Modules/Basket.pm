@@ -1653,8 +1653,8 @@ sub BasketToInvoice {
 
 	my %basket=%$basket_p;
 
-	unless($basket{'state'}==0) {
-		goah::Modules->AddMessage('error',__("Can't convert basket! Basket state isn't pending!"),__FILE__,__LINE__);
+	unless($basket{'state'}==0 || $basket{'state'}==4) {
+		goah::Modules->AddMessage('error',__("Can't convert basket! Basket state isn't pending or order!"),__FILE__,__LINE__);
 		return 0;
 	}
 

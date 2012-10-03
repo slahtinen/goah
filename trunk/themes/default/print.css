@@ -8,7 +8,7 @@ body {
 	line-height: 1.4em; 
 	word-spacing:1px; 
 	letter-spacing:0.2px; 
-	font: 13px Arial, Helvetica,"Lucida Grande", serif; 
+	font: 11px Arial, Helvetica,"Lucida Grande", serif; 
 	color: #000;
 	background: none;
 }
@@ -54,6 +54,7 @@ thead th {
 
 tbody td {
 	border: none;
+	font-size: 10px;
 }
 
 tbody tr {
