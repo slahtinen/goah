@@ -17,6 +17,9 @@
   <tr>
   [% FOREACH key IN timetrackingdb.keys.sort %]
   [% data = timetrackingdb.$key %]
+  [% IF data.field == 'longdescription' %]
+  	[% NEXT %]
+  [% END %]
   [% IF data.type != "hidden" %]
         [% IF data.type == 'textfield' %]
 		[% IF data.field == 'day' %]
@@ -71,6 +74,9 @@
 <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Create") %]" />
 </td>
 </tr>
+<tr>
+<td colspan=8>[% gettext("Long description, only for internal use") %]<br/>
+<textarea name="longdescription" class="tracking_longdesc"></textarea></td>
 </tbody>
 </table>
 </form>
@@ -130,7 +136,11 @@
 [% END %]
 
 </td>
-<td>[% row.description %]</td>
+<td>[% row.description %]
+[% IF row.longdescription != '' %]
+<img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
+[% END %]
+</td>
 
 <td class='center'>
 <a href="?module=[% module %]&amp;action=edithourtracking&amp;target=[% row.id %]">

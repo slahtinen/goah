@@ -54,6 +54,7 @@ my %timetrackingdb = (
 	9 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
 	91 => { field => 'no_billing', name => __("Internal"), type => 'checkbox', required => '0' },
 	92 => { field => 'basket_id', name => __("Imported to basket"), type => 'checkbox', required => '0' },
+	93 => { field => 'longdescription', name => __("Long description, only for internal use"), type => "textarea", required => 0 },
 );
 
 
@@ -193,6 +194,7 @@ sub Start {
 				$variables{'search_enddate'}=$enddate;
 				$variables{'search_yesnoselect'}=$yesnoselect;
 				$variables{'search_debitselect'}=$debitselect;
+				$variables{'search_longdesc'}='checked' if($q->param('search_longdesc'));
 
 			} else {
 				#$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$yearnow,$mon,'01'),'','','unimported');
@@ -554,6 +556,16 @@ sub ReadHours {
 				my $billing=1;
 				$billing = 0 if($row->no_billing);
 				$totalhours{$row->type}{$billing}+=$row->$field;
+			}
+			if ($field eq 'longdescription') {
+				$tdata{$i}{$field}=$row->$field;
+				$tdata{$i}{$field}=~s/\n/<br\/>\n/g;
+
+				$tdata{$i}{'longdescription_tooltip'}=$row->$field;
+				if(length($tdata{$i}{'longdescription_tooltip'})>100) {
+					$tdata{$i}{'longdescription_tooltip'}=substr($tdata{$i}{'longdescription_tooltip'},0,100);
+					$tdata{$i}{'longdescription_tooltip'}.='...';
+				}
 			}
 		}
 	}	

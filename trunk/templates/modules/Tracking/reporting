@@ -6,7 +6,7 @@
 <th>[% gettext("By customer") %]</th>
 <th>[% gettext("By user") %]</th>
 <th>[% gettext("From/to date (dd.mm.yyyy)") %]</th>
-<th>[% gettext("Other options") %]</th>
+<th colspan=2>[% gettext("Other options") %]</th>
 <th>&nbsp;</th>
 </tr>
 </thead><tbody>
@@ -81,7 +81,6 @@
 	[% selected='' %]
 	[% IF firstloop==1 && search_debitselect=='' %]
 		[% selected='selected' %]
-	[% ELSE %]
 		[% firstloop=0 %]
 	[% END %]
 	[% IF item.key == search_debitselect %]
@@ -91,6 +90,14 @@
 [% END %]
 </select>
 
+</td>
+<td>
+[% IF search_longdesc == 'checked' %]
+<input name="search_longdesc" type="checkbox" checked />
+[% ELSE %]
+<input name="search_longdesc" type="checkbox" />
+[% END %]
+[% gettext("Long description") %]
 </td>
 <td>
 <!-- <input type="submit" name="submit-reset" value="[% gettext("Reset") %]" /> -->
@@ -127,7 +134,7 @@
 		[% trow = 'odd' %]
 	[% END %]
 
-	<tr class="[% trow %]">
+	<tr class="[% trow %]" valign=top>
 	<td>[% row.day %]</td>
 	<td>[% row.companyname %]</td>
 	<td>
@@ -167,7 +174,14 @@
 	<td>
 	[% row.productcode %] - [% row.productname %]
 	</td>
-	<td>[% row.description %]</td>
+	<td>[% row.description %]
+	[% IF search_longdesc=='checked' && row.longdescription != '' %]
+		<div class="tracking_longdesc">[% row.longdescription %]</div>
+	[% END %]
+	[% IF search_longdesc!='checked' && row.longdescription != '' %]
+		<img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
+	[% END %]
+	</td>
 	<td class='center'>
 	[% IF row.userid == uid %]
 		<a href="?module=[% module %]&amp;action=edithourtracking&amp;target=[% row.id %]">

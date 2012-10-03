@@ -39,7 +39,7 @@
 		[% IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
 			[% dbdata.$field %]
 		[% ELSE %]
-			<textarea class="medium" name="[% data.field %]">[% dbdata.$field %]</textarea>
+			<textarea class="tracking_longdesc" name="[% data.field %]">[% dbdata.$field %]</textarea>
 		[% END %]
 		</td>
 	[% ELSIF data.type == 'checkbox' %]

@@ -42,6 +42,12 @@ div, blockquote p {
     padding: 0;
 }
 
+div.tracking_longdesc { 
+	margin-top: 5px;
+	padding-top: 3px;
+	border-top: 1px gray dotted;
+}
+
 h2 {
 	font-size: 1.2em;
 	font-weight: normal;
@@ -350,6 +356,11 @@ textarea.medium {
 textarea.huge {
 	width: 90%;
 	height: 300px;
+}
+
+textarea.tracking_longdesc {
+	width: 100%;
+	height: 150px;
 }
 
 input {
