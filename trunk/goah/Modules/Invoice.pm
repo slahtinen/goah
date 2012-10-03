@@ -617,22 +617,30 @@ sub ReadInvoices {
 			$dbsearch{'companyid'}=$q->param('customer');
 		}
 
-		my $sortby='invoicenumber';
+		my $sortby='state,due';
 		my $sortdir='ASC';
 
-		if($q->param('sortby') && $q->param('sortby') eq 'date') {
+		if($q->param('sortby')) {
+		
+			if( $q->param('sortby') eq 'date') {
 			
-			$sortby='due';
-			if($duecreated eq 'created') {
-				$sortby='created';
-			} 
+				$sortby='due';
+				if($duecreated eq 'created') {
+					$sortby='created';
+				} 
+			}
+
+			if( $q->param('sortby') eq 'number') {
+				$sortby='invoicenumber';
+			}
 		}
 
 		if($q->param('sortdir') && $q->param('sortdir') eq 'desc') {
 			$sortdir='DESC';
 		}
 		
-		my $sortrules="state,".$sortby." ".$sortdir;
+		#my $sortrules="state,".$sortby." ".$sortdir;
+		my $sortrules=$sortby." ".$sortdir;
 		goah::Modules->AddMessage('debug',"Sort by: $sortrules");
 		my $datap=goah::Db::Invoices::Manager->get_invoices(\%dbsearch, sort_by => $sortrules );
 		@data=@$datap;
