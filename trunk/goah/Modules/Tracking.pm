@@ -121,7 +121,7 @@ sub Start {
 
 		} elsif($q->param('action') eq 'edithourtracking') {
 			$variables{'function'} = "modules/Tracking/edithourtracking";
-			$variables{'dbdata'} = ReadData('hours',"id".$q->param('target'),0);
+			$variables{'dbdata'} = ReadData('hours',"id".$q->param('target'));
 
 		} elsif($q->param('action') eq 'reporting') {
 			$variables{'function'} = "modules/Tracking/reporting";
@@ -384,7 +384,7 @@ sub ReadData {
 			$data{$field} = goah::GoaH::FormatDate($datap->$field);
 		} elsif ($field eq 'hours') {
 			$data{$field}=$datap->$field;
-			if($_[2] eq '0') {
+			if(!($_[2]) || $_[2] eq '0') {
 				$data{$field}=~s/\.\d*$//;
 				$data{'minutes'}=$datap->$field;
 				$data{'minutes'}=~s/^\d*/0/;
