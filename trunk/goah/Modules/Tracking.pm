@@ -52,7 +52,8 @@ my %timetrackingdb = (
 	#9 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
 	8 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
 	9 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
-	91 => { field => 'no_billing', name => __("No billing"), type => 'checkbox', required => '0' },
+	91 => { field => 'no_billing', name => __("Internal"), type => 'checkbox', required => '0' },
+	92 => { field => 'basket_id', name => __("Imported to basket"), type => 'checkbox', required => '0' },
 );
 
 
@@ -128,10 +129,15 @@ sub Start {
 			$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
 			$variables{'timetrackstatuses'}=\%timetrackstatuses;
 
-			# Helper variable to generate an selectbox for parameters
+			# Helper variables to generate an selectbox for search parameters
 			$variables{'yesnoselect'} = { 	0 => { key => 'yesno', value => __("All hours") },
 							1 => { key => 'yes', value => __("Only billed hours") },
 							2 => { key => 'no', value => __("Only not billed hours") } };
+			$variables{'debitselect'} = { 	0 => { key => 'unimported', value => __("Only not imported hours") },
+							1 => { key => 'imported', value => __("Only imported hours") },
+							2 => { key => 'all', value => __("All hours") } };
+							
+
 
 			# Get data for actual search, or if no parameters are given, search for hours
 			# at current month
@@ -143,12 +149,14 @@ sub Start {
 				my $searchdatestart;
 				my $searchdateend;
 				my $yesnoselect;
+				my $debitselect;
 
 				$company = $q->param('customer') if($q->param('customer') && !($q->param('customer')=~/\*/) );
 				$uid = $q->param('user') if($q->param('user'));
 				$startdate = $q->param('fromdate') if($q->param('fromdate'));
 				$enddate = $q->param('todate') if($q->param('todate'));
 				$yesnoselect = $q->param('yesnoselect') if($q->param('yesnoselect'));
+				$debitselect = $q->param('debitselect') if($q->param('debitselect'));
 				
 				if(length($startdate)) {
 					unless($startdate=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/ || $startdate=~/[0-9]{1,2}\.[0-9]{1,2}/) {
@@ -178,15 +186,17 @@ sub Start {
 					}
 				}
 
-				$variables{'dbdata'}=ReadHours($uid,$company,$searchdatestart,$searchdateend,$yesnoselect);
+				$variables{'dbdata'}=ReadHours($uid,$company,$searchdatestart,$searchdateend,$yesnoselect,$debitselect);
 				$variables{'search_customer'}=$company;
 				$variables{'search_owners'}=$uid;
 				$variables{'search_startdate'}=$startdate;
 				$variables{'search_enddate'}=$enddate;
 				$variables{'search_yesnoselect'}=$yesnoselect;
+				$variables{'search_debitselect'}=$debitselect;
 
 			} else {
-				$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$yearnow,$mon,'01'));
+				#$variables{'dbdata'}=ReadHours('','',sprintf("%04d-%02d-%02d",$yearnow,$mon,'01'),'','','unimported');
+				$variables{'dbdata'}=ReadHours('','','','','','unimported');
 			}
 
                 } else {
@@ -270,6 +280,7 @@ sub WriteHours {
 			if(length($q->param($fieldinfo{'field'})) || $fieldinfo{'field'} eq 'hours' || $fieldinfo{'type'} eq 'checkbox') {
 				my $tmpcol=$fieldinfo{'field'};
 				$dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
+				
 				if($fieldinfo{'field'} eq 'hours') {
 					my $hours = $q->param($fieldinfo{'field'});
 					$hours=~s/,/\./g;
@@ -298,7 +309,11 @@ sub WriteHours {
 				}
 				if($fieldinfo{'type'} eq 'checkbox') {
 					if($q->param($tmpcol) eq 'on') {
-						$dbdata{$tmpcol}=1;
+						if($fieldinfo{'field'} eq 'basket_id') {
+							$dbdata{$tmpcol}=-1;
+						} else {
+							$dbdata{$tmpcol}=1;
+						}
 					} else {
 						$dbdata{$tmpcol}=0;
 					}
@@ -393,7 +408,8 @@ sub ReadData {
 #   1 - customer id's, either single value or array reference
 #   2 - starting day, in YYYY-MM-DD, or negative value to read -1*n last entries
 #   3 - ending day, in YYYY-MM-DD
-#   4 - which hours to read, all (yesno), billable(yes), unbillable(no), not in basket(open), optional
+#   4 - which hours to read, all (yesno), billable(yes), internal(no), not in basket(open), optional parameter
+#   5 - which hours to read, all (all), ones imported to basket(imported), ones not imported to basket(unimported), optional parameter
 #
 # Returns:
 #
@@ -434,7 +450,7 @@ sub ReadHours {
 		goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
 
-	# Limit search by billable/unbillable
+	# Limit search by billable/internal
 	if($_[4]) {
 		if($_[4]=~/^yes$/i) {
 			$dbsearch{'no_billing'} = "0";
@@ -447,18 +463,30 @@ sub ReadHours {
 		# Limit search for only hours not moved to basket
 		# This implies billable -option
 		if($_[4]=~/^open$/i) {
-			goah::Modules->AddMessage('debug',"Searching open, billable hours",__FILE__,__LINE__);
+			goah::Modules->AddMessage('debug',"Searching open, debit hours",__FILE__,__LINE__);
 			$dbsearch{'no_billing'} = '0';
-			$dbsearch{'or'} = [ basket_id => '', basket_id => { lt => 0 } ];
+			$dbsearch{'or'} = [ basket_id => '', basket_id => 0 ];
 			$dbsearch{'productcode'} = { ne => '' };
 		}
 	}
 
-	
+	# Limit search by imported to basket -status
+	if($_[5]) {
+		if($_[5]=~/^unimported$/i) {
+			goah::Modules->AddMessage('debug',"Searching only unimported hours",__FILE__,__LINE__);
+			$dbsearch{'or'}= [ basket_id => '', basket_id => 0 ];
+		}
+
+		if($_[5]=~/^imported$/i) {
+			goah::Modules->AddMessage('debug',"Searching only imported hours",__FILE__,__LINE__);
+			$dbsearch{'or'} = [ basket_id => { gt => 0 }, basket_id => -1 ];
+		}
+	}
 
 	my $datap; 
 	
 	if($_[2]<0) {
+		goah::Modules->AddMessage('debug',"Limiting search by result count",__FILE__,__LINE__);
 		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC', limit => -1*$_[2]);
 	} else {
 		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC');
@@ -636,7 +664,7 @@ sub AddHoursToBasket {
 	if($_[1]>0) {
 		$datap->basket_id($_[1]);
 	} else {
-		$datap->basket_id('');
+		$datap->basket_id(0);
 	}
 
 	return 1 if($datap->save);
@@ -677,7 +705,7 @@ sub DeleteBasket {
 
 	my @rows=@$datap;
 	foreach my $r (@rows) {
-		$r->basket_id('-1');
+		$r->basket_id(0);
 		$r->update;
 	}
 

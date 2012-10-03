@@ -17,46 +17,88 @@
         </td>
         [% IF data.type == 'textfield' %]
 		[% IF field == 'hours' %]
-		<td><input class="small" name="[% data.field %]" value="[% dbdata.$field %]" />h <input class="small" name="minutes" value="[% dbdata.minutes %]" />min</td>
+			<td>
+			[% IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
+				[% dbdata.$field %]h [% dbdata.$field %]min
+			[% ELSE %]
+				<input class="small" name="[% data.field %]" value="[% dbdata.$field %]" />h 
+				<input class="small" name="minutes" value="[% dbdata.minutes %]" />min
+			[% END %]
+			</td>
 		[% ELSE %]
-                <td><input  name="[% data.field %]" value="[% dbdata.$field %]" /></td>
+			<td>
+			[% IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
+				[% dbdata.$field %]
+			[% ELSE %]
+				<input  name="[% data.field %]" value="[% dbdata.$field %]" />
+			[% END %]
+			</td>
 		[% END %]
         [% ELSIF data.type == 'textarea' %]
-                <td><textarea class="medium" name="[% data.field %]">[% dbdata.$field %]</textarea></td>
-	[% ELSIF data.type == 'checkbox' %]
-		<td>
-		[% IF dbdata.$field == 1 %]
-			<input type='checkbox' name="[% data.field %]" checked />
+                <td>
+		[% IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
+			[% dbdata.$field %]
 		[% ELSE %]
-			<input type='checkbox' name="[% data.field %]" />
+			<textarea class="medium" name="[% data.field %]">[% dbdata.$field %]</textarea>
 		[% END %]
 		</td>
+	[% ELSIF data.type == 'checkbox' %]
+		<td>
+		[% IF dbdata.$field == 1 || ( data.field == 'basket_id' && dbdata.$field !=0 ) %]
+			<input type='checkbox' name="[% data.field %]" checked
+		[% ELSE %]
+			<input type='checkbox' name="[% data.field %]" 
+		[% END %]
+		[%- IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
+			disabled="disabled"
+		[% END %]
+		/> 
+		</td>
         [% ELSIF data.type == 'selectbox' %]
-                <td><select class="medium" name="[% data.field %]">
-                <option  value="-1">-- [% gettext("Select") %] --</option>
-                [% FOREACH key IN data.data.keys.sort %]
-                        [% item = data.data.$key %]
-			[% IF item.hidden != 1 %]
-				[% IF data.field == 'productcode' && groupname != item.groupname %]
-					<option value="-1" class="subhead">[% item.groupname %]</option>
-					[% groupname = item.groupname %]
-				[% END %]
+                <td>
+		[% IF !(dbdata.basket_id > 0 || dbdata.basket_id == -1) %]	
+			<select class="medium" name="[% data.field %]">
+			<option  value="-1">-- [% gettext("Select") %] --</option>
+			[% FOREACH key IN data.data.keys.sort %]
+				[% item = data.data.$key %]
+				[% IF item.hidden != 1 %]
+					[% IF data.field == 'productcode' && groupname != item.groupname %]
+						<option value="-1" class="subhead">[% item.groupname %]</option>
+						[% groupname = item.groupname %]
+					[% END %]
+					[% IF item.id == dbdata.$field %]
+						<option value="[% item.id %]" selected>
+					[% ELSE %]
+						<option value="[% item.id %]">
+					[% END %]
+					[% IF data.field == 'productcode' %]
+						[% item.code %] -
+					[% END %]
+					[% item.name %]
+					[%- IF item.vat_id == '00000000' %]
+						, [% item.firstname %]
+					[% END %]
+					</option>
+				[% END %] 
+			[% END %]
+
+			[% IF !(dbdata.basket_id > 0 || dbdata.basket_id == -1) %]
+				</select>
+			[% END %]
+		[% ELSE %]
+			[% FOREACH key IN data.data.keys.sort %]
+				[% item = data.data.$key %]
 				[% IF item.id == dbdata.$field %]
-					<option value="[% item.id %]" selected>
-				[% ELSE %]
-					<option value="[% item.id %]">
+					[% IF data.field == 'productcode' %]
+						[% item.code %] -
+					[% END %]
+					[% item.name %]
+					[%- IF item.vat_id == '00000000' %]
+						, [% item.firstname %]
+					[% END %]
 				[% END %]
-				[% IF data.field == 'productcode' %]
-					[% item.code %] -
-				[% END %]
-				[% item.name %]
-				[%- IF item.vat_id == '00000000' %]
-					, [% item.firstname %]
-				[% END %]
-				</option>
-			[% END %] 
-                [% END %]
-                </select>
+			[% END %]
+		[% END %]
                 </td>
         [% ELSE %]
                 <td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
@@ -71,17 +113,22 @@
 	[% row = 'even' %]
 [% END %]
 [% END %]
-<tr><td>[% gettext("Delete") %]</td><td><input type='checkbox' name='delete' /> [% gettext("Warning! No further confirmation!") %]</td></tr> 
-<tr>
-<td colspan='2'>
-<p>
-<input type="hidden" name="module" value="[% module %]" />
-<input type="hidden" name="action" value="writeeditedhours" />
-<input type="hidden" name="userid" value="[% uid %]" />
-<input type="hidden" name="target" value="[% dbdata.id %]" />
-<input type="submit" value="[% gettext("Save") %]" />
-</p>
-</td>
-</tr>
+[% IF !(dbdata.basket_id > 0 || dbdata.basket_id == -1) %]
+	<tr>
+	<td>[% gettext("Delete") %]</td><td><input type='checkbox' name='delete' /> [% gettext("Warning! No further confirmation!") %]</td></tr> 
+	<tr>
+	<td colspan='2'>
+	<p>
+	<input type="hidden" name="module" value="[% module %]" />
+	<input type="hidden" name="action" value="writeeditedhours" />
+	<input type="hidden" name="userid" value="[% uid %]" />
+	<input type="hidden" name="target" value="[% dbdata.id %]" />
+	<input type="submit" value="[% gettext("Save") %]" />
+	</p>
+	</td>
+	</tr>
+[% ELSE %]
+	<tr><td>[% gettext("Hours moved to basket") %]</td></tr>
+[% END %]
 </table>
 </form>

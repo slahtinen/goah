@@ -10,7 +10,7 @@
     <th>[% gettext("Description") %]</th>
 <!--    <th>[% gettext("Project") %]</th>
     <th>[% gettext("Related personnel") %]</th> -->
-    <th>[% gettext("No billing") %]</th>
+    <th>[% gettext("Internal") %]</th>
     <th>&nbsp;</th>
   </thead>
   <tbody>
@@ -29,7 +29,9 @@
         [% ELSIF data.type == 'textarea' %]
                 <td><input class="huge" name="[% data.field %]" /></td>
 	[% ELSIF data.type == 'checkbox' %]
-		<td><input name="[% data.field %]" type="checkbox" /></td>
+		[% IF data.field != 'basket_id' %]
+			<td><input name="[% data.field %]" type="checkbox" /></td>
+		[% END %]
         [% ELSIF data.type == 'selectbox' %]
                 <td><select class="small" name="[% data.field %]">
                 <option  value="-1">-- [% gettext("Select") %] --</option>
@@ -108,14 +110,7 @@
 [% END %]
 </td>
 <td>
-[% proddata = timetrackingdb.4.data %]
-[% FOREACH prodkey IN proddata.keys %]
-	[% prod = proddata.$prodkey %]
-	[% IF row.productcode == prod.id %]
-		[% prod.code %] - [% prod.name %]
-		[% LAST %]
-	[% END %]
-[% END %]
+[% row.productcode %] - [% row.productname %]
 </td>
 <td>
 [% FOREACH statkey IN timetrackstatuses.keys %]
@@ -127,14 +122,20 @@
 	[% END %]
 [% END %]
 [% IF row.no_billing == 1 %]
-<br>[% gettext("No billing") %]
+<br>[% gettext("Internal") %]
 [% END %]
+
+[% IF row.basket_id > 0 || row.basket_id == -1 %]
+	<img class="link" alt="Imported to basket" title="Imported to basket" src="themes/[% theme %]/icon/16x16/actions/money.png" />
+[% END %]
+
 </td>
 <td>[% row.description %]</td>
 
 <td class='center'>
 <a href="?module=[% module %]&amp;action=edithourtracking&amp;target=[% row.id %]">
-<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
+</td>
 
 </tr>
 [% END %]
@@ -154,16 +155,16 @@
 	[% END %]
 	</td>
 	<td>[% totcount.hours.-1 %] h [% totcount.minutes.-1 %] min</td>
-	<td>[% gettext("Billed:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
-	<td>[% gettext("Not billed:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
+	<td>[% gettext("Debit:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
+	<td>[% gettext("Internal:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
 	<td>&nbsp;</td>
 	</tr>
 [% END %]
 <tr><td colspan=2 class="right">[% gettext("Total") %]</td>
 [% totcount = total.-1 %]
 <td>[% totcount.hours.-1 %]h&nbsp;[% totcount.minutes.-1 %]min</td>
-<td>[% gettext("Billed:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
-<td>[% gettext("Not billed:") %]&nbsp;[% totcount.hours.0 %]h&nbsp;[% totcount.minutes.0 %]min</td>
+<td>[% gettext("Debit:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
+<td>[% gettext("Internal:") %]&nbsp;[% totcount.hours.0 %]h&nbsp;[% totcount.minutes.0 %]min</td>
 <td>&nbsp;</td>
 </tr>
 </tbody>

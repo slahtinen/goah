@@ -62,6 +62,7 @@
 <input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" />
 </td>
 <td>
+
 <select name="yesnoselect">
 [% FOREACH key IN yesnoselect.keys.sort %]
 [% item=yesnoselect.$key %]
@@ -72,6 +73,18 @@
 <option value="[% item.key %]" [% selected %]>[% item.value %]</option>
 [% END %]
 </select>
+
+<select name="debitselect">
+[% FOREACH key IN debitselect.keys.sort %]
+	[% item= debitselect.$key %]
+	[% selected='' %]
+	[% IF item.key == search_debitselect %]
+		[% selected='selected' %]
+	[% END %]
+	<option value="[% item.key %]" [% selected %]>[% item.value %]</option>
+[% END %]
+</select>
+
 </td>
 <td>
 <!-- <input type="submit" name="submit-reset" value="[% gettext("Reset") %]" /> -->
@@ -138,20 +151,16 @@
 		[% END %]
 	[% END %]
 	[% IF row.no_billing == 1 %]
-		<br>[% gettext("Not billed") %]
+		<br>[% gettext("Internal") %]
+	[% END %]
+
+	[% IF row.basket_id > 0 || row.basket_id == -1 %]
+		<img class="link" alt="Imported to basket" title="Imported to basket" src="themes/[% theme %]/icon/16x16/actions/money.png" />
 	[% END %]
 	</td>
 	<td>
-	[% proddata = timetrackingdb.4.data %]
-	[% FOREACH prodkey IN proddata.keys %]
-		[% prod = proddata.$prodkey %]
-		[% IF row.productcode == prod.id %]
-			[% prod.code %] - [% prod.name %]
-			[% LAST %]
-		[% END %]
-	[% END %]
+	[% row.productcode %] - [% row.productname %]
 	</td>
-
 	<td>[% row.description %]</td>
 	<td class='center'>
 	[% IF row.userid == uid %]
@@ -181,8 +190,8 @@
 [% END %]
 </td>
 <td>[% totcount.hours.-1 %] h [% totcount.minutes.-1 %] min</td>
-<td>[% gettext("Billed:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
-<td>[% gettext("Not billed:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
+<td>[% gettext("Debit:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
+<td>[% gettext("Internal:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
 <td>&nbsp;</td>
 </tr>
 [% END %]
