@@ -75,9 +75,15 @@
 </select>
 
 <select name="debitselect">
+[% firstloop=1 %]
 [% FOREACH key IN debitselect.keys.sort %]
 	[% item= debitselect.$key %]
 	[% selected='' %]
+	[% IF firstloop==1 && search_debitselect=='' %]
+		[% selected='selected' %]
+	[% ELSE %]
+		[% firstloop=0 %]
+	[% END %]
 	[% IF item.key == search_debitselect %]
 		[% selected='selected' %]
 	[% END %]

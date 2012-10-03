@@ -131,8 +131,8 @@ sub Start {
 
 			# Helper variables to generate an selectbox for search parameters
 			$variables{'yesnoselect'} = { 	0 => { key => 'yesno', value => __("All hours") },
-							1 => { key => 'yes', value => __("Only billed hours") },
-							2 => { key => 'no', value => __("Only not billed hours") } };
+							1 => { key => 'yes', value => __("Only debit hours") },
+							2 => { key => 'no', value => __("Only internal hours") } };
 			$variables{'debitselect'} = { 	0 => { key => 'unimported', value => __("Only not imported hours") },
 							1 => { key => 'imported', value => __("Only imported hours") },
 							2 => { key => 'all', value => __("All hours") } };
