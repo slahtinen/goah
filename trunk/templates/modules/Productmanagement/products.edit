@@ -34,7 +34,7 @@
 		<option value="-1">-- [% gettext("Select one") %] --</option>
 		[%# Ugly-ish hack to fix loops for both HASHes and arrays, this should be fixed soon! %]
 		[% IF field.field == 'manufacturer' || field.field == 'groupid' %]
-		[% FOREACH k IN field.data.keys %]
+		[% FOREACH k IN field.data.keys.sort %]
 			[% item = field.data.$k %]
 			[% EXT = '' %]
 			[% IF item.id == data.$fieldname %]
