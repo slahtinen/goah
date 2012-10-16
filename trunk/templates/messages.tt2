@@ -16,9 +16,10 @@
 		<script>$.jnotify("[% message.1 %]");</script>
 	[% ELSE %]
 		<p class="[% msg_type %]">[% message.1 %]
-		[% IF message.2 != '' %]
+		[% IF message.2 != '' && msg_type=='debug' %]
 			<br/><small>[% message.2 %] line [% message.3 %]</small>
 		[% END %]
+		<br/><small>Call from: [% message.4 %] file [% message.5 %]:[% message.6 %]</small>
 		</p>
 	[% END %]
 

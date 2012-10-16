@@ -200,7 +200,9 @@ sub StartModule {
 #   line - Line from the file where function is called. Just use __LINE__
 #
 sub AddMessage {
-	my @values=([$_[1],$_[2],$_[3],$_[4]]);
+
+	my ($cpackage,$cfilename,$cline) = caller;
+	my @values=([$_[1],$_[2],$_[3],$_[4],$cpackage,$cfilename,$cline]);
 	push (@messages,@values);
 	return 1;
 }
@@ -242,8 +244,6 @@ sub GetMessages {
 		}
 	}
 
-
-	use Data::Dumper;
 	# If debug messages are disabled then remove them from the array
 	if($debug==0) {
 		my ($i,$tmp,@tmp2,@tmp3);
