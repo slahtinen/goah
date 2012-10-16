@@ -32,7 +32,8 @@ my $settref;
 my %timetrackstatuses = (
 	0 => { id => 0, name => __("Normal"), selected => 1, hidden => 0 },
 	1 => { id => 1, name => __("Evening"), selected => 0, hidden => 0 },
-	2 => { id => 2, name => __("Night"), selected => 0, hidden => 0 }
+	2 => { id => 2, name => __("Night"), selected => 0, hidden => 0 },
+	3 => { id => 3, name => __("Other"), selected => 0, hidden => 0 },
 );
 
 my %timetrackingdb = (
@@ -243,20 +244,20 @@ sub WriteHours {
 
 	my %dbdata;
 
-	my $prod;
+	my $trackingitem;
 	my $update=0;
 
 	# Check if we're updating an existing item or creating a new one
 	if($q->param('target')) {
-		$prod = goah::Db::Timetracking->new(id => $q->param('target'));
-		unless($prod->load(speculative => 1, for_update => 1)) {
+		$trackingitem = goah::Db::Timetracking->new(id => $q->param('target'));
+		unless($trackingitem->load(speculative => 1, for_update => 1)) {
 			goah::Modules->AddMessage('error',__("Couldn't load data from the database for modifications!"),__LINE__,__FILE__);
 			return 0;
 		}
-		goah::Modules->AddMessage('debug',"Got data with id ".$prod->id." and desc ".$prod->description,__FILE__,__LINE__);
+		goah::Modules->AddMessage('debug',"Got data with id ".$trackingitem->id." and desc ".$trackingitem->description,__FILE__,__LINE__);
 		$update=1;
 		if($q->param('delete')) {
-			return 1 if $prod->delete;
+			return 1 if $trackingitem->delete;
 			goah::Modules->AddMessage('error',__("Couldn't delete item from the database."),__FILE__,__LINE__);
 			return 0;
 		}
@@ -284,14 +285,39 @@ sub WriteHours {
 				$dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
 				
 				if($fieldinfo{'field'} eq 'hours') {
-					my $hours = $q->param($fieldinfo{'field'});
-					$hours=~s/,/\./g;
-					unless($hours=~/\d+\.?\d*/) {
-						goah::Modules->AddMessage('warn',__("Hours column not numeric! Setting hours -value to 0!"));
-						$dbdata{$tmpcol}="0";
+
+					# Read product information so that we can separate between time and
+					# other types
+					unless($q->param('productcode')) {
+						goah::Modules->AddMessage('error',__("Can't add tracked hours to database! Product code is missing!"),__FILE__,__LINE__);
+						return 0;
 					}
-					if($q->param('minutes')>0) {
-						$dbdata{$tmpcol}+=$q->param('minutes')/60;
+					my $prodinfo_p = goah::Modules::Productmanagement->ReadData('products',$q->param('productcode'),$uid,$settref,1);
+					unless($prodinfo_p) {
+						goah::Modules->AddMessage('error',__("Can't read product data from the database! Can't add tracked hours!"),__FILE__,__LINE__);
+						return 0;
+					}
+					my %prodinfo=%$prodinfo_p;
+
+					if($prodinfo{'unit'}=~/^h/) {
+
+						my $hours = $q->param($fieldinfo{'field'});
+						$hours=~s/,/\./g;
+						unless($hours=~/\d+\.?\d*/) {
+							goah::Modules->AddMessage('warn',__("Hours column not numeric! Setting hours -value to 0!"));
+							$dbdata{$tmpcol}="0";
+						}
+						if($q->param('minutes')>0) {
+							$dbdata{$tmpcol}+=$q->param('minutes')/60;
+						}
+					} else {
+						
+						unless($q->param('amount') && $q->param('amount')=~/^\d+\.?\d*/) {
+							goah::Modules->AddMessage('error',__("Amount column not numeric! Setting amount -value to 0!"));
+							$dbdata{$tmpcol}=0;
+						} else {
+							$dbdata{$tmpcol}=$q->param('amount');
+						}
 					}
 				}	
 				if($fieldinfo{'field'} eq 'day') {
@@ -322,14 +348,14 @@ sub WriteHours {
 				}
 
 				# Update existing tracking item
-				$prod->$tmpcol($dbdata{$tmpcol}) if $update;
+				$trackingitem->$tmpcol($dbdata{$tmpcol}) if $update;
 			}
                 }
         }
 
 	# Create new tracking item
-	$prod = goah::Db::Timetracking->new(%dbdata) unless $update;
-	return 1 if ($prod->save);
+	$trackingitem = goah::Db::Timetracking->new(%dbdata) unless $update;
+	return 1 if ($trackingitem->save);
 	return 0;
 
 }

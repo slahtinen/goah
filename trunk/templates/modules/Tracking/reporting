@@ -118,7 +118,7 @@
 <th>[% gettext("Date") %]</th>
 <th>[% gettext("Customer") %]</th>
 <th>[% gettext("User") %]</th>
-<th>[% gettext("Time") %]</th>
+<th>[% gettext("Time") %]/[% gettext("Amount") %]</th>
 <th>[% gettext("Type") %]</th>
 <th>[% gettext("Product") %]</th>
 <th>[% gettext("Description") %]</th>
@@ -150,9 +150,14 @@
 	[% END %]
 	</td>
 		
-	<td>[% row.hours %] h
-	[% IF row.minutes > 0 %]
-		[% row.minutes %] min
+	<td>
+	[% IF row.type == 3 %]
+		[% row.hours %] [% gettext("st") %]
+	[% ELSE %]
+		[% row.hours %] h
+		[% IF row.minutes > 0 %]
+			[% row.minutes %] min
+		[% END %]
 	[% END %]
 	[% IF row.hours <= 0 && row.minutes <= 0 %]
 		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">

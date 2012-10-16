@@ -7,6 +7,7 @@
     <th>[% gettext("Product") %]</th>
     <th>[% gettext("Date") %]</th>
     <th>[% gettext("Time") %]</th>
+    <th>[% gettext("Amount") %]</th>
     <th>[% gettext("Description") %]</th>
 <!--    <th>[% gettext("Project") %]</th>
     <th>[% gettext("Related personnel") %]</th> -->
@@ -25,7 +26,8 @@
 		[% IF data.field == 'day' %]
                 <td><input  name="[% data.field %]" class="small" value="[% datenow %]" /></td>
 		[% ELSIF data.field == 'hours' %]
-		<td><input  class="tiny" name="[% data.field %]" /> h <input class="tiny" name="minutes" /> min</td>
+		<td><input class="tiny" name="[% data.field %]" /> h <input class="tiny" name="minutes" /> min</td>
+		<td><input class="tiny" name="amount" /> [% gettext("st") %]</td>
 		[% ELSE %]
                 <td><input  name="[% data.field %]" /></td>
 		[% END %]
@@ -86,7 +88,7 @@
 <thead>
   <th>[% gettext("Date") %]</th>
   <th>[% gettext("Customer") %]</th>
-  <th>[% gettext("Time") %]</th>
+  <th>[% gettext("Time") %]/[% gettext("Amount") %]</th>
   <th>[% gettext("Product") %]</th>
   <th>[% gettext("Type") %]</th>
   <th colspan=2>[% gettext("Description") %]</th>
@@ -107,9 +109,14 @@
 <tr class="[% trow %]">
 <td>[% row.day %]</td>
 <td>[% row.companyname %]</td>
-<td>[% row.hours %] h 
-[% IF row.minutes > 0 %]
-[% row.minutes %] min
+<td>
+[% IF row.type == 3 %]
+	[% row.hours %] [% gettext("st") %]
+[% ELSE %]
+	[% row.hours %] h 
+	[% IF row.minutes > 0 %]
+	[% row.minutes %] min
+	[% END %]
 [% END %]
 [% IF row.hours <= 0 && row.minutes <= 0 %]
 <img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
