@@ -432,7 +432,7 @@ sub ReadSetup {
 		return \%sdata;
 	}
 
-	goah::Modules->AddMessage('debug',"Old version of goah::Modules::Systemsettings->ReadSetup called",__FILE__,__LINE__);
+	goah::Modules->AddMessage('debug',"Old version of goah::Modules::Systemsettings->ReadSetup called",__FILE__,__LINE__,caller());
 	return \@data;
 }
 

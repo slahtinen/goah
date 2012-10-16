@@ -834,7 +834,11 @@ sub ReadData {
 			if($field eq 'purchase' || $field eq 'sell') {
 				unless($_[4] && $_[4] eq "1") {
 					#$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
-					$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$dbdata->vat,$uid,'out',$settref);
+					unless($dbdata->$field) {
+						$pdata{$field}=0;
+					} else {
+						$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$dbdata->vat,$uid,'out',$settref);
+					}
 				} else {
 					$pdata{$field} = $dbdata->$field;
 				}
@@ -1139,7 +1143,11 @@ sub ReadProductsByGroup {
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if( ($field eq 'purchase' || $field eq 'sell') && $_[2]!=1 ) {
-				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+				unless($prod->$field) {
+					$pdata{$i}{$field}=0;
+				} else {
+					$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+				}
 			} else {
 				$pdata{$i}{$field} = $prod->$field;
 			}

@@ -198,11 +198,13 @@ sub StartModule {
 #   content - Actual message
 #   file - File, where this function is called. Just use __FILE__
 #   line - Line from the file where function is called. Just use __LINE__
+#   callerpackage - Package where the function was originally called
+#   callerfile - Filename where the function was originally called
+#   callerline - Line number of callers filename
 #
 sub AddMessage {
 
-	my ($cpackage,$cfilename,$cline) = caller;
-	my @values=([$_[1],$_[2],$_[3],$_[4],$cpackage,$cfilename,$cline]);
+	my @values=([$_[1],$_[2],$_[3],$_[4],$_[5],$_[6],$_[7]]);
 	push (@messages,@values);
 	return 1;
 }

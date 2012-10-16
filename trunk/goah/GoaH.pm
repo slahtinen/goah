@@ -95,7 +95,7 @@ sub FormatCurrency {
 	shift if ($_[0]=~/goah::GoaH/);
 
 	unless(length($_[0])) {
-		goah::Modules->AddMessage('debug',__('No number to reformat.'),__FILE__,__LINE__);
+		goah::Modules->AddMessage('debug',__('No number to reformat.'),__FILE__,__LINE__,caller());
 		return 0;
 	}
 
