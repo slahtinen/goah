@@ -1168,8 +1168,8 @@ sub AddToBasket {
 
 				$hourid=$hours{'id'};
 				$prod=$product{'id'};
-				$purchase=$product{'purchase'};
-				$sell=$product{'sell'};
+				$purchase=goah::GoaH->FormatCurrency($product{'purchase'},$product{'vat'},$uid,'out',$settref);;
+				$sell=goah::GoaH->FormatCurrency($product{'sell'},$product{'vat'},$uid,'out',$settref);
 				$amount=$hours{'hours'};
 				$desc=$hours{'day'}.' '.$hours{'username'}.': '.$hours{'description'};
 
