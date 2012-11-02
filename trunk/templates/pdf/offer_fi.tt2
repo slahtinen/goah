@@ -67,25 +67,30 @@
 \vspace*{1cm}
 
 \hspace{-0.5cm}
-\footnotesize \begin{tabular*}{18cm}{p{2cm}p{7cm}rrrrr}
-\textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+\footnotesize \begin{longtable}{p{9.5cm}rrrrr}
+\textbf{TUOTEKOODI}: \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+\\ 
+\endhead
+& & & & & Jatkuu...
+\endfoot
+\\ & & & & \textbf{Yht. ALV 0\%} & [% data.-1.total %]
+\\ & & & & \textbf{ALV osuus} & [% data.-1.vat %] \\
+\\ & & & & \textbf{Maksettava} & \textbf{[% data.-1.totalvat %]} \\
+\endlastfoot
+
 [% FOREACH key IN rows.keys.sort %]
 [% IF key > 0 %]
 [% row = rows.$key %]
-\\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sell_vat %] & [% row.total_vat %] \\
+\\ {\bf [% escape(row.code) %]}: [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sell_vat %] & [% row.total_vat %]
 [% IF row.rowinfo != '' %]
-\scriptsize Lisätietoja: & \multicolumn{6}{p{7cm}}{\scriptsize [% escape(row.rowinfo) %]} \\
+\\* \scriptsize Lisätietoja: [% escape(row.rowinfo) %] & & & & &
+[% END %]
+\\* & & & & &
 [% END %]
 [% END %]
-[% END %]
-\\ \multicolumn{6}{r}{\textbf{Yht. ALV 0\%}} & [% data.-1.total %] \\
-\multicolumn{6}{r}{\textbf{ALV osuus}} & [% data.-1.vat %] \\
-\multicolumn{6}{r}{\textbf{Maksettava}} & \textbf{[% data.-1.totalvat %]} \\
-\end{tabular*}
-\\
-\vspace*{0.5cm}
-\\
+\end{longtable}
 [% IF data.longinfo.length > 0 %]
+\vspace*{0.5cm}
 \begin{longtable}{p{17.8cm}}
 \setlength\LTleft\parindent
 \setlength\LTright\fill

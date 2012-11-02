@@ -9,6 +9,7 @@
 \usepackage{fancyhdr}
 \usepackage{verbatim}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage[table]{xcolor}
 \renewcommand{\footrulewidth}{0.5pt}
 \renewcommand{\rmdefault}{phv}
@@ -79,17 +80,24 @@
 \vspace*{1cm}
 
 \hspace{-0.5cm}
-\footnotesize \begin{tabular*}{18cm}{p{2cm}p{7cm}rrrrr}
-\textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+\footnotesize \begin{longtable}{p{9.5cm}rrrrr}
+\textbf{TUOTEKOODI}: \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+\\
+\endhead
+& & & & & Jatkuu...
+\endfoot
+\\ & & & & \textbf{Yht. ALV 0\%} & [% total.vat0 %]
+\\ & & & & \textbf{ALV osuus} & [% total.vat %] \\
+\\ & & & & \textbf{Maksettava} & \textbf{[% total.inclvat %]} \\
+\endlastfoot
+
 [% FOREACH key IN rows.keys.sort %]
 [% row = rows.$key %]
-\\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %] \\
+\\ {\bf [% escape(row.code) %]}: [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %]
 [% IF row.rowinfo != '' %]
-\scriptsize Lisätietoja: & \multicolumn{6}{p{7cm}}{\scriptsize [% escape(row.rowinfo) %]} \\
+\\* \scriptsize Lisätietoja: [% escape(row.rowinfo) %] & & & & &
 [% END %]
+\\* & & & & &
 [% END %]
-\\ \multicolumn{6}{r}{\textbf{Yht. ALV 0\%}} & [% total.vat0 %] \\
-\multicolumn{6}{r}{\textbf{ALV osuus}} & [% total.vat %] \\
-\multicolumn{6}{r}{\textbf{Maksettava}} & \textbf{[% total.inclvat %]} \\
-\end{tabular*}
+\end{longtable}
 \end{document} 

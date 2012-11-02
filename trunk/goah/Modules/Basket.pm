@@ -1062,7 +1062,9 @@ sub UpdateBasketRow {
 				$rowinfo->set($fieldinfo{'field'} => $amount);
 
 			} else {
-				$rowinfo->set($fieldinfo{'field'} => decode("utf-8",$q->param($fieldinfo{'field'})));
+				my $tmprowinfo=decode("utf-8",$q->param($fieldinfo{'field'}));
+				$tmprowinfo=~s/€/&euro;/g;
+				$rowinfo->set($fieldinfo{'field'} => $tmprowinfo);
 			}
 			
 		} else {

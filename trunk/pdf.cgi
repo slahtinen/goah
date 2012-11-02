@@ -203,7 +203,7 @@ if($auth==1) {
 	$templatevars{'logo'} = getcwd()."/pdflogo.jpg";
 
 	# Debugging, print only the tex -code
-	if(1==0) {
+	if(0==1) {
 		print $q->header( -type => 'text/plain', -charset => 'utf-8' );
 		$tt->process($templatevars{'file'},\%templatevars) or
 			die "ERR! ".$tt->error();
