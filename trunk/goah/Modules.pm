@@ -98,13 +98,14 @@ sub ReadTopNavi {
 	my %modmenu;
 	my %topmenu;
 	my $sort;
+	my $i=100000;
 	foreach (@modules) {
 		$mod = $_->file;
 		
 		if($_->sort eq '') {
-			$sort = $_->id;
+			$sort = $i+$_->id;
 		} else {
-			$sort = $_->sort.'.'.$_->id;
+			$sort = $i+$_->sort.'.'.$_->id;
 		}
 
 		# Hardcoded module to skip depending on debug mode. This will be removed
@@ -114,6 +115,7 @@ sub ReadTopNavi {
 		}
 		$topmenu{'modules'}{$sort}{'module'} = $mod;
 		$topmenu{'modules'}{$sort}{'name'} =__($_->name);
+		$i++;
 	}
 
 	# Add additional functions
@@ -148,7 +150,7 @@ sub ReadTopNavi {
 sub GetActiveModules {
 
 	use goah::Database::Modules;
-	my @modules = goah::Database::Modules->retrieve_all();
+	my @modules = goah::Database::Modules->retrieve_all_sorted_by('sort');
 
 	# We skip check for module existence by now, so the function
 	# description isn't really valid.
