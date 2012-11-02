@@ -29,28 +29,28 @@
 
 \renewcommand{\footrulewidth}{0.5pt}
 
-\lfoot{[% owner.name %]\\
-[% ownerloc.addr1 %]\\
+\lfoot{[% escape(owner.name) %]\\
+[% escape(ownerloc.addr1) %]\\
 [% IF ownerloc.addr2 != '' %]
-[% ownerloc.addr2 %]\\
+[% escape(ownerloc.addr2) %]\\
 [% END -%]
-[% ownerloc.postalcode %] [% ownerloc.postaloffice %]} 
+[% ownerloc.postalcode %] [% escape(ownerloc.postaloffice) %]} 
 \cfoot{Y-tunnus [% owner.vat_id %] \\ [% owner.bank_accounts %] } 
-\rfoot{Puhelin [% ownerloc.phone %] \\ Faksi [% ownerloc.fax %] \\ [% owner.www %] } 
+\rfoot{Puhelin [% ownerloc.phone %] \\ Faksi [% ownerloc.fax %] \\ [% escape(owner.www) %] } 
 
 \begin{document} 
 
 \hspace{-0.5cm}
 \begin{tabular}{p{9.2cm}}
-\textbf{[% customerinfo.name %]} \\
-[% billingaddr.addr1 %] \\
-[% billingaddr.postalcode %] [% billingaddr.postaloffice %] 
+\textbf{[% escape(customerinfo.name) %]} \\
+[% escape(billingaddr.addr1) %] \\
+[% billingaddr.postalcode %] [% escape(billingaddr.postaloffice) %] 
 \end{tabular}
 \begin{tabular}{p{7cm}}
 \textbf{Toimitusosoite} \\
-[% customerinfo.name %] \\
-[% shippingaddr.addr1 %] \\
-[% shippingaddr.postalcode %] [% shippingaddr.postaloffice %] 
+[% escape(customerinfo.name) %] \\
+[% escape(shippingaddr.addr1) %] \\
+[% shippingaddr.postalcode %] [% escape(shippingaddr.postaloffice) %] 
 \end{tabular}
 
 \vspace*{1cm}
