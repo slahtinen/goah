@@ -1,0 +1,190 @@
+<h2>[% gettext("Time tracking") %]</h2>
+<form action="" method="post">
+<table>
+  <thead>
+  [% FOREACH key IN tasksdb.keys.sort %]
+  [% data = tasksdb.$key %]
+  [% IF data.fild == 'longtable' || data.hidden!=1 || data.type!='hidden' %]
+  <th>[% data.name %]</th>
+  [% END %]
+  [% END %]
+    <th>[% gettext("Customer") %]</th>
+    <th>[% gettext("Assignee") %]</th>
+    <th>[% gettext("Priority") %]</th>
+    <th>[% gettext("Est.Time") %]</th>
+    <th>[% gettext("Est.internal time") %]</th>
+    <th>[% gettext("Description") %]</th>
+    <th>[% gettext("Internal") %]</th>
+    <th>&nbsp;</th>
+  </thead>
+  <tbody>
+  <tr>
+  [% FOREACH key IN tasksdb.keys.sort %]
+  [% data = tasksdb.$key %]
+  [% IF data.field == 'longdescription' %]
+  	[% NEXT %]
+  [% END %]
+  [% IF data.type != "hidden" && data.hidden != "1" %]
+        [% IF data.type == 'textfield' %]
+		[% IF data.field == 'day' %]
+                <td><input  name="[% data.field %]" class="small" value="[% datenow %]" /></td>
+		[% ELSIF data.field == 'hours' || data.field == 'priority' || data.field == 'inthours' %]
+		<td><input class="tiny" name="[% data.field %]" /> 
+		[% ELSE %]
+                <td><input  name="[% data.field %]" /></td>
+		[% END %]
+        [% ELSIF data.type == 'textarea' %]
+                <td><input class="huge" name="[% data.field %]" /></td>
+	[% ELSIF data.type == 'checkbox' %]
+		[% IF data.field != 'basket_id' %]
+			<td><input name="[% data.field %]" type="checkbox" /></td>
+		[% END %]
+        [% ELSIF data.type == 'selectbox' %]
+                <td><select class="small" name="[% data.field %]">
+                <option  value="-1">-- [% gettext("Select") %] --</option>
+                [% FOREACH key IN data.data.keys.sort %]
+                        [% item = data.data.$key %]
+			[% IF item.hidden != 1 %]
+				[% IF data.field == 'productcode' && groupname != item.groupname %]
+					<option value="-1" class="subhead">[% item.groupname %]</option>
+					[% groupname = item.groupname %]
+				[% END %]
+				[% IF item.selected == 1 %]
+					<option value="[% item.id %]" selected>
+				[% ELSE %]
+					<option value="[% item.id %]">
+				[% END %]
+				[% IF data.field == 'productcode' %]
+					[% item.code %] - 
+				[% END %]
+				[% item.name %]
+				[%- IF item.vat_id == '00000000' %]
+					, [% item.firstname %]
+				[% END %]
+				</option>
+			[% END %] 
+                [% END %]
+                </select>
+                </td>
+        [% ELSE %]
+                <td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
+        [% END %]
+  [% END %]
+[% END %]
+<td class="center">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="action" value="writenewhours" />
+<input type="hidden" name="userid" value="[% uid %]" />
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext("Create") %]" />
+</td>
+</tr>
+<tr>
+<td colspan=8>[% gettext("Long description, only for internal use") %]<br/>
+<textarea name="longdescription" class="tracking_longdesc"></textarea></td>
+</tbody>
+</table>
+</form>
+<h3>[% gettext("Your latest tracked hours") %]</h3>
+[% trow='even' %]
+<table>
+<thead>
+  <th>[% gettext("Date") %]</th>
+  <th>[% gettext("Customer") %]</th>
+  <th>[% gettext("Time") %]/[% gettext("Amount") %]</th>
+  <th>[% gettext("Product") %]</th>
+  <th>[% gettext("Type") %]</th>
+  <th colspan=2>[% gettext("Description") %]</th>
+</thead>
+<tbody class="rowdata">
+[% FOREACH key IN latesthours.keys.sort %]
+[% IF key < 0 %]
+	[% NEXT %]
+[% END %]
+[% row = latesthours.$key %]
+
+[% IF trow=='odd' %]
+	[% trow = 'even' %]
+[% ELSE %]
+	[% trow = 'odd' %]
+[% END %]
+
+<tr class="[% trow %]">
+<td>[% row.day %]</td>
+<td>[% row.companyname %]</td>
+<td>
+[% IF row.type == 3 %]
+	[% row.hours %] [% gettext("st") %]
+[% ELSE %]
+	[% row.hours %] h 
+	[% IF row.minutes > 0 %]
+	[% row.minutes %] min
+	[% END %]
+[% END %]
+[% IF row.hours <= 0 && row.minutes <= 0 %]
+<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
+[% END %]
+</td>
+<td>
+[% row.productcode %] - [% row.productname %]
+</td>
+<td>
+[% FOREACH statkey IN timetrackstatuses.keys %]
+	[% timetrackstatus = timetrackstatuses.$statkey %]
+	[% IF row.type == timetrackstatus.id %]
+		[% timetrackstatus.name %] 
+		[% LAST %]
+	[% ELSE %]
+	[% END %]
+[% END %]
+[% IF row.no_billing == 1 %]
+<br>[% gettext("Internal") %]
+[% END %]
+
+[% IF row.basket_id > 0 || row.basket_id == -1 %]
+	<img class="link" alt="Imported to basket" title="Imported to basket" src="themes/[% theme %]/icon/16x16/actions/money.png" />
+[% END %]
+
+</td>
+<td>[% row.description %]
+[% IF row.longdescription != '' %]
+<img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
+[% END %]
+</td>
+
+<td class='center'>
+<a href="?module=[% module %]&amp;action=edithourtracking&amp;target=[% row.id %]">
+<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
+</td>
+
+</tr>
+[% END %]
+[% total = latesthours.-1 %]
+[% FOREACH t IN total.keys.sort %] 
+	[% IF t < 0 %]
+		[% NEXT %]
+	[% END %]
+	[% totcount = total.$t %]
+	<tr><td colspan=2 class="right">
+	[% FOREACH statkey IN timetrackstatuses.keys %]
+		[% timetrackstatus = timetrackstatuses.$statkey %]
+		[% IF t == timetrackstatus.id %]
+			[% gettext("Total ") %] [% timetrackstatus.name %]
+			[% LAST %]
+		[% END %]
+	[% END %]
+	</td>
+	<td>[% totcount.hours.-1 %] h [% totcount.minutes.-1 %] min</td>
+	<td>[% gettext("Debit:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
+	<td>[% gettext("Internal:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
+	<td>&nbsp;</td>
+	</tr>
+[% END %]
+<tr><td colspan=2 class="right">[% gettext("Total") %]</td>
+[% totcount = total.-1 %]
+<td>[% totcount.hours.-1 %]h&nbsp;[% totcount.minutes.-1 %]min</td>
+<td>[% gettext("Debit:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
+<td>[% gettext("Internal:") %]&nbsp;[% totcount.hours.0 %]h&nbsp;[% totcount.minutes.0 %]min</td>
+<td>&nbsp;</td>
+</tr>
+</tbody>
+</table>
