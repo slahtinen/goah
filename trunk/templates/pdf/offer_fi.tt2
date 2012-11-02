@@ -64,28 +64,27 @@
 [% shippingaddr.postalcode %] [% escape(shippingaddr.postaloffice) %] 
 \end{tabular}
 
-\vspace*{1cm}
+\vspace*{0.5cm}
 
 \hspace{-0.5cm}
-\footnotesize \begin{longtable}{p{9.5cm}rrrrr}
-\textbf{TUOTEKOODI}: \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
-\\ 
+\footnotesize \begin{longtable}{p{2.0cm}p{7.0cm}rrrrr}
+\textbf{KOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 \endhead
-& & & & & Jatkuu...
+& & & & & 
 \endfoot
-\\ & & & & \textbf{Yht. ALV 0\%} & [% data.-1.total %]
-\\ & & & & \textbf{ALV osuus} & [% data.-1.vat %] \\
-\\ & & & & \textbf{Maksettava} & \textbf{[% data.-1.totalvat %]} \\
+\\ & & & & & \textbf{Yht. ALV 0\%} & [% data.-1.total %]
+\\ & & & & & \textbf{ALV osuus} & [% data.-1.vat %] \\
+\\ & & & & & \textbf{Maksettava} & \textbf{[% data.-1.totalvat %]} \\
 \endlastfoot
 
 [% FOREACH key IN rows.keys.sort %]
 [% IF key > 0 %]
 [% row = rows.$key %]
-\\ {\bf [% escape(row.code) %]}: [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sell_vat %] & [% row.total_vat %]
+\\ [% escape(row.code,13) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sell_vat %] & [% row.total_vat %]
 [% IF row.rowinfo != '' %]
-\\* \scriptsize Lisätietoja: [% escape(row.rowinfo) %] & & & & &
+\\* \scriptsize Lisätietoja: & \scriptsize [% escape(row.rowinfo) %] & & & & &
 [% END %]
-\\* & & & & &
+\\* & & & & & 
 [% END %]
 [% END %]
 \end{longtable}

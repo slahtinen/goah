@@ -59,14 +59,14 @@
 [% shippingaddr.postalcode %] [% escape(shippingaddr.postaloffice) %] 
 \end{tabular}
 
-\vspace*{1cm}
+\vspace*{0.5cm}
 
 \hspace{-0.5cm}
 \begin{tabular}{p{2.3cm} p{6.6cm} p{2.8cm} p{6cm}}
 \textbf{Laskutuspvm} & [% formatdate(data.created) %] & \textbf{Maksuehto} & [% customerinfo.payment_condition %] pv \\
 \textbf{Eräpäivä} & [% formatdate(data.due) %] & \textbf{Viivästyskorko} & [% customerinfo.delay_interest %] \% \\
 \textbf{Viitenumero} & [% data.referencenumber %] & \textbf{Huomautusaika} & [% customerinfo.reclamation_time %] pv \\
-\textbf{Viitteenne} & [% escape(data.customerreference) %] \\
+\textbf{Maksettava} & [% total.inclvat %]\euro & \textbf{Viitteenne} & [% escape(data.customerreference) %] \\
 \\
 \end{tabular}
 
@@ -80,22 +80,22 @@
 \vspace*{1cm}
 
 \hspace{-0.5cm}
-\footnotesize \begin{longtable}{p{9.5cm}rrrrr}
-\textbf{TUOTEKOODI}: \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+\footnotesize \begin{longtable}{p{2.0cm}p{7.0cm}rrrrr}
+\textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 \\
 \endhead
-& & & & & Jatkuu...
+& & & & & 
 \endfoot
-\\ & & & & \textbf{Yht. ALV 0\%} & [% total.vat0 %]
-\\ & & & & \textbf{ALV osuus} & [% total.vat %] \\
-\\ & & & & \textbf{Maksettava} & \textbf{[% total.inclvat %]} \\
+\\ & & & & & \textbf{Yht. ALV 0\%} & [% total.vat0 %]
+\\ & & & & & \textbf{ALV osuus} & [% total.vat %] 
+\\ & & & & & \textbf{Maksettava} & \textbf{[% total.inclvat %]} \\
 \endlastfoot
 
 [% FOREACH key IN rows.keys.sort %]
 [% row = rows.$key %]
-\\ {\bf [% escape(row.code) %]}: [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %]
+\\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %]
 [% IF row.rowinfo != '' %]
-\\* \scriptsize Lisätietoja: [% escape(row.rowinfo) %] & & & & &
+\\* \scriptsize Lisätietoja: & \scriptsize [% escape(row.rowinfo) %] & & & & &
 [% END %]
 \\* & & & & &
 [% END %]

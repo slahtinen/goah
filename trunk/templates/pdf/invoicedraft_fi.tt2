@@ -81,7 +81,7 @@
 [% END %]
  \end{tabular}
 
-\vspace*{1cm}
+\vspace*{0.5cm}
 
 \hspace{-0.5cm}
 \footnotesize \begin{longtable}{p{2.0cm}p{7.0cm}rrrrr}
@@ -97,7 +97,7 @@
 [% row = rows.$key %]
 \\ [% escape(row.code,13) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] &  [% row.rowtotalvat %]
 [% IF row.rowinfo != '' %]
-\\* \scriptsize Lisätietoja: & [% escape(row.rowinfo) %] & & & & &
+\\* \scriptsize Lisätietoja: & \scriptsize [% escape(row.rowinfo) %] & & & & &
 [% END %]
 \\* & & & & &
 [% END %]
