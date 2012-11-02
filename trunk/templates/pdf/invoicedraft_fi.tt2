@@ -84,8 +84,8 @@
 \vspace*{1cm}
 
 \hspace{-0.5cm}
-\footnotesize \begin{longtable}{p{9.5cm}rrrrr}
-\textbf{TUOTEKOODI}: \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+\footnotesize \begin{longtable}{p{1.5cm}p{7.5cm}rrrrr}
+\textbf{KOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 \\
 \endhead
 & & & & & Jatkuu...
@@ -96,9 +96,9 @@
 \endlastfoot
 [% FOREACH key IN rows.keys.sort %]
 [% row = rows.$key %]
-\\ {\bf [% escape(row.code) %]}: [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] &  [% row.rowtotalvat %]
+\\ {[% escape(row.code) %]} & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] &  [% row.rowtotalvat %]
 [% IF row.rowinfo != '' %]
-\\* \scriptsize Lisätietoja: [% escape(row.rowinfo) %] & & & & &
+\\* \scriptsize Lisätietoja: & [% escape(row.rowinfo) %] & & & & &
 [% END %]
 \\* & & & & &
 [% END %]
