@@ -16,7 +16,7 @@ About: License
 package goah::Modules::Tracking;
 
 use Cwd;
-use Locale::TextDomain ('Basket', getcwd()."/locale");
+use Locale::TextDomain ('Tracking', getcwd()."/locale");
 
 use strict;
 use warnings;
