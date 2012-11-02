@@ -107,7 +107,7 @@ sub Start {
 			if(WriteHours($uid)) {
 				goah::Modules->AddMessage('info',__("Hours tracked"),__FILE__,__LINE__);
 			} else {
-				goah::Modules->AddMessage('error',__("Coudln't write hours to database!"),__FILE__,__LINE__);
+				goah::Modules->AddMessage('error',__("Couldn't write hours to database!"),__FILE__,__LINE__);
 			}
 		} elsif($q->param('action') eq 'writeeditedhours') {
 			if(WriteHours($uid)) {
@@ -117,7 +117,7 @@ sub Start {
 					goah::Modules->AddMessage('info',__("Time monitoring info updated."),__FILE__,__LINE__);
 				}
 			} else {
-				goah::Modules->AddMessage('error',__("Coudln't update information into database!"),__FILE__,__LINE__);
+				goah::Modules->AddMessage('error',__("Couldn't update information into database!"),__FILE__,__LINE__);
 			}
 
 		} elsif($q->param('action') eq 'edithourtracking') {
