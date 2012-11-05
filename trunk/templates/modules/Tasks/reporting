@@ -1,12 +1,12 @@
 <div id="moduleheader">
-<h2>[% gettext("Search time tracking") %]</h2>
+<h2>[% gettext("Search tasks") %]</h2>
 <table>
 <thead>
 <tr>
 <th>[% gettext("By customer") %]</th>
 <th>[% gettext("By user") %]</th>
-<th>[% gettext("From/to date (dd.mm.yyyy)") %]</th>
-<th colspan=2>[% gettext("Other options") %]</th>
+<!--<th>[% gettext("From/to date (dd.mm.yyyy)") %]</th> -->
+<th colspan=2>[% gettext("Other options") %]</th> 
 <th>&nbsp;</th>
 </tr>
 </thead><tbody>
@@ -58,35 +58,21 @@
 	[% END %]
 [% END %]
 </select>
+<!--
 <td>
 <input class='date' name='fromdate' value="[% search_startdate %]" /> - <input class='date' name='todate' value="[% search_enddate %]" />
 </td>
+-->
 <td>
-
-<select name="yesnoselect">
-[% FOREACH key IN yesnoselect.keys.sort %]
-[% item=yesnoselect.$key %]
-[% selected='' %]
-[% IF item.key == search_yesnoselect %]
-	[% selected='selected' %]
-[% END %]
-[%# IF search_yesnoselect=='' && item.key=='yes' %]
-	[%# selected='selected' %]
-[%# END %]
-<option value="[% item.key %]" [% selected %]>[% item.value %]</option>
-[% END %]
-</select>
-
-<select name="debitselect">
-[% firstloop=1 %]
-[% FOREACH key IN debitselect.keys.sort %]
-	[% item= debitselect.$key %]
+<select name="stateselect">
+[% FOREACH key IN stateselect.keys.sort %]
+	[% item= stateselect.$key %]
 	[% selected='' %]
-	[% IF firstloop==1 && search_debitselect=='' %]
+	[% IF firstloop==1 && search_stateselect=='' %]
 		[% selected='selected' %]
 		[% firstloop=0 %]
 	[% END %]
-	[% IF item.key == search_debitselect %]
+	[% IF item.key == search_stateselect %]
 		[% selected='selected' %]
 	[% END %]
 	<option value="[% item.key %]" [% selected %]>[% item.value %]</option>
@@ -111,16 +97,15 @@
 </table>
 </div>
 
-<h3>[% gettext("Tracked hours") %]</h3>
+<h3>[% gettext("Tasks") %]</h3>
 [% trow='even' %]
 <table>
 <thead>
 <th>[% gettext("Date") %]</th>
 <th>[% gettext("Customer") %]</th>
 <th>[% gettext("User") %]</th>
-<th>[% gettext("Time") %]/[% gettext("Amount") %]</th>
-<th>[% gettext("Type") %]</th>
-<th>[% gettext("Product") %]</th>
+<th>[% gettext("Time") %]</th>
+<th>[% gettext("Internal time") %]</th>
 <th>[% gettext("Description") %]</th>
 <th>[% gettext("Edit") %]</th>
 </thead>
@@ -143,7 +128,7 @@
 	<td>
 	[% FOREACH ukey IN dbusers.keys %]
 		[% user = dbusers.$ukey %]
-		[% IF row.userid == user.id %]
+		[% IF row.assigneeid == user.id %]
 			[% user.lastname %] [% user.firstname %]
 			[% LAST %]
 		[% END %]
@@ -151,37 +136,18 @@
 	</td>
 		
 	<td>
-	[% IF row.type == 3 %]
-		[% row.hours %] [% gettext("st") %]
-	[% ELSE %]
-		[% row.hours %] h
-		[% IF row.minutes > 0 %]
-			[% row.minutes %] min
-		[% END %]
-	[% END %]
-	[% IF row.hours <= 0 && row.minutes <= 0 %]
-		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
+	[% row.hours %]
+	[% IF row.minutes > 0 %]
+	:[% row.minutes %]
 	[% END %]
 	</td>
 	<td>
-	[% FOREACH statkey IN timetrackstatuses.keys %]
-		[% timetrackstatus = timetrackstatuses.$statkey %]
-		[% IF row.type == timetrackstatus.id %]
-			[% timetrackstatus.name %]
-			[% LAST %]
-		[% END %]
+	[% row.inthours %]
+	[% IF row.intminutes > 0 %]
+	:[% row.intminutes %]
 	[% END %]
-	[% IF row.no_billing == 1 %]
-		<br>[% gettext("Internal") %]
-	[% END %]
+	</td>
 
-	[% IF row.basket_id > 0 || row.basket_id == -1 %]
-		<img class="link" alt="Imported to basket" title="Imported to basket" src="themes/[% theme %]/icon/16x16/actions/money.png" />
-	[% END %]
-	</td>
-	<td>
-	[% row.productcode %] - [% row.productname %]
-	</td>
 	<td>[% row.description %]
 	[% IF search_longdesc=='checked' && row.longdescription != '' %]
 		<div class="tracking_longdesc">[% row.longdescription %]</div>
@@ -191,43 +157,17 @@
 	[% END %]
 	</td>
 	<td class='center'>
-	[% IF row.userid == uid %]
-		<a href="?module=[% module %]&amp;action=edithourtracking&amp;target=[% row.id %]">
-		<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
-	[% ELSE %]
-		&nbsp;
-	[% END %]
+	<a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
+	<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
 	</td>
 
 
 	</tr>
 [% END %]
 [% total = dbdata.-1 %]
-[% FOREACH t IN total.keys.sort %] 
-[% IF t < 0 %]
-	[% NEXT %]
-[% END %]
-[% totcount = total.$t %]
-<tr><td colspan=3 class="right">
-[% FOREACH statkey IN timetrackstatuses.keys %]
-	[% timetrackstatus = timetrackstatuses.$statkey %]
-	[% IF t == timetrackstatus.id %]
-		[% gettext("Total ") %] [% timetrackstatus.name %]
-		[% LAST %]
-	[% END %]
-[% END %]
-</td>
-<td>[% totcount.hours.-1 %] h [% totcount.minutes.-1 %] min</td>
-<td>[% gettext("Debit:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
-<td>[% gettext("Internal:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
-<td>&nbsp;</td>
-</tr>
-[% END %]
 <tr><td colspan=3 class="right">[% gettext("Total") %]</td>
-[% totcount = total.-1 %]
-<td>[% totcount.hours.-1 %]h&nbsp;[% totcount.minutes.-1 %]min</td>
-<td>[% gettext("Debit:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
-<td>[% gettext("Internal:") %]&nbsp;[% totcount.hours.0 %]h&nbsp;[% totcount.minutes.0 %]min</td>
+<td>[% total.normal %]h&nbsp;[% total.minutes %]min</td>
+<td>[% total.internal %]h&nbsp;[% total.intminutes %]min</td>
 <td>&nbsp;</td>
 </tr>
 

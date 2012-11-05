@@ -1,13 +1,13 @@
-<h2>[% gettext("Edit time tracking") %]</h2>
+<h2>[% gettext("Edit task") %]</h2>
 <form action="" method="post">
 <table>
 <tr>
   <td class='info' colspan='2'>[% gettext("Fields marked with * are required") %]</td>
 </tr>
 [% row = 'even' %]
-[% FOREACH key IN timetrackingdb.keys.sort %]
+[% FOREACH key IN tasksdb.keys.sort %]
 <tr class="[% row %]">
-[% data = timetrackingdb.$key %]
+[% data = tasksdb.$key %]
 [% field = data.field %]
 [% IF data.type != "hidden" %]
         <td>[% gettext(data.name) %]
@@ -16,22 +16,13 @@
         [% END %]
         </td>
         [% IF data.type == 'textfield' %]
-		[% IF field == 'hours' %]
+		[% IF field == 'hours' || field == 'inthours' %]
 			<td>
-			[% IF dbdata.type == 3 %]
-			[%# Other time tracking %]
-				[% IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
-					[% dbdata.$field %][% gettext("st") %]
-				[% ELSE %]
-					<input class="small" name="amount" value="[% dbdata.$field %]" />[% gettext("st") %]
-				[% END %]
+			<input class="small" name="[% data.field %]" value="[% dbdata.$field %]" />h 
+			[% IF field =='inthours' %]
+			<input class="small" name="intminutes" value="[% dbdata.intminutes %]" />min
 			[% ELSE %]
-				[% IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
-					[% dbdata.$field %]h [% dbdata.$field %]min
-				[% ELSE %]
-					<input class="small" name="[% data.field %]" value="[% dbdata.$field %]" />h 
-					<input class="small" name="minutes" value="[% dbdata.minutes %]" />min
-				[% END %]
+			<input class="small" name="minutes" value="[% dbdata.minutes %]" />min
 			[% END %]
 			</td>
 		[% ELSE %]
@@ -65,49 +56,28 @@
 		</td>
         [% ELSIF data.type == 'selectbox' %]
                 <td>
-		[% IF !(dbdata.basket_id > 0 || dbdata.basket_id == -1) %]	
-			<select class="medium" name="[% data.field %]">
-			<option  value="-1">-- [% gettext("Select") %] --</option>
-			[% FOREACH key IN data.data.keys.sort %]
-				[% item = data.data.$key %]
-				[% IF item.hidden != 1 %]
-					[% IF data.field == 'productcode' && groupname != item.groupname %]
-						<option value="-1" class="subhead">[% item.groupname %]</option>
-						[% groupname = item.groupname %]
-					[% END %]
-					[% IF item.id == dbdata.$field %]
-						<option value="[% item.id %]" selected>
-					[% ELSE %]
-						<option value="[% item.id %]">
-					[% END %]
-					[% IF data.field == 'productcode' %]
-						[% item.code %] -
-					[% END %]
-					[% item.name %]
-					[%- IF item.vat_id == '00000000' %]
-						, [% item.firstname %]
-					[% END %]
-					</option>
-				[% END %] 
-			[% END %]
-
-			[% IF !(dbdata.basket_id > 0 || dbdata.basket_id == -1) %]
-				</select>
-			[% END %]
-		[% ELSE %]
-			[% FOREACH key IN data.data.keys.sort %]
-				[% item = data.data.$key %]
+		<select class="medium" name="[% data.field %]">
+		<option  value="-1">-- [% gettext("Select") %] --</option>
+		[% FOREACH key IN data.data.keys.sort %]
+			[% item = data.data.$key %]
+			[% IF item.hidden != 1 %]
 				[% IF item.id == dbdata.$field %]
-					[% IF data.field == 'productcode' %]
-						[% item.code %] -
-					[% END %]
+					<option value="[% item.id %]" selected>
+				[% ELSE %]
+					<option value="[% item.id %]">
+				[% END %]
+				[% IF field == 'assigneeid' %]
+					[% item.lastname %] [% item.firstname %]
+				[% ELSE %]
 					[% item.name %]
 					[%- IF item.vat_id == '00000000' %]
 						, [% item.firstname %]
 					[% END %]
 				[% END %]
-			[% END %]
+				</option>
+			[% END %] 
 		[% END %]
+		</select>
                 </td>
         [% ELSE %]
                 <td><p class='error'>[% gettext("Unknown field type") %] '[% data.type %]'</p></td>
@@ -129,7 +99,7 @@
 	<td colspan='2'>
 	<p>
 	<input type="hidden" name="module" value="[% module %]" />
-	<input type="hidden" name="action" value="writeeditedhours" />
+	<input type="hidden" name="action" value="writeeditedtask" />
 	<input type="hidden" name="userid" value="[% uid %]" />
 	<input type="hidden" name="target" value="[% dbdata.id %]" />
 	<input type="submit" value="[% gettext("Save") %]" />
