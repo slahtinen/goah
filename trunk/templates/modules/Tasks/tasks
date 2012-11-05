@@ -81,6 +81,7 @@
 [% trow='even' %]
 <table>
 <thead>
+  <th>[% gettext("Pri.") %]</th>
   <th>[% gettext("Date") %]</th>
   <th>[% gettext("Customer") %]</th>
   <th>[% gettext("Time") %]</th>
@@ -102,6 +103,7 @@
 [% END %]
 
 <tr class="[% trow %]">
+<td>[% row.priority %]</td>
 <td>[% row.day %]</td>
 <td>[% row.companyname %]</td>
 <td>
@@ -129,11 +131,11 @@
 
 </tr>
 [% END %]
-<tr><td colspan=2 class="right">[% gettext("Total") %]</td>
+<tr><td colspan=3 class="right">[% gettext("Total") %]</td>
 [% totcount = opentasks.-1 %]
 <td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
 <td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
-<td>&nbsp;</td>
+<td colspan=2>&nbsp;</td>
 </tr>
 </tbody>
 </table>
