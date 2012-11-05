@@ -81,7 +81,8 @@
 [% trow='even' %]
 <table>
 <thead>
-  <th>[% gettext("Pri.") %]</th>
+  <th class="center">[% gettext("Id") %]</th>
+  <th class="center">[% gettext("Pri.") %]</th>
   <th>[% gettext("Date") %]</th>
   <th>[% gettext("Customer") %]</th>
   <th>[% gettext("Time") %]</th>
@@ -103,19 +104,30 @@
 [% END %]
 
 <tr class="[% trow %]">
-<td>[% row.priority %]</td>
+<td class="center">[% row.id %]</td>
+<td class="center">[% row.priority %]</td>
 <td>[% row.day %]</td>
 <td>[% row.companyname %]</td>
 <td>
-[% row.hours %] 
-[% IF row.minutes > 0 %]
-:[% row.minutes %]
+[% IF row.hours > 0 && row.minutes == 0 %]
+[% row.hours %]:00 [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours > 0 %]
+[% row.hours %]:[% row.minutes %] [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours == 0 %]
+0:[% row.minutes %] [% gettext("h") %]
+[% ELSE %]
+&nbsp;
 [% END %]
 </td>
 <td>
+[% IF row.inthours > 0 && row.intminutes == 0 %]
+[% row.inthours %]:00 [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours > 0 %]
+[% row.inthours %]:[% row.intminutes %] [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours == 0 %]
+0:[% row.intminutes %] [% gettext("h") %]
+[% ELSE %]
 [% row.inthours %]
-[% IF row.intminutes > 0 %]
-:[% row.intminutes %]
 [% END %]
 </td>
 <td>[% row.description %]
@@ -131,7 +143,7 @@
 
 </tr>
 [% END %]
-<tr><td colspan=3 class="right">[% gettext("Total") %]</td>
+<tr><td colspan=4 class="right">[% gettext("Total") %]</td>
 [% totcount = opentasks.-1 %]
 <td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
 <td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
