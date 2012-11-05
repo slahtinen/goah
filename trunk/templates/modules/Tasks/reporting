@@ -108,6 +108,7 @@
 <th>[% gettext("Time") %]</th>
 <th>[% gettext("Internal time") %]</th>
 <th>[% gettext("Description") %]</th>
+<th>[% gettext("State") %]</th>
 <th>[% gettext("Edit") %]</th>
 </thead>
 <tbody class="rowdata">
@@ -158,6 +159,13 @@
 		<img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
 	[% END %]
 	</td>
+	<td>
+	[% IF row.completed == 1 %]
+		[% gettext("Closed") %]
+	[% ELSE %]
+		[% gettext("Open") %]
+	[% END %]
+	</td>
 	<td class='center'>
 	<a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
 	<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
@@ -170,7 +178,7 @@
 <tr><td colspan=4 class="right">[% gettext("Total") %]</td>
 <td>[% total.normal %]h&nbsp;[% total.minutes %]min</td>
 <td>[% total.internal %]h&nbsp;[% total.intminutes %]min</td>
-<td colspan=2>&nbsp;</td>
+<td colspan=3>&nbsp;</td>
 </tr>
 
 </tbody>
