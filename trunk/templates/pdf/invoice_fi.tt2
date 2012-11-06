@@ -25,7 +25,7 @@
 \pagestyle{fancy}
 
 \lhead{\includegraphics{[% logo %]}}
-\rhead{\makebox[6.5cm][l]{\textbf{LASKU: [% data.invoicenumber %]}} sivu \thepage\ / \pageref{LastPage}} 
+\rhead{\makebox[6.7cm][l]{\textbf{LASKU: [% data.invoicenumber %]}} sivu \thepage\ / \pageref{LastPage}} 
 
 \renewcommand{\footrulewidth}{0.5pt}
 
@@ -66,7 +66,7 @@
 \textbf{Laskutuspvm} & [% formatdate(data.created) %] & \textbf{Maksuehto} & [% customerinfo.payment_condition %] pv \\
 \textbf{Eräpäivä} & [% formatdate(data.due) %] & \textbf{Viivästyskorko} & [% customerinfo.delay_interest %] \% \\
 \textbf{Viitenumero} & [% data.referencenumber %] & \textbf{Huomautusaika} & [% customerinfo.reclamation_time %] pv \\
-\textbf{Maksettava} & [% total.inclvat %]\euro & \textbf{Viitteenne} & [% escape(data.customerreference) %] \\
+\textbf{Maksettava} & [% total.inclvat %] EUR & \textbf{Viitteenne} & [% escape(data.customerreference) %] \\
 \\
 \end{tabular}
 
@@ -76,14 +76,18 @@
 [% FOREACH bank IN bankaccounts %]
 [% bank.bankname %]~[% bank.domestic %] & & [% bank.bic %] & [% bank.iban %] \\
 [% END %]
- \end{tabular}
-\vspace*{1cm}
+\end{tabular}
+\vspace*{0cm}
 
 \hspace{-0.5cm}
-\footnotesize \begin{longtable}{p{2.0cm}p{7.0cm}rrrrr}
+\footnotesize \begin{longtable}{p{2.0cm}p{7.0cm}lllll}
 \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 \\
 \endhead
+\vspace{-0.5cm}
+\\
+\textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
+\endfirsthead
 & & & & & 
 \endfoot
 \\ & & & & & \textbf{Yht. ALV 0\%} & [% total.vat0 %]
