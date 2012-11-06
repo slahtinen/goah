@@ -445,9 +445,9 @@ sub ReadTasks {
 	
 	if($_[2]<0) {
 		goah::Modules->AddMessage('debug',"Limiting search by result count",__FILE__,__LINE__);
-		$datap = goah::Db::Tasks::Manager->get_tasks(\%dbsearch, sort_by => 'priority DESC, day DESC', limit => -1*$_[2]);
+		$datap = goah::Db::Tasks::Manager->get_tasks(\%dbsearch, sort_by => 'priority DESC, id DESC', limit => -1*$_[2]);
 	} else {
-		$datap = goah::Db::Tasks::Manager->get_tasks(\%dbsearch, sort_by => 'priority DESC, day DESC');
+		$datap = goah::Db::Tasks::Manager->get_tasks(\%dbsearch, sort_by => 'priority DESC, id DESC');
 	}
 	
 	return 0 unless $datap;
