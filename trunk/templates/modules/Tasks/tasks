@@ -77,7 +77,7 @@
 </tbody>
 </table>
 </form>
-<h3>[% gettext("Open tasks - Assigned to me") %]</h3>
+<h3>[% gettext("Open tasks - Assigned to you") %]</h3>
 [% trow='even' %]
 <table>
 <thead>
@@ -336,7 +336,7 @@
 </table>
 
 
-<h3>[% gettext("Closed tasks - Latest 50 assigned to me") %]</h3>
+<h3>[% gettext("Closed tasks - Latest 50 assigned to you") %]</h3>
 [% trow='even' %]
 <table>
 <thead>
