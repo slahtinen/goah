@@ -159,7 +159,11 @@ sub Start {
 	}
 
 	if($variables{'function'}=~/modules\/Tasks\/tasks/) {
-		$variables{'opentasks'}=ReadTasks($uid,'','-50','');
+		$variables{'opentasks'}=ReadTasks($uid,'','','','open');
+		$variables{'closedtasks'}=ReadTasks($uid,'','-50','','closed');
+		$variables{'openaddedtasks'}=ReadTasks('','','','','open',$uid);
+		$variables{'closedaddedtasks'}=ReadTasks('','','-50','','closed',$uid);
+		$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
 	}
 		
 
@@ -439,6 +443,12 @@ sub ReadTasks {
 			goah::Modules->AddMessage('debug',"Searching for completed tasks",__FILE__,__LINE__);
 			$dbsearch{'completed'} = "1";
 		}
+	}
+	
+	# Search by userid
+	if($_[5]) {
+		$dbsearch{'userid'}=$_[5];
+		goah::Modules->AddMessage('debug',"Searching with uid ".$dbsearch{'userid'},__FILE__,__LINE__);
 	}
 		
 	my $datap; 

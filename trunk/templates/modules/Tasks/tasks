@@ -77,7 +77,7 @@
 </tbody>
 </table>
 </form>
-<h3>[% gettext("Your latest open tasks") %]</h3>
+<h3>[% gettext("Open tasks - Assigned to me") %]</h3>
 [% trow='even' %]
 <table>
 <thead>
@@ -151,3 +151,263 @@
 </tr>
 </tbody>
 </table>
+
+<h3>[% gettext("Open tasks - Added by you") %]</h3>
+[% trow='even' %]
+<table>
+<thead>
+  <th class="center">[% gettext("Id") %]</th>
+  <th class="center">[% gettext("Pri.") %]</th>
+  <th>[% gettext("Date") %]</th>
+  <th>[% gettext("Customer") %]</th>
+  <th>[% gettext("User") %]</th>
+  <th>[% gettext("Time") %]</th>
+  <th>[% gettext("Internal time") %]</th>
+  <th>[% gettext("Description") %]</th>
+  <th>[% gettext("State") %]</th>
+  <th>&nbsp;</th>
+</thead>
+<tbody class="rowdata">
+[% FOREACH key IN openaddedtasks.keys.sort %]
+[% IF key < 0 %]
+	[% NEXT %]
+[% END %]
+[% row = openaddedtasks.$key %]
+
+[% IF trow=='odd' %]
+	[% trow = 'even' %]
+[% ELSE %]
+	[% trow = 'odd' %]
+[% END %]
+
+<tr class="[% trow %]">
+<td class="center">[% row.id %]</td>
+<td class="center">[% row.priority %]</td>
+<td>[% row.day %]</td>
+<td>[% row.companyname %]</td>
+<td>
+[% FOREACH ukey IN dbusers.keys %]
+	[% user = dbusers.$ukey %]
+	[% IF row.assigneeid == user.id %]
+		[% user.lastname %] [% user.firstname %]
+		[% LAST %]
+	[% END %]
+[% END %]
+</td>
+<td>
+[% IF row.hours > 0 && row.minutes == 0 %]
+[% row.hours %]:00 [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours > 0 %]
+[% row.hours %]:[% row.minutes %] [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours == 0 %]
+0:[% row.minutes %] [% gettext("h") %]
+[% ELSE %]
+&nbsp;
+[% END %]
+</td>
+<td>
+[% IF row.inthours > 0 && row.intminutes == 0 %]
+[% row.inthours %]:00 [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours > 0 %]
+[% row.inthours %]:[% row.intminutes %] [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours == 0 %]
+0:[% row.intminutes %] [% gettext("h") %]
+[% ELSE %]
+[% row.inthours %]
+[% END %]
+</td>
+<td>[% row.description %]
+[% IF row.longdescription != '' %]
+<img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
+[% END %]
+</td>
+<td>
+[% IF row.completed == 0 %] 
+	[% gettext("Open") %]
+[% ELSE %]
+	[% gettext("Closed") %]
+[% END %]
+<td class='center'>
+<a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
+<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
+</td>
+
+</tr>
+[% END %]
+<tr><td colspan=5 class="right">[% gettext("Total") %]</td>
+[% totcount = openaddedtasks.-1 %]
+<td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
+<td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
+<td colspan=3>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>[% gettext("Closed tasks - Latest 50 added by you") %]</h3>
+[% trow='even' %]
+<table>
+<thead>
+  <th class="center">[% gettext("Id") %]</th>
+  <th class="center">[% gettext("Pri.") %]</th>
+  <th>[% gettext("Date") %]</th>
+  <th>[% gettext("Customer") %]</th>
+  <th>[% gettext("User") %]</th>
+  <th>[% gettext("Time") %]</th>
+  <th>[% gettext("Internal time") %]</th>
+  <th>[% gettext("Description") %]</th>
+  <th>[% gettext("State") %]</th>
+  <th>&nbsp;</th>
+</thead>
+<tbody class="rowdata">
+[% FOREACH key IN closedaddedtasks.keys.sort %]
+[% IF key < 0 %]
+	[% NEXT %]
+[% END %]
+[% row = closedaddedtasks.$key %]
+
+[% IF trow=='odd' %]
+	[% trow = 'even' %]
+[% ELSE %]
+	[% trow = 'odd' %]
+[% END %]
+
+<tr class="[% trow %]">
+<td class="center">[% row.id %]</td>
+<td class="center">[% row.priority %]</td>
+<td>[% row.day %]</td>
+<td>[% row.companyname %]</td>
+<td>
+[% FOREACH ukey IN dbusers.keys %]
+	[% user = dbusers.$ukey %]
+	[% IF row.assigneeid == user.id %]
+		[% user.lastname %] [% user.firstname %]
+		[% LAST %]
+	[% END %]
+[% END %]
+</td>
+<td>
+[% IF row.hours > 0 && row.minutes == 0 %]
+[% row.hours %]:00 [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours > 0 %]
+[% row.hours %]:[% row.minutes %] [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours == 0 %]
+0:[% row.minutes %] [% gettext("h") %]
+[% ELSE %]
+&nbsp;
+[% END %]
+</td>
+<td>
+[% IF row.inthours > 0 && row.intminutes == 0 %]
+[% row.inthours %]:00 [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours > 0 %]
+[% row.inthours %]:[% row.intminutes %] [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours == 0 %]
+0:[% row.intminutes %] [% gettext("h") %]
+[% ELSE %]
+[% row.inthours %]
+[% END %]
+</td>
+<td>[% row.description %]
+[% IF row.longdescription != '' %]
+<img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
+[% END %]
+</td>
+<td>
+[% IF row.completed == 0 %] 
+	[% gettext("Open") %]
+[% ELSE %]
+	[% gettext("Closed") %]
+[% END %]
+<td class='center'>
+<a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
+<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
+</td>
+
+</tr>
+[% END %]
+<tr><td colspan=5 class="right">[% gettext("Total") %]</td>
+[% totcount = closedaddedtasks.-1 %]
+<td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
+<td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
+<td colspan=3>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>[% gettext("Closed tasks - Latest 50 assigned to me") %]</h3>
+[% trow='even' %]
+<table>
+<thead>
+  <th class="center">[% gettext("Id") %]</th>
+  <th class="center">[% gettext("Pri.") %]</th>
+  <th>[% gettext("Date") %]</th>
+  <th>[% gettext("Customer") %]</th>
+  <th>[% gettext("Time") %]</th>
+  <th>[% gettext("Internal time") %]</th>
+  <th>[% gettext("Description") %]</th>
+  <th>&nbsp;</th>
+</thead>
+<tbody class="rowdata">
+[% FOREACH key IN closedtasks.keys.sort %]
+[% IF key < 0 %]
+	[% NEXT %]
+[% END %]
+[% row = closedtasks.$key %]
+
+[% IF trow=='odd' %]
+	[% trow = 'even' %]
+[% ELSE %]
+	[% trow = 'odd' %]
+[% END %]
+
+<tr class="[% trow %]">
+<td class="center">[% row.id %]</td>
+<td class="center">[% row.priority %]</td>
+<td>[% row.day %]</td>
+<td>[% row.companyname %]</td>
+<td>
+[% IF row.hours > 0 && row.minutes == 0 %]
+[% row.hours %]:00 [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours > 0 %]
+[% row.hours %]:[% row.minutes %] [% gettext("h") %]
+[% ELSIF row.minutes > 0 && row.hours == 0 %]
+0:[% row.minutes %] [% gettext("h") %]
+[% ELSE %]
+&nbsp;
+[% END %]
+</td>
+<td>
+[% IF row.inthours > 0 && row.intminutes == 0 %]
+[% row.inthours %]:00 [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours > 0 %]
+[% row.inthours %]:[% row.intminutes %] [% gettext("h") %]
+[% ELSIF row.intminutes > 0 && row.inthours == 0 %]
+0:[% row.intminutes %] [% gettext("h") %]
+[% ELSE %]
+[% row.inthours %]
+[% END %]
+</td>
+<td>[% row.description %]
+[% IF row.longdescription != '' %]
+<img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
+[% END %]
+</td>
+
+<td class='center'>
+<a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
+<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
+</td>
+
+</tr>
+[% END %]
+<tr><td colspan=4 class="right">[% gettext("Total") %]</td>
+[% totcount = closedtasks.-1 %]
+<td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
+<td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
+<td colspan=2>&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
