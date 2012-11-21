@@ -274,7 +274,7 @@ sub Start {
 				my $tmpdata=ReadBaskets($q->param('target'));
 				my %tmpd=%$tmpdata;
 
-				$variables{'basketdata'} = ReadBaskets($q->param('target'));
+				$variables{'basketdata'} = $tmpdata;
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'activebasket'} = $q->param('activebasket');
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
