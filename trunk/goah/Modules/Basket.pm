@@ -270,9 +270,15 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't update row."));
 				}
+
+				my $tmpdata=ReadBaskets($q->param('target'));
+				my %tmpd=%$tmpdata;
+
 				$variables{'basketdata'} = ReadBaskets($q->param('target'));
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'activebasket'} = $q->param('activebasket');
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				
 				if($q->param('activebasket') == '0') {
 					$variables{'function'} = 'modules/Basket/basketinfo';
 				} else {
