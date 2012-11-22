@@ -211,7 +211,7 @@ if($auth==1) {
 		# by combining userid, session id and theme with a dot.
 		$keksi = $q->cookie ( -name => 'goah',
 				  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'},
-				  -expires => '+2h');
+				  -expires => '+12h');
 				  
 
 		$templatevars{'page'} = 'main.tt2';
