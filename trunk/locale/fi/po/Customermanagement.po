@@ -21,7 +21,7 @@ msgstr ""
 msgid "Add"
 msgstr "Lisää"
 
-#: ../goah/Modules/Customermanagement.pm:126
+#: ../goah/Modules/Customermanagement.pm:127
 msgid "Add new customer"
 msgstr "Lisää uusi asiakas"
 
@@ -41,69 +41,73 @@ msgstr "Lisää uusi sijainti"
 msgid "Add new person"
 msgstr "Lisää uusi henkilö"
 
-#: ../goah/Modules/Customermanagement.pm:83
+#: ../goah/Modules/Customermanagement.pm:84
 msgid "Address, line 1"
 msgstr "Osoite, rivi 1"
 
-#: ../goah/Modules/Customermanagement.pm:84
+#: ../goah/Modules/Customermanagement.pm:85
 msgid "Address, line 2"
 msgstr "Osoite, rivi 2"
 
-#: ../goah/Modules/Customermanagement.pm:179 ../goah/Modules/Customermanagement.pm:236
+#: ../goah/Modules/Customermanagement.pm:180 ../goah/Modules/Customermanagement.pm:237
 msgid "Can't add new company into database!"
 msgstr "Uuden yrityksen lisäys tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Customermanagement.pm:208
+#: ../goah/Modules/Customermanagement.pm:209
 msgid "Can't delete company"
 msgstr "Yrityksen poisto epäonnistui"
 
-#: ../goah/Modules/Customermanagement.pm:943
+#: ../goah/Modules/Customermanagement.pm:961
 msgid "Can't delete company information."
 msgstr "Yrityksen tietojen poisto epäonnistui."
 
-#: ../goah/Modules/Customermanagement.pm:1151
+#: ../goah/Modules/Customermanagement.pm:992
+msgid "Can't read company personnel! Company id is missing!"
+msgstr ""
+
+#: ../goah/Modules/Customermanagement.pm:1221
 msgid "Can't read customer identifier!"
 msgstr "Asiakkaan tunnistetta ei voida lukea!"
 
 #. ($_[0])
-#: ../goah/Modules/Customermanagement.pm:734
+#: ../goah/Modules/Customermanagement.pm:752
 msgid "Can't read default billing address for company id "
 msgstr "Oletuksena käytettävää laskutusosoitetta ei voida lukea yritys id:lle"
 
 #. ($_[0])
-#: ../goah/Modules/Customermanagement.pm:723
+#: ../goah/Modules/Customermanagement.pm:741
 msgid "Can't read default shipping address for company id "
 msgstr "Oletuksena käytettävää lähetysosoitetta ei voida lukea yritys id:lle"
 
-#: ../goah/Modules/Customermanagement.pm:758 ../goah/Modules/Customermanagement.pm:766
+#: ../goah/Modules/Customermanagement.pm:776 ../goah/Modules/Customermanagement.pm:784
 msgid "Can't read location data!"
 msgstr "Sijaintitietoa ei voida lukea!"
 
-#: ../goah/Modules/Customermanagement.pm:1040 ../goah/Modules/Customermanagement.pm:1048
+#: ../goah/Modules/Customermanagement.pm:1072 ../goah/Modules/Customermanagement.pm:1080
 msgid "Can't read person data!"
 msgstr "Henkilön tietoja ei voida lukea!"
 
-#: ../goah/Modules/Customermanagement.pm:246
+#: ../goah/Modules/Customermanagement.pm:247
 msgid "Can't remove location information!"
 msgstr "Sijaintitietoa ei voida poistaa!"
 
-#: ../goah/Modules/Customermanagement.pm:889
+#: ../goah/Modules/Customermanagement.pm:907
 msgid "Can't remove location!"
 msgstr "Sijaintia ei voida poistaa!"
 
-#: ../goah/Modules/Customermanagement.pm:198
+#: ../goah/Modules/Customermanagement.pm:199
 msgid "Can't update company data to database!"
 msgstr "Yrityksen tietojen päivitys tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Customermanagement.pm:1245 ../goah/Modules/Customermanagement.pm:1250
+#: ../goah/Modules/Customermanagement.pm:1315 ../goah/Modules/Customermanagement.pm:1320
 msgid "Can't update database item."
 msgstr "Tietokantakohteen päivittäminen ei onnistu"
 
-#: ../goah/Modules/Customermanagement.pm:1073 ../goah/Modules/Customermanagement.pm:783 ../goah/Modules/Customermanagement.pm:819
+#: ../goah/Modules/Customermanagement.pm:1105 ../goah/Modules/Customermanagement.pm:801 ../goah/Modules/Customermanagement.pm:837
 msgid "Can't update information in database!"
 msgstr "Tietojen päivittäminen tietokantaan epäonnistui!"
 
-#: ../goah/Modules/Customermanagement.pm:220
+#: ../goah/Modules/Customermanagement.pm:221
 msgid "Can't update location data to database!"
 msgstr "Sijaintitiedon päivittäminen tietokantaan epäonnistui!"
 
@@ -115,7 +119,7 @@ msgstr "Yritys / Sukunimi"
 msgid "Company addresses"
 msgstr "Yrityksen osoitteet"
 
-#: ../goah/Modules/Customermanagement.pm:196
+#: ../goah/Modules/Customermanagement.pm:197
 msgid "Company data updated to database."
 msgstr "Yrityksen tiedot päivitettu tietokantaan."
 
@@ -123,47 +127,59 @@ msgstr "Yrityksen tiedot päivitettu tietokantaan."
 msgid "Company personnell"
 msgstr "Yrityksen henkilöt"
 
-#: ../goah/Modules/Customermanagement.pm:206
+#: ../goah/Modules/Customermanagement.pm:207
 msgid "Company removed from the database."
 msgstr "Yritys poistettu tietokannasta."
 
-#: ../goah/Modules/Customermanagement.pm:451
+#: ../goah/Modules/Customermanagement.pm:463
 msgid "Couldn't find any companies from the database."
 msgstr "Tietokannasta ei löytynyt yhtään yritystä."
 
-#: ../goah/Modules/Customermanagement.pm:87
+#: ../goah/Modules/Customermanagement.pm:287
+msgid "Couldn't remove person info from database!"
+msgstr ""
+
+#: ../goah/Modules/Customermanagement.pm:1163
+msgid "Couldn't retrieve user information from the database!"
+msgstr ""
+
+#: ../goah/Modules/Customermanagement.pm:88
 msgid "Country"
 msgstr "Maa"
 
-#: ../goah/Modules/Customermanagement.pm:1265
+#: ../goah/Modules/Customermanagement.pm:1335
 msgid "Customer group already exists, won't rename: "
 msgstr "Asiakasryhmä on jo olemassa, ei nimetä uudelleen: "
 
-#: ../goah/Modules/Customermanagement.pm:1193
+#: ../goah/Modules/Customermanagement.pm:1263
 msgid "Customer group already exists: "
 msgstr "Asiakasryhmä on jo olemassa: "
 
-#: ../goah/Modules/Customermanagement.pm:334
+#: ../goah/Modules/Customermanagement.pm:346
 msgid "Customer group information updated"
 msgstr "Asiakasryhmän tiedot päivitetty"
 
-#: ../goah/Modules/Customermanagement.pm:128 ../templates/modules/Customermanagement/customergroups:1
+#: ../goah/Modules/Customermanagement.pm:129 ../templates/modules/Customermanagement/customergroups:1
 msgid "Customer groups"
 msgstr "Asiakasryhmät"
+
+#: ../goah/Modules/Customermanagement.pm:69
+msgid "Customer reference"
+msgstr ""
 
 #: ../goah/Modules/Customermanagement.pm:68
 msgid "Customer type"
 msgstr "Asiakastyyppi"
 
-#: ../goah/Modules/Customermanagement.pm:1263
+#: ../goah/Modules/Customermanagement.pm:1333
 msgid "Customer type already exists, won't rename: "
 msgstr "Asiakastyyppi on jo olemassa, ei nimetä uudelleen: "
 
-#: ../goah/Modules/Customermanagement.pm:1191
+#: ../goah/Modules/Customermanagement.pm:1261
 msgid "Customer type already exists: "
 msgstr "Asiakastyyppi on jo olemassa: "
 
-#: ../goah/Modules/Customermanagement.pm:127 ../templates/modules/Customermanagement/customertypes:1
+#: ../goah/Modules/Customermanagement.pm:128 ../templates/modules/Customermanagement/customertypes:1
 msgid "Customer types"
 msgstr "Asiakastyypit"
 
@@ -171,15 +187,15 @@ msgstr "Asiakastyypit"
 msgid "Customers"
 msgstr "Asiakkaat"
 
-#: ../goah/Modules/Customermanagement.pm:316
+#: ../goah/Modules/Customermanagement.pm:328
 msgid "Customertype updated"
 msgstr "Asiakastyyppi päivitetty"
 
-#: ../goah/Modules/Customermanagement.pm:302
+#: ../goah/Modules/Customermanagement.pm:314
 msgid "Data removed"
 msgstr "Tietue poistettu"
 
-#: ../goah/Modules/Customermanagement.pm:1181 ../goah/Modules/Customermanagement.pm:1214 ../goah/Modules/Customermanagement.pm:1226
+#: ../goah/Modules/Customermanagement.pm:1251 ../goah/Modules/Customermanagement.pm:1284 ../goah/Modules/Customermanagement.pm:1296
 msgid "Database query aborted."
 msgstr "Tietokantakysely keskeytetty."
 
@@ -187,19 +203,19 @@ msgstr "Tietokantakysely keskeytetty."
 msgid "Default address removed! Assigned new default address automatically."
 msgstr "Oletusosoite poistettu! Uusi oletusosoite määritetty automaattisesti."
 
-#: ../goah/Modules/Customermanagement.pm:82 ../templates/modules/Customermanagement/companyinfo.locations:30
+#: ../goah/Modules/Customermanagement.pm:83 ../templates/modules/Customermanagement/companyinfo.locations:30
 msgid "Default billing address"
 msgstr "Oletus laskutusosoite"
 
-#: ../goah/Modules/Customermanagement.pm:916
+#: ../goah/Modules/Customermanagement.pm:934
 msgid "Default billing address removed! Assigned new default address automatically."
 msgstr "Oletuslaskutusosoite poistettu! Määritetään uusi oletusosoite automaattisesti."
 
-#: ../goah/Modules/Customermanagement.pm:81
+#: ../goah/Modules/Customermanagement.pm:82
 msgid "Default shipping address"
 msgstr "Lähetysosoite (oletus)"
 
-#: ../goah/Modules/Customermanagement.pm:905
+#: ../goah/Modules/Customermanagement.pm:923
 msgid "Default shipping address removed! Assigned new default address automatically."
 msgstr "Oletustoimitusosoite poistettu! Määritetään uusi oletusosoite automaattisesti."
 
@@ -231,7 +247,7 @@ msgstr "Poista asiakastyyppi tietokannasta?"
 msgid "Delete personnell from database?"
 msgstr "Poista henkilö tietokannasta?"
 
-#: ../goah/Modules/Customermanagement.pm:109
+#: ../goah/Modules/Customermanagement.pm:110
 msgid "E-mail"
 msgstr "Sähköposti"
 
@@ -255,11 +271,11 @@ msgstr "Muokkaa sijaintitietoja"
 msgid "Edit person information"
 msgstr "Muokkaa henkilön tietoja"
 
-#: ../goah/Modules/Customermanagement.pm:90
+#: ../goah/Modules/Customermanagement.pm:91
 msgid "Email"
 msgstr "Sähköposti"
 
-#: ../goah/Modules/Customermanagement.pm:108 ../goah/Modules/Customermanagement.pm:89
+#: ../goah/Modules/Customermanagement.pm:109 ../goah/Modules/Customermanagement.pm:90
 msgid "Fax"
 msgstr "Fax"
 
@@ -271,7 +287,7 @@ msgstr "* Kenttä pakollinen"
 msgid "Fields marked with * are required"
 msgstr "* Kentät pakollisia"
 
-#: ../goah/Modules/Customermanagement.pm:103 ../goah/Modules/Customermanagement.pm:48
+#: ../goah/Modules/Customermanagement.pm:104 ../goah/Modules/Customermanagement.pm:48
 msgid "First name"
 msgstr "Etunimi"
 
@@ -287,19 +303,19 @@ msgstr ""
 "Ryhmiä voidaan käyttää asiakkaiden \n"
 "lajitteluun esim. maantieteellisen sijainnin, liiketoiminnan jne. suhteen"
 
-#: ../goah/Modules/Customermanagement.pm:69
+#: ../goah/Modules/Customermanagement.pm:70
 msgid "Homepage address"
 msgstr "Kotisivujen osoite"
 
-#: ../goah/Modules/Customermanagement.pm:1073 ../goah/Modules/Customermanagement.pm:783 ../goah/Modules/Customermanagement.pm:819
+#: ../goah/Modules/Customermanagement.pm:1105 ../goah/Modules/Customermanagement.pm:801 ../goah/Modules/Customermanagement.pm:837
 msgid "ID -field missing."
 msgstr "ID-kenttä puuttuu."
 
-#: ../goah/Modules/Customermanagement.pm:1151
+#: ../goah/Modules/Customermanagement.pm:1221
 msgid "ID is missing!"
 msgstr "ID puuttuu!"
 
-#: ../goah/Modules/Customermanagement.pm:1048 ../goah/Modules/Customermanagement.pm:766 ../goah/Modules/Customermanagement.pm:889
+#: ../goah/Modules/Customermanagement.pm:1080 ../goah/Modules/Customermanagement.pm:784 ../goah/Modules/Customermanagement.pm:907
 msgid "Id isn't valid."
 msgstr "ID ei ole kelvollinen."
 
@@ -307,51 +323,51 @@ msgstr "ID ei ole kelvollinen."
 msgid "Individual"
 msgstr "Yksityishenkilö"
 
-#: ../goah/Modules/Customermanagement.pm:279
+#: ../goah/Modules/Customermanagement.pm:280
 msgid "Information updated"
 msgstr "Tieto päivitetty"
 
-#: ../goah/Modules/Customermanagement.pm:1226
+#: ../goah/Modules/Customermanagement.pm:1296
 msgid "Invalid ID!"
 msgstr "Virheellinen ID!"
 
-#: ../goah/Modules/Customermanagement.pm:1176
+#: ../goah/Modules/Customermanagement.pm:1246
 msgid "Invalid selector for customer group/type!"
 msgstr "Virheellinen valitsin asiakasryhmälle tai tyypille!"
 
-#: ../goah/Modules/Customermanagement.pm:104
+#: ../goah/Modules/Customermanagement.pm:105
 msgid "Last name"
 msgstr "Sukunimi"
 
-#: ../goah/Modules/Customermanagement.pm:1086 ../goah/Modules/Customermanagement.pm:796 ../goah/Modules/Customermanagement.pm:832
+#: ../goah/Modules/Customermanagement.pm:1118 ../goah/Modules/Customermanagement.pm:814 ../goah/Modules/Customermanagement.pm:850
 msgid "Leaving value unaltered."
 msgstr "Arvoa ei muuteta."
 
-#: ../goah/Modules/Customermanagement.pm:110
+#: ../goah/Modules/Customermanagement.pm:111
 msgid "Location"
 msgstr "Sijainti"
 
-#: ../goah/Modules/Customermanagement.pm:218
+#: ../goah/Modules/Customermanagement.pm:219
 msgid "Location data updated to database."
 msgstr "Sijaintitieto päivitetty tietokantaan."
 
-#: ../goah/Modules/Customermanagement.pm:244
+#: ../goah/Modules/Customermanagement.pm:245
 msgid "Location removed"
 msgstr "Sijainti poistettu"
 
-#: ../goah/Modules/Customermanagement.pm:398
+#: ../goah/Modules/Customermanagement.pm:410
 msgid "Missing category to search settings"
 msgstr "Asetusten haku ei onnistu, asetuskategoria puuttuu."
 
-#: ../goah/Modules/Customermanagement.pm:1214 ../goah/Modules/Customermanagement.pm:1245
+#: ../goah/Modules/Customermanagement.pm:1284 ../goah/Modules/Customermanagement.pm:1315
 msgid "Missing or invalid id!"
 msgstr "Puuttuva tai virheellinen id!"
 
-#: ../goah/Modules/Customermanagement.pm:107
+#: ../goah/Modules/Customermanagement.pm:108
 msgid "Mobile"
 msgstr "Matkapuhelin"
 
-#: ../goah/Modules/Customermanagement.pm:340
+#: ../goah/Modules/Customermanagement.pm:352
 msgid "Module doesn't have function "
 msgstr "Modulilla ei ole funktiota"
 
@@ -359,7 +375,7 @@ msgstr "Modulilla ei ole funktiota"
 msgid "Name"
 msgstr "Nimi"
 
-#: ../goah/Modules/Customermanagement.pm:1181 ../goah/Modules/Customermanagement.pm:1250
+#: ../goah/Modules/Customermanagement.pm:1251 ../goah/Modules/Customermanagement.pm:1320
 msgid "Name for customer group/type is empty."
 msgstr "Nimi asiakasryhmälle tai tyypille on tyhjä."
 
@@ -367,11 +383,11 @@ msgstr "Nimi asiakasryhmälle tai tyypille on tyhjä."
 msgid "New address for company"
 msgstr "Uusi osoite"
 
-#: ../goah/Modules/Customermanagement.pm:233
+#: ../goah/Modules/Customermanagement.pm:234
 msgid "New address stored to database"
 msgstr "Uusi osoite tallennettu tietokantaan"
 
-#: ../goah/Modules/Customermanagement.pm:177
+#: ../goah/Modules/Customermanagement.pm:178
 msgid "New company stored into database"
 msgstr "Uusi yritys tallennettu tietokantaan"
 
@@ -383,11 +399,11 @@ msgstr "Uusi asiakas (yritys/yksityishenkilö)"
 msgid "New customer company"
 msgstr "Uusi asiakasyritys"
 
-#: ../goah/Modules/Customermanagement.pm:325
+#: ../goah/Modules/Customermanagement.pm:337
 msgid "New customer group added to database"
 msgstr "Uusi asiakasryhmä lisätty tietokantaan"
 
-#: ../goah/Modules/Customermanagement.pm:293
+#: ../goah/Modules/Customermanagement.pm:305
 msgid "New customer type added to database"
 msgstr "Uusi asiakastyyppi lisätty tietokantaan"
 
@@ -395,15 +411,19 @@ msgstr "Uusi asiakastyyppi lisätty tietokantaan"
 msgid "New person data for company"
 msgstr "Uusi henkilö yritykselle"
 
-#: ../goah/Modules/Customermanagement.pm:265
+#: ../goah/Modules/Customermanagement.pm:266
 msgid "New person stored to database"
 msgstr "Uusi henkilö tallennettu tietokantaan"
+
+#: ../goah/Modules/Customermanagement.pm:660
+msgid "No company id given, can't read company data!"
+msgstr ""
 
 #: ../templates/modules/Customermanagement/companies:8 ../templates/modules/Customermanagement/companyinfo.locations:11 ../templates/modules/Customermanagement/companyinfo.persons:11
 msgid "Open"
 msgstr "Avaa"
 
-#: ../goah/Modules/Customermanagement.pm:70 ../goah/Modules/Customermanagement.pm:91
+#: ../goah/Modules/Customermanagement.pm:71 ../goah/Modules/Customermanagement.pm:92
 msgid "Other information"
 msgstr "Lisätietoja"
 
@@ -411,15 +431,23 @@ msgstr "Lisätietoja"
 msgid "Payment condition"
 msgstr "Maksuehto"
 
-#: ../goah/Modules/Customermanagement.pm:106 ../goah/Modules/Customermanagement.pm:88
+#: ../goah/Modules/Customermanagement.pm:1153
+msgid "Person ID missing! Can't remove person from database!"
+msgstr ""
+
+#: ../goah/Modules/Customermanagement.pm:285
+msgid "Person removed."
+msgstr ""
+
+#: ../goah/Modules/Customermanagement.pm:107 ../goah/Modules/Customermanagement.pm:89
 msgid "Phone"
 msgstr "Puhelin"
 
-#: ../goah/Modules/Customermanagement.pm:86
+#: ../goah/Modules/Customermanagement.pm:87
 msgid "Post office"
 msgstr "Postiosoite"
 
-#: ../goah/Modules/Customermanagement.pm:85
+#: ../goah/Modules/Customermanagement.pm:86
 msgid "Postal code"
 msgstr "Postinumero"
 
@@ -431,11 +459,11 @@ msgstr "Reklamaatioaika"
 msgid "Remove customer group from database?"
 msgstr "Poista asiakasryhmä tietokannasta?"
 
-#: ../goah/Modules/Customermanagement.pm:1220
+#: ../goah/Modules/Customermanagement.pm:1290
 msgid "Removing id "
 msgstr "Poistetaan id"
 
-#: ../goah/Modules/Customermanagement.pm:1004 ../goah/Modules/Customermanagement.pm:1085 ../goah/Modules/Customermanagement.pm:501 ../goah/Modules/Customermanagement.pm:525 ../goah/Modules/Customermanagement.pm:571 ../goah/Modules/Customermanagement.pm:795 ../goah/Modules/Customermanagement.pm:831
+#: ../goah/Modules/Customermanagement.pm:1036 ../goah/Modules/Customermanagement.pm:1117 ../goah/Modules/Customermanagement.pm:513 ../goah/Modules/Customermanagement.pm:537 ../goah/Modules/Customermanagement.pm:583 ../goah/Modules/Customermanagement.pm:813 ../goah/Modules/Customermanagement.pm:849
 msgid "Required field"
 msgstr "Pakollinen kenttä"
 
@@ -443,7 +471,7 @@ msgstr "Pakollinen kenttä"
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../goah/Modules/Customermanagement.pm:1040 ../goah/Modules/Customermanagement.pm:758
+#: ../goah/Modules/Customermanagement.pm:1072 ../goah/Modules/Customermanagement.pm:776
 msgid "Search parameter isn't valid"
 msgstr "Hakuparametri on virheellinen"
 
@@ -459,7 +487,7 @@ msgstr ""
 "Yksi yritys voidaan \n"
 "liittää useampaan ryhmään. "
 
-#: ../goah/Modules/Customermanagement.pm:105
+#: ../goah/Modules/Customermanagement.pm:106
 msgid "Title"
 msgstr "Asema"
 
@@ -475,7 +503,7 @@ msgstr "Tuntematon kenttätyyppi"
 msgid "VAT -id"
 msgstr "Alv-tunnus"
 
-#: ../goah/Modules/Customermanagement.pm:943
+#: ../goah/Modules/Customermanagement.pm:961
 msgid "Valid id is missing"
 msgstr "Kelvollinen id puuttuu"
 
@@ -491,7 +519,7 @@ msgstr ""
 "Näiden ryhmien avulla on mahdollista luoda esimerkiksi tilastoja ja \n"
 "raportteja perustuen eri ryhmätyyppeihin. "
 
-#: ../goah/Modules/Customermanagement.pm:526
+#: ../goah/Modules/Customermanagement.pm:538
 msgid "Won't write new location information"
 msgstr "Uutta sijaintitietoa ei kirjoiteta"
 
@@ -499,7 +527,7 @@ msgstr "Uutta sijaintitietoa ei kirjoiteta"
 msgid "Won't write new person information"
 msgstr "Uuden henkilön tietoja ei kirjoiteta"
 
-#: ../goah/Modules/Customermanagement.pm:1004 ../goah/Modules/Customermanagement.pm:1085 ../goah/Modules/Customermanagement.pm:501 ../goah/Modules/Customermanagement.pm:525 ../goah/Modules/Customermanagement.pm:571 ../goah/Modules/Customermanagement.pm:795 ../goah/Modules/Customermanagement.pm:831
+#: ../goah/Modules/Customermanagement.pm:1036 ../goah/Modules/Customermanagement.pm:1117 ../goah/Modules/Customermanagement.pm:513 ../goah/Modules/Customermanagement.pm:537 ../goah/Modules/Customermanagement.pm:583 ../goah/Modules/Customermanagement.pm:813 ../goah/Modules/Customermanagement.pm:849
 msgid "empty!"
 msgstr "tyhjä!"
 
