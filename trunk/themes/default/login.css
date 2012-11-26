@@ -102,3 +102,7 @@ tbody td.footer {
 	text-align: center;
 	border: 0px;
 }
+
+select.medium {
+	width: 125px;
+}

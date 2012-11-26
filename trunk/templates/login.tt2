@@ -51,9 +51,21 @@ $(document).ready(function() {
   <td>[% gettext("Password") %]:</td><td><input name="pass" type="password" /></td>
   </tr>
   <tr>
+  <td>[% gettext("Remember login:") %]</td>
+  <td>
+  <select name="loginperiod" id="loginperiod" class="medium">
+  <option value="1">[% gettext("1 hour") %]</option>
+  <option value="2">[% gettext("2 hours") %]</option>
+  <option value="4">[% gettext("4 hours") %]</option>
+  <option value="8">[% gettext("8 hours") %]</option>
+  <option value="12" selected>[% gettext("12 hours") %]</option>
+  <option value="24">[% gettext("24 hours") %]</option>
+  </td>
+  </tr>
+  <tr>
   <td>[% gettext("Theme") %]:</td>
   <td>
-  <select name="theme" id="theme">
+  <select name="theme" id="theme" class="medium">
   <option value="default" class="default" selected >[% gettext("Desktop") %]</option>
   <option value="tablet" class="tablet" >[% gettext("Tablet") %]</option>
   <option value="GongoUI" class="GongoUI" >[% gettext("GongoUI (devel)") %]</option>
