@@ -433,11 +433,11 @@ sub WriteNewItem {
 		$code=~s/ä/Ä/g;
 		$code=~s/ö/Ö/g;
 		$code=~s/å/Å/g;
-		my @data = $db->search_where( { code => $code, barcode => $q->param('barcode') }, { logic => 'OR'});
+		my @data = $db->search_where([ code => $code, barcode => $q->param('barcode') ], { logic => 'OR'});
 		if(scalar(@data)>0) {
 			goah::Modules->AddMessage('error',__("Product already exists in database!"));
 			return 1;
-		}
+		} 
 	}
 
 	# Check that user can't insert duplicate manufacturers
@@ -602,7 +602,8 @@ sub WriteEditedItem {
 
 	# Check that user isn't changing product code to overlap another product
 	if($q->param('type') eq 'products') {
-		my @data = $db->search_where( { code => uc($q->param('code')), barcode => $q->param('barcode') }, { logic => 'OR'});
+		my @data = $db->search_where([ code => uc($q->param('code')), barcode => $q->param('barcode') ], { logic => 'OR'});
+
 		foreach my $test (@data) {
 			goah::Modules->AddMessage('debug',"Testing duplicates. ".$test->id." == ".$q->param('id')." for ".$test->name);
 			unless($test->id == $q->param('id') && $test->hidden == 0) {
