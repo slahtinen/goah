@@ -76,8 +76,7 @@
 <tr class="odd">
 	<td class="medium">[% gettext("Created") %] </td>
 	[% IF state == '0' %]
-		<td><input class="date" name='created' value="[% date.format(date.now, '%d.%m.%Y') %]" />
-		[% gettext("Currently") %]: [% formatdate(invoice.created) %]</td>
+		<td><input class="date" name='created' value="[% formatdate(invoice.created) %]" /></td>
 	[% ELSE %]
 		<td>[% formatdate(invoice.created) %]</td>
 	[% END %]
