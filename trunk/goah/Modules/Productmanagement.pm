@@ -243,7 +243,7 @@ sub Start {
 					$variables{'submenuselect'} = 'productgroups';
 				}
 			}
-			$action='showall';
+			$action='selectgroup';
 
 
 		} elsif($action eq 'writeedited') {
@@ -255,7 +255,7 @@ sub Start {
 			}
 			$variables{'function'} = $function;
 			$variables{'storages'} = goah::Modules::Storagemanagement->ReadData('storages');
-			$action='showall';
+			$action='selectgroup';
 			if($q->param('type') eq 'products') {
 				$variables{'submenuselect'} = '';
 			} elsif($q->param('type') eq 'manuf') {
@@ -294,9 +294,11 @@ sub Start {
 			goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
 			$variables{'function'} = 'modules/blank';
 		}
-	} else { 
-		$action='showall';
 	}
+ 
+	#else { 
+	#	$action='showall';
+	#}
 
 	if($action eq 'showall' || $action eq 'selectgroup' || $action eq 'searchbyname' || $action eq 'searchbycode') {
 		# List all products on groups if no other action is defined
