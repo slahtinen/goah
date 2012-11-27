@@ -427,7 +427,7 @@ sub WriteNewItem {
 	}
 
 
-	# Check that user can't insert duplicate products
+	# Check that user can't insert duplicate products and that we have manufacturer and group
 	if($q->param('type') eq 'products') {
 		my $code=uc($q->param('code'));
 		$code=~s/ä/Ä/g;
@@ -436,6 +436,16 @@ sub WriteNewItem {
 		my @data = $db->search_where([ code => $code, barcode => $q->param('barcode') ], { logic => 'OR'});
 		if(scalar(@data)>0) {
 			goah::Modules->AddMessage('error',__("Product already exists in database!"));
+			return 1;
+		}
+
+		if(($q->param('manufacturer') eq "-1") && !($q->param('manufacturer.new'))) {
+			goah::Modules->AddMessage('error',__("Required value manufacturer missing!"));
+			return 1;
+		}
+ 
+		if(($q->param('groupid') eq "-1") && !($q->param('groupid.new'))) {
+			goah::Modules->AddMessage('error',__("Required value Product group missing!"));
 			return 1;
 		} 
 	}
@@ -519,6 +529,7 @@ sub WriteNewItem {
 			goah::Modules->AddMessage('warn',__('Required dropdown field').' <b>'.$fieldinfo{'name'}.'</b> '.__("unselected!"));
 			return 1;
 		}
+
 
 		if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
 
