@@ -39,12 +39,16 @@
 		[% END %]
         [% ELSIF data.type == 'selectbox' %]
                 <td><select class="small" name="[% data.field %]">
+		[% IF data.name == 'Product' %]
+                	<optgroup label="[% gettext("Product") %]">
+		[% END %]
                 <option  value="-1">-- [% gettext("Select") %] --</option>
                 [% FOREACH key IN data.data.keys.sort %]
                         [% item = data.data.$key %]
 			[% IF item.hidden != 1 %]
 				[% IF data.field == 'productcode' && groupname != item.groupname %]
-					<option value="-1" class="subhead">[% item.groupname %]</option>
+					</optgroup>
+					<optgroup label="[% item.groupname %]">
 					[% groupname = item.groupname %]
 				[% END %]
 				[% IF item.selected == 1 %]
@@ -62,6 +66,9 @@
 				</option>
 			[% END %] 
                 [% END %]
+		[% IF data.name == 'Product' %]
+                	</optgroup>
+		[% END %]
                 </select>
                 </td>
         [% ELSE %]
