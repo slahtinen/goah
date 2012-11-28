@@ -19,6 +19,10 @@ msgstr ""
 msgid "All tasks"
 msgstr "Kaikki tehtävät"
 
+#: ../goah/Modules/Tasks.pm:42
+msgid "Created by"
+msgstr "Luonut"
+
 #: ../goah/Modules/Tasks.pm:43
 msgid "Assigned to"
 msgstr "Osoitettu"

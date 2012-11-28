@@ -105,7 +105,7 @@
 <th class="center">[% gettext("Pri.") %]</th>
 <th>[% gettext("Date") %]</th>
 <th>[% gettext("Customer") %]</th>
-<th>[% gettext("User") %]</th>
+<th>[% gettext("Name") %]</th>
 <th>[% gettext("Time") %]</th>
 <th>[% gettext("Internal time") %]</th>
 <th>[% gettext("Description") %]</th>
@@ -131,6 +131,17 @@
 	<td>[% row.day %]</td>
 	<td>[% row.companyname %]</td>
 	<td>
+
+	[% gettext("Created by") %]: 
+	[% FOREACH ukey IN dbusers.keys %]
+		[% user = dbusers.$ukey %]
+		[% IF row.userid == user.id %]
+			[% user.lastname %] [% user.firstname %]
+			[% LAST %]
+		[% END %]
+	[% END %]
+	<br>
+	[% gettext("Assigned to")%]: 
 	[% FOREACH ukey IN dbusers.keys %]
 		[% user = dbusers.$ukey %]
 		[% IF row.assigneeid == user.id %]
@@ -138,8 +149,8 @@
 			[% LAST %]
 		[% END %]
 	[% END %]
+
 	</td>
-		
 	<td>
 	[% IF row.hours > 0 && row.minutes == 0 %]
 	[% row.hours %]:00 [% gettext("h") %]
