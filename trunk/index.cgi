@@ -91,6 +91,12 @@ my $theme;
 my $viewport;
 
 #
+# String: loginperiod
+#
+# Login period to store in the cookie
+my $loginperiod;
+
+#
 # String: q
 #
 #    CGI.pm instance
@@ -207,11 +213,14 @@ if($auth==1) {
 		$templatevars{'function'} = 'accountdisabled';
 
 	} else {
+		# Read users login period
+		$loginperiod = $q->param('loginperiod');
+
 		# Create cookie which has only one value. Value is assembled
 		# by combining userid, session id and theme with a dot.
 		$keksi = $q->cookie ( -name => 'goah',
 				  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'},
-				  -expires => '+12h');
+				  -expires => '+'.$loginperiod.'h');
 				  
 
 		$templatevars{'page'} = 'main.tt2';

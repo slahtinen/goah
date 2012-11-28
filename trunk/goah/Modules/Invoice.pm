@@ -104,6 +104,21 @@ sub Start {
 			$tmp = ReadInvoices($q->param('target'));
 			$variables{'invoice'} = $tmp;
 
+			# Change date today if needed and update also due value
+			my $now = POSIX::strftime("%Y-%m-%d", localtime);
+			my $created = $tmp->created;
+
+			if (($tmp->state == 0) && ($tmp->invoicenumber == 0) && ($now gt $created)) {
+
+				$variables{'invoice'}{'created'} = $now;
+
+				my @created_tmp = split("-",$now);    
+				my ($dyear,$dmon,$dmday) = Add_Delta_Days($created_tmp[0],$created_tmp[1],$created_tmp[2],$tmp->payment_condition);    
+				my $due = sprintf("%04d-%02d-%02d",$dyear,$dmon,$dmday);    
+				
+				$variables{'invoice'}{'due'} = $due;
+			}
+
 			$tmp = ReadInvoicerows($q->param('target'));
 			$variables{'invoicerows'} = $tmp;
 
@@ -685,6 +700,7 @@ sub ReadInvoices {
 		if(scalar(@data) == 0) {
 			return 0;
 		}
+
 		return $data[0];
 	}
 	return 0;

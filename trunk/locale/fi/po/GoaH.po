@@ -30,17 +30,21 @@ msgstr "Asiakashallinta"
 msgid "DEMO MODE! Anonymous login prohibited!"
 msgstr "Demo Moodi! Anonyymi kirjautumienn kielletty!"
 
-#: ../templates/login.tt2:45
+#: ../templates/login.tt2:57
 msgid "Desktop"
 msgstr "Työpöytä"
 
-#: ../templates/main.tt2:73 ../templates/main_content.tt2:10 ../templates/main_csv.tt2:18
+#: ../templates/main.tt2:73 ../templates/main_content.tt2:16 ../templates/main_csv.tt2:18
 msgid "Error in template file!"
 msgstr "Virhe template-tiedostossa!"
 
 #: ../templates/main_csv.tt2:12
 msgid "Generated from GoaH"
 msgstr "Generoitu GoaH:ista"
+
+#: ../templates/login.tt2:59
+msgid "GongoUI (devel)"
+msgstr ""
 
 #: ../templates/wronglogin.tt2:2
 msgid "Invalid login name or password!"
@@ -50,7 +54,7 @@ msgstr "Virheellinen käyttäjänimi tai salasana!"
 msgid "Invoices"
 msgstr "Laskut"
 
-#: ../templates/login.tt2:32 ../templates/login.tt2:50
+#: ../templates/login.tt2:36 ../templates/login.tt2:64
 msgid "Login"
 msgstr "Kirjaudu"
 
@@ -74,7 +78,7 @@ msgstr "Ei alanavigointia"
 msgid "Old browser"
 msgstr "Vanha selain"
 
-#: ../templates/login.tt2:39
+#: ../templates/login.tt2:51
 msgid "Password"
 msgstr "Salasana"
 
@@ -86,7 +90,7 @@ msgstr "Omat asetukset"
 msgid "Product management"
 msgstr "Tuotehallinta"
 
-#: ../templates/navi.tt2:38
+#: ../templates/navi.tt2:43
 msgid "Settings"
 msgstr "Asetukset"
 
@@ -98,18 +102,22 @@ msgstr "Varastonhallinta"
 msgid "System settings"
 msgstr "Järjestelmän asetukset"
 
-#: ../templates/login.tt2:46
+#: ../templates/login.tt2:58
 msgid "Tablet"
 msgstr "Tabletti"
 
-#: ../templates/login.tt2:42
+#: ../templates/login.tt2:54
 msgid "Theme"
 msgstr "Teema"
 
-#: ../templates/login.tt2:36
+#: ../templates/login.tt2:48
 msgid "Username"
 msgstr "Käyttäjänimi"
 
 #: ../templates/oldbrowser.tt2:19
 msgid "You're using an old version of Internet Explorer and GoaH2 doesn't support it. Please upgrade your browser and try again."
 msgstr "Käytössäsi on liian vanha versio Internet Explorerista ja GoaH2 ei tue sitä. Ole hyvä ja päivitä selain ja yritä uudestaan."
+
+#: ../templates/accountdisabled.tt2:2
+msgid "Your account has been disabled!"
+msgstr "Käyttäjätunnuksesi on poistettu käytöstä!"

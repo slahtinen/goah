@@ -243,7 +243,7 @@ sub Start {
 					$variables{'submenuselect'} = 'productgroups';
 				}
 			}
-			$action='showall';
+			$action='selectgroup';
 
 
 		} elsif($action eq 'writeedited') {
@@ -255,7 +255,7 @@ sub Start {
 			}
 			$variables{'function'} = $function;
 			$variables{'storages'} = goah::Modules::Storagemanagement->ReadData('storages');
-			$action='showall';
+			$action='selectgroup';
 			if($q->param('type') eq 'products') {
 				$variables{'submenuselect'} = '';
 			} elsif($q->param('type') eq 'manuf') {
@@ -294,9 +294,11 @@ sub Start {
 			goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
 			$variables{'function'} = 'modules/blank';
 		}
-	} else { 
-		$action='showall';
 	}
+ 
+	#else { 
+	#	$action='showall';
+	#}
 
 	if($action eq 'showall' || $action eq 'selectgroup' || $action eq 'searchbyname' || $action eq 'searchbycode') {
 		# List all products on groups if no other action is defined
@@ -425,17 +427,27 @@ sub WriteNewItem {
 	}
 
 
-	# Check that user can't insert duplicate products
+	# Check that user can't insert duplicate products and that we have manufacturer and group
 	if($q->param('type') eq 'products') {
 		my $code=uc($q->param('code'));
 		$code=~s/ä/Ä/g;
 		$code=~s/ö/Ö/g;
 		$code=~s/å/Å/g;
-		my @data = $db->search_where( { code => $code, barcode => $q->param('barcode') }, { logic => 'OR'});
+		my @data = $db->search_where([ code => $code, barcode => $q->param('barcode') ], { logic => 'OR'});
 		if(scalar(@data)>0) {
 			goah::Modules->AddMessage('error',__("Product already exists in database!"));
 			return 1;
 		}
+
+		if(($q->param('manufacturer') eq "-1") && !($q->param('manufacturer.new'))) {
+			goah::Modules->AddMessage('error',__("Required value manufacturer missing!"));
+			return 1;
+		}
+ 
+		if(($q->param('groupid') eq "-1") && !($q->param('groupid.new'))) {
+			goah::Modules->AddMessage('error',__("Required value Product group missing!"));
+			return 1;
+		} 
 	}
 
 	# Check that user can't insert duplicate manufacturers
@@ -517,6 +529,7 @@ sub WriteNewItem {
 			goah::Modules->AddMessage('warn',__('Required dropdown field').' <b>'.$fieldinfo{'name'}.'</b> '.__("unselected!"));
 			return 1;
 		}
+
 
 		if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
 
@@ -600,7 +613,8 @@ sub WriteEditedItem {
 
 	# Check that user isn't changing product code to overlap another product
 	if($q->param('type') eq 'products') {
-		my @data = $db->search_where( { code => uc($q->param('code')), barcode => $q->param('barcode') }, { logic => 'OR'});
+		my @data = $db->search_where([ code => uc($q->param('code')), barcode => $q->param('barcode') ], { logic => 'OR'});
+
 		foreach my $test (@data) {
 			goah::Modules->AddMessage('debug',"Testing duplicates. ".$test->id." == ".$q->param('id')." for ".$test->name);
 			unless($test->id == $q->param('id') && $test->hidden == 0) {

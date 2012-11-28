@@ -37,11 +37,23 @@ msgstr "Lisää merkintä:"
 msgid "Amount"
 msgstr "Määrä"
 
-#: ../templates/modules/Invoice/invoice.customer:6
+#: ../templates/modules/Invoice/activeinvoices:66
+msgid "Asc."
+msgstr "Nouseva"
+
+#: ../templates/modules/Invoice/invoiceinfo:44
 msgid "Billing address"
 msgstr "Laskutusosoite"
 
-#: ../goah/Modules/Invoice.pm:870 ../goah/Modules/Invoice.pm:875
+#: ../templates/modules/Invoice/activeinvoices:56
+msgid "By date"
+msgstr "Päivällä"
+
+#: ../templates/modules/Invoice/activeinvoices:57
+msgid "By number"
+msgstr "Numerolla"
+
+#: ../goah/Modules/Invoice.pm:889 ../goah/Modules/Invoice.pm:894
 msgid "Can't add event to invoice!"
 msgstr "Tapahtuman lisäys laskuun epäonnistui!"
 
@@ -49,23 +61,23 @@ msgstr "Tapahtuman lisäys laskuun epäonnistui!"
 msgid "Can't add event to invoice."
 msgstr "Tapahtuman lisäys laskuun epäonnistui!"
 
-#: ../goah/Modules/Invoice.pm:496 ../goah/Modules/Invoice.pm:501
+#: ../goah/Modules/Invoice.pm:506 ../goah/Modules/Invoice.pm:511
 msgid "Can't add row to invoice!"
 msgstr "Rivin lisäys laskuun epäonnistui!"
 
-#: ../goah/Modules/Invoice.pm:818
+#: ../goah/Modules/Invoice.pm:837
 msgid "Can't calculate total sum for invoice! Invoice id is missing!"
 msgstr "Laskun loppusumman laskenta epäonnistui! Laskun id puuttuu!"
 
-#: ../goah/Modules/Invoice.pm:324 ../goah/Modules/Invoice.pm:340
+#: ../goah/Modules/Invoice.pm:329 ../goah/Modules/Invoice.pm:347
 msgid "Can't create new invoice!"
 msgstr "Uuden laskun luominen epäonnistui!"
 
-#: ../goah/Modules/Invoice.pm:438
+#: ../goah/Modules/Invoice.pm:448
 msgid "Can't create reference number for the bill! Invoice number is missing!"
 msgstr "Viitenumeron luonti laskuun epäonnistui! Laskunumero puuttuu!"
 
-#: ../goah/Modules/Invoice.pm:1078
+#: ../goah/Modules/Invoice.pm:1099
 msgid "Can't delete invoice! Id is missing!"
 msgstr "Laskua ei voi poistaa! Id on hukassa!"
 
@@ -73,11 +85,11 @@ msgstr "Laskua ei voi poistaa! Id on hukassa!"
 msgid "Can't delete invoice! Invoice already sent!"
 msgstr "Laskua ei voi poistaa! Lasku on jo lähetetty!"
 
-#: ../goah/Modules/Invoice.pm:358 ../goah/Modules/Invoice.pm:969
+#: ../goah/Modules/Invoice.pm:367 ../goah/Modules/Invoice.pm:989
 msgid "Can't get reference number for invoice number! Can't create invoice!"
 msgstr "Viitenumeron haku laskunumerolle epäonnistui! Laskua ei voida tehdä!"
 
-#: ../goah/Modules/Invoice.pm:774
+#: ../goah/Modules/Invoice.pm:793
 msgid "Can't read invoice history!"
 msgstr "Laskuhistorian luku epäonnistui!"
 
@@ -85,35 +97,35 @@ msgstr "Laskuhistorian luku epäonnistui!"
 msgid "Can't read invoice information. Can't revert invoice into an basket."
 msgstr "Laskun tietoja ei voi lukea. Laskua ei voi palauttaa koriksi."
 
-#: ../goah/Modules/Invoice.pm:340
+#: ../goah/Modules/Invoice.pm:347
 msgid "Can't read order contents!"
 msgstr "Tilauksen sisällön luku epäonnistui!"
 
-#: ../goah/Modules/Invoice.pm:692 ../goah/Modules/Invoice.pm:700
+#: ../goah/Modules/Invoice.pm:716 ../goah/Modules/Invoice.pm:724
 msgid "Can't read rows for invoice!"
 msgstr "Rivien luku laskulle epäonnistui!"
 
-#: ../goah/Modules/Invoice.pm:260
+#: ../goah/Modules/Invoice.pm:263
 msgid "Can't search invoice rows unless customer is selected!"
 msgstr "Laskun rivejä ei voi hakea, asiakas täytyy olla valittuna!"
 
-#: ../goah/Modules/Invoice.pm:182 ../goah/Modules/Invoice.pm:211 ../goah/Modules/Invoice.pm:229 ../goah/Modules/Invoice.pm:926 ../goah/Modules/Invoice.pm:940
+#: ../goah/Modules/Invoice.pm:182 ../goah/Modules/Invoice.pm:211 ../goah/Modules/Invoice.pm:230 ../goah/Modules/Invoice.pm:945 ../goah/Modules/Invoice.pm:959
 msgid "Can't update invoice information!"
 msgstr "Laskun tietojen päivitys epäonnistui!"
 
-#: ../templates/modules/Invoice/invoiceinfo:93
+#: ../templates/modules/Invoice/invoiceinfo:129
 msgid "Card payment"
 msgstr "Korttimaksu"
 
-#: ../goah/Modules/Invoice.pm:226 ../goah/Modules/Invoice.pm:242
+#: ../goah/Modules/Invoice.pm:227 ../goah/Modules/Invoice.pm:244
 msgid "Card payment received. Don't forget to print out PDF!"
 msgstr "Korttimaksu suoritettu. Muista tulostaa PDF!"
 
-#: ../templates/modules/Invoice/invoiceinfo:92
+#: ../templates/modules/Invoice/invoiceinfo:128
 msgid "Cash payment"
 msgstr "Käteismaksu"
 
-#: ../goah/Modules/Invoice.pm:224
+#: ../goah/Modules/Invoice.pm:225
 msgid "Cash payment received. Don't forget to print out PDF!"
 msgstr "Käteismaksu suoritettu. Muista tulostaa PDF!"
 
@@ -141,15 +153,15 @@ msgstr "Koodi"
 msgid "Code / Product"
 msgstr "Koodi / Tuote"
 
-#: ../templates/modules/Invoice/invoiceinfo:107
+#: ../templates/modules/Invoice/invoiceinfo:143
 msgid "Confirm payment as received"
 msgstr "Vahvista maksu saapuneeksi"
 
-#: ../templates/modules/Invoice/invoiceinfo:92 ../templates/modules/Invoice/invoiceinfo:93
+#: ../templates/modules/Invoice/invoiceinfo:128 ../templates/modules/Invoice/invoiceinfo:129
 msgid "Confirm payment for invoice"
 msgstr "Vahvista maksu laskutukseen"
 
-#: ../templates/modules/Invoice/invoiceinfo:95
+#: ../templates/modules/Invoice/invoiceinfo:131
 msgid "Confirm returning invoice to basket"
 msgstr "Palautetaanko lasku koriksi?"
 
@@ -161,23 +173,27 @@ msgstr "Laskua ei voitu muuntaa koriksi!"
 msgid "Couldn't delete referral. Leaving invoice untouched!"
 msgstr "Lähetettä ei voitu poistaa. Laskuun ei tehty muutoksia!"
 
-#: ../goah/Modules/Invoice.pm:711
+#: ../goah/Modules/Invoice.pm:733
 msgid "Couldn't find any rows for invoice id"
 msgstr "Rivejä ei löytynyt laskulla"
 
-#: ../goah/Modules/Invoice.pm:369
+#: ../goah/Modules/Invoice.pm:378
 msgid "Couldn't read customer data from the database. Can't calculate due date."
 msgstr "Asiakastiedon luku tietokannasta epäonnistui. Eräpäivää ei pystytty laskemaan."
 
-#: ../goah/Modules/Invoice.pm:1016
+#: ../goah/Modules/Invoice.pm:1037
 msgid "Couldn't read payment condition! Can't calculate due date."
 msgstr "Maksuehdon luku epäonnistui! Eräpäivää ei pystytty laskemaan."
 
-#: ../templates/modules/Invoice/activeinvoices:43 ../templates/modules/Invoice/activeinvoices:75 ../templates/modules/Invoice/invoiceinfo:42 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:43 ../templates/modules/Invoice/invoices.rows:76
+#: ../templates/modules/Invoice/activeinvoices:108 ../templates/modules/Invoice/activeinvoices:44 ../templates/modules/Invoice/invoiceinfo:77 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:43 ../templates/modules/Invoice/invoices.rows:76
 msgid "Created"
 msgstr "Laskutettu"
 
-#: ../templates/modules/Invoice/activeinvoices:6 ../templates/modules/Invoice/activeinvoices:74 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:6 ../templates/modules/Invoice/invoices.rows:75
+#: ../templates/modules/Invoice/invoiceinfo:80
+msgid "Currently"
+msgstr ""
+
+#: ../templates/modules/Invoice/activeinvoices:106 ../templates/modules/Invoice/activeinvoices:7 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:6 ../templates/modules/Invoice/invoices.rows:75
 msgid "Customer"
 msgstr "Asiakas"
 
@@ -185,11 +201,11 @@ msgstr "Asiakas"
 msgid "Customer info"
 msgstr "Asiakastiedot"
 
-#: ../templates/modules/Invoice/invoice.customer:1
+#:
 msgid "Customer information"
 msgstr "Asiakastieto"
 
-#: ../templates/modules/Invoice/invoiceinfo:77
+#: ../templates/modules/Invoice/invoiceinfo:113
 msgid "Customer reference"
 msgstr "Asiakkaan viite"
 
@@ -205,11 +221,15 @@ msgstr "Luontipäivä"
 msgid "Date range for due dates"
 msgstr "Eräpäivä"
 
-#: ../templates/modules/Invoice/activeinvoices:44 ../templates/modules/Invoice/activeinvoices:76 ../templates/modules/Invoice/invoiceinfo:72 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:44 ../templates/modules/Invoice/invoices.rows:76
+#: ../templates/modules/Invoice/activeinvoices:67
+msgid "Desc"
+msgstr "Laskeva"
+
+#: ../templates/modules/Invoice/activeinvoices:117 ../templates/modules/Invoice/activeinvoices:45 ../templates/modules/Invoice/invoiceinfo:108 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:44 ../templates/modules/Invoice/invoices.rows:76
 msgid "Due"
 msgstr "Eräpäivä"
 
-#: ../goah/Modules/Invoice.pm:569
+#: ../goah/Modules/Invoice.pm:585
 msgid "End date isn't formatted correctly. Ignoring filter."
 msgstr "Päättymispäivä on väärässä muodossa. Suodatinta ei huomioida."
 
@@ -217,16 +237,16 @@ msgstr "Päättymispäivä on väärässä muodossa. Suodatinta ei huomioida."
 msgid "Event added to invoice"
 msgstr "Tapahtuma lisätty laskulle"
 
-#: ../goah/Modules/Invoice.pm:875
+#: ../goah/Modules/Invoice.pm:894
 msgid "Event content is missing!"
 msgstr "Tapahtuman sisältö puuttuu!"
 
 #. ($row->productid)
-#: ../goah/Modules/Invoice.pm:736
+#: ../goah/Modules/Invoice.pm:755
 msgid "Fatal error! Can't read product information for invoice with id "
 msgstr "Kriittinen virhe! Tuotetietojen luku epäonnistui lasku id:lle "
 
-#: ../goah/Modules/Invoice.pm:824
+#: ../goah/Modules/Invoice.pm:843
 msgid "Fatal error. Can't read invoice total due to faulty invoice rows!"
 msgstr "Kriittinen virhe! Virheellisiä rivejä laskulla, luku epäonnistui!"
 
@@ -257,7 +277,7 @@ msgstr ""
 msgid "IN"
 msgstr "Osto"
 
-#: ../templates/modules/Invoice/activeinvoices:78 ../templates/modules/Invoice/invoice.productlist:11 ../templates/modules/Invoice/invoice.productlist:14 ../templates/modules/Invoice/invoice.productlist:65 ../templates/modules/Invoice/invoices.csvtt2:27
+#: ../templates/modules/Invoice/activeinvoices:128 ../templates/modules/Invoice/invoice.productlist:11 ../templates/modules/Invoice/invoice.productlist:14 ../templates/modules/Invoice/invoice.productlist:65 ../templates/modules/Invoice/invoices.csvtt2:27
 msgid "Incl. VAT"
 msgstr "sis. alv"
 
@@ -277,7 +297,7 @@ msgstr "Lasku"
 msgid "Invoice converted to basket"
 msgstr "Lasku muunnettiin koriksi"
 
-#: ../goah/Modules/Invoice.pm:411
+#: ../goah/Modules/Invoice.pm:421
 msgid "Invoice created"
 msgstr "Lasku luotu"
 
@@ -285,7 +305,7 @@ msgstr "Lasku luotu"
 msgid "Invoice history"
 msgstr "Laskuhistoria"
 
-#: ../goah/Modules/Invoice.pm:496 ../goah/Modules/Invoice.pm:692 ../goah/Modules/Invoice.pm:774 ../goah/Modules/Invoice.pm:870 ../goah/Modules/Invoice.pm:926
+#: ../goah/Modules/Invoice.pm:506 ../goah/Modules/Invoice.pm:716 ../goah/Modules/Invoice.pm:793 ../goah/Modules/Invoice.pm:889 ../goah/Modules/Invoice.pm:945
 msgid "Invoice id is missing!"
 msgstr "Laskun id puuttuu!"
 
@@ -301,15 +321,15 @@ msgstr "Laskun tiedot päivitetty."
 msgid "Invoice number"
 msgstr "Laskunumero"
 
-#: ../goah/Modules/Invoice.pm:452
+#: ../goah/Modules/Invoice.pm:462
 msgid "Invoice number too long! Can't create reference number!"
 msgstr "Laskun numero on liian pitkä! Viitenumeron luonti epäonnistui!"
 
-#: ../goah/Modules/Invoice.pm:240
+#: ../goah/Modules/Invoice.pm:242
 msgid "Invoice payment received."
 msgstr "Laskun suoritus vastaanotettu."
 
-#: ../goah/Modules/Invoice.pm:940
+#: ../goah/Modules/Invoice.pm:959
 msgid "Invoice state is missing!"
 msgstr "Laskun tila on hukassa!"
 
@@ -333,11 +353,11 @@ msgstr ""
 "Laskuilla voi olla 5 eri tilaa: avoin, lähetetty, muistutus 1, muistutus 2 ja käsitelty. Näiden avulla voit\n"
 "seurata eri laskujen tapahtumia ja pysyä perillä mitä niille on tehty."
 
-#: ../goah/Modules/Invoice.pm:253
+#: ../goah/Modules/Invoice.pm:256
 msgid "Module doesn't have function "
 msgstr "Modulilla ei ole funktiota"
 
-#: ../templates/modules/Invoice/invoiceinfo:91
+#: ../templates/modules/Invoice/invoiceinfo:127
 msgid "Move invoice to billing?"
 msgstr "Siirrä lasku laskutukseen?"
 
@@ -349,11 +369,11 @@ msgstr "Nimi"
 msgid "No events"
 msgstr "Ei tapahtumia"
 
-#: ../templates/modules/Invoice/activeinvoices:103 ../templates/modules/Invoice/invoices.csvtt2:39 ../templates/modules/Invoice/invoices.rows:110
+#: ../templates/modules/Invoice/activeinvoices:153 ../templates/modules/Invoice/invoices.csvtt2:39 ../templates/modules/Invoice/invoices.rows:110
 msgid "Not available!"
 msgstr "Ei saatavilla!"
 
-#: ../templates/modules/Invoice/activeinvoices:73 ../templates/modules/Invoice/invoices.csvtt2:27
+#: ../templates/modules/Invoice/activeinvoices:97 ../templates/modules/Invoice/invoices.csvtt2:27
 msgid "Number"
 msgstr "Numero"
 
@@ -373,15 +393,15 @@ msgstr "Myynti sis. Alv"
 msgid "Out VAT 0%"
 msgstr "Myynti Alv 0%"
 
-#: ../templates/modules/Invoice/invoiceinfo:50
+#: ../templates/modules/Invoice/invoiceinfo:86
 msgid "Payment condition"
 msgstr "Maksuehto"
 
-#: ../goah/Modules/Invoice.pm:1008 ../goah/Modules/Invoice.pm:976
+#: ../goah/Modules/Invoice.pm:1029 ../goah/Modules/Invoice.pm:996
 msgid "Payment condition isn't selected! Can't update invoice!"
 msgstr "Maksuehto ei ole valittuna! Laskua ei voi päivittää!"
 
-#: ../templates/modules/Invoice/invoiceinfo:106 ../templates/modules/Invoice/invoiceinfo:15
+#: ../templates/modules/Invoice/invoiceinfo:142 ../templates/modules/Invoice/invoiceinfo:15
 msgid "Payment received"
 msgstr "Suoritus vastaanotettu"
 
@@ -389,7 +409,7 @@ msgstr "Suoritus vastaanotettu"
 msgid "Payment received (leave empty for today):"
 msgstr "Suoritus saapunut: "
 
-#: ../goah/Modules/Invoice.pm:501
+#: ../goah/Modules/Invoice.pm:511
 msgid "Product id is missing!"
 msgstr "Tuotteen id puuttuu!"
 
@@ -405,7 +425,7 @@ msgstr "Vastaanotettu"
 msgid "Received payment for the invoice"
 msgstr "Maksu vastaanotettu"
 
-#: ../goah/Modules/Invoice.pm:324
+#: ../goah/Modules/Invoice.pm:329
 msgid "Referral id is missing!"
 msgstr "Viitenumero puuttuu!"
 
@@ -421,7 +441,7 @@ msgstr "Muistutus 1"
 msgid "Remark2"
 msgstr "Muistutus 2"
 
-#: ../templates/modules/Invoice/invoiceinfo:95
+#: ../templates/modules/Invoice/invoiceinfo:131
 msgid "Return invoice to basket"
 msgstr "Palauta lasku koriksi"
 
@@ -429,19 +449,19 @@ msgstr "Palauta lasku koriksi"
 msgid "Row info"
 msgstr "Rivitieto"
 
-#: ../templates/modules/Invoice/invoiceinfo:107 ../templates/modules/Invoice/invoiceinfo:90
+#: ../templates/modules/Invoice/invoiceinfo:126 ../templates/modules/Invoice/invoiceinfo:143
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../templates/modules/Invoice/activeinvoices:63 ../templates/modules/Invoice/invoices.rows:64
+#: ../templates/modules/Invoice/activeinvoices:86 ../templates/modules/Invoice/invoices.rows:64
 msgid "Search"
 msgstr "Hae"
 
-#: ../templates/modules/Invoice/activeinvoices:48 ../templates/modules/Invoice/invoices.rows:48
+#: ../templates/modules/Invoice/activeinvoices:71 ../templates/modules/Invoice/invoices.rows:48
 msgid "Select"
 msgstr "Valitse"
 
-#: ../templates/modules/Invoice/invoiceinfo:53
+#: ../templates/modules/Invoice/invoiceinfo:89
 msgid "Select one"
 msgstr "Valitse yksi"
 
@@ -449,11 +469,11 @@ msgstr "Valitse yksi"
 msgid "Selected invoice states"
 msgstr "Valittujen laskujen tilat"
 
-#: ../templates/modules/Invoice/activeinvoices:69 ../templates/modules/Invoice/invoices.csvtt2:25 ../templates/modules/Invoice/invoices.rows:70
+#: ../templates/modules/Invoice/activeinvoices:92 ../templates/modules/Invoice/invoices.csvtt2:25 ../templates/modules/Invoice/invoices.rows:70
 msgid "Selected invoices"
 msgstr "Valitut laskut"
 
-#: ../templates/modules/Invoice/invoiceinfo:91
+#: ../templates/modules/Invoice/invoiceinfo:127
 msgid "Send invoice"
 msgstr "Lähetä lasku"
 
@@ -461,23 +481,27 @@ msgstr "Lähetä lasku"
 msgid "Sent"
 msgstr "Lähetetty"
 
-#: ../templates/modules/Invoice/invoice.customer:7
+#: ../templates/modules/Invoice/invoiceinfo:60
 msgid "Shipping address"
 msgstr "Toimitusosoite"
 
-#: ../templates/modules/Invoice/activeinvoices:30 ../templates/modules/Invoice/invoices.rows:30
+#: ../templates/modules/Invoice/activeinvoices:31 ../templates/modules/Invoice/invoices.rows:30
 msgid "Show invoices"
 msgstr "Näytä laskut"
 
-#: ../templates/modules/Invoice/activeinvoices:31 ../templates/modules/Invoice/invoices.rows:31
+#: ../templates/modules/Invoice/activeinvoices:32 ../templates/modules/Invoice/invoices.rows:31
 msgid "Show rows"
 msgstr "Näytä rivit"
 
-#: ../goah/Modules/Invoice.pm:561
+#: ../templates/modules/Invoice/activeinvoices:6
+msgid "Sorting"
+msgstr "Järjestä"
+
+#: ../goah/Modules/Invoice.pm:573
 msgid "Start date isn't formatted correctly. Ignoring filter."
 msgstr "Aloituspäivä on väärässä muodossa. Suodatinta ei huomioida."
 
-#: ../templates/modules/Invoice/activeinvoices:4 ../templates/modules/Invoice/activeinvoices:79 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:4 ../templates/modules/Invoice/invoices.rows:81
+#: ../templates/modules/Invoice/activeinvoices:129 ../templates/modules/Invoice/activeinvoices:4 ../templates/modules/Invoice/invoices.csvtt2:27 ../templates/modules/Invoice/invoices.rows:4 ../templates/modules/Invoice/invoices.rows:81
 msgid "State"
 msgstr "Tila"
 
@@ -497,15 +521,15 @@ msgstr "Aika"
 msgid "To date:"
 msgstr "Päivään:"
 
-#: ../templates/modules/Invoice/activeinvoices:77 ../templates/modules/Invoice/activeinvoices:78 ../templates/modules/Invoice/invoice.productlist:13 ../templates/modules/Invoice/invoice.productlist:14 ../templates/modules/Invoice/invoice.productlist:45 ../templates/modules/Invoice/invoice.productlist:65 ../templates/modules/Invoice/invoices.csvtt2:27
+#: ../templates/modules/Invoice/activeinvoices:127 ../templates/modules/Invoice/activeinvoices:128 ../templates/modules/Invoice/invoice.productlist:13 ../templates/modules/Invoice/invoice.productlist:14 ../templates/modules/Invoice/invoice.productlist:45 ../templates/modules/Invoice/invoice.productlist:65 ../templates/modules/Invoice/invoices.csvtt2:27
 msgid "Total"
 msgstr "Yhteensä"
 
-#: ../templates/modules/Invoice/activeinvoices:132 ../templates/modules/Invoice/invoices.rows:141
+#: ../templates/modules/Invoice/activeinvoices:182 ../templates/modules/Invoice/invoices.rows:141
 msgid "Total sum"
 msgstr "Yhteensä"
 
-#: ../goah/Modules/Invoice.pm:700
+#: ../goah/Modules/Invoice.pm:724
 msgid "UID is missing"
 msgstr "UID puuttuu"
 
@@ -513,11 +537,11 @@ msgstr "UID puuttuu"
 msgid "VAT"
 msgstr "Alv"
 
-#: ../templates/modules/Invoice/activeinvoices:77 ../templates/modules/Invoice/invoice.productlist:45 ../templates/modules/Invoice/invoices.csvtt2:27
+#: ../templates/modules/Invoice/activeinvoices:127 ../templates/modules/Invoice/invoice.productlist:45 ../templates/modules/Invoice/invoices.csvtt2:27
 msgid "VAT 0%"
 msgstr "Alv 0%"
 
-#: ../templates/modules/Invoice/invoiceinfo:118
+#: ../templates/modules/Invoice/invoiceinfo:153
 msgid ""
 "You can alter the information of the invoice as \n"
 "long as its state is 'open'. Once the invoice is sent data cannot be altered anymore, not counting \n"

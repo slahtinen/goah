@@ -1,0 +1,276 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../goah/Modules/Tasks.pm:132
+msgid "All tasks"
+msgstr "Kaikki tehtävät"
+
+#: ../goah/Modules/Tasks.pm:43
+msgid "Assigned to"
+msgstr "Osoitettu"
+
+#: ../templates/modules/Tasks/reporting:6
+msgid "By customer"
+msgstr "Asiakkaalla"
+
+#: ../templates/modules/Tasks/reporting:7
+msgid "By user"
+msgstr "Käyttäjällä"
+
+#: ../templates/modules/Tasks/reporting:176 ../templates/modules/Tasks/tasks:228 ../templates/modules/Tasks/tasks:320
+msgid "Closed"
+msgstr "Suljettu"
+
+#: ../goah/Modules/Tasks.pm:131
+msgid "Closed tasks"
+msgstr "Suljetut tehtävät"
+
+#: ../templates/modules/Tasks/tasks:247
+msgid "Closed tasks - Latest 50 added by you"
+msgstr "Suljetut tehtävät - 50 uusinta lisäystäsi"
+
+#: ../templates/modules/Tasks/tasks:339
+msgid "Closed tasks - Latest 50 assigned to you"
+msgstr "Suljetut tehtävät - 50 uusinta sinulle osoitettua"
+
+#: ../goah/Modules/Tasks.pm:55
+msgid "Completed task"
+msgstr "Valmistunut"
+
+#: ../goah/Modules/Tasks.pm:212
+msgid "Couldn't delete item from the database."
+msgstr "Tietoa ei voitu poistaa tietokannasta"
+
+#: ../goah/Modules/Tasks.pm:205
+msgid "Couldn't load data from the database for modifications!"
+msgstr ""
+
+#: ../goah/Modules/Tasks.pm:351
+msgid "Couldn't read any data from the database with id "
+msgstr ""
+
+#: ../goah/Modules/Tasks.pm:117
+msgid "Couldn't update information into database!"
+msgstr "Tietoja ei voitu päivittää tietokantaan"
+
+#: ../goah/Modules/Tasks.pm:107
+msgid "Couldn't write task to database!"
+msgstr "Tehtävää ei voitu kirjoittaa tietokantaan"
+
+#: ../templates/modules/Tasks/tasks:71
+msgid "Create"
+msgstr "Luo"
+
+#: ../goah/Modules/Tasks.pm:36 ../templates/modules/Tasks/reporting:107 ../templates/modules/Tasks/reporting:21 ../templates/modules/Tasks/tasks:162 ../templates/modules/Tasks/tasks:254 ../templates/modules/Tasks/tasks:346 ../templates/modules/Tasks/tasks:87
+msgid "Customer"
+msgstr "Asiakas"
+
+#: ../goah/Modules/Tasks.pm:49 ../templates/modules/Tasks/reporting:106 ../templates/modules/Tasks/tasks:161 ../templates/modules/Tasks/tasks:253 ../templates/modules/Tasks/tasks:345 ../templates/modules/Tasks/tasks:86
+msgid "Date"
+msgstr "Päivämäärä"
+
+#: ../templates/modules/Tasks/edittask:97
+msgid "Delete"
+msgstr "Poista"
+
+#: ../goah/Modules/Tasks.pm:52 ../templates/modules/Tasks/reporting:111 ../templates/modules/Tasks/tasks:166 ../templates/modules/Tasks/tasks:258 ../templates/modules/Tasks/tasks:349 ../templates/modules/Tasks/tasks:90
+msgid "Description"
+msgstr "Kuvaus"
+
+#: ../templates/modules/Tasks/reporting:113
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: ../templates/modules/Tasks/edittask:1
+msgid "Edit task"
+msgstr "Muokkaa tehtävää"
+
+#: ../templates/modules/Tasks/edittask:5
+msgid "Fields marked with * are required"
+msgstr "Tähdellä (*) merkityt kentät ovat pakollisia"
+
+#: ../templates/modules/Tasks/reporting:8
+msgid "From/to date (dd.mm.yyyy)"
+msgstr "Alku/loppu pvm (dd.mm.yyyy)"
+
+#: ../goah/Modules/Tasks.pm:248
+msgid "Hours column not numeric! Setting hours -value to 0!"
+msgstr "Tunti sarake ei ole numeerinen! Asetetaan tuntiarvo nollaan!"
+
+#: ../templates/modules/Tasks/edittask:110
+msgid "Hours moved to basket"
+msgstr "Tunnit siirretty koriin"
+
+#: ../goah/Modules/Tasks.pm:105
+msgid "Hours tracked"
+msgstr "Tunnit lisätty seurantaan"
+
+#: ../templates/modules/Tasks/reporting:104 ../templates/modules/Tasks/tasks:159 ../templates/modules/Tasks/tasks:251 ../templates/modules/Tasks/tasks:343 ../templates/modules/Tasks/tasks:84
+msgid "Id"
+msgstr "Id"
+
+#: ../goah/Modules/Tasks.pm:286
+msgid "Incorrectly formatted date!  Using current date."
+msgstr "Väärin muotoiltu päivä! Käytetään nykyistä päivämäärää."
+
+#: ../goah/Modules/Tasks.pm:51
+msgid "Intern. hrs"
+msgstr "Sis. tunnit"
+
+#: ../goah/Modules/Tasks.pm:53
+msgid "Internal"
+msgstr "Sisäinen"
+
+#: ../goah/Modules/Tasks.pm:265
+msgid "Internal hours column not numeric! Setting value to 0!"
+msgstr "Sisäisten tuntien sarake ei ole numeerinen! Asetetaan arvoksi 0!"
+
+#: ../templates/modules/Tasks/reporting:110 ../templates/modules/Tasks/tasks:165 ../templates/modules/Tasks/tasks:257 ../templates/modules/Tasks/tasks:348 ../templates/modules/Tasks/tasks:89
+msgid "Internal time"
+msgstr "Sisäinen aika"
+
+#: ../goah/Modules/Tasks.pm:230
+msgid "Leaving value unaltered."
+msgstr "Jätetään arvo muuttumattomaksi"
+
+#: ../templates/modules/Tasks/reporting:89
+msgid "Long description"
+msgstr "Pitkä kuvaus"
+
+#: ../goah/Modules/Tasks.pm:54 ../templates/modules/Tasks/tasks:75
+msgid "Long description, only for internal use"
+msgstr "Pitkä kuvaus, vain sisäiseen käyttöön"
+
+#: ../goah/Modules/Tasks.pm:155
+msgid "Module doesn't have function "
+msgstr "Moduulilla ei ole toimintoa "
+
+#: ../goah/Modules/Tasks.pm:485 ../goah/Modules/Tasks.pm:494
+msgid "Not available!"
+msgstr "Ei saatavilla!"
+
+#: ../templates/modules/Tasks/reporting:178 ../templates/modules/Tasks/tasks:226 ../templates/modules/Tasks/tasks:318
+msgid "Open"
+msgstr "Avoin"
+
+#: ../goah/Modules/Tasks.pm:130
+msgid "Open tasks"
+msgstr "Avoimet tehtävät"
+
+#: ../templates/modules/Tasks/tasks:155
+msgid "Open tasks - Added by you"
+msgstr "Avoimet tehtävät - Sinun lisäämäsi"
+
+#: ../templates/modules/Tasks/tasks:80
+msgid "Open tasks - Assigned to you"
+msgstr "Avoimet tehtävät - Sinulle osoitetut"
+
+#: ../templates/modules/Tasks/reporting:9
+msgid "Other options"
+msgstr "Muut asetukset"
+
+#: ../templates/modules/Tasks/reporting:105 ../templates/modules/Tasks/tasks:160 ../templates/modules/Tasks/tasks:252 ../templates/modules/Tasks/tasks:344 ../templates/modules/Tasks/tasks:85
+msgid "Pri."
+msgstr "Tärk."
+
+#: ../goah/Modules/Tasks.pm:48
+msgid "Priority"
+msgstr "Tärkeysaste"
+
+#: ../goah/Modules/Tasks.pm:60
+msgid "Reporting"
+msgstr "Raportointi"
+
+#: ../goah/Modules/Tasks.pm:229
+msgid "Required dropdown field"
+msgstr "Pakollinen avattava kenttä"
+
+#: ../goah/Modules/Tasks.pm:224
+msgid "Required field"
+msgstr "Pakollinen kenttä"
+
+#: ../templates/modules/Tasks/reporting:92
+msgid "Reset"
+msgstr "Tyhjennä"
+
+#: ../templates/modules/Tasks/edittask:105
+msgid "Save"
+msgstr "Tallenna"
+
+#: ../templates/modules/Tasks/reporting:93
+msgid "Search"
+msgstr "Etsi"
+
+#: ../templates/modules/Tasks/reporting:2
+msgid "Search tasks"
+msgstr "Etsi tehtäviä"
+
+#: ../templates/modules/Tasks/edittask:60 ../templates/modules/Tasks/tasks:40
+msgid "Select"
+msgstr "Valitse"
+
+#: ../templates/modules/Tasks/reporting:112 ../templates/modules/Tasks/tasks:167 ../templates/modules/Tasks/tasks:259
+msgid "State"
+msgstr "Tila"
+
+#: ../goah/Modules/Tasks.pm:114
+msgid "Task info updated."
+msgstr "Tehtävän tiedot päivitetty."
+
+#: ../goah/Modules/Tasks.pm:112
+msgid "Task removed from the database."
+msgstr "Tehtävä poistettu tietokannasta."
+
+#: ../templates/modules/Tasks/reporting:100 ../templates/modules/Tasks/tasks:1
+msgid "Tasks"
+msgstr "Tehtävät"
+
+#: ../templates/modules/Tasks/reporting:109 ../templates/modules/Tasks/tasks:164 ../templates/modules/Tasks/tasks:256 ../templates/modules/Tasks/tasks:347 ../templates/modules/Tasks/tasks:88
+msgid "Time"
+msgstr "Aika"
+
+#: ../templates/modules/Tasks/reporting:190 ../templates/modules/Tasks/tasks:146 ../templates/modules/Tasks/tasks:237 ../templates/modules/Tasks/tasks:329 ../templates/modules/Tasks/tasks:405
+msgid "Total"
+msgstr "Yhteensä"
+
+#: ../templates/modules/Tasks/edittask:83 ../templates/modules/Tasks/tasks:63
+msgid "Unknown field type"
+msgstr "Tuntematon kentän tyyppi"
+
+#: ../templates/modules/Tasks/reporting:108 ../templates/modules/Tasks/reporting:41 ../templates/modules/Tasks/tasks:163 ../templates/modules/Tasks/tasks:255
+msgid "User"
+msgstr "Käyttäjä"
+
+#: ../templates/modules/Tasks/edittask:97
+msgid "Warning! No further confirmation!"
+msgstr "Varoitus! Ei lisävahvistusta!"
+
+#: ../goah/Modules/Tasks.pm:50
+msgid "Working hrs"
+msgstr "Työtunnit"
+
+#: ../goah/Modules/Tasks.pm:224
+msgid "empty!"
+msgstr "Tyhjä!"
+
+#: ../templates/modules/Tasks/reporting:145 ../templates/modules/Tasks/reporting:147 ../templates/modules/Tasks/reporting:149 ../templates/modules/Tasks/reporting:156 ../templates/modules/Tasks/reporting:158 ../templates/modules/Tasks/reporting:160 ../templates/modules/Tasks/tasks:113 ../templates/modules/Tasks/tasks:115 ../templates/modules/Tasks/tasks:117 ../templates/modules/Tasks/tasks:124 ../templates/modules/Tasks/tasks:126 ../templates/modules/Tasks/tasks:128 ../templates/modules/Tasks/tasks:199 ../templates/modules/Tasks/tasks:201 ../templates/modules/Tasks/tasks:203 ../templates/modules/Tasks/tasks:210 ../templates/modules/Tasks/tasks:212 ../templates/modules/Tasks/tasks:214 ../templates/modules/Tasks/tasks:291 ../templates/modules/Tasks/tasks:293 ../templates/modules/Tasks/tasks:295 ../templates/modules/Tasks/tasks:302 ../templates/modules/Tasks/tasks:304 ../templates/modules/Tasks/tasks:306 ../templates/modules/Tasks/tasks:372 ../templates/modules/Tasks/tasks:374 ../templates/modules/Tasks/tasks:376 ../templates/modules/Tasks/tasks:383 ../templates/modules/Tasks/tasks:385 ../templates/modules/Tasks/tasks:387
+msgid "h"
+msgstr "t"
+
+#: ../goah/Modules/Tasks.pm:229
+msgid "unselected!"
+msgstr "ei valittu!"

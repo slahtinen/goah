@@ -1,0 +1,312 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../goah/Modules/Tracking.pm:135 ../goah/Modules/Tracking.pm:140
+msgid "All hours"
+msgstr "Kaikki tunnit"
+
+#: ../templates/modules/Tracking/reporting:121 ../templates/modules/Tracking/timetracking:10 ../templates/modules/Tracking/timetracking:91
+msgid "Amount"
+msgstr "Määrä"
+
+#: ../goah/Modules/Tracking.pm:316
+msgid "Amount column not numeric! Setting amount -value to 0!"
+msgstr "Määrä sarake ei ole numeerinen! Asetetaan arvoksi 0!"
+
+#: ../templates/modules/Tracking/reporting:6
+msgid "By customer"
+msgstr "Asiakkaalla"
+
+#: ../templates/modules/Tracking/reporting:7
+msgid "By user"
+msgstr "Käyttäjällä"
+
+#: ../goah/Modules/Tracking.pm:292
+msgid "Can't add tracked hours to database! Product code is missing!"
+msgstr "Tietokantaan ei voitu lisätä tunteja! Tuotekoodi puuttuu!"
+
+#: ../goah/Modules/Tracking.pm:297
+msgid "Can't read product data from the database! Can't add tracked hours!"
+msgstr ""
+
+#: ../goah/Modules/Tracking.pm:261
+msgid "Couldn't delete item from the database."
+msgstr "Tietoa ei voitu poistaa tietokannasta."
+
+#: ../goah/Modules/Tracking.pm:254
+msgid "Couldn't load data from the database for modifications!"
+msgstr ""
+
+#: ../goah/Modules/Tracking.pm:401 ../goah/Modules/Tracking.pm:700
+msgid "Couldn't read any data from the database with id "
+msgstr ""
+
+#: ../goah/Modules/Tracking.pm:120
+msgid "Couldn't update information into database!"
+msgstr ""
+
+#: ../goah/Modules/Tracking.pm:110
+msgid "Couldn't write hours to database!"
+msgstr "Tunteja ei voitu kirjoittaa tietokantaan!"
+
+#: ../templates/modules/Tracking/timetracking:76
+msgid "Create"
+msgstr "Luo"
+
+#: ../goah/Modules/Tracking.pm:41 ../templates/modules/Tracking/reporting:119 ../templates/modules/Tracking/reporting:21 ../templates/modules/Tracking/timetracking:5 ../templates/modules/Tracking/timetracking:90
+msgid "Customer"
+msgstr "Asiakas"
+
+#: ../goah/Modules/Tracking.pm:49 ../templates/modules/Tracking/reporting:118 ../templates/modules/Tracking/timetracking:8 ../templates/modules/Tracking/timetracking:89
+msgid "Date"
+msgstr "Päivämäärä"
+
+#: ../templates/modules/Tracking/reporting:221 ../templates/modules/Tracking/reporting:229 ../templates/modules/Tracking/timetracking:175 ../templates/modules/Tracking/timetracking:183
+msgid "Debit:"
+msgstr "Laskutettava:"
+
+#: ../templates/modules/Tracking/edithourtracking:127
+msgid "Delete"
+msgstr "Poista"
+
+#: ../goah/Modules/Tracking.pm:51 ../templates/modules/Tracking/reporting:124 ../templates/modules/Tracking/timetracking:11 ../templates/modules/Tracking/timetracking:94
+msgid "Description"
+msgstr "Kuvaus"
+
+#: ../templates/modules/Tracking/reporting:125
+msgid "Edit"
+msgstr "Muokkaa"
+
+#: ../templates/modules/Tracking/edithourtracking:1
+msgid "Edit time tracking"
+msgstr "Muokkaa ajan seurantaa"
+
+#: ../goah/Modules/Tracking.pm:179
+msgid "End date isn't formatted correctly. Ignoring filter."
+msgstr "Päättymispäivää ei ole asetettu oikein. Suodatinta ei huomioida"
+
+#: ../goah/Modules/Tracking.pm:34
+msgid "Evening"
+msgstr "Ilta"
+
+#: ../templates/modules/Tracking/edithourtracking:5
+msgid "Fields marked with * are required"
+msgstr "Tähdellä (*) merkityt kentät ovat pakollisia"
+
+#: ../templates/modules/Tracking/reporting:8
+msgid "From/to date (dd.mm.yyyy)"
+msgstr "Alku/loppu pvm (dd.mm.yyyy)"
+
+#: ../goah/Modules/Tracking.pm:734
+msgid "Given basket id not numeric!"
+msgstr "Annettu korin id ei ole numeerinen!"
+
+#: ../goah/Modules/Tracking.pm:307
+msgid "Hours column not numeric! Setting hours -value to 0!"
+msgstr "Tuntisarake ei ole numeerinen! Asetetaan arvoksi 0!"
+
+#: ../templates/modules/Tracking/edithourtracking:140
+msgid "Hours moved to basket"
+msgstr "Tunnit siirretty koriin"
+
+#: ../goah/Modules/Tracking.pm:108
+msgid "Hours tracked"
+msgstr "Tunnit lisätty seurantaan"
+
+#: ../goah/Modules/Tracking.pm:57
+msgid "Imported to basket"
+msgstr "Lisätty koriin"
+
+#: ../goah/Modules/Tracking.pm:333
+msgid "Incorrectly formatted date!  Using current date."
+msgstr "Väärin muotoiltu päivämäärä! Käytetään nykyistä päivämäärää."
+
+#: ../goah/Modules/Tracking.pm:56 ../templates/modules/Tracking/reporting:175 ../templates/modules/Tracking/timetracking:138 ../templates/modules/Tracking/timetracking:14
+msgid "Internal"
+msgstr "Sisäinen"
+
+#: ../templates/modules/Tracking/reporting:222 ../templates/modules/Tracking/reporting:230 ../templates/modules/Tracking/timetracking:176 ../templates/modules/Tracking/timetracking:184
+msgid "Internal:"
+msgstr "Sisäinen:"
+
+#: ../goah/Modules/Tracking.pm:279
+msgid "Leaving value unaltered."
+msgstr "Jätetään arvo muuttumattomaksi"
+
+#: ../templates/modules/Tracking/reporting:103
+msgid "Long description"
+msgstr "Pitkä kuvaus"
+
+#: ../goah/Modules/Tracking.pm:58 ../templates/modules/Tracking/timetracking:80
+msgid "Long description, only for internal use"
+msgstr "Pitkä kuvaus, vain sisäiseen käyttöön"
+
+#: ../goah/Modules/Tracking.pm:206
+msgid "Module doesn't have function "
+msgstr "Moduulilla ei ole toimintoa "
+
+#: ../goah/Modules/Tracking.pm:35
+msgid "Night"
+msgstr "Yö"
+
+#: ../goah/Modules/Tracking.pm:33
+msgid "Normal"
+msgstr "Päivä"
+
+#: ../goah/Modules/Tracking.pm:547 ../goah/Modules/Tracking.pm:556 ../goah/Modules/Tracking.pm:562 ../goah/Modules/Tracking.pm:563
+msgid "Not available!"
+msgstr "Ei saatavilla"
+
+#: ../goah/Modules/Tracking.pm:136
+msgid "Only debit hours"
+msgstr "Vain laskutettavat tunnit"
+
+#: ../goah/Modules/Tracking.pm:139
+msgid "Only imported hours"
+msgstr "Vain viedyt tunnit"
+
+#: ../goah/Modules/Tracking.pm:137
+msgid "Only internal hours"
+msgstr "Vain sisäiset tunnit"
+
+#: ../goah/Modules/Tracking.pm:138
+msgid "Only not imported hours"
+msgstr "Vain viemättömät tunnit"
+
+#: ../goah/Modules/Tracking.pm:36
+msgid "Other"
+msgstr "Muut"
+
+#: ../templates/modules/Tracking/reporting:9
+msgid "Other options"
+msgstr "Muut asetukset"
+
+#: ../goah/Modules/Tracking.pm:45 ../templates/modules/Tracking/reporting:123 ../templates/modules/Tracking/timetracking:7 ../templates/modules/Tracking/timetracking:92
+msgid "Product"
+msgstr "Tuote"
+
+#: ../goah/Modules/Tracking.pm:52 ../goah/Modules/Tracking.pm:54 ../templates/modules/Tracking/timetracking:12
+msgid "Project"
+msgstr "Projekti"
+
+#: ../goah/Modules/Tracking.pm:53 ../goah/Modules/Tracking.pm:55 ../templates/modules/Tracking/timetracking:13
+msgid "Related personnel"
+msgstr "Liittyvä henkilöstö"
+
+#: ../goah/Modules/Tracking.pm:63
+msgid "Reporting"
+msgstr "Raportointi"
+
+#: ../goah/Modules/Tracking.pm:278
+msgid "Required dropdown field"
+msgstr "Pakollinen avattava kenttä"
+
+#: ../goah/Modules/Tracking.pm:273
+msgid "Required field"
+msgstr "Pakollinen kenttä"
+
+#: ../templates/modules/Tracking/reporting:106
+msgid "Reset"
+msgstr "Tyhjennä"
+
+#: ../templates/modules/Tracking/edithourtracking:135
+msgid "Save"
+msgstr "Tallenna"
+
+#: ../templates/modules/Tracking/reporting:107
+msgid "Search"
+msgstr "Etsi"
+
+#: ../templates/modules/Tracking/reporting:2
+msgid "Search time tracking"
+msgstr "Etsi seurannasta"
+
+#: ../templates/modules/Tracking/edithourtracking:70 ../templates/modules/Tracking/timetracking:42
+msgid "Select"
+msgstr "Valitse"
+
+#: ../goah/Modules/Tracking.pm:165
+msgid "Start date isn't formatted correctly. Ignoring filter."
+msgstr "Aloituspäivämäärää ei ole asetettu oikein. Suodatinta ei huomioida."
+
+#: ../templates/modules/Tracking/reporting:121 ../templates/modules/Tracking/timetracking:9 ../templates/modules/Tracking/timetracking:91
+msgid "Time"
+msgstr "Aika"
+
+#: ../goah/Modules/Tracking.pm:117
+msgid "Time monitoring info updated."
+msgstr ""
+
+#: ../goah/Modules/Tracking.pm:115
+msgid "Time monitoring item removed from the database."
+msgstr ""
+
+#: ../templates/modules/Tracking/timetracking:1
+msgid "Time tracking"
+msgstr "Tuntiseuranta"
+
+#: ../templates/modules/Tracking/reporting:226 ../templates/modules/Tracking/timetracking:180
+msgid "Total"
+msgstr "Yhteensä"
+
+#: ../templates/modules/Tracking/reporting:215 ../templates/modules/Tracking/timetracking:169
+msgid "Total "
+msgstr "Yhteensä "
+
+#: ../templates/modules/Tracking/reporting:114
+msgid "Tracked hours"
+msgstr "Lisätyt tunnit"
+
+#: ../templates/modules/Tracking/reporting:122 ../templates/modules/Tracking/timetracking:6 ../templates/modules/Tracking/timetracking:93
+msgid "Type"
+msgstr "Tyyppi"
+
+#: ../templates/modules/Tracking/edithourtracking:113 ../templates/modules/Tracking/timetracking:68
+msgid "Unknown field type"
+msgstr "Tuntematon kentän tyyppi"
+
+#: ../templates/modules/Tracking/reporting:120 ../templates/modules/Tracking/reporting:41
+msgid "User"
+msgstr "Käyttäjä"
+
+#: ../templates/modules/Tracking/edithourtracking:127
+msgid "Warning! No further confirmation!"
+msgstr "Varoitus! Ei lisävahvistusta!"
+
+#: ../goah/Modules/Tracking.pm:43
+msgid "Work type"
+msgstr "Työn tyyppi"
+
+#: ../goah/Modules/Tracking.pm:50
+msgid "Working hours"
+msgstr "Työtunnit"
+
+#: ../templates/modules/Tracking/timetracking:85
+msgid "Your latest tracked hours"
+msgstr "Viimeisimmät tunnit"
+
+#: ../goah/Modules/Tracking.pm:273
+msgid "empty!"
+msgstr "tyhjä!"
+
+#: ../templates/modules/Tracking/edithourtracking:24 ../templates/modules/Tracking/edithourtracking:26 ../templates/modules/Tracking/reporting:155 ../templates/modules/Tracking/timetracking:114 ../templates/modules/Tracking/timetracking:30
+msgid "st"
+msgstr ""
+
+#: ../goah/Modules/Tracking.pm:278
+msgid "unselected!"
+msgstr "ei valittu!"
