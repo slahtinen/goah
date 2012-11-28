@@ -63,6 +63,9 @@
 				[%- IF item.vat_id == '00000000' %]
 					, [% item.firstname %]
 				[% END %]
+				[% IF data.field == 'productcode' %]
+				([% item.unit %])
+				[% END %]
 				</option>
 			[% END %] 
                 [% END %]
