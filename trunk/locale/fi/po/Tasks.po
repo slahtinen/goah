@@ -27,6 +27,10 @@ msgstr "Luonut"
 msgid "Assigned to"
 msgstr "Osoitettu"
 
+#: ../goah/Modules/Tasks.pm:44
+msgid "Nobody"
+msgstr "Ei kenellekään"
+
 #: ../templates/modules/Tasks/reporting:6
 msgid "By customer"
 msgstr "Asiakkaalla"

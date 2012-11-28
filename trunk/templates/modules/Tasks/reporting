@@ -141,12 +141,17 @@
 		[% END %]
 	[% END %]
 	<br>
+
 	[% gettext("Assigned to")%]: 
-	[% FOREACH ukey IN dbusers.keys %]
-		[% user = dbusers.$ukey %]
+	[% IF row.assigneeid == -1 %]
+	<b>[% gettext("Nobody")%]</b>
+	[% ELSE %]
+		[% FOREACH ukey IN dbusers.keys %]
+			[% user = dbusers.$ukey %]
 		[% IF row.assigneeid == user.id %]
-			[% user.lastname %] [% user.firstname %]
+				[% user.lastname %] [% user.firstname %]
 			[% LAST %]
+			[% END %]
 		[% END %]
 	[% END %]
 
