@@ -180,6 +180,8 @@ sub Start {
 				my $tmpdata = ReadBaskets($q->param('target'));
 				my %tmpd=%$tmpdata;
 				use goah::Modules::Tracking;
+				
+				goah::Modules->AddMessage('debug',"Info".$tmpd{'lasttrigger'});
 
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $q->param('target');
@@ -679,6 +681,8 @@ sub ReadBaskets {
 	use goah::Modules::Customermanagement;
 	foreach my $b (@data) {
 
+
+
 		my $cust;
 		$cust=goah::Modules::Customermanagement->ReadCompanydata($b->companyid,1) if($b->companyid>0);
 		my %customer;
@@ -755,22 +759,32 @@ sub ReadBaskets {
 			}
 
 			if($state eq "2") {
-				my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
+		
+			my $nexttrigger;	
+			if($b->nexttrigger) {
+				$nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
 				$nexttrigger=~s/^..\.//;
-
+			}
 				my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
 				my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
+
+			if($_[0] || length($_[0])) {
+				$baskets{'lasttrigger'}=$b->lasttrigger;
+				$baskets{'nexttrigger'}=$b->nexttrigger;
+				$baskets{'repeat'}=$b->repeat;
+				$baskets{'dayinmonth'}=$b->dayinmonth;
+			} else {
 				$baskets{$i}{'triggerheading'}=$nexttrigger;
 				$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
 				$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
-
+				$baskets{$i}{'repeat'}=$b->repeat;
+				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
+			}
 				$headingtotal=0 unless($headingtotal);
 				$headingtotalvat=0 unless($headingtotalvat);
 
 				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
 				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
-				$baskets{$i}{'repeat'}=$b->repeat;
-				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
 			}
 		}
 
