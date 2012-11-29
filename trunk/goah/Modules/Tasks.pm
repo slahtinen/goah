@@ -305,9 +305,55 @@ sub WriteTasks {
 
 	# Create new task
 	$taskitem = goah::Db::Tasks->new(%dbdata) unless $update;
+
+	# Send email
+	my $sendemail = 1;
+	
+	if ($q->param('assigneeid') != '-1') {
+
+		goah::Modules->AddMessage('debug',"Param".$q->param('complete'));
+
+		my $status;
+		if($q->param('action') eq 'writenewtask') {
+			$status = "New";
+		} 
+		if($q->param('action') eq 'writeeditedtask') {
+			if(($q->param('delete')) && ($q->param('delete') eq 'on')) {
+				$status = "Delete";
+			} 
+			if(($q->param('completed')) && ($q->param('completed') eq 'on')) {
+				$status = "Complete";
+			} else {
+				$status = "Update";
+			}
+		}
+		
+		my $ownerinfo = goah::Modules::Systemsettings->ReadOwnerInfo();
+		my $assigneepointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($q->param('assigneeid'));
+		my %assigneeinfo=%$assigneepointer;
+		my $userpointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($q->param('userid'));
+		my %userinfo=%$userpointer;
+	
+		my $assigneename = "$assigneeinfo{'firstname'} $assigneeinfo{'lastname'}";
+
+		my %vars;
+		$vars{'module'} = 'Tasks';
+		$vars{'from'} = $ownerinfo->email;
+		$vars{'to'} = $assigneeinfo{'email'};
+		$vars{'cc'} = $userinfo{'email'};
+		$vars{'Charset'} = 'utf8';
+		$vars{'status'} = $status;
+		$vars{'assigneename'} = $assigneename;
+		$vars{'description'} = $q->param('description');
+		$vars{'longdescription'} = $q->param('longdescription');
+
+		use goah::Modules::Email;
+		my $email = goah::Modules::Email->SendEmail(\%vars);
+	
+	}
+
 	return 1 if ($taskitem->save);
 	return 0;
-
 }
 
 #

@@ -54,6 +54,7 @@ my %companydbfieldnames = (
                         2 => { field => 'vat_id', name => __('VAT -id'), type => 'textfield', required => '1' },
                         3 => { field => 'name', name => __('Name'), type => 'textfield', required => '1' },
                         5 => { field => 'www', name => __('Homepage address'), type => 'textfield', required => '0' },
+                        6 => { field => 'email', name => __('Email address'), type => 'textfield', required => '1' },
                 );
 
 #

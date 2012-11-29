@@ -23,6 +23,6 @@ use utf8;
 use warnings;
 
 goah::Database::Companies->table('Companies');
-goah::Database::Companies->columns(All => qw/id vat_id name custtype payment_condition delay_interest reclamation_time www bank_accounts isowner description hidden firstname customerreference/);  
+goah::Database::Companies->columns(All => qw/id vat_id name custtype payment_condition delay_interest reclamation_time www bank_accounts isowner description hidden firstname customerreference email/);  
 
 1;

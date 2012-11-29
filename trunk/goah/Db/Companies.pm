@@ -21,7 +21,7 @@ use base qw(goah::Db::Object);
 __PACKAGE__->meta->setup
         (
 	table      => 'Companies',
-	columns    => [ qw(id vat_id name custtype payment_condition delay_interest reclamation_time www bank_accounts isowner description hidden firstname customerreference) ],
+	columns    => [ qw(id vat_id name custtype payment_condition delay_interest reclamation_time www bank_accounts isowner description hidden firstname customerreference email) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );

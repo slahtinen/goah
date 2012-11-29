@@ -45,9 +45,9 @@
 	[% ELSIF data.type == 'checkbox' %]
 		<td>
 		[% IF dbdata.$field == 1 || ( data.field == 'basket_id' && dbdata.$field !=0 ) %]
-			<input type='checkbox' name="[% data.field %]" checked
+			<input type='checkbox' value= "on" name="[% data.field %]" checked
 		[% ELSE %]
-			<input type='checkbox' name="[% data.field %]" 
+			<input type='checkbox' value="on" name="[% data.field %]" 
 		[% END %]
 		[%- IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
 			disabled="disabled"
