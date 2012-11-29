@@ -357,3 +357,90 @@
 </tr>
 </tbody>
 </table>
+
+<h3>[% gettext("SMTP server settings") %]</h3>
+<table>
+<tbody class="rowdata">
+<tr>
+<td>[% gettext("Server name") %]</td>
+<td>
+<form action="" method="post">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="category" value="smtpserver_name" />
+<input name='value' value="[% smtpserver_name.10000000.value(";") %]" />
+<input type="hidden" name="id" value="[% smtpserver_name.10000000.id %]" />
+<input type="hidden" name="action" value="updatesetting" />
+</td>
+<td>
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+</td>
+</form>
+</tr>
+
+<tr>
+<td>[% gettext("Server port") %]</td>
+<td>
+<form action="" method="post">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="category" value="smtpserver_port" />
+<input name="value" value="[% smtpserver_port.10000000.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_port.10000000.id %]" />
+<input type="hidden" name="action" value="updatesetting" />
+</td>
+<td>
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+</td>
+</form>
+</tr>
+
+<tr>
+<td>[% gettext("Use SSL (1 to enable)") %]</td>
+<td>
+<form action="" method="post">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="category" value="smtpserver_ssl" />
+<input name="value" value="[% smtpserver_ssl.10000000.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_ssl.10000000.id %]" />
+<input type="hidden" name="action" value="updatesetting" />
+</td>
+<td>
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+</td>
+</form>
+</tr>
+
+<tr>
+<td>[% gettext("SMTP username") %]</td>
+<td>
+<form action="" method="post">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="category" value="smtpserver_username" />
+<input name="value" value="[% smtpserver_username.10000000.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_username.10000000.id %]" />
+<input type="hidden" name="action" value="updatesetting" />
+</td>
+<td>
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+</td>
+</form>
+</tr>
+
+<tr>
+<td>[% gettext("SMTP password") %]</td>
+<td>
+<form action="" method="post">
+<input type="hidden" name="module" value="[% module %]" />
+<input type="hidden" name="category" value="smtpserver_password" />
+<input name="value" value="[% smtpserver_password.10000000.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_password.10000000.id %]" />
+<input type="hidden" name="action" value="updatesetting" />
+</td>
+<td>
+<input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
+</td>
+</form>
+</tr>
+
+</tbody>
+</table>
+

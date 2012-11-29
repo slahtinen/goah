@@ -309,6 +309,12 @@ sub Start {
 			$variables{'syslocale'} = ReadSetup('locale');
 			$variables{'submenuselect'}="goahsettings";
 
+			$variables{'smtpserver_name'} = ReadSetup('smtpserver_name',1);
+			$variables{'smtpserver_port'} = ReadSetup('smtpserver_port',1);
+			$variables{'smtpserver_ssl'} = ReadSetup('smtpserver_ssl',1);
+			$variables{'smtpserver_username'} = ReadSetup('smtpserver_username',1);
+			$variables{'smtpserver_password'} = ReadSetup('smtpserver_password',1);
+
 			$variables{'languages'} = goah::GoaH->ReadLanguages();
 
 		} elsif($q->param('action') eq 'newsetting' || $q->param('action') eq 'updatesetting') {
@@ -327,6 +333,13 @@ sub Start {
 			$variables{'delayinterests'} = ReadSetup('delayinterests');
 			$variables{'submenuselect'}="goahsettings";
 
+			$variables{'smtpserver_name'} = ReadSetup('smtpserver_name',1);
+			$variables{'smtpserver_port'} = ReadSetup('smtpserver_port',1);
+			$variables{'smtpserver_ssl'} = ReadSetup('smtpserver_ssl',1);
+			$variables{'smtpserver_username'} = ReadSetup('smtpserver_username',1);
+			$variables{'smtpserver_password'} = ReadSetup('smtpserver_password',1);
+
+
 		} elsif($q->param('action') eq 'deletesetting') {
 
 			if(DeleteSetup() == 1) {
@@ -340,6 +353,13 @@ sub Start {
 			$variables{'reclamationtimes'} = ReadSetup('reclamationtime');
 			$variables{'delayinterests'} = ReadSetup('delayinterests');
 			$variables{'submenuselect'}="goahsettings";
+
+			$variables{'smtpserver_name'} = ReadSetup('smtpserver_name',1);
+			$variables{'smtpserver_port'} = ReadSetup('smtpserver_port',1);
+			$variables{'smtpserver_ssl'} = ReadSetup('smtpserver_ssl',1);
+			$variables{'smtpserver_username'} = ReadSetup('smtpserver_username',1);
+			$variables{'smtpserver_password'} = ReadSetup('smtpserver_password',1);
+
 		} else {
 
 			goah::Modules->AddMessage('error',__("Module doesn't have function '").$q->param('action')."'.");
@@ -456,13 +476,19 @@ sub WriteSetup {
 
 	my $q = new CGI;
 
+	my $update=0;
+	my $data;
+
 	if($q->param('action') eq 'updatesetting') {
 
-		my $data = goah::Database::Setup->retrieve($q->param('id'));
+		$update=1;
+		$data = goah::Database::Setup->retrieve($q->param('id'));
 		unless($data && ($data->id eq $q->param('id'))) {
-			goah::Modules->AddMessage('error',__("Invalid id for setting update!"),__FILE__,__LINE__);
-			return 0;
-		}
+			$update=0;
+		} 
+	}
+
+	if($update) {
 
 		$data->item($q->param('item'));
 		if($q->param('category') eq 'vat') {
