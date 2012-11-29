@@ -341,7 +341,7 @@ sub WriteTasks {
 		$vars{'from'} = $ownerinfo->email;
 		$vars{'to'} = $assigneeinfo{'email'};
 		$vars{'cc'} = $userinfo{'email'};
-		$vars{'Charset'} = 'utf8';
+		$vars{'charset'} = 'utf8';
 		$vars{'status'} = $status;
 		$vars{'assigneename'} = $assigneename;
 		$vars{'description'} = $q->param('description');

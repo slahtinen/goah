@@ -1,0 +1,9 @@
+Status ............ [% status %]
+Assigned to ....... [% assigneename %]
+Description ....... [% description %]
+
+Long description
+ 
+[% longdescription %]
+
+
