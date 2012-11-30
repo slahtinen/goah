@@ -305,36 +305,53 @@ sub WriteTasks {
 
 	# Create new task
 	$taskitem = goah::Db::Tasks->new(%dbdata) unless $update;
+	$taskitem->save;
 
-	# Send email
-	my $sendemail = 1;
+	# Specify taskid
+	my $taskid;
+	if ($update) {
+		$taskid = $q->param('id');
+	} else {
+		$taskid = $taskitem->{'id'};
+	}
 	
+	# Create new email	
 	if ($q->param('assigneeid') != '-1') {
 
-		goah::Modules->AddMessage('debug',"Param".$q->param('complete'));
+		# goah::Modules->AddMessage('debug',"Taskitem: ".$taskid);
 
 		my $status;
 		if($q->param('action') eq 'writenewtask') {
 			$status = "New";
 		} 
 		if($q->param('action') eq 'writeeditedtask') {
-			if(($q->param('delete')) && ($q->param('delete') eq 'on')) {
-				$status = "Delete";
-			} 
 			if(($q->param('completed')) && ($q->param('completed') eq 'on')) {
 				$status = "Complete";
 			} else {
 				$status = "Update";
 			}
 		}
-		
+
+		# Get customername	
+		my $customerinfo = goah::Modules::Customermanagement->ReadCompanydata($q->param('companyid'));
+
+		my $customername;
+		if ($customerinfo->vat_id eq '00000000') {
+			$customername = $customerinfo->name.' '.$customerinfo->firstname;
+		} else {
+			$customername = $customerinfo->name;
+		}
+
 		my $ownerinfo = goah::Modules::Systemsettings->ReadOwnerInfo();
 		my $assigneepointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($q->param('assigneeid'));
 		my %assigneeinfo=%$assigneepointer;
 		my $userpointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($q->param('userid'));
 		my %userinfo=%$userpointer;
-	
+
 		my $assigneename = "$assigneeinfo{'firstname'} $assigneeinfo{'lastname'}";
+		my $creatorname = "$userinfo{'firstname'} $userinfo{'lastname'}";
+
+		goah::Modules->AddMessage('debug',"Comp: ".$customername);
 
 		my %vars;
 		$vars{'module'} = 'Tasks';
@@ -343,6 +360,9 @@ sub WriteTasks {
 		$vars{'cc'} = $userinfo{'email'};
 		$vars{'charset'} = 'utf8';
 		$vars{'status'} = $status;
+		$vars{'taskid'} = $taskid;
+		$vars{'customername'} = $customername;
+		$vars{'creatorname'} = $creatorname;
 		$vars{'assigneename'} = $assigneename;
 		$vars{'description'} = $q->param('description');
 		$vars{'longdescription'} = $q->param('longdescription');

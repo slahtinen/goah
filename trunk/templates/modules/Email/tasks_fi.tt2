@@ -1,9 +1,11 @@
-Status ............ [% status %]
-Assigned to ....... [% assigneename %]
-Description ....... [% description %]
+[% gettext("Task ID ........... ") %][% taskid %]
+[% gettext("Description ....... ") %][% description %]
+[% gettext("Customer .......... ") %][% customername %]
+[% gettext("Status ............ ") %][% status %]
+[% gettext("Creator ........... ") %][% creatorname %]
+[% gettext("Assigned to ....... ") %][% assigneename %]
 
-Long description
+[% gettext("Long description") %]
  
 [% longdescription %]
-
 
