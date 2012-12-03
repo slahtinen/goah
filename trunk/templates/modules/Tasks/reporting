@@ -188,10 +188,11 @@
 	[% END %]
 	</td>
 	<td>
-	[% IF row.completed == 1 %]
-		[% gettext("Closed") %]
-	[% ELSE %]
-		[% gettext("Open") %]
+	[% FOREACH option IN taskstates.keys.sort %]
+		[% state = option %]
+		[% IF row.completed == option %]
+			[% taskstates.$state  %]
+		[% END %]
 	[% END %]
 	</td>
 	<td class='center'>

@@ -51,8 +51,7 @@ my %tasksdb = (
 	8 => { field => 'inthours', name => __("Intern. hrs"), type => 'textfield', required => '0', hidden => 0, title => "1:30 or 1,5" },
 	9 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1', hidden => 0 },
 	91 => { field => 'no_billing', name => __("Internal"), type => 'checkbox', required => '0', hidden => 0 },
-	93 => { field => 'longdescription', name => __("Long description, only for internal use"), type => "textarea", required => 0, hidden => 1 },
-	94 => { field => 'completed', name => __("Completed task"), type => 'checkbox', required => 0, hidden => 0 },
+	93 => { field => 'longdescription', name => __("Long description, only for internal use"), type => "textarea", required => 0, hidden => 1 }
 );
 
 
@@ -60,6 +59,13 @@ my %submenu = (
 	0 => { title => __("Reporting"), action => 'reporting' }
 );
 
+my %taskstates = (
+	0 => __("Open"),
+	1 => __("Closed"),
+	2 => __("Rejected"),
+	3 => __("Waiting response"),
+	4 => __("In progress")
+);
 
 #
 # Function: Start
@@ -91,6 +97,7 @@ sub Start {
         $variables{'gettext'} = sub { return __($_[0]); };
         $variables{'submenu'} = \%submenu;
 	$variables{'tasksdb'} = \%tasksdb;
+	$variables{'taskstates'} = \%taskstates;
 
 
 	my ($sec,$min,$hour,$mday,$mon,$yearnow,$wday,$yday,$isdst) = localtime(time);
@@ -218,6 +225,7 @@ sub WriteTasks {
         my %fieldinfo;
         while(my($key,$value) = each (%tasksdb)) {
                 %fieldinfo = %$value;
+
                 if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) && !($fieldinfo{'field'} eq 'hours') ) {
 
 			# Using variable just to make source look nicer
@@ -245,7 +253,7 @@ sub WriteTasks {
 						$tmphours+=$hoursarr[0];
 						$hours=$tmphours;
 					} elsif(!$hours=~/\d+\.?\d*/) {
-						goah::Modules->AddMessage('warn',__("Hours column not numeric! Setting hours -value to 0!"));
+						goah::Modules->AddMessage('debug',__("Hours column not numeric! Setting hours -value to 0!"));
 						$hours=0;
 					}
 					if($q->param('minutes')) {
@@ -262,7 +270,7 @@ sub WriteTasks {
 						$tmpinthours+=$inthoursarr[0];
 						$inthours=$tmpinthours;
 					} elsif (!$inthours=~/\d+\.?\d*/) {
-						goah::Modules->AddMessage('warn',__("Internal hours column not numeric! Setting value to 0!"));
+						goah::Modules->AddMessage('debug',__("Internal hours column not numeric! Setting value to 0!"));
 						$inthours=0;
 					}
 					if($q->param('intminutes')) {
@@ -303,14 +311,21 @@ sub WriteTasks {
                 }
         }
 
+	# Update task state
+	if ($update) { 
+		$taskitem->completed($q->param('taskstate')); 
+	} else {
+		$dbdata{'completed'} = 0;
+	}
+
 	# Create new task
 	$taskitem = goah::Db::Tasks->new(%dbdata) unless $update;
 	$taskitem->save;
 
-	# Specify taskid
+	# Specify taskid for email
 	my $taskid;
 	if ($update) {
-		$taskid = $q->param('id');
+		$taskid = $q->param('target');
 	} else {
 		$taskid = $taskitem->{'id'};
 	}
@@ -321,15 +336,10 @@ sub WriteTasks {
 		# goah::Modules->AddMessage('debug',"Taskitem: ".$taskid);
 
 		my $status;
-		if($q->param('action') eq 'writenewtask') {
-			$status = "New";
-		} 
-		if($q->param('action') eq 'writeeditedtask') {
-			if(($q->param('completed')) && ($q->param('completed') eq 'on')) {
-				$status = "Complete";
-			} else {
-				$status = "Update";
-			}
+		if ($update) {
+			$status = $q->param('taskstate');
+		} else {
+			$status = 0;
 		}
 
 		# Get customername	
@@ -368,7 +378,7 @@ sub WriteTasks {
 		$vars{'longdescription'} = $q->param('longdescription');
 
 		use goah::Modules::Email;
-		my $email = goah::Modules::Email->SendEmail(\%vars);
+		my $email = goah::Modules::Email->SendEmail(\%vars,\%taskstates);
 	
 	}
 
@@ -444,6 +454,8 @@ sub ReadData {
 		}
 	}
 
+	$data{'completed'} = $datap->completed;
+
 	return \%data;
 }
 
@@ -451,7 +463,7 @@ sub ReadData {
 # 
 # Function: ReadTasks
 #
-#   Function to maintain searches for hour tracking
+#   Function to maintain searches for tasks
 #
 # Parameters:
 #
@@ -503,11 +515,11 @@ sub ReadTasks {
 	# Search by state
 	if($_[4]) {
 		if($_[4]=~/open/) {
-			$dbsearch{'completed'} = "0";
+			$dbsearch{'completed'} = [0,3,4];
 		}
 		elsif($_[4]=~/closed/) {
 			goah::Modules->AddMessage('debug',"Searching for completed tasks",__FILE__,__LINE__);
-			$dbsearch{'completed'} = "1";
+			$dbsearch{'completed'} = [1,2];
 		}
 	}
 	
@@ -595,10 +607,11 @@ sub ReadTasks {
 				}
 			}
 		}
+		$tdata{$i}{'completed'} = $row->completed;
 	}	
 	goah::Modules->AddMessage('debug',"Got ".($i-10000000)." rows from the database.",__FILE__,__LINE__);
 
-	# Go trough hours and cacl total hours
+	# Go trough hours and calc total hours
 	foreach my $t (keys(%totalhours)) {
 		
 		$tdata{-1}{'normal'}=$totalhours{'normal'};

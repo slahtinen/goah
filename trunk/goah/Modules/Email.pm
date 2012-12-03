@@ -50,6 +50,8 @@ sub SendEmail {
 	shift if($_[0]=~/goah::Modules::Email/);
 	my $hashtmp = $_[0];
 	my %var = %$hashtmp;
+	my $hashtmp2 = $_[1];
+	my %taskstates = %$hashtmp2;
 	my $subject;
 	my $status;
 	my %params;
@@ -109,20 +111,14 @@ sub SendEmail {
 
 	if($var{'module'} eq 'Tasks') {
 
-		if ($var{'status'} eq "New") {
-			$subject = "[#$var{'taskid'}] New task added: "."$var{'description'}";
-			$status = "New task";
-		} 
-		if ($var{'status'} eq "Update") {
-			$subject = "[#$var{'taskid'}] Task updated: "."$var{'description'}";
-			$status = "Task updated";
-		} 
-		if ($var{'status'} eq "Complete") {
-			$subject = "[#$var{'taskid'}] Task completed: "."$var{'description'}";
-			$status = "Task closed";
+		if (($var{'status'} == 3) || ($var{'status'} == 4)) {
+			my $tmpstat = lc($taskstates{$var{'status'}});
+			$subject = "[#$var{'taskid'}] Task $tmpstat: "."$var{'description'}";
+		} else {
+			$subject = "[#$var{'taskid'}] $taskstates{$var{'status'}} task: "."$var{'description'}";
 		}
 
-        	$params{status} = $status;
+        	$params{status} = $taskstates{$var{'status'}};
         	$params{taskid} = $var{'taskid'};
         	$params{customername} = $var{'customername'};
         	$params{assigneename} = $var{'assigneename'};
@@ -131,7 +127,7 @@ sub SendEmail {
         	$params{longdescription} = $var{'longdescription'};
         	$params{gettext} = sub { return __($_[0]); };
 
-		$template = 'tasks_fi.tt2';
+		$template = 'tasks.tt2';
 	}
 	
         use MIME::Lite::TT;

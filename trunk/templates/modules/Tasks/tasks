@@ -88,7 +88,9 @@
   <th>[% gettext("Time") %]</th>
   <th>[% gettext("Internal time") %]</th>
   <th>[% gettext("Description") %]</th>
-  <th>&nbsp;</th>
+  <th width="10%">[% gettext("State") %]</th>
+  <th width="3%">&nbsp;</th>
+  <th width="3%">&nbsp;</th>
 </thead>
 <tbody class="rowdata">
 [% FOREACH key IN opentasks.keys.sort %]
@@ -135,7 +137,31 @@
 <img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
 [% END %]
 </td>
-
+<td>
+<form action="" method="post">
+<select name="taskstate">
+[% FOREACH option IN taskstates.keys.sort %]
+	[% state = option %]
+	[% IF row.completed == option %]
+		<option value=[% row.completed %] selected >[% taskstates.$state %]</option>
+	[% ELSE %]
+		<option value=[% option %] >[% taskstates.$state %]</option>
+	[% END %]
+[% END %]
+</select>
+        <input type="hidden" name="module" value="[% module %]" />
+        <input type="hidden" name="companyid" value="[% row.companyid %]" />
+        <input type="hidden" name="hours" value="[% row.hours %]" />
+        <input type="hidden" name="inthours" value="[% row.inthours %]" />
+        <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="action" value="writeeditedtask" />
+        <input type="hidden" name="userid" value="[% uid %]" />
+        <input type="hidden" name="target" value="[% row.id %]" />
+<td class="center">
+        <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
+</td>
+</form>
+</td>
 <td class='center'>
 <a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
 <img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
@@ -147,7 +173,7 @@
 [% totcount = opentasks.-1 %]
 <td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
 <td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
-<td colspan=2>&nbsp;</td>
+<td colspan=4>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -164,8 +190,9 @@
   <th>[% gettext("Time") %]</th>
   <th>[% gettext("Internal time") %]</th>
   <th>[% gettext("Description") %]</th>
-  <th>[% gettext("State") %]</th>
-  <th>&nbsp;</th>
+  <th width="10%">[% gettext("State") %]</th>
+  <th width="3%">&nbsp;</th>
+  <th width="3%">&nbsp;</th>
 </thead>
 <tbody class="rowdata">
 [% FOREACH key IN openaddedtasks.keys.sort %]
@@ -222,23 +249,41 @@
 [% END %]
 </td>
 <td>
-[% IF row.completed == 0 %] 
-	[% gettext("Open") %]
-[% ELSE %]
-	[% gettext("Closed") %]
+<form action="" method="post">
+<select name="taskstate">
+[% FOREACH option IN taskstates.keys.sort %]
+	[% state = option %]
+	[% IF row.completed == option %]
+		<option value=[% row.completed %] selected >[% taskstates.$state %]</option>
+	[% ELSE %]
+		<option value=[% option %] >[% taskstates.$state %]</option>
+	[% END %]
 [% END %]
+</select>
+        <input type="hidden" name="module" value="[% module %]" />
+        <input type="hidden" name="companyid" value="[% row.companyid %]" />
+        <input type="hidden" name="hours" value="[% row.hours %]" />
+        <input type="hidden" name="inthours" value="[% row.inthours %]" />
+        <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="action" value="writeeditedtask" />
+        <input type="hidden" name="userid" value="[% uid %]" />
+        <input type="hidden" name="target" value="[% row.id %]" />
+<td class="center">
+        <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
+</td>
+</form>
+</td>
 <td class='center'>
 <a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
 <img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
 </td>
-
 </tr>
 [% END %]
 <tr><td colspan=5 class="right">[% gettext("Total") %]</td>
 [% totcount = openaddedtasks.-1 %]
 <td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
 <td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
-<td colspan=3>&nbsp;</td>
+<td colspan=4>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -256,8 +301,9 @@
   <th>[% gettext("Time") %]</th>
   <th>[% gettext("Internal time") %]</th>
   <th>[% gettext("Description") %]</th>
-  <th>[% gettext("State") %]</th>
-  <th>&nbsp;</th>
+  <th width="10%">[% gettext("State") %]</th>
+  <th width="3%">&nbsp;</th>
+  <th width="3%">&nbsp;</th>
 </thead>
 <tbody class="rowdata">
 [% FOREACH key IN closedaddedtasks.keys.sort %]
@@ -314,11 +360,30 @@
 [% END %]
 </td>
 <td>
-[% IF row.completed == 0 %] 
-	[% gettext("Open") %]
-[% ELSE %]
-	[% gettext("Closed") %]
+<form action="" method="post">
+<select name="taskstate">
+[% FOREACH option IN taskstates.keys.sort %]
+	[% state = option %]
+	[% IF row.completed == option %]
+		<option value=[% row.completed %] selected >[% taskstates.$state %]</option>
+	[% ELSE %]
+		<option value=[% option %] >[% taskstates.$state %]</option>
+	[% END %]
 [% END %]
+</select>
+        <input type="hidden" name="module" value="[% module %]" />
+        <input type="hidden" name="companyid" value="[% row.companyid %]" />
+        <input type="hidden" name="hours" value="[% row.hours %]" />
+        <input type="hidden" name="inthours" value="[% row.inthours %]" />
+        <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="action" value="writeeditedtask" />
+        <input type="hidden" name="userid" value="[% uid %]" />
+        <input type="hidden" name="target" value="[% row.id %]" />
+<td class="center">
+        <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
+</td>
+</form>
+</td>
 <td class='center'>
 <a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
 <img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
@@ -330,7 +395,7 @@
 [% totcount = closedaddedtasks.-1 %]
 <td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
 <td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
-<td colspan=3>&nbsp;</td>
+<td colspan=4>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -347,7 +412,9 @@
   <th>[% gettext("Time") %]</th>
   <th>[% gettext("Internal time") %]</th>
   <th>[% gettext("Description") %]</th>
-  <th>&nbsp;</th>
+  <th width="10%">[% gettext("State") %]</th>
+  <th width="3%">&nbsp;</th>
+  <th width="3%">&nbsp;</th>
 </thead>
 <tbody class="rowdata">
 [% FOREACH key IN closedtasks.keys.sort %]
@@ -394,7 +461,31 @@
 <img class="right" src="themes/[% theme %]/icon/16x16/actions/multirow.png" title="[% row.longdescription_tooltip %]" />
 [% END %]
 </td>
-
+<td>
+<form action="" method="post">
+<select name="taskstate">
+[% FOREACH option IN taskstates.keys.sort %]
+	[% state = option %]
+	[% IF row.completed == option %]
+		<option value=[% row.completed %] selected >[% taskstates.$state %]</option>
+	[% ELSE %]
+		<option value=[% option %] >[% taskstates.$state %]</option>
+	[% END %]
+[% END %]
+</select>
+        <input type="hidden" name="module" value="[% module %]" />
+        <input type="hidden" name="companyid" value="[% row.companyid %]" />
+        <input type="hidden" name="hours" value="[% row.hours %]" />
+        <input type="hidden" name="inthours" value="[% row.inthours %]" />
+        <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="action" value="writeeditedtask" />
+        <input type="hidden" name="userid" value="[% uid %]" />
+        <input type="hidden" name="target" value="[% row.id %]" />
+<td class="center">
+        <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
+</td>
+</form>
+</td>
 <td class='center'>
 <a href="?module=[% module %]&amp;action=edittask&amp;target=[% row.id %]">
 <img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a>
@@ -406,7 +497,7 @@
 [% totcount = closedtasks.-1 %]
 <td>[% totcount.normal %]h&nbsp;[% totcount.minutes %]min</td>
 <td>[% totcount.internal %]h&nbsp;[% totcount.intminutes %]min</td>
-<td colspan=2>&nbsp;</td>
+<td colspan=4>&nbsp;</td>
 </tr>
 </tbody>
 </table>

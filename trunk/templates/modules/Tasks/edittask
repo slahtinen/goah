@@ -92,6 +92,20 @@
 	[% row = 'even' %]
 [% END %]
 [% END %]
+<tr>
+<td>[% gettext("Task state") %]</td>
+<td>
+<select name="taskstate">
+[% FOREACH option IN taskstates.keys.sort %]
+	[% state = option  %]
+	[% IF state == dbdata.completed %]
+		<option value="[% option %]" selected>[% taskstates.$state %]</option>
+	[% ELSE %]
+		<option value="[% option %]">[% taskstates.$state %]</option>
+	[% END %]
+[% END %]
+</select>
+
 [% IF !(dbdata.basket_id > 0 || dbdata.basket_id == -1) %]
 	<tr>
 	<td>[% gettext("Delete") %]</td><td><input type='checkbox' name='delete' /> [% gettext("Warning! No further confirmation!") %]</td></tr> 
@@ -110,4 +124,10 @@
 	<tr><td>[% gettext("Hours moved to basket") %]</td></tr>
 [% END %]
 </table>
+</select>
+</td>
+</tr>
 </form>
+
+
+
