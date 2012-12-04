@@ -54,7 +54,6 @@ my %companydbfieldnames = (
                         2 => { field => 'vat_id', name => __('VAT -id'), type => 'textfield', required => '1' },
                         3 => { field => 'name', name => __('Name'), type => 'textfield', required => '1' },
                         5 => { field => 'www', name => __('Homepage address'), type => 'textfield', required => '0' },
-                        6 => { field => 'email', name => __('Email address'), type => 'textfield', required => '1' },
                 );
 
 #
@@ -303,20 +302,7 @@ sub Start {
 		} elsif($q->param('action') eq 'goahsettings') {
 			
 			$variables{'function'} = 'modules/Systemsettings/goahsettings';
-			$variables{'vatclasses'} = ReadSetup('vat');
-			$variables{'paymentconditions'} = ReadSetup('paymentcondition');
-			$variables{'reclamationtimes'} = ReadSetup('reclamationtime');
-			$variables{'delayinterests'} = ReadSetup('delayinterests');
-			$variables{'syslocale'} = ReadSetup('locale');
 			$variables{'submenuselect'}="goahsettings";
-
-			$variables{'smtpserver_name'} = ReadSetup('smtpserver_name',1);
-			$variables{'smtpserver_port'} = ReadSetup('smtpserver_port',1);
-			$variables{'smtpserver_ssl'} = ReadSetup('smtpserver_ssl',1);
-			$variables{'smtpserver_username'} = ReadSetup('smtpserver_username',1);
-			$variables{'smtpserver_password'} = ReadSetup('smtpserver_password',1);
-
-			$variables{'languages'} = goah::GoaH->ReadLanguages();
 
 		} elsif($q->param('action') eq 'newsetting' || $q->param('action') eq 'updatesetting') {
 			
@@ -326,20 +312,7 @@ sub Start {
 				goah::Modules->AddMessage('error',__("Can't write setting to database."));
 			}
 			$variables{'function'} = 'modules/Systemsettings/goahsettings';
-			$variables{'vatclasses'} = ReadSetup('vat');
-			$variables{'paymentconditions'} = ReadSetup('paymentcondition');
-			$variables{'reclamationtimes'} = ReadSetup('reclamationtime');
-			$variables{'syslocale'} = ReadSetup('locale');
-			$variables{'languages'} = goah::GoaH->ReadLanguages();
-			$variables{'delayinterests'} = ReadSetup('delayinterests');
 			$variables{'submenuselect'}="goahsettings";
-
-			$variables{'smtpserver_name'} = ReadSetup('smtpserver_name',1);
-			$variables{'smtpserver_port'} = ReadSetup('smtpserver_port',1);
-			$variables{'smtpserver_ssl'} = ReadSetup('smtpserver_ssl',1);
-			$variables{'smtpserver_username'} = ReadSetup('smtpserver_username',1);
-			$variables{'smtpserver_password'} = ReadSetup('smtpserver_password',1);
-
 
 		} elsif($q->param('action') eq 'deletesetting') {
 
@@ -349,23 +322,32 @@ sub Start {
 				goah::Modules->AddMessage('error',__("Can't remove setting from database."));
 			}
 			$variables{'function'} = 'modules/Systemsettings/goahsettings';
-			$variables{'vatclasses'} = ReadSetup('vat');
-			$variables{'paymentconditions'} = ReadSetup('paymentcondition');
-			$variables{'reclamationtimes'} = ReadSetup('reclamationtime');
-			$variables{'delayinterests'} = ReadSetup('delayinterests');
 			$variables{'submenuselect'}="goahsettings";
-
-			$variables{'smtpserver_name'} = ReadSetup('smtpserver_name',1);
-			$variables{'smtpserver_port'} = ReadSetup('smtpserver_port',1);
-			$variables{'smtpserver_ssl'} = ReadSetup('smtpserver_ssl',1);
-			$variables{'smtpserver_username'} = ReadSetup('smtpserver_username',1);
-			$variables{'smtpserver_password'} = ReadSetup('smtpserver_password',1);
 
 		} else {
 
 			goah::Modules->AddMessage('error',__("Module doesn't have function '").$q->param('action')."'.");
 			$variables{'function'} = 'modules/blank';
 		}
+
+
+		# Read setup variables to template variables
+		my $act=$q->param('action');
+		if($act eq 'deletesetting' || $act eq 'newsetting' || $act eq 'updatesetting' || $act eq 'goahsettings') {
+			$variables{'systemlocale'} = ReadSetup('locale',1);
+			$variables{'vatclasses'} = ReadSetup('vat');
+			$variables{'paymentconditions'} = ReadSetup('paymentcondition');
+			$variables{'reclamationtimes'} = ReadSetup('reclamationtime');
+			$variables{'delayinterests'} = ReadSetup('delayinterests');
+			$variables{'smtpserver_name'} = ReadSetup('smtpserver_name',1);
+			$variables{'smtpserver_port'} = ReadSetup('smtpserver_port',1);
+			$variables{'smtpserver_ssl'} = ReadSetup('smtpserver_ssl',1);
+			$variables{'smtpserver_username'} = ReadSetup('smtpserver_username',1);
+			$variables{'smtpserver_password'} = ReadSetup('smtpserver_password',1);
+			$variables{'languages'} = goah::GoaH->ReadLanguages();
+		}
+
+
 	} 
 
 	return \%variables;
@@ -409,52 +391,55 @@ sub DeleteSetup {
 # Parameters:
 #
 #   category - Category name to be retrieved
-#   hash - If set to 1 return values in hash instead of class::dbi resources
-#          This is an temporary option until all functions using this are
-#          migrated to hash-format
+#   single - If set to 1 return values in hash without sorting key, useful
+#   	     when retrieving only single value
 #
 # Returns:
 #
 #   Fail - 0
-#   Success - Pointer to Class::DBI resource
+#   Success - Hash reference
 #
 sub ReadSetup {
 
-	if($_[0]=~/goah::Modules::Systemsettings/) {
-		shift;
-	}
+	shift if($_[0]=~/goah::Modules::Systemsettings/);
 
 	unless($_[0]) {
-		goah::Modules->AddMessage('error',__("Missing category to search settings"));
+		goah::Modules->AddMessage('error',__("Missing category to search settings"),__FILE__,__LINE__,caller());
 		return 0;
 	}
 
-	use goah::Database::Setup;
-	my @data = goah::Database::Setup->search_where( { category => $_[0] }, { order_by => 'sort' } );
+	use goah::Db::Setup::Manager;
+	my $datap = goah::Db::Setup::Manager->get_setup( [ category => $_[0] ] , sort_by => 'sort');
 
+	unless($datap) {
+		goah::Modules->AddMessage('error',__("Couldn't find any settings by category")." '".$_[0]."'",__FILE__,__LINE__,caller());
+		return 0;
+	}
+
+	my @data=@$datap;
 	if(scalar(@data)==0) {
-		goah::Modules->AddMessage('debug',"Empty result set for settings with category ".$_[0]);
+		goah::Modules->AddMessage('debug',"Empty result set for settings with category ".$_[0],__FILE__,__LINE__,caller());
 		return 0;
 	}
 
-	if($_[1]) {
-	
-		my %sdata;
-		my $sortidx=10000000;
-		my @fields=qw(id category item value sort def);
+	my %sdata;
+	my $sortidx=10000000;
+	my @fields=qw(id category item value sort def);
 
-		foreach (@data) {
-			
-			foreach my $k (@fields) {
+
+	foreach (@data) {
+		
+		foreach my $k (@fields) {
+			unless($_[1]) {	
 				$sdata{$sortidx}{$k}=$_->$k;
+			} else {
+				$sdata{$k}=$_->$k;
 			}
-			$sortidx++;
 		}
-		return \%sdata;
+		$sortidx++;
 	}
+	return \%sdata;
 
-	goah::Modules->AddMessage('debug',"Old version of goah::Modules::Systemsettings->ReadSetup called",__FILE__,__LINE__,caller());
-	return \@data;
 }
 
 #

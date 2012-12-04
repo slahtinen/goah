@@ -14,7 +14,7 @@
 <option value="C">-- [% gettext("Select language") %] --</option>
 [% FOREACH key IN languages.keys.sort %]
 [% lang = languages.$key %]
-[% IF syslocale.0.item == lang.locale %]
+[% IF systemlocale.item == lang.locale %]
 <option value="[% lang.locale %]" selected>[% lang.language %]</option>
 [% ELSE %]
 <option value="[% lang.locale %]">[% lang.language %]</option>
@@ -22,14 +22,14 @@
 [% END %]
 </td><td class="center">
 <p>
-[% IF syslocale.0.id != '' %]
+[% IF systemlocale.0.id != '' %]
 <input type="hidden" name="action" value="updatesetting" />
 [% ELSE %]
 <input type="hidden" name="action" value="newsetting" />
 [% END %]
 <input type="hidden" name="category" value="locale" />
 <input type="hidden" name="module" value="[% module %]" />
-<input type="hidden" name="id" value="[% syslocale.0.id %]" />
+<input type="hidden" name="id" value="[% systemlocale.0.id %]" />
 <input type="image" name="submit" src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="[% gettext('Save') %]" />
 </p>
 </form>
@@ -53,7 +53,8 @@
 </thead>
 <tbody class="rowdata">
 [% rowc = 'even' %]
-[% FOREACH row IN vatclasses %]
+[% FOREACH key IN vatclasses.keys.sort %]
+	[% row = vatclasses.$key %]
 
 	<tr class="[% rowc %]">
 	<td>
@@ -135,7 +136,8 @@
 </thead>
 <tbody class="rowdata">
 [% rowc = 'even' %]
-[% FOREACH row IN paymentconditions %]
+[% FOREACH key IN paymentconditions.keys.sort %]
+	[% row = paymentconditions.$key %]
 
 	<tr class="[% rowc %]">
 	<td>
@@ -216,7 +218,8 @@
 </thead>
 <tbody class="rowdata">
 [% rowc = 'even' %]
-[% FOREACH row IN delayinterests %]
+[% FOREACH key IN delayinterests.keys.sort %]
+	[% row = delayinterests.$key %]
 
 	<tr class="[% rowc %]">
 	<td>
@@ -298,7 +301,8 @@
 </thead>
 <tbody class="rowdata">
 [% rowc = 'even' %]
-[% FOREACH row IN reclamationtimes %]
+[% FOREACH key IN reclamationtimes.keys.sort %]
+	[% row = reclamationtimes.$key %]
 
         <tr class="[% rowc %]">
         <td>
@@ -367,8 +371,8 @@
 <form action="" method="post">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="category" value="smtpserver_name" />
-<input name='value' value="[% smtpserver_name.10000000.value(";") %]" />
-<input type="hidden" name="id" value="[% smtpserver_name.10000000.id %]" />
+<input name='value' value="[% smtpserver_name.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_name.id %]" />
 <input type="hidden" name="action" value="updatesetting" />
 </td>
 <td>
@@ -383,8 +387,8 @@
 <form action="" method="post">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="category" value="smtpserver_port" />
-<input name="value" value="[% smtpserver_port.10000000.value %]" />
-<input type="hidden" name="id" value="[% smtpserver_port.10000000.id %]" />
+<input name="value" value="[% smtpserver_port.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_port.id %]" />
 <input type="hidden" name="action" value="updatesetting" />
 </td>
 <td>
@@ -399,8 +403,8 @@
 <form action="" method="post">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="category" value="smtpserver_ssl" />
-<input name="value" value="[% smtpserver_ssl.10000000.value %]" />
-<input type="hidden" name="id" value="[% smtpserver_ssl.10000000.id %]" />
+<input name="value" value="[% smtpserver_ssl.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_ssl.id %]" />
 <input type="hidden" name="action" value="updatesetting" />
 </td>
 <td>
@@ -415,8 +419,8 @@
 <form action="" method="post">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="category" value="smtpserver_username" />
-<input name="value" value="[% smtpserver_username.10000000.value %]" />
-<input type="hidden" name="id" value="[% smtpserver_username.10000000.id %]" />
+<input name="value" value="[% smtpserver_username.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_username.id %]" />
 <input type="hidden" name="action" value="updatesetting" />
 </td>
 <td>
@@ -431,8 +435,8 @@
 <form action="" method="post">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="category" value="smtpserver_password" />
-<input name="value" value="[% smtpserver_password.10000000.value %]" />
-<input type="hidden" name="id" value="[% smtpserver_password.10000000.id %]" />
+<input name="value" value="[% smtpserver_password.value %]" />
+<input type="hidden" name="id" value="[% smtpserver_password.id %]" />
 <input type="hidden" name="action" value="updatesetting" />
 </td>
 <td>

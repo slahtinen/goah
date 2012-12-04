@@ -51,10 +51,10 @@ setlocale(LC_ALL, 'C');
 
 # Check if default locale is set
 use goah::Modules::Systemsettings;
-my $locref = goah::Modules::Systemsettings->ReadSetup('locale');
+my $locref = goah::Modules::Systemsettings->ReadSetup('locale',1);
 if($locref != 0) {
-	my @loc = @$locref;
-	setlocale(LC_ALL,$loc[0]->item);
+	my %loc = %$locref;
+	setlocale(LC_ALL,$loc{'item'});
 }
 
 #
@@ -266,13 +266,13 @@ if($auth==1) {
 		# there's more of this kind of functions I suppose we should
 		# build someting more sophisticated for this, but for now this
 		# should do.
-		my $cronp = goah::Modules::Systemsettings->ReadSetup('runcron');
+		my $cronp = goah::Modules::Systemsettings->ReadSetup('runcron',1);
 		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 		my $runcron=0;
 		unless($cronp eq "0") {
-			my @cronarr=@$cronp;
-			my $cron=$cronarr[0];
-			my $datetxt=$cron->value;
+			my %cron=%$cronp;
+			my $datetxt=$cron{'value'};
+
 			my @date=split("-",$datetxt);
 		
 			if($date[0] < $year+1900) {

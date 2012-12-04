@@ -1151,7 +1151,7 @@ sub ReadProductsByGroup {
 	my %pdata;
 	my $field;
 	my $i=100000;
-	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat',1);
+	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat');
 	my %vat=%$vatp;
 	foreach my $prod (@data) {
 		foreach my $key (keys %productsdbfields) {

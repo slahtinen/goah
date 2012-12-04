@@ -33,7 +33,7 @@
 		[% loopfirst = 1 %]
 
 		[%# An ugly fix to keep things running while migration to Rose::DB is incomplete %]
-		[% IF data.field == 'supplier' || data.field == 'vat' || data.field == 'storage' %]
+		[% IF data.field == 'supplier' || data.field == 'storage' %]
 			[% FOREACH item IN data.data %]
 				[% IF item.item != '' %]
 					[% IF item.def == 1 %]
@@ -59,6 +59,9 @@
 		[% ELSE %]
 			[% FOREACH key IN data.data.keys.sort %]
 				[% item = data.data.$key %]
+				[% IF data.field == 'vat' %]
+					[% item.name = item.item %]
+				[% END %]
 				<option value="[% item.id %]">[% item.name %]</option>
 			[% END %]
 			</select>

@@ -33,19 +33,11 @@
 		<select name="[% field.field %]">
 		<option value="-1">-- [% gettext("Select one") %] --</option>
 		[%# Ugly-ish hack to fix loops for both HASHes and arrays, this should be fixed soon! %]
-		[% IF field.field == 'manufacturer' || field.field == 'groupid' %]
+		[% IF field.field == 'manufacturer' || field.field == 'groupid' || field.field == 'vat' %]
 		[% FOREACH k IN field.data.keys.sort %]
 			[% item = field.data.$k %]
 			[% EXT = '' %]
 			[% IF item.id == data.$fieldname %]
-				[% EXT = 'selected' %]
-			[% END %]
-			<option value="[% item.id %]" [% EXT %]>[% item.name %]</option>
-		[% END %]
-		[% ELSE %]
-		[% FOREACH item IN field.data %]
-			[% EXT = '' %]
-			[% IF item.id == data.$fieldname || item.value == data.$fieldname || item.item == data.$fieldname %]
 				[% EXT = 'selected' %]
 			[% END %]
 
@@ -54,6 +46,17 @@
 				[% IF item.item - data.$fieldname == 0 %]
 					[% EXT = 'selected' %]
 				[% END %]
+				[% item.name = item.item %]
+			[% END %]
+
+			<option value="[% item.id %]" [% EXT %]>[% item.name %]</option>
+		[% END %]
+		[% ELSE %]
+		[%# We shouldn't end up here ever, since the code below is (should be) obsolete %]
+		[% FOREACH item IN field.data %]
+			[% EXT = '' %]
+			[% IF item.id == data.$fieldname || item.value == data.$fieldname || item.item == data.$fieldname %]
+				[% EXT = 'selected' %]
 			[% END %]
 
 			[% IF item.item != '' %]
