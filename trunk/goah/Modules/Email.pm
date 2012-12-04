@@ -67,45 +67,11 @@ sub SendEmail {
 	my $tmp_user = goah::Modules::Systemsettings->ReadSetup('smtpserver_username',1);
 	my $tmp_password = goah::Modules::Systemsettings->ReadSetup('smtpserver_password',1);
 	
-	my $smtp_server;
-	if ($tmp_smtp) {
-		my %tmphash=%$tmp_smtp;
-		$tmp_smtp=$tmphash{'10000000'};
-		my %smtpdata=%$tmp_smtp;
-		$smtp_server=$smtpdata{'value'};
-	}
-
-	my $smtp_port;
-	if ($tmp_port) {
-		my %tmphash=%$tmp_port;
-		$tmp_port=$tmphash{'10000000'};
-		my %smtpdata=%$tmp_port;
-		$smtp_port=$smtpdata{'value'};
-	}
-
-	my $smtp_ssl;
-	if ($tmp_ssl) {
-		my %tmphash=%$tmp_ssl;
-		$tmp_ssl=$tmphash{'10000000'};
-		my %smtpdata=%$tmp_ssl;
-		$smtp_ssl=$smtpdata{'value'};
-	}
-
-	my $smtp_username;
-	if ($tmp_user) {
-		my %tmphash=%$tmp_user;
-		$tmp_user=$tmphash{'10000000'};
-		my %smtpdata=%$tmp_user;
-		$smtp_username=$smtpdata{'value'};
-	}
-
-	my $smtp_password;
-	if ($tmp_password) {
-		my %tmphash=%$tmp_password;
-		$tmp_password=$tmphash{'10000000'};
-		my %smtpdata=%$tmp_password;
-		$smtp_password=$smtpdata{'value'};
-	}
+	my %smtp_server=%$tmp_smtp;
+	my %smtp_port=%$tmp_port;
+	my %smtp_ssl=%$tmp_ssl;
+	my %smtp_user=%$tmp_user;
+	my %smtp_password=%$tmp_password;
 
 	# goah::Modules->AddMessage('warn',"SERVER: $smtp_server PORT: $smtp_port SSL: $smtp_ssl USER: $smtp_username PASS: $smtp_password");
 
@@ -146,10 +112,10 @@ sub SendEmail {
         ); 
 
 	# Send email
-	if ($smtp_ssl == 1) {
+	if ($smtp_ssl{'value'} == 1) {
 		use Net::SMTP::SSL;
-		my $smtp = Net::SMTP::SSL->new($smtp_server, Port=>$smtp_port) or die "Can't connect";
-			$smtp->auth($smtp_username, $smtp_password);
+		my $smtp = Net::SMTP::SSL->new($smtp_server{'value'}, Port=>$smtp_port{'value'}) or die "Can't connect";
+			$smtp->auth($smtp_user{'value'}, $smtp_password{'value'});
 			$smtp->mail($var{'from'});
 			$smtp->to($var{'to'});
 			$smtp->cc($var{'cc'});
@@ -158,7 +124,7 @@ sub SendEmail {
 			$smtp->dataend();
 			$smtp->quit();
 	} else {
-        	$msg->send('smtp',$smtp_server);
+        	$msg->send('smtp',$smtp_server{'value'});
 	}
 }
 
