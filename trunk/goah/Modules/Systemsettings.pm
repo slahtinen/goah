@@ -253,6 +253,7 @@ sub Start {
 			$variables{'function'}  = 'modules/Systemsettings/editlocation';
 			$variables{'locationdata'} = goah::Modules::Customermanagement::ReadLocationdata($q->param('target'));
 
+
 		} elsif($q->param('action') eq 'editperson') {
 
 			$variables{'function'}  = 'modules/Systemsettings/editperson';
@@ -281,6 +282,8 @@ sub Start {
 			$variables{'companydata'} = ReadOwnerInfo();
 			$variables{'function'} = 'modules/Systemsettings/companyinfo';
 			$variables{'locations'} = ReadOwnerLocations();
+			$variables{'companypersonnel'} = ReadOwnerPersonnel();
+			$variables{'bankaccounts'} = ReadBankAccounts();
 
 		} elsif($q->param('action') eq 'deletelocation') {
 
