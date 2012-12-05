@@ -1,5 +1,8 @@
 <h2>[% gettext("Edit time tracking") %]</h2>
 <form action="" method="post">
+[% IF fromreporting == 1 %]
+<input type='hidden' name='fromreporting' value='1' />
+[% END %]
 <table>
 <tr>
   <td class='info' colspan='2'>[% gettext("Fields marked with * are required") %]</td>

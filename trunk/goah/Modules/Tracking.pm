@@ -96,6 +96,14 @@ sub Start {
 	$variables{'timetrackingdb'} = \%timetrackingdb;
 
 
+	# Helper variables to generate an selectbox for search parameters on reporting
+	$variables{'yesnoselect'} = { 	0 => { key => 'yesno', value => __("All hours") },
+					1 => { key => 'yes', value => __("Only debit hours") },
+					2 => { key => 'no', value => __("Only internal hours") } };
+	$variables{'debitselect'} = { 	0 => { key => 'unimported', value => __("Only not imported hours") },
+					1 => { key => 'imported', value => __("Only imported hours") },
+					2 => { key => 'all', value => __("All hours") } };
+	
 	my ($sec,$min,$hour,$mday,$mon,$yearnow,$wday,$yday,$isdst) = localtime(time);
 	$yearnow+=1900;
 	$mon++;
@@ -119,10 +127,18 @@ sub Start {
 			} else {
 				goah::Modules->AddMessage('error',__("Couldn't update information into database!"),__FILE__,__LINE__);
 			}
+			if($q->param('fromreporting')) {
+				$variables{'function'} = "modules/Tracking/reporting";
+				$variables{'dbdata'}=ReadHours('','','','','yes','unimported');
+				$variables{'dbcompanies'}=goah::Modules::Customermanagement->ReadAllCompanies(1);
+				$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
+				$variables{'timetrackstatuses'}=\%timetrackstatuses;
+			}
 
 		} elsif($q->param('action') eq 'edithourtracking') {
 			$variables{'function'} = "modules/Tracking/edithourtracking";
 			$variables{'dbdata'} = ReadData('hours',"id".$q->param('target'));
+			$variables{'fromreporting'}=$q->param('fromreporting') if($q->param('fromreporting'));
 
 		} elsif($q->param('action') eq 'reporting') {
 			$variables{'function'} = "modules/Tracking/reporting";
@@ -130,16 +146,6 @@ sub Start {
 			$variables{'dbcompanies'}=goah::Modules::Customermanagement->ReadAllCompanies(1);
 			$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
 			$variables{'timetrackstatuses'}=\%timetrackstatuses;
-
-			# Helper variables to generate an selectbox for search parameters
-			$variables{'yesnoselect'} = { 	0 => { key => 'yesno', value => __("All hours") },
-							1 => { key => 'yes', value => __("Only debit hours") },
-							2 => { key => 'no', value => __("Only internal hours") } };
-			$variables{'debitselect'} = { 	0 => { key => 'unimported', value => __("Only not imported hours") },
-							1 => { key => 'imported', value => __("Only imported hours") },
-							2 => { key => 'all', value => __("All hours") } };
-							
-
 
 			# Get data for actual search, or if no parameters are given, search for hours
 			# at current month
