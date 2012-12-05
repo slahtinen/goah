@@ -435,7 +435,7 @@
 <form action="" method="post">
 <input type="hidden" name="module" value="[% module %]" />
 <input type="hidden" name="category" value="smtpserver_password" />
-<input name="value" value="[% smtpserver_password.value %]" />
+<input name="value" type="password" value="[% smtpserver_password.value %]" />
 <input type="hidden" name="id" value="[% smtpserver_password.id %]" />
 <input type="hidden" name="action" value="updatesetting" />
 </td>
