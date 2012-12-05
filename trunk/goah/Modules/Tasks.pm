@@ -368,7 +368,7 @@ sub WriteTasks {
 		$vars{'from'} = $ownerinfo->email;
 		$vars{'to'} = $assigneeinfo{'email'};
 		$vars{'cc'} = $userinfo{'email'};
-		$vars{'charset'} = 'utf8';
+		$vars{'charset'} = 'utf-8';
 		$vars{'status'} = $status;
 		$vars{'taskid'} = $taskid;
 		$vars{'customername'} = $customername;

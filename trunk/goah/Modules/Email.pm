@@ -48,18 +48,13 @@ my $module='Email';
 sub SendEmail {
 
 	shift if($_[0]=~/goah::Modules::Email/);
-	my $hashtmp = $_[0];
-	my %var = %$hashtmp;
-	my $hashtmp2 = $_[1];
-	my %taskstates = %$hashtmp2;
+	my %var = %{$_[0]};
+	my %taskstates = %{$_[1]};
 	my $subject;
 	my $status;
 	my %params;
 	my %options;
 	my $template;
-
-	# Get SMTP values. This really need to be fixed after we have some better
-	# way to get data from Systemsettings. Ugly, but necessary.
 
 	my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
 	my $tmp_port = goah::Modules::Systemsettings->ReadSetup('smtpserver_port',1);
@@ -79,10 +74,12 @@ sub SendEmail {
 
 		if (($var{'status'} == 3) || ($var{'status'} == 4)) {
 			my $tmpstat = lc($taskstates{$var{'status'}});
-			$subject = "[#$var{'taskid'}] Task $tmpstat: "."$var{'description'}";
+			$subject = "[#$var{'taskid'}]_Task_"."$tmpstat:_"."$var{'description'}";
 		} else {
 			$subject = "[#$var{'taskid'}] $taskstates{$var{'status'}} task: "."$var{'description'}";
 		}
+		
+		$subject =~ s/\s+/_/g;;
 
         	$params{status} = $taskstates{$var{'status'}};
         	$params{taskid} = $var{'taskid'};
@@ -99,17 +96,20 @@ sub SendEmail {
         use MIME::Lite::TT;
 
 	$options{INCLUDE_PATH} = 'templates/modules/Email/';
-
+	my $header;
         my $msg = MIME::Lite::TT->new(
 		From => $var{'from'},
 		To => $var{'to'},
 		Cc => $var{'cc'},
 		Charset => $var{'charset'},
-		Subject => $subject,
+		Encoding => 'quoted-printable',
+		Subject => "=?UTF-8?Q?".$subject."?=",
 		Template => $template,
 		TmplOptions => \%options,
 		TmplParams => \%params,
         ); 
+
+	$msg->attr('content-type.charset' => 'UTF-8');
 
 	# Send email
 	if ($smtp_ssl{'value'} == 1) {
