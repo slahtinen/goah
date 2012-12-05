@@ -217,13 +217,19 @@
 	[% END %]
 [% END %]
 </td>
+[% IF t == 3 %]
+<td>[% totcount.hours.-1 %][% gettext("st") %]</td>
+<td>[% gettext("Debit:") %] [% totcount.hours.1 %][% gettext("st") %]</td>
+<td>[% gettext("Internal:") %] [% totcount.hours.0 %][% gettext("st") %]</td>
+[% ELSE %]
 <td>[% totcount.hours.-1 %] h [% totcount.minutes.-1 %] min</td>
 <td>[% gettext("Debit:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
 <td>[% gettext("Internal:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
+[% END %]
 <td>&nbsp;</td>
 </tr>
 [% END %]
-<tr><td colspan=3 class="right">[% gettext("Total") %]</td>
+<tr><td colspan=3 class="right">[% gettext("Total hours") %]</td>
 [% totcount = total.-1 %]
 <td>[% totcount.hours.-1 %]h&nbsp;[% totcount.minutes.-1 %]min</td>
 <td>[% gettext("Debit:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
