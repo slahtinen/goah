@@ -61,14 +61,19 @@ sub SendEmail {
 	my $tmp_ssl = goah::Modules::Systemsettings->ReadSetup('smtpserver_ssl',1);
 	my $tmp_user = goah::Modules::Systemsettings->ReadSetup('smtpserver_username',1);
 	my $tmp_password = goah::Modules::Systemsettings->ReadSetup('smtpserver_password',1);
-	
-	my %smtp_server=%$tmp_smtp;
-	my %smtp_port=%$tmp_port;
-	my %smtp_ssl=%$tmp_ssl;
-	my %smtp_user=%$tmp_user;
-	my %smtp_password=%$tmp_password;
 
-	# goah::Modules->AddMessage('warn',"SERVER: $smtp_server PORT: $smtp_port SSL: $smtp_ssl USER: $smtp_username PASS: $smtp_password");
+	my %smtp_server;
+	my %smtp_port;
+	my %smtp_ssl;
+	my %smtp_user;
+	my %smtp_password;
+
+	if ($tmp_smtp) {%smtp_server=%$tmp_smtp;}
+	if ($tmp_port) {%smtp_port=%$tmp_port;}
+	if ($tmp_ssl) {%smtp_ssl = %$tmp_ssl;}
+	if ($tmp_user) {%smtp_user=%$tmp_user;}
+	if ($tmp_password) {%smtp_password=%$tmp_password;}
+
 
 	if($var{'module'} eq 'Tasks') {
 
@@ -80,6 +85,8 @@ sub SendEmail {
 		}
 		
 		$subject =~ s/\s+/_/g;;
+
+	 	# goah::Modules->AddMessage('warn',"Subject: $subject");
 
         	$params{status} = $taskstates{$var{'status'}};
         	$params{taskid} = $var{'taskid'};
