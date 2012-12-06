@@ -377,8 +377,19 @@ sub WriteTasks {
 		$vars{'description'} = $q->param('description');
 		$vars{'longdescription'} = $q->param('longdescription');
 
-		use goah::Modules::Email;
-		my $email = goah::Modules::Email->SendEmail(\%vars,\%taskstates);
+		# Check that we have smtp-server specified before trying to send email
+		my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
+		my %smtp_server = %$tmp_smtp;	
+	
+		if ($tmp_smtp) {
+			my $tmp = $smtp_server{'value'};	
+			if (length($tmp) > 3) {
+				use goah::Modules::Email;
+				my $email = goah::Modules::Email->SendEmail(\%vars,\%taskstates);
+			} else {
+				goah::Modules->AddMessage('info',"Smtp-server not specified! Cannot send email.");
+			}
+		}	
 	
 	}
 
