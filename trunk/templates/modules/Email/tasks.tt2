@@ -2,10 +2,11 @@
 [% gettext("Description ....... ") %][% description %]
 [% gettext("Customer .......... ") %][% customername %]
 [% gettext("Status ............ ") %][% status %]
+[% gettext("Action ............ ") %][% action %]
 [% gettext("Creator ........... ") %][% creatorname %]
 [% gettext("Assigned to ....... ") %][% assigneename %]
 
-[% gettext("Long description") %]
+[% IF longdescription %][% gettext("Long description") %][% END %]
  
 [% longdescription %]
 

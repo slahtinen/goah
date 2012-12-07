@@ -33,12 +33,22 @@ my $module='Email';
 #
 # Function: SendEmail
 #
-# Start the actual module. Module process is controlled via
-# variables which are coming from another modules.
+# Module process is controlled with hash-variables which
+# are passed from module as hashref. To work right, this
+# module also needs template to process.
 #
 # Parameters:
 #
-#   None
+#   Hashref from module, which should have at least basic
+#   variables.
+#
+#   Required
+#
+#   from - Sender address
+#   to - Where to send email
+#   subject - Subject of the email
+#   template - Template to process
+#
 #
 # Returns:
 #
@@ -48,13 +58,11 @@ my $module='Email';
 sub SendEmail {
 
 	shift if($_[0]=~/goah::Modules::Email/);
-	my %var = %{$_[0]};
-	my %taskstates = %{$_[1]};
-	my $subject;
-	my $status;
-	my %params;
+	my %params = %{$_[0]};
 	my %options;
 	my $template;
+
+	$params{'gettext'} = sub { return __($_[0]); };
 
 	# Read setup values
 	my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
@@ -84,32 +92,6 @@ sub SendEmail {
 	if (length($smtp_user{'value'}) < 1) {$smtp_user{'value'} = '0';}
 	if (length($smtp_password{'value'}) < 1) {$smtp_password{'value'} = '0';}
 
-	# Tasks module
-	if($var{'module'} eq 'Tasks') {
-
-		if (($var{'status'} == 3) || ($var{'status'} == 4)) {
-			my $tmpstat = lc($taskstates{$var{'status'}});
-			$subject = "[#$var{'taskid'}]_Task_"."$tmpstat:_"."$var{'description'}";
-		} else {
-			$subject = "[#$var{'taskid'}] $taskstates{$var{'status'}} task: "."$var{'description'}";
-		}
-		
-		$subject =~ s/\s+/_/g;;
-
-	 	# goah::Modules->AddMessage('warn',"Subject: $subject");
-
-        	$params{status} = $taskstates{$var{'status'}};
-        	$params{taskid} = $var{'taskid'};
-        	$params{customername} = $var{'customername'};
-        	$params{assigneename} = $var{'assigneename'};
-        	$params{creatorname} = $var{'creatorname'};
-        	$params{description} = $var{'description'};
-        	$params{longdescription} = $var{'longdescription'};
-        	$params{gettext} = sub { return __($_[0]); };
-
-		$template = 'tasks.tt2';
-	}
-
 	# Process email template
 	my $tt = Template->new({
     		INCLUDE_PATH => 'templates/modules/Email/',
@@ -117,7 +99,7 @@ sub SendEmail {
 	});
 
 	my $message;
-	$tt->process($template, \%params, \$message);
+	$tt->process($params{'template'}, \%params, \$message);
 
 	# Create and send email
 	use Email::Sender::Simple qw(sendmail);
@@ -152,10 +134,10 @@ sub SendEmail {
 	if ($smtp_server{'value'}){
   		$email = Email::Simple->create(
     			header => [
-      			To => $var{'to'},
-			Cc=> $var{'cc'},
-      			From => $var{'from'},
-      			Subject => "=?UTF-8?Q?".$subject."?=",
+      			To => $params{'to'},
+			Cc=> $params{'cc'},
+      			From => $params{'from'},
+      			Subject => "=?UTF-8?Q?".$params{'subject'}."?=",
     			],
     			body => $message,
 		);

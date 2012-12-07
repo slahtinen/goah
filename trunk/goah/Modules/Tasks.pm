@@ -364,18 +364,30 @@ sub WriteTasks {
 		goah::Modules->AddMessage('debug',"Comp: ".$customername);
 
 		my %vars;
-		$vars{'module'} = 'Tasks';
 		$vars{'from'} = $ownerinfo->email;
 		$vars{'to'} = $assigneeinfo{'email'};
 		$vars{'cc'} = $userinfo{'email'};
-		$vars{'charset'} = 'utf-8';
-		$vars{'status'} = $status;
+		$vars{'status'} = $taskstates{$status};
 		$vars{'taskid'} = $taskid;
 		$vars{'customername'} = $customername;
 		$vars{'creatorname'} = $creatorname;
 		$vars{'assigneename'} = $assigneename;
 		$vars{'description'} = $q->param('description');
 		$vars{'longdescription'} = $q->param('longdescription');
+
+		$vars{'template'} = 'tasks.tt2';
+		$vars{'module'} = 'Tasks';
+
+		if ($update) {
+			$vars{'action'} = "Task updated";
+		} else {
+			$vars{'action'} = "New task";
+		}
+
+		my $subject = "[#$vars{'taskid'}]_".$vars{'action'}.":_"."$vars{'description'}";
+    
+		$subject =~ s/\s+/_/g;
+                $vars{'subject'} = $subject;
 
 		# Check that we have smtp-server specified before trying to send email
 		my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
@@ -385,7 +397,7 @@ sub WriteTasks {
 			my $tmp = $smtp_server{'value'};	
 			if (length($tmp) > 3) {
 				use goah::Modules::Email;
-				my $email = goah::Modules::Email->SendEmail(\%vars,\%taskstates);
+				my $email = goah::Modules::Email->SendEmail(\%vars);
 			} else {
 				goah::Modules->AddMessage('info',"Smtp-server not specified! Cannot send email.");
 			}
