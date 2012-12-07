@@ -33,8 +33,8 @@ my $module='Email';
 #
 # Function: SendEmail
 #
-# Start the actual module. Module process is controlled via HTTP
-# variables which are created internally inside the module.
+# Start the actual module. Module process is controlled via
+# variables which are coming from another modules.
 #
 # Parameters:
 #
@@ -42,7 +42,7 @@ my $module='Email';
 #
 # Returns:
 #
-#   Hash containing relevant bits for frameset generation
+#   1 for success
 #
 
 sub SendEmail {
@@ -56,6 +56,7 @@ sub SendEmail {
 	my %options;
 	my $template;
 
+	# Read setup values
 	my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
 	my $tmp_port = goah::Modules::Systemsettings->ReadSetup('smtpserver_port',1);
 	my $tmp_ssl = goah::Modules::Systemsettings->ReadSetup('smtpserver_ssl',1);
@@ -68,13 +69,22 @@ sub SendEmail {
 	my %smtp_user;
 	my %smtp_password;
 
+	# Check that we have HASH. There can be situation, where HASH mot created, if that setting
+	# has not been saved.
 	if ($tmp_smtp) {%smtp_server=%$tmp_smtp;}
 	if ($tmp_port) {%smtp_port=%$tmp_port;}
 	if ($tmp_ssl) {%smtp_ssl = %$tmp_ssl;}
 	if ($tmp_user) {%smtp_user=%$tmp_user;}
 	if ($tmp_password) {%smtp_password=%$tmp_password;}
 
+	# Now, check that we have some real value. If not, set default values.
+	if (length($smtp_server{'value'}) < 1) {$smtp_server{'value'} = 0;}
+	if (length($smtp_port{'value'}) < 1) {$smtp_port{'value'} = 25;}
+	if ($smtp_ssl{'value'} != 1) {$smtp_ssl{'value'} = '0';}
+	if (length($smtp_user{'value'}) < 1) {$smtp_user{'value'} = '0';}
+	if (length($smtp_password{'value'}) < 1) {$smtp_password{'value'} = '0';}
 
+	# Tasks module
 	if($var{'module'} eq 'Tasks') {
 
 		if (($var{'status'} == 3) || ($var{'status'} == 4)) {
@@ -99,40 +109,63 @@ sub SendEmail {
 
 		$template = 'tasks.tt2';
 	}
-	
-        use MIME::Lite::TT;
 
-	$options{INCLUDE_PATH} = 'templates/modules/Email/';
-	my $header;
-        my $msg = MIME::Lite::TT->new(
-		From => $var{'from'},
-		To => $var{'to'},
-		Cc => $var{'cc'},
-		Charset => $var{'charset'},
-		Encoding => 'quoted-printable',
-		Subject => "=?UTF-8?Q?".$subject."?=",
-		Template => $template,
-		TmplOptions => \%options,
-		TmplParams => \%params,
-        ); 
+	# Process email template
+	my $tt = Template->new({
+    		INCLUDE_PATH => 'templates/modules/Email/',
+    		EVAL_PERL    => 1,
+	});
 
-	$msg->attr('content-type.charset' => 'UTF-8');
+	my $message;
+	$tt->process($template, \%params, \$message);
 
-	# Send email
-	if ($smtp_ssl{'value'} == 1) {
-		use Net::SMTP::SSL;
-		my $smtp = Net::SMTP::SSL->new($smtp_server{'value'}, Port=>$smtp_port{'value'}) or die "Can't connect";
-			$smtp->auth($smtp_user{'value'}, $smtp_password{'value'});
-			$smtp->mail($var{'from'});
-			$smtp->to($var{'to'});
-			$smtp->cc($var{'cc'});
-			$smtp->data();
-			$smtp->datasend($msg->as_string);
-			$smtp->dataend();
-			$smtp->quit();
+	# Create and send email
+	use Email::Sender::Simple qw(sendmail);
+ 	use Email::Simple;
+  	use Email::Simple::Creator;
+	use Email::Sender::Transport::SMTP;
+
+	# Specify SMTP-connection parameters
+	my $transport;
+	if (($smtp_user{'value'}) && $smtp_password{'value'}){
+
+		$transport = Email::Sender::Transport::SMTP->new({
+    			host => $smtp_server{'value'},
+    			port => $smtp_port{'value'},
+			ssl => $smtp_ssl{'value'},
+			sasl_username => $smtp_user{'value'}, 
+			sasl_password => $smtp_password{'value'}, 
+  		});
+
 	} else {
-        	$msg->send('smtp',$smtp_server{'value'});
+
+		$transport = Email::Sender::Transport::SMTP->new({
+    			host => $smtp_server{'value'},
+    			port => $smtp_port{'value'},
+			ssl => $smtp_ssl{'value'},
+		});
+
 	}
+
+	# Put all together and process email
+	my $email;
+	if ($smtp_server{'value'}){
+  		$email = Email::Simple->create(
+    			header => [
+      			To => $var{'to'},
+			Cc=> $var{'cc'},
+      			From => $var{'from'},
+      			Subject => "=?UTF-8?Q?".$subject."?=",
+    			],
+    			body => $message,
+		);
+
+		sendmail($email, { transport => $transport});
+
+	} else {
+		goah::Modules->AddMessage('error',"Sending email failed: Incorrect settings! Supported connection types are: SMTP, SMTPS (SSL) and SMTP AUTH");
+	}
+
 }
 
 1;
