@@ -199,7 +199,7 @@ if($auth==1) {
 	$templatevars{'escape'}= sub{ 
 					$_[0]=~s/&euro;/\\euro/g; 
 					$_[0]=~ s/([\#\$\%\&\_\^\{\}\~])/\\$1/g; 
-					if($_[1]>0) {
+					if($_[1] && $_[1]>0) {
 						if(length($_[0])>$_[1]) {
 							$_[0]=~s/(.{$_[1]})/\1\\allowbreak /g;
 						}
@@ -212,7 +212,7 @@ if($auth==1) {
 	$templatevars{'logo'} = getcwd()."/pdflogo.jpg";
 
 	# Debugging, print only the tex -code
-	if(1==0) {
+	if(0==1) {
 		print $q->header( -type => 'text/plain', -charset => 'utf-8' );
 		$tt->process($templatevars{'file'},\%templatevars) or
 			die "ERR! ".$tt->error();

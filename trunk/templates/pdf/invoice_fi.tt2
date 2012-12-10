@@ -97,7 +97,7 @@
 
 [% FOREACH key IN rows.keys.sort %]
 [% row = rows.$key %]
-\\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% row.vat %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %]
+\\ [% escape(row.code) %] & [% escape(row.name) %] & [% row.amount %] [% row.unit %] & [% escape(row.vat) %] & [% row.sell %] & [% row.sellvat %] & [% row.rowtotalvat %]
 [% IF row.rowinfo != '' %]
 \\* \scriptsize Lisätietoja: & \scriptsize [% escape(row.rowinfo) %] & & & & &
 [% END %]
