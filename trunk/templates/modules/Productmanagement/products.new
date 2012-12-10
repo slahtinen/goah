@@ -62,7 +62,7 @@
 				[% IF data.field == 'vat' %]
 					[% item.name = item.item %]
 				[% END %]
-				<option value="[% item.id %]">[% item.name %]</option>
+				<option value="[% item.id %]">[% item.name %] [% item.id %]</option>
 			[% END %]
 			</select>
 			</td>

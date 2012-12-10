@@ -43,7 +43,10 @@
 
 			[%# Another ugly fix to keep VAT classes on order, this way 23.00 == 23 %]
 			[% IF field.field == 'vat' %] 
-				[% IF item.item - data.$fieldname == 0 %]
+				[% IF item.value - data.$fieldname == 0 %]
+					[% EXT = 'selected' %]
+				[% END %]
+				[% IF item.id == data.$fieldname %]
 					[% EXT = 'selected' %]
 				[% END %]
 				[% item.name = item.item %]
