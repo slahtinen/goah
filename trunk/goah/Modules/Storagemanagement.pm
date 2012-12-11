@@ -1400,6 +1400,7 @@ sub ReadShipmentrows {
 						goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorr ect!"),__FILE__,__LINE__);
 					} else {
 						%vat=%$vatp;
+						$rowdata{$i}{'vatitem'}=$vat{'item'};
 					}
 
 					$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$vat{'value'},$uid,'out',$settref);

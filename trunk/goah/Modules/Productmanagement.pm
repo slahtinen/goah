@@ -536,7 +536,15 @@ sub WriteNewItem {
 			if($q->param($fieldinfo{'field'})) {
 
 				my $sum = $q->param($fieldinfo{'field'});
-				my $vat = $q->param('vat');
+
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($q->param('vat'));
+				my %vath;
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				} else {
+					%vath=%$vatp;
+				}
+				my $vat=$vath{'value'};
 
 				$data{$fieldinfo{'field'}} = goah::GoaH->FormatCurrency($sum,$vat,$uid,'in',$settref);
 			}

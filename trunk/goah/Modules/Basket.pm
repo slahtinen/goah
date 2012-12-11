@@ -1023,7 +1023,14 @@ sub UpdateBasketRow {
 						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
 					} else {
 						my %prod = %$prodpoint;
-						$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase_vat'),$prod{'vat'},0,'in',0);
+						my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+						my %vat;
+						unless($vatp) {
+							goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+						} else {
+							%vat=%$vatp;
+						}
+						$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase_vat'),$vat{'value'},0,'in',0);
 					}
 				}
 	
@@ -1042,7 +1049,14 @@ sub UpdateBasketRow {
 						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
 					} else {
 						my %prod = %$prodpoint;
-						$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell_vat'),$prod{'vat'},0,'in',0);
+						my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+						my %vat;
+						unless($vatp) {
+							goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+						} else {
+							%vat=%$vatp;
+						}
+						$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell_vat'),$vat{'value'},0,'in',0);
 					}
 				}
 
@@ -1170,8 +1184,17 @@ sub AddToBasket {
 
 				$hourid=$hours{'id'};
 				$prod=$product{'id'};
-				$purchase=goah::GoaH->FormatCurrency($product{'purchase'},$product{'vat'},$uid,'out',$settref);;
-				$sell=goah::GoaH->FormatCurrency($product{'sell'},$product{'vat'},$uid,'out',$settref);
+
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($product{'vat'});
+				my %vat;
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				} else {
+					%vat=%$vatp;
+				}
+
+				$purchase=goah::GoaH->FormatCurrency($product{'purchase'},$vat{'value'},$uid,'out',$settref);;
+				$sell=goah::GoaH->FormatCurrency($product{'sell'},$vat{'value'},$uid,'out',$settref);
 				$amount=$hours{'hours'};
 				$desc=$hours{'day'}.' '.$hours{'username'}.': '.$hours{'description'};
 
@@ -1199,7 +1222,7 @@ sub AddToBasket {
 				}
 			}
 
-			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount,$desc)==1) {
+			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount,$desc,1)==1) {
 				goah::Modules->AddMessage('debug',"Added productid $prod to basket",__FILE__,__LINE__);
 			} else {
 				goah::Modules->AddMessage('error',"Can't add product id $prod to basket!",__FILE__,__LINE__);
@@ -1298,6 +1321,7 @@ sub AddToBasket {
 #   sell - Selling price
 #   amount - Row amount 
 #   rowinfo - Additional information for the row
+#   vat0 - Leave vat caclulations out of the process, for example when importing hours to basket
 #
 sub AddProductToBasket {
 
