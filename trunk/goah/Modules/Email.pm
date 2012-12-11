@@ -101,6 +101,21 @@ sub SendEmail {
 	my $message;
 	$tt->process($params{'template'}, \%params, \$message);
 
+	$params{'body'} = $message;
+
+	# Create messageid and timestamp
+	use Email::MessageID;
+	$params{'messageid'} = Email::MessageID->new;
+	$params{'timestamp'} = time();
+
+	# Value for outgoing email
+	$params{'type'} = '1';	
+
+	# Save email to database.
+	my $dbitem = goah::Modules::Email->WriteEmail(\%params);
+	my %dbdata = %$dbitem;
+	my $rowid = $dbdata{'id'};
+
 	# Create and send email
 	use Email::Sender::Simple qw(sendmail);
  	use Email::Simple;
@@ -134,20 +149,142 @@ sub SendEmail {
 	if ($smtp_server{'value'}){
   		$email = Email::Simple->create(
     			header => [
-      			To => $params{'to'} [NOTIFY => 'SUCCESS'],
+      			To => $params{'to'},
 			Cc=> $params{'cc'},
       			From => $params{'from'},
       			Subject => "=?UTF-8?Q?".$params{'subject'}."?=",
+			'X-GoaH-Message-Id' => $params{'messageid'},
     			],
     			body => $message,
 		);
 
-		sendmail($email, { transport => $transport});
+		# Ask confirmation for email reading?
+		my $asknotify = $params{'asknotify'};
+		if ($asknotify == 1) {
+			$email->header_set('Disposition-Notification-To' => $params{'from'});
+		}
 
-	} else {
-		goah::Modules->AddMessage('error',"Sending email failed: Incorrect settings! Supported connection types are: SMTP, SMTPS (SSL) and SMTP AUTH");
+		use Try::Tiny;
+		try {
+			# Send email
+			sendmail($email, { transport => $transport});
+
+			# Update database
+			my %dbupdata;
+			$dbupdata{'delivered'} = '1';
+			goah::Modules::Email->UpdateEmail($rowid, \%dbupdata); 
+			
+		} catch {
+			goah::Modules->AddMessage('error',"ERROR! $_");
+
+			# Update database
+			my %dbupdata;
+			$dbupdata{'delivered'} = '0';
+			goah::Modules::Email->UpdateEmail($rowid, \%dbupdata); 
+		}
 	}
+
 
 }
 
+
+#
+# Function: WriteEmail
+#
+# Module saves email to database. Process is controlled with hash-variables which
+# are passed as hashref from SendEmail.
+#
+# Parameters:
+#
+#   Hashref from SendEmail.
+#
+#   Required
+#
+#   from - Sender address
+#   to - Where to send email
+#   subject - Subject of the email
+#
+#
+# Returns:
+#
+#   Hashref for added row
+#
+
+sub WriteEmail {
+
+	use goah::Db::Email;
+
+	shift if($_[0]=~/goah::Modules::Email/);
+	my %vars = %{$_[0]};
+
+	my %dbdata;
+	$dbdata{'userid'} = $vars{'userid'};
+	$dbdata{'timestamp'} = $vars{'timestamp'};
+	$dbdata{'type'} = $vars{'type'};
+	$dbdata{'delivered'} = $vars{'delivered'};
+	$dbdata{'sender'} = $vars{'from'};
+	$dbdata{'recipient'} = $vars{'to'};
+	$dbdata{'cc'} = $vars{'cc'};
+	$dbdata{'bcc'} = $vars{'bcc'};
+	$dbdata{'subject'} = $vars{'subject'};
+	$dbdata{'body'} = $vars{'body'};
+	$dbdata{'attachments'} = $vars{'attachments'};
+	$dbdata{'module'} = $vars{'module'};
+	$dbdata{'messageid'} = $vars{'messageid'};
+
+	my $emailitem = goah::Db::Email->new(%dbdata);
+	$emailitem->save;
+
+	return $emailitem;
+	
+}
+
+
+#
+# Function: UpdateEmail
+#
+# 
+# Module updates selected row to database. Process is controlled with row id
+# and parameters as hashref. Hashref keys must be named as Email-database columns.
+#
+# Parameters:
+#
+#   0 - Row id
+#   1 -  Hashref from module.
+#
+#   Required
+#
+#   row id
+#
+# Returns:
+#
+#   1 for success
+#
+
+sub UpdateEmail {
+
+	shift if($_[0]=~/goah::Modules::Email/);
+	my $rowid = $_[0];
+	my %vars = %{$_[1]};
+
+	my $emailitem = goah::Db::Email->new( id => $rowid );
+	$emailitem->load;
+
+	# Update values to database
+	my $key;
+	foreach $key (sort(keys %vars)) {
+		$emailitem->{$key} = ($vars{$key});
+	}
+
+	$emailitem->save;
+}
+
 1;
+
+
+
+
+
+
+
+
