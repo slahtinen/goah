@@ -1241,10 +1241,18 @@ sub AddProductToShipment {
 
 	my %data;
 
+	my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+	my %vat;
+	unless($vatp) {
+		goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+	} else {
+		%vat=%$vatp;
+	}
+
 	$data{'productid'} = $_[0];
 	$data{'shipmentid'} = $_[1];
 
-	$data{'purchase'} = goah::GoaH->FormatCurrency($_[2],$prod{'vat'},$uid,'in',$settref);
+	$data{'purchase'} = goah::GoaH->FormatCurrency($_[2],$vat{'value'},$uid,'in',$settref);
 	$data{'amount'} = decode("utf-8",$_[3]);
 	$data{'rowinfo'} = decode("utf-8",$_[4]);
 
@@ -1385,7 +1393,17 @@ sub ReadShipmentrows {
 				if($field eq 'purchase') {
 					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$row->productid,$uid);
 					my %prod = %$prodpoint;
-					$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$prod{'vat'},$uid,'out',$settref);
+					
+					my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+					my %vat;
+					unless($vatp) {
+						goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorr ect!"),__FILE__,__LINE__);
+					} else {
+						%vat=%$vatp;
+						$rowdata{$i}{'vatitem'}=$vat{'item'};
+					}
+
+					$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$vat{'value'},$uid,'out',$settref);
 				} else {
 					$rowdata{$i}{$field} = $row->get($field);
 				}
@@ -1412,7 +1430,16 @@ sub ReadShipmentrows {
 			if($field eq 'purchase') {
 				my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$data->productid,$uid);
 				my %prod = %$prodpoint;
-				$rowdata{$field} = goah::GoaH->FormatCurrency($data->get($field),$prod{'vat'},$uid,'out',$settref);
+
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+				my %vat;
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__ ,__LINE__);
+				} else {
+					%vat=%$vatp;
+				}
+
+				$rowdata{$field} = goah::GoaH->FormatCurrency($data->get($field),$vat{'value'},$uid,'out',$settref);
 			} else {
 				$rowdata{$field} = $data->get($field);
 			}
@@ -1535,7 +1562,16 @@ sub UpdateShipmentRow {
 		if($q->param($fieldinfo{'field'})) {
 
 			if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
-				my $amt = goah::GoaH->FormatCurrency($q->param($fieldinfo{'field'}),$prod{'vat'},$uid,'in',$settref);
+				
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+				my %vat;
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				} else {
+					%vat=%$vatp;
+				}
+
+				my $amt = goah::GoaH->FormatCurrency($q->param($fieldinfo{'field'}),$vat{'value'},$uid,'in',$settref);
 				$rowinfo->set($fieldinfo{'field'} => $amt);
 				goah::Modules->AddMessage('debug',"Updated ".$fieldinfo{'field'}." to value $amt",__FILE__,__LINE__);
 			} else {

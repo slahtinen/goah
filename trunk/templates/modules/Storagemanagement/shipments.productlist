@@ -42,7 +42,7 @@
 	[% ELSE %]
 	<td><input class="small" name='purchase' value='[% row.purchase %]'></td>
 	[% END %]
-	<td>[% prodinfo.vat %]&#37;</td>
+	<td>[% row.vatitem %]</td>
 	[% IF shipment.received == 1 %]
 	<td>[% row.amount %]</td>
 	[% ELSE %]

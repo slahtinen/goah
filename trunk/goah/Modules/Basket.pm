@@ -180,8 +180,6 @@ sub Start {
 				my $tmpdata = ReadBaskets($q->param('target'));
 				my %tmpd=%$tmpdata;
 				use goah::Modules::Tracking;
-				
-				goah::Modules->AddMessage('debug',"Info".$tmpd{'lasttrigger'});
 
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $q->param('target');
@@ -272,15 +270,9 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't update row."));
 				}
-
-				my $tmpdata=ReadBaskets($q->param('target'));
-				my %tmpd=%$tmpdata;
-
-				$variables{'basketdata'} = $tmpdata;
+				$variables{'basketdata'} = ReadBaskets($q->param('target'));
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'activebasket'} = $q->param('activebasket');
-				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
-				
 				if($q->param('activebasket') == '0') {
 					$variables{'function'} = 'modules/Basket/basketinfo';
 				} else {
@@ -681,8 +673,6 @@ sub ReadBaskets {
 	use goah::Modules::Customermanagement;
 	foreach my $b (@data) {
 
-
-
 		my $cust;
 		$cust=goah::Modules::Customermanagement->ReadCompanydata($b->companyid,1) if($b->companyid>0);
 		my %customer;
@@ -759,32 +749,22 @@ sub ReadBaskets {
 			}
 
 			if($state eq "2") {
-		
-			my $nexttrigger;	
-			if($b->nexttrigger) {
-				$nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
+				my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
 				$nexttrigger=~s/^..\.//;
-			}
+
 				my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
 				my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
-
-			if($_[0] || length($_[0])) {
-				$baskets{'lasttrigger'}=$b->lasttrigger;
-				$baskets{'nexttrigger'}=$b->nexttrigger;
-				$baskets{'repeat'}=$b->repeat;
-				$baskets{'dayinmonth'}=$b->dayinmonth;
-			} else {
 				$baskets{$i}{'triggerheading'}=$nexttrigger;
 				$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
 				$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
-				$baskets{$i}{'repeat'}=$b->repeat;
-				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
-			}
+
 				$headingtotal=0 unless($headingtotal);
 				$headingtotalvat=0 unless($headingtotalvat);
 
 				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
 				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
+				$baskets{$i}{'repeat'}=$b->repeat;
+				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
 			}
 		}
 
@@ -1043,7 +1023,14 @@ sub UpdateBasketRow {
 						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
 					} else {
 						my %prod = %$prodpoint;
-						$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase_vat'),$prod{'vat'},0,'in',0);
+						my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+						my %vat;
+						unless($vatp) {
+							goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+						} else {
+							%vat=%$vatp;
+						}
+						$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase_vat'),$vat{'value'},0,'in',0);
 					}
 				}
 	
@@ -1062,7 +1049,14 @@ sub UpdateBasketRow {
 						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
 					} else {
 						my %prod = %$prodpoint;
-						$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell_vat'),$prod{'vat'},0,'in',0);
+						my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+						my %vat;
+						unless($vatp) {
+							goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+						} else {
+							%vat=%$vatp;
+						}
+						$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell_vat'),$vat{'value'},0,'in',0);
 					}
 				}
 
@@ -1190,8 +1184,17 @@ sub AddToBasket {
 
 				$hourid=$hours{'id'};
 				$prod=$product{'id'};
-				$purchase=goah::GoaH->FormatCurrency($product{'purchase'},$product{'vat'},$uid,'out',$settref);;
-				$sell=goah::GoaH->FormatCurrency($product{'sell'},$product{'vat'},$uid,'out',$settref);
+
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($product{'vat'});
+				my %vat;
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				} else {
+					%vat=%$vatp;
+				}
+
+				$purchase=goah::GoaH->FormatCurrency($product{'purchase'},$vat{'value'},$uid,'out',$settref);;
+				$sell=goah::GoaH->FormatCurrency($product{'sell'},$vat{'value'},$uid,'out',$settref);
 				$amount=$hours{'hours'};
 				$desc=$hours{'day'}.' '.$hours{'username'}.': '.$hours{'description'};
 
@@ -1219,7 +1222,7 @@ sub AddToBasket {
 				}
 			}
 
-			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount,$desc)==1) {
+			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount,$desc,1)==1) {
 				goah::Modules->AddMessage('debug',"Added productid $prod to basket",__FILE__,__LINE__);
 			} else {
 				goah::Modules->AddMessage('error',"Can't add product id $prod to basket!",__FILE__,__LINE__);
@@ -1235,23 +1238,39 @@ sub AddToBasket {
 			if($_[1] eq "ean") {
 				goah::Modules->AddMessage('debug',"Adding product via barcode ".$_[0],__FILE__,__LINE__);
 				$prod = goah::Modules::Productmanagement->ReadProductByEAN($_[0]);
+
+				if($prod==0) {
+					goah::Modules->AddMessage('error',__("Product not found"),__FILE__,__LINE__);
+					return 1;
+				}
+				# ReadProductByEAN doesn't respond with proper data, so we need to 
+				# read additional details separately
+				my $proddataptr = goah::Modules::Productmanagement->ReadData('products',$prod,$uid);
+				if($proddataptr == 0) {
+					goah::Modules->AddMessage('error',"Something went badly wrong...",__FILE__,__LINE__);
+				} 
+				my %proddata = %$proddataptr;
+				$purchase = $proddata{'purchase'};
+				$sell = $proddata{'sell'};
 			}
 			if($_[1] eq "productcode") {
 				goah::Modules->AddMessage('debug',"Adding product via product code ".$_[0],__FILE__,__LINE__);
-				$prod = goah::Modules::Productmanagement->ReadProductByCode($_[0]);
-			}
-			if($prod==0) {
-				goah::Modules->AddMessage('error',__("Product not found"),__FILE__,__LINE__);
-				return 1;
+				my $prodpointer = goah::Modules::Productmanagement->ReadProductByCode($_[0],'',1,$uid,$settref);
+
+				unless($prodpointer) {
+					goah::Modules->AddMessage('error',"Product code not found",__FILE__,__LINE__);
+					return 1;
+				} else {
+					my %proddata=%$prodpointer;
+					$prodpointer=each(%proddata);
+					%proddata=%{$proddata{$prodpointer}};
+					$purchase=$proddata{'purchase'};
+					$sell=$proddata{'sell'};
+					$prod=$proddata{'id'};
+					goah::Modules->AddMessage('debug',"Purchase $purchase, sell $sell, id $prod",__FILE__,__LINE__);
+				}
 			}
 			$amount=1;
-			my $proddataptr = goah::Modules::Productmanagement->ReadData('products',$prod,$uid);
-			if($proddataptr == 0) {
-				goah::Modules->AddMessage('error',"Something went badly wrong...",__FILE__,__LINE__);
-			} 
-			my %proddata = %$proddataptr;
-			$purchase = $proddata{'purchase'};
-			$sell = $proddata{'sell'};
 		} else {
 			$prod = $q->param('productid');
 			$purchase = $q->param('purchase');
@@ -1302,6 +1321,7 @@ sub AddToBasket {
 #   sell - Selling price
 #   amount - Row amount 
 #   rowinfo - Additional information for the row
+#   vat0 - Leave vat caclulations out of the process, for example when importing hours to basket
 #
 sub AddProductToBasket {
 
@@ -1322,8 +1342,17 @@ sub AddProductToBasket {
 	$data{'productid'} = $_[0];
 	$data{'basketid'} = $_[1];
 
-	$data{'purchase'} = goah::GoaH->FormatCurrency($_[2],$prod{'vat'},$uid,'in',$settref);
-	$data{'sell'} = goah::GoaH->FormatCurrency($_[3],$prod{'vat'},$uid,'in',$settref);
+	my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+	my %vat;
+	unless($vatp) {
+		goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+	} else {
+		%vat=%$vatp;
+	}
+
+	goah::Modules->AddMessage('debug',"Calculating prices with VAT ".$vat{'value'},__FILE__,__LINE__);
+	$data{'purchase'} = goah::GoaH->FormatCurrency($_[2],$vat{'value'},$uid,'in',$settref);
+	$data{'sell'} = goah::GoaH->FormatCurrency($_[3],$vat{'value'},$uid,'in',$settref);
 	$data{'amount'} = decode("utf-8",$_[4]);
 	$data{'rowinfo'} = decode("utf-8",$_[5]);
 	$data{'code'} = $prod{'code'};
@@ -1404,23 +1433,32 @@ sub ReadBasketrows {
 						if($_[1] && $_[1]==-1) {
 							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->$field,0,$uid,'in',$settref);
 						} else {
+
+							my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+							my %vat;
+							unless($vatp) {
+								goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+							} else {
+								%vat=%$vatp;
+							}
+
 							# Calculate rows sums for display
 							if($field eq 'purchase') {
 								my $tmppurchase=0;
 								$tmppurchase=$row->purchase if ($row->purchase);
-								$rowdata{$i}{'purchase'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$prod{'vat'},0,'out',0);
-								$rowdata{$i}{'purchase_vat'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$prod{'vat'},0,'out',1);
+								$rowdata{$i}{'purchase'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$vat{'value'},0,'out',0);
+								$rowdata{$i}{'purchase_vat'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$vat{'value'},0,'out',1);
 							} elsif ( $field eq 'sell' ) {
 								my $tmpsell=0;
 								$tmpsell=$row->sell if ($row->sell);
-								$rowdata{$i}{'sell'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$prod{'vat'},0,'out',0);
-								$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$prod{'vat'},0,'out',1);
+								$rowdata{$i}{'sell'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$vat{'value'},0,'out',0);
+								$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$vat{'value'},0,'out',1);
 							} else {
 								my $tmpfield=0;
 								$tmpfield=$row->$field if ($row->$field);
-								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$prod{'vat'},$uid,'out',$settref);
+								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$vat{'value'},$uid,'out',$settref);
 							}
-							$rowdata{$i}{'vat'} = $prod{'vat'};
+							$rowdata{$i}{'vat'} = $vat{'item'};
 							
 						}
 					} else {

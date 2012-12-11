@@ -772,8 +772,17 @@ sub ReadInvoicerows {
 			return 0;
 		}
 		%productdata = %$pdata;
+		
+		my $vatp=goah::Modules::Systemsettings->ReadSetup($productdata{'vat'});
+		my %vath;
+		unless($vatp) {
+			goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+		} else {
+			%vath=%$vatp;
+		}
 
-		$vat = ($productdata{'vat'}/100)+1;
+		$vat = ($vath{'value'}/100)+1;
+		$rowdata{$i}{'vat'}=$vath{'item'};
 		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref);
 		$rowdata{$i}{'rowtotalvat'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount*$vat),0,$uid,'out',$settref);
 		$rowdata{$i}{'sellvat'} = goah::GoaH->FormatCurrency(($row->sell*$vat),0,$uid,'out',$settref);
@@ -781,7 +790,6 @@ sub ReadInvoicerows {
 		$rowdata{$i}{'code'} = $productdata{'code'};
 		$rowdata{$i}{'name'} = $productdata{'name'};
 		$rowdata{$i}{'unit'} = $productdata{'unit'};
-		$rowdata{$i}{'vat'} = $productdata{'vat'};
 
 		$i++;
 	}

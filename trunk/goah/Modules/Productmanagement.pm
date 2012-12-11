@@ -366,11 +366,11 @@ sub Start {
 		}	
 	}
 	$variables{'suppliers'} = goah::Modules::Storagemanagement->ReadData('suppliers');
-	if($q->param('type') eq 'manuf' || $action eq 'manufacturers' || $action eq 'addnew' || $action eq 'writenew') {
+	if($q->param('type') && ($q->param('type') eq 'manuf' || $action eq 'manufacturers' || $action eq 'addnew' || $action eq 'writenew')) {
 		$variables{'manufacturers'} = ReadData('manuf');
 	}
 
-	if($q->param('type') eq 'productgroups' || $action eq 'productgroups' || $action eq 'addnew' || $action eq 'writenew') {
+	if($q->param('type') && ($q->param('type') eq 'productgroups' || $action eq 'productgroups' || $action eq 'addnew' || $action eq 'writenew')) {
 		$variables{'productgroups'} = ReadData('productgroups');
 	}
 
@@ -536,7 +536,15 @@ sub WriteNewItem {
 			if($q->param($fieldinfo{'field'})) {
 
 				my $sum = $q->param($fieldinfo{'field'});
-				my $vat = $q->param('vat');
+
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($q->param('vat'));
+				my %vath;
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				} else {
+					%vath=%$vatp;
+				}
+				my $vat=$vath{'value'};
 
 				$data{$fieldinfo{'field'}} = goah::GoaH->FormatCurrency($sum,$vat,$uid,'in',$settref);
 			}
@@ -658,12 +666,20 @@ sub WriteEditedItem {
 		} else {
 			if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
 			
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($data->vat);
+				my %vat;
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				} else {
+					%vat=%$vatp;
+				}
+
 				if($q->param($fieldinfo{'field'})) {
 
 					my $sum = $q->param($fieldinfo{'field'});
 					my $vat = $q->param('vat');
 					
-					$data->set($fieldinfo{'field'} => goah::GoaH->FormatCurrency($sum,$vat,$uid,'in',$settref));
+					$data->set($fieldinfo{'field'} => goah::GoaH->FormatCurrency($sum,$vat{'value'},$uid,'in',$settref));
 
 				} else {
 					$data->set($fieldinfo{'field'} => '0.00');
@@ -672,6 +688,7 @@ sub WriteEditedItem {
 			} else {
 				if($q->param($fieldinfo{'field'})) {
 					$data->set($fieldinfo{'field'} => decode('utf-8',$q->param($fieldinfo{'field'})));
+					goah::Modules->AddMessage('debug',"Set ".$fieldinfo{'field'}." to value ".$data->get($fieldinfo{'field'}),__FILE__,__LINE__,caller());
 				}
 			}
 		}
@@ -801,16 +818,25 @@ sub ReadData {
 
 		my $storagetotal=0;
 		foreach my $prod (@data) {
+			my $vatp=goah::Modules::Systemsettings->ReadSetup($prod->vat);
+			my %vat;
+			unless($vatp) {
+				goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+			} else {
+				%vat=%$vatp;
+			}
+
+			$pdata{$i}{'vatclass'}=$vat{'item'};
+			$pdata{$i}{'vatvalue'}=$vat{'value'};
+
 			foreach my $key (keys %productsdbfields) {
 				$field = $productsdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
 					unless($_[4]) {
-						$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+						$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$vat{'value'},$uid,'out',$settref);
 					} else {
 						$pdata{$i}{$field} = $prod->$field;
 					}
-				} elsif ($field eq 'vat') {
-					$pdata{$field} = sprintf("%.2f",$prod->$field);
 				} else {
 					$pdata{$i}{$field} = $prod->$field;
 				}
@@ -843,6 +869,17 @@ sub ReadData {
 		}
 
 		%pdata = ();
+		my $vatp=goah::Modules::Systemsettings->ReadSetup($dbdata->vat);
+		my %vat;
+		unless($vatp) {
+			goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+		} else {
+			%vat=%$vatp;
+		}
+
+		$pdata{'vatclass'}=$vat{'item'};
+		$pdata{'vatvalue'}=$vat{'value'};
+
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
@@ -851,13 +888,13 @@ sub ReadData {
 					unless($dbdata->$field) {
 						$pdata{$field}=0;
 					} else {
-						$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$dbdata->vat,$uid,'out',$settref);
+						$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$vat{'value'},$uid,'out',$settref);
 					}
 				} else {
 					$pdata{$field} = $dbdata->$field;
 				}
-			} elsif ($field eq 'vat') {
-				$pdata{$field} = sprintf("%.2f",$dbdata->$field);
+			#} elsif ($field eq 'vat') {
+			#	$pdata{$field} = sprintf("%.2f",$dbdata->$field);
 			} else {
 				#$pdata{$field} = $data[0]->get($field);
 				$pdata{$field} = $dbdata->$field;
@@ -952,14 +989,21 @@ sub ReadProductsByName {
 	# Pack found data into hash and return data
 	my %pdata;
 	my $field;
-	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat',1);
+	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat');
 	my %vat=%$vatp;
 	my $i=100000;
 	foreach my $prod (@data) {
+		while (my ($key,$value) = each(%vat)) {
+			my %tmp=%$value;
+			if($tmp{'id'} == $prod->vat) {
+				$pdata{$i}{'vatclass'}=$tmp{'item'};
+				$pdata{$i}{'vatvalue'}=$tmp{'value'}
+			}
+		}
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
-				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
 			} else {
 				$pdata{$i}{$field} = $prod->$field;
 			}
@@ -969,13 +1013,11 @@ sub ReadProductsByName {
 			my %m=%$manuf;
 			$pdata{$i}{'manufacturer_name'}=$m{'name'};
 		}
-		while (my ($key,$value) = each(%vat)) {
-			my %tmp=%$value;
-			if($tmp{'value'} == $pdata{$i}{'vat'}) {
-				$pdata{$i}{'vatclass'}=$tmp{'item'};
-			}
+		if($prod->in_store) {
+			$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},$uid,'out',$settref)
+		} else {
+			$pdata{$i}{'row_total_value'}=0.00;
 		}
-		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
 		$i++;
 	}
 
@@ -993,6 +1035,8 @@ sub ReadProductsByName {
 #   Product code - Manufacturer's code
 #   Product group - Group id to search, if omitted deafults to all
 #   Format - Return data in old/new format, if omitted defaults to 0 (=old)
+#   uid - User ID, used for VAT calculations in case the module isn't "started"
+#   settref - Settings reference, used for VAT calculations like uid
 #
 # Returns:
 #
@@ -1003,6 +1047,15 @@ sub ReadProductByCode {
 
 	if($_[0]=~/goah::Modules::Productmanagement/) {
 		shift;
+	}
+
+
+	unless($uid && $_[3]) {
+		$uid=$_[3];
+	}
+
+	unless($settref && $_[4]) {
+		$settref=$_[4];
 	}
 
 	my $prodcode = '-1';
@@ -1061,14 +1114,21 @@ sub ReadProductByCode {
 	# Pack found data into hash and return data in new format
 	my %pdata;
 	my $field;
-	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat',1);
+	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat');
 	my %vat=%$vatp;
 	my $i=100000;
 	foreach my $prod (@data) {
+		while (my ($key,$value) = each(%vat)) {
+			my %tmp=%$value;
+			if($tmp{'id'} == $prod->vat) {
+				$pdata{$i}{'vatclass'}=$tmp{'item'};
+				$pdata{$i}{'vatvalue'}=$tmp{'value'};
+			}
+		}
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
-				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
 			} else {
 				$pdata{$i}{$field} = $prod->$field;
 			}
@@ -1078,13 +1138,12 @@ sub ReadProductByCode {
 			my %m=%$manuf;
 			$pdata{$i}{'manufacturer_name'}=$m{'name'};
 		}
-		while (my ($key,$value) = each(%vat)) {
-			my %tmp=%$value;
-			if($tmp{'value'} == $pdata{$i}{'vat'}) {
-				$pdata{$i}{'vatclass'}=$tmp{'item'};
-			}
+		if($prod->in_store) {
+			$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
+		} else {
+			$pdata{$i}{'row_total_value'}=0;
 		}
-		$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
+
 		$i++
 	}
 	return \%pdata;
@@ -1154,13 +1213,20 @@ sub ReadProductsByGroup {
 	my $vatp=goah::Modules::Systemsettings->ReadSetup('vat');
 	my %vat=%$vatp;
 	foreach my $prod (@data) {
+		while (my ($key,$value) = each(%vat)) {
+			my %tmp=%$value;
+			if($tmp{'id'} == $prod->vat) {
+				$pdata{$i}{'vatclass'}=$tmp{'item'};
+				$pdata{$i}{'vatvalue'}=$tmp{'value'};
+			}
+		}
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if( ($field eq 'purchase' || $field eq 'sell') && $_[2]!=1 ) {
 				unless($prod->$field) {
 					$pdata{$i}{$field}=0;
 				} else {
-					$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$prod->vat,$uid,'out',$settref);
+					$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
 				}
 			} else {
 				$pdata{$i}{$field} = $prod->$field;
@@ -1171,17 +1237,18 @@ sub ReadProductsByGroup {
 			my %m=%$manuf;
 			$pdata{$i}{'manufacturer_name'}=$m{'name'};
 		}
-		while (my ($key,$value) = each(%vat)) {
-			my %tmp=%$value;
-			if($tmp{'value'} == $pdata{$i}{'vat'}) {
-				$pdata{$i}{'vatclass'}=$tmp{'item'};
-			}
-		}
 
 		if($_[2]!=1) {
-			$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$prod->vat,$uid,'out',$settref);
+			if($prod->in_store) {
+				$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
+			} else {
+				$pdata{$i}{'row_total_value'}=0;
+			}
+
 		} else {
-			$pdata{$i}{'row_total_value'}=$prod->purchase*$prod->in_store;
+			$pdata{$i}{'row_total_value'}=0;
+			$pdata{$i}{'row_total_value'}=$prod->purchase*$prod->in_store if($prod->in_store);
+
 		}
 		$i++;
 	}

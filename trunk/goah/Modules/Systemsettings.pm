@@ -393,7 +393,9 @@ sub DeleteSetup {
 #
 # Parameters:
 #
-#   category - Category name to be retrieved
+#   category - Category name to be retrieved. If numeric read only the setup entry
+#   	       with given id number. Useful for retrieving ie. an VAT class for
+#   	       products. Numeric category implies single -value
 #   single - If set to 1 return values in hash without sorting key, useful
 #   	     when retrieving only single value
 #
@@ -411,36 +413,51 @@ sub ReadSetup {
 		return 0;
 	}
 
-	use goah::Db::Setup::Manager;
-	my $datap = goah::Db::Setup::Manager->get_setup( [ category => $_[0] ] , sort_by => 'sort');
-
-	unless($datap) {
-		goah::Modules->AddMessage('error',__("Couldn't find any settings by category")." '".$_[0]."'",__FILE__,__LINE__,caller());
-		return 0;
-	}
-
-	my @data=@$datap;
-	if(scalar(@data)==0) {
-		goah::Modules->AddMessage('debug',"Empty result set for settings with category ".$_[0],__FILE__,__LINE__,caller());
-		return 0;
-	}
-
 	my %sdata;
 	my $sortidx=10000000;
 	my @fields=qw(id category item value sort def);
 
+	unless($_[0]=~/\d+/) {
+		use goah::Db::Setup::Manager;
+		my $datap = goah::Db::Setup::Manager->get_setup( [ category => $_[0] ] , sort_by => 'sort');
 
-	foreach (@data) {
-		
-		foreach my $k (@fields) {
-			unless($_[1]) {	
-				$sdata{$sortidx}{$k}=$_->$k;
-			} else {
-				$sdata{$k}=$_->$k;
-			}
+		unless($datap) {
+			goah::Modules->AddMessage('error',__("Couldn't find any settings by category")." '".$_[0]."'",__FILE__,__LINE__,caller());
+			return 0;
 		}
-		$sortidx++;
+
+		my @data=@$datap;
+		if(scalar(@data)==0) {
+			goah::Modules->AddMessage('debug',"Empty result set for settings with category ".$_[0],__FILE__,__LINE__,caller());
+			return 0;
+		}
+
+		foreach (@data) {
+			
+			foreach my $k (@fields) {
+				unless($_[1]) {	
+					$sdata{$sortidx}{$k}=$_->$k;
+				} else {
+					$sdata{$k}=$_->$k;
+				}
+			}
+			$sortidx++;
+		}
+	} else {
+
+		use goah::Db::Setup;
+		my $datap=goah::Db::Setup->new(id => $_[0]);
+
+		unless($datap->load(speculative => 1)) {
+			goah::Modules->AddMessage('error',__("Couldn't retrieve setup item with id")." ".$_[0],__FILE__,__LINE__,caller());
+			return 0;
+		}
+
+		foreach my $k (@fields) {
+			$sdata{$k}=$datap->$k;
+		}
 	}
+
 	return \%sdata;
 
 }

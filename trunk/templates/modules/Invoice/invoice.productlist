@@ -17,14 +17,14 @@
 </thead>
 <tbody class="rowdata">
 [% total = 0 %]
-[% FOREACH key IN invoicerows.keys %]
+[% FOREACH key IN invoicerows.keys.sort %]
 	[% row = invoicerows.$key %]
 	<tr class='[% rowc %]'>
 	<td>[% row.code %]</td>
 	<td>[% row.name %]</td>
 	<td class="number">[% row.purchase %]</td>
 	<td class="number">[% row.sell %]</td>
-	<td class="number">[% row.vat %]&#37;</td>
+	<td class="number">[% row.vat %]</td>
 	<td class="number">[% row.sellvat %]</td>
 	<td class="number">[% row.amount %]</td>
 	<td>[% row.unit %]</td>
