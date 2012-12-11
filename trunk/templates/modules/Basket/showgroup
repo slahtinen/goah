@@ -39,7 +39,7 @@
 	<td><input class="number" name='sell_[% row.id %]' value='[% row.sell %]'></td>
 	<td>[% row.in_store %]</td>
 	<td><input class="number" name='amount_[% row.id %]' value='1'></td>
-	<td>[% row.vat %]&#37;</td>
+	<td>[% row.vatclass %]</td>
 	</tr>
 
 	[% IF rowc == 'odd' %]

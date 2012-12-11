@@ -1456,9 +1456,9 @@ sub ReadBasketrows {
 							} else {
 								my $tmpfield=0;
 								$tmpfield=$row->$field if ($row->$field);
-								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$prod{'vat'},$uid,'out',$settref);
+								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$vat{'value'},$uid,'out',$settref);
 							}
-							$rowdata{$i}{'vat'} = $prod{'vat'};
+							$rowdata{$i}{'vat'} = $vat{'item'};
 							
 						}
 					} else {
