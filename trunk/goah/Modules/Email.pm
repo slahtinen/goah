@@ -134,7 +134,7 @@ sub SendEmail {
 	if ($smtp_server{'value'}){
   		$email = Email::Simple->create(
     			header => [
-      			To => $params{'to'},
+      			To => $params{'to'} [NOTIFY => 'SUCCESS'],
 			Cc=> $params{'cc'},
       			From => $params{'from'},
       			Subject => "=?UTF-8?Q?".$params{'subject'}."?=",
