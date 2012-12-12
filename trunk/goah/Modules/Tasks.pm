@@ -374,9 +374,10 @@ sub WriteTasks {
 		$vars{'assigneename'} = $assigneename;
 		$vars{'description'} = $q->param('description');
 		$vars{'longdescription'} = $q->param('longdescription');
+		$vars{'userid'} = $q->param('userid');
 
 		$vars{'template'} = 'tasks.tt2';
-		$vars{'module'} = 'Tasks';
+		$vars{'module'} = caller();
 
 		if ($update) {
 			$vars{'action'} = "Task updated";
