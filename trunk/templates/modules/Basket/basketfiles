@@ -1,0 +1,16 @@
+<h3>[% gettext("Basket files") %]</h3>
+<table>
+<tr>
+<td>
+<form action="files.cgi" method="post" enctype="multipart/form-data">
+<input type="file" name="file" />
+[% gettext("File information: ") %]<input type='text' class='huge' name='info' />
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='action' value='upload'>
+<input type='hidden' name='userid' value='[% userid %]'>
+<input type='submit' value='[% gettext('Upload') %]'>
+</form>
+</td>
+</form>
+</tr>
+</table>

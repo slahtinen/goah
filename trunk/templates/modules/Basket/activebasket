@@ -257,5 +257,5 @@
 </form>
 </tbody>
 </table>
-
+[% INCLUDE modules/Basket/basketfiles %]
 
