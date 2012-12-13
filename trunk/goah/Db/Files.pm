@@ -23,7 +23,7 @@ use warnings;
 __PACKAGE__->meta->setup
         (
 	table      => 'Files',
-	columns	   => [ qw(id userid module date mimetype md5 dir info) ],
+	columns	   => [ qw(id userid moduleid date mimetype md5 datadir int_filename orig_filename status public expires downloads info) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );
