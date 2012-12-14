@@ -23,7 +23,7 @@ use warnings;
 __PACKAGE__->meta->setup
         (
 	table      => 'Email',
-	columns	   => [ qw(id userid messageid type timestamp delivered from to cc bcc subject body attachments) ],
+	columns	   => [ qw(id userid messageid timestamp type delivered sender recipient cc bcc subject body attachments module) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );

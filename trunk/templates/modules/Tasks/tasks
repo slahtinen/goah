@@ -154,8 +154,10 @@
         <input type="hidden" name="hours" value="[% row.hours %]" />
         <input type="hidden" name="inthours" value="[% row.inthours %]" />
         <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="longdescription" value="[% row.longdescription %]" />
         <input type="hidden" name="action" value="writeeditedtask" />
         <input type="hidden" name="userid" value="[% row.userid %]" />
+        <input type="hidden" name="assigneeid" value="[% row.assigneeid %]" />
         <input type="hidden" name="target" value="[% row.id %]" />
 <td class="center">
         <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
@@ -265,8 +267,10 @@
         <input type="hidden" name="hours" value="[% row.hours %]" />
         <input type="hidden" name="inthours" value="[% row.inthours %]" />
         <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="longdescription" value="[% row.longdescription %]" />
         <input type="hidden" name="action" value="writeeditedtask" />
         <input type="hidden" name="userid" value="[% row.userid %]" />
+        <input type="hidden" name="assigneeid" value="[% row.assigneeid %]" />
         <input type="hidden" name="target" value="[% row.id %]" />
 <td class="center">
         <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
@@ -376,8 +380,10 @@
         <input type="hidden" name="hours" value="[% row.hours %]" />
         <input type="hidden" name="inthours" value="[% row.inthours %]" />
         <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="longdescription" value="[% row.longdescription %]" />
         <input type="hidden" name="action" value="writeeditedtask" />
         <input type="hidden" name="userid" value="[% row.userid %]" />
+        <input type="hidden" name="assigneeid" value="[% row.assigneeid %]" />
         <input type="hidden" name="target" value="[% row.id %]" />
 <td class="center">
         <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
@@ -478,8 +484,10 @@
         <input type="hidden" name="hours" value="[% row.hours %]" />
         <input type="hidden" name="inthours" value="[% row.inthours %]" />
         <input type="hidden" name="description" value="[% row.description %]" />
+        <input type="hidden" name="longdescription" value="[% row.longdescription %]" />
         <input type="hidden" name="action" value="writeeditedtask" />
         <input type="hidden" name="userid" value="[% row.userid %]" />
+        <input type="hidden" name="assigneeid" value="[% row.assigneeid %]" />
         <input type="hidden" name="target" value="[% row.id %]" />
 <td class="center">
         <input type="image" src="themes/[% theme %]/icon/32x32/actions/document-save.png" />
