@@ -74,8 +74,6 @@ if($auth == 0) {
 
 my %templatevars; # Variables for Template Toolkit
 
-$auth=1;
-
 # We're logged in to system
 if($auth==1) {
 
@@ -126,13 +124,13 @@ if($auth==1) {
 	# Read data for invoices
 	if($q->param('type') eq 'invoice') {
 		use goah::Modules::Invoice;
-		$data = goah::Modules::Invoice::ReadInvoices($q->param('id'));
-		$rows = goah::Modules::Invoice::ReadInvoicerows($data->id,$uid);
+		$data = goah::Modules::Invoice::ReadInvoices($q->param('id'),'',1);
+		$rows = goah::Modules::Invoice::ReadInvoicerows($data->id,$uid,1);
 
 		# Bank accounts
 		$templatevars{'bankaccounts'} = goah::Modules::Systemsettings->ReadBankAccounts();	
 
-		my $total = goah::Modules::Invoice::ReadInvoiceTotal($data->id);
+		my $total = goah::Modules::Invoice::ReadInvoiceTotal($data->id,1);
 		$templatevars{'total'} = $total;
 
 		# Process common data

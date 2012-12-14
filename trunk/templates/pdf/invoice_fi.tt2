@@ -80,7 +80,7 @@
 \vspace*{0cm}
 
 \hspace{-0.5cm}
-\footnotesize \begin{longtable}{p{2.0cm}p{7.0cm}lllll}
+\footnotesize \begin{longtable}{p{2.0cm}p{7.0cm}llrrr}
 \textbf{TUOTEKOODI} & \textbf{TUOTENIMI} & \textbf{MÄÄRÄ} & \textbf{ALV \%} & \textbf{à ALV 0 \%} & \textbf{à SIS. ALV}& \textbf{YHTEENSÄ} \\
 \\
 \endhead
