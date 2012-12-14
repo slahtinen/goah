@@ -2,7 +2,7 @@
 <form action="" method="post">
 <table>
 <thead>
-<th colspan='7' class='info'>[% gettext("Create new recurring basket") %]</th>
+<th colspan='9' class='info'>[% gettext("Create new recurring basket") %]</th>
 </thead>
 <tbody>
 [% row = 'info' %]

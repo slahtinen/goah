@@ -787,7 +787,7 @@ sub ReadBaskets {
 	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
-	unless($_[0] || !$_[0] eq '') {
+	unless($_[0] || !$_[0] eq '' || $search{'state'}!=2) {
 		# Sort baskets hash by customer names
 		$i=1000000;
 		my %sortedbaskets;
