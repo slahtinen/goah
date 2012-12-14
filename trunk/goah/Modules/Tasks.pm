@@ -394,23 +394,6 @@ sub WriteTasks {
 #    0 - Error
 #
 
-<<<<<<< HEAD
-		my %vars;
-		$vars{'from'} = $ownerinfo->email;
-		$vars{'to'} = $assigneeinfo{'email'};
-		$vars{'cc'} = $userinfo{'email'};
-		$vars{'status'} = $taskstates{$status};
-		$vars{'taskid'} = $taskid;
-		$vars{'customername'} = $customername;
-		$vars{'creatorname'} = $creatorname;
-		$vars{'assigneename'} = $assigneename;
-		$vars{'description'} = $q->param('description');
-		$vars{'longdescription'} = $q->param('longdescription');
-		$vars{'userid'} = $q->param('userid');
-
-		$vars{'template'} = 'tasks.tt2';
-		$vars{'module'} = caller();
-=======
 sub Send2Email {
 	
 	shift if ($_[0]=~/goah::Modules::Tasks/);
@@ -419,7 +402,6 @@ sub Send2Email {
 
 	# Get customername	
 	my $customerinfo = goah::Modules::Customermanagement->ReadCompanydata($evars{'companyid'});
->>>>>>> ver2.1.0beta
 
 	my $customername;
 	if ($customerinfo->vat_id eq '00000000') {
