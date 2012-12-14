@@ -12,12 +12,6 @@ About: License
   This software is copyright (c) 2009 by Tietovirta Oy and associates.
   See LICENSE and COPYRIGHT -files for full details.
 
-About: TODO
-
-  Currently this file only creates PDF documents for invoices. Basic
-  functionality to include referrals and other documents is built but
-  it's currently disabled.
-
 =cut
 
 
@@ -72,8 +66,6 @@ if($auth == 0) {
 
 }
 
-$auth=1;
-
 # We're logged in to system
 if($auth==1) {
 
@@ -85,14 +77,10 @@ if($auth==1) {
         $params{'info'} = $q->param('info');
         $params{'action'} = $q->param('action');
 
-	# Read data directory
-	use goah::Modules::Systemsettings;
- 	my $tmp_dir = goah::Modules::Systemsettings->ReadSetup('files_datadir',1);
-
-	my %dir;
-	if ($tmp_dir) {%dir=%$tmp_dir;}
-
-        $params{'dir'} = $dir{'value'};
+	# Get default path for files from config
+	my $cref = goah::GoaH->GetConfig;
+	my %conf = %$cref;
+	$params{'dir'} = $conf{'goah.files_dir'};
 
         if ($params{'action'} eq 'upload') {
                 FileUpload(\%params);
