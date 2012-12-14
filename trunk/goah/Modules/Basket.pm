@@ -713,7 +713,9 @@ sub ReadBaskets {
 				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
 					if($f=~/state/i) {
-						goah::Modules->AddMessage('debug',"Got state: ".$b->$f);
+						goah::Modules->AddMessage('debug',"Got state: ".$b->$f,__FILE__,__LINE__);
+						$baskets{'statename'}=$basketstates{$b->$f};
+						goah::Modules->AddMessage('debug',"Set state name: ".$baskets{'statename'},__FILE__,__LINE__);
 					}
 					$baskets{$f}=$b->$f;
 				} else {
@@ -788,7 +790,7 @@ sub ReadBaskets {
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
 	unless($_[0] || !$_[0] eq '' || $search{'state'}!=2) {
-		# Sort baskets hash by customer names
+		# Sort baskets hash by customer names, unless we're reading recurring baskets
 		$i=1000000;
 		my %sortedbaskets;
 		if($groupstates) {

@@ -163,6 +163,8 @@ if($auth==1) {
 	if($q->param('type') eq 'basket') {
 
 		use goah::Modules::Basket;
+		use Locale::TextDomain ('Basket', getcwd()."/locale");
+
 		$data = goah::Modules::Basket::ReadBaskets($q->param('id'));
 		%basketdata=%$data;
 		$rows = goah::Modules::Basket::ReadBasketrows($q->param('id'));
@@ -204,6 +206,7 @@ if($auth==1) {
 					}
 					return $_[0]; 
 				};
+	$templatevars{'gettext'}= sub { return __($_[0]); };
 
 	use goah::Modules::Productmanagement;
 	$templatevars{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };

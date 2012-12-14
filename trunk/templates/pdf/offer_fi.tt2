@@ -26,11 +26,7 @@
 \pagestyle{fancy}
 
 \lhead{\includegraphics{[% logo %]}}
-[% IF data.state == "2" %]
-\rhead{\makebox[6.5cm][l]{\textbf{TARJOUS: [% data.id %]}} sivu \thepage\ / \pageref{LastPage}} 
-[% ELSE %]
-\rhead{\makebox[6.5cm][l]{\textbf{KORI: [% data.id %]}} sivu \thepage\ / \pageref{LastPage}} 
-[% END %]
+\rhead{\makebox[6.5cm][l]{\textbf{[% gettext(data.statename) %]: [% data.id %]}} sivu \thepage\ / \pageref{LastPage}} 
 
 \renewcommand{\footrulewidth}{0.5pt}
 
