@@ -270,9 +270,18 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't update row."));
 				}
-				$variables{'basketdata'} = ReadBaskets($q->param('target'));
+
+				my $tmpdata=ReadBaskets($q->param('target'));
+				my %tmpd=%$tmpdata;
+
+				$variables{'basketdata'} = $tmpdata;
+				#$variables{'basketdata'} = ReadBaskets($q->param('target'));
+				
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'activebasket'} = $q->param('activebasket');
+
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+
 				if($q->param('activebasket') == '0') {
 					$variables{'function'} = 'modules/Basket/basketinfo';
 				} else {
@@ -704,7 +713,9 @@ sub ReadBaskets {
 				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
 					if($f=~/state/i) {
-						goah::Modules->AddMessage('debug',"Got state: ".$b->$f);
+						goah::Modules->AddMessage('debug',"Got state: ".$b->$f,__FILE__,__LINE__);
+						$baskets{'statename'}=$basketstates{$b->$f};
+						goah::Modules->AddMessage('debug',"Set state name: ".$baskets{'statename'},__FILE__,__LINE__);
 					}
 					$baskets{$f}=$b->$f;
 				} else {
@@ -778,8 +789,8 @@ sub ReadBaskets {
 	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
-	unless($_[0] || !$_[0] eq '') {
-		# Sort baskets hash by customer names
+	unless($_[0] || !$_[0] eq '' || $search{'state'}!=2) {
+		# Sort baskets hash by customer names, unless we're reading recurring baskets
 		$i=1000000;
 		my %sortedbaskets;
 		if($groupstates) {

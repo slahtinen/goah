@@ -5,8 +5,6 @@
   <td>[% gettext("Fields marked with * are required") %]</td>
 </tr>
 [% row = 'even' %]
-[% k = persondata.keys.first %]
-[% persondata = persondata.$k %]
 [% FOREACH key IN persondbfields.keys.sort %]
 [% data = persondbfields.$key %]
 [% field = data.field %]

@@ -74,8 +74,6 @@ if($auth == 0) {
 
 my %templatevars; # Variables for Template Toolkit
 
-$auth=1;
-
 # We're logged in to system
 if($auth==1) {
 
@@ -126,13 +124,13 @@ if($auth==1) {
 	# Read data for invoices
 	if($q->param('type') eq 'invoice') {
 		use goah::Modules::Invoice;
-		$data = goah::Modules::Invoice::ReadInvoices($q->param('id'));
-		$rows = goah::Modules::Invoice::ReadInvoicerows($data->id,$uid);
+		$data = goah::Modules::Invoice::ReadInvoices($q->param('id'),'',1);
+		$rows = goah::Modules::Invoice::ReadInvoicerows($data->id,$uid,1);
 
 		# Bank accounts
 		$templatevars{'bankaccounts'} = goah::Modules::Systemsettings->ReadBankAccounts();	
 
-		my $total = goah::Modules::Invoice::ReadInvoiceTotal($data->id);
+		my $total = goah::Modules::Invoice::ReadInvoiceTotal($data->id,1);
 		$templatevars{'total'} = $total;
 
 		# Process common data
@@ -165,6 +163,8 @@ if($auth==1) {
 	if($q->param('type') eq 'basket') {
 
 		use goah::Modules::Basket;
+		use Locale::TextDomain ('Basket', getcwd()."/locale");
+
 		$data = goah::Modules::Basket::ReadBaskets($q->param('id'));
 		%basketdata=%$data;
 		$rows = goah::Modules::Basket::ReadBasketrows($q->param('id'));
@@ -206,6 +206,7 @@ if($auth==1) {
 					}
 					return $_[0]; 
 				};
+	$templatevars{'gettext'}= sub { return __($_[0]); };
 
 	use goah::Modules::Productmanagement;
 	$templatevars{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };

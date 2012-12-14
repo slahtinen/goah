@@ -551,6 +551,7 @@ sub AddRowToInvoice {
 #
 #   id - If ID is empty read all invoices, either read invoice by ID number
 #   rows - If 1 include invoice rows into hash
+#   pdf - If 1 return data formatted correctly for PDF
 #
 sub ReadInvoices {
 
@@ -660,6 +661,15 @@ sub ReadInvoices {
 		my $datap=goah::Db::Invoices::Manager->get_invoices(\%dbsearch, sort_by => $sortrules );
 		@data=@$datap;
 
+		my $pdf='';
+		if($_[2]) {
+			if($_[2] eq 1) {
+				$pdf=2;
+			} else {
+				$pdf=$_[2];
+			}
+		}
+
 		goah::Modules->AddMessage('debug',"States: @states",__FILE__,__LINE__);
 		goah::Modules->AddMessage('debug',"Search parameters: ".join(" - ",keys(%dbsearch)),__FILE__,__LINE__);
 		#goah::Modules->AddMessage('debug',"And: ".join(" - ",keys($dbsearch{'and'})),__FILE__,__LINE__);
@@ -668,7 +678,7 @@ sub ReadInvoices {
 		my $sortcounter=1000000;
 		foreach my $inv (@data) {
 
-			my $t = goah::Modules::Invoice->ReadInvoiceTotal($inv->id);
+			my $t = goah::Modules::Invoice->ReadInvoiceTotal($inv->id,$pdf);
 			my %tot=%$t;
 			$totalsum{'vat0'}+=$tot{'vat0'};
 			$totalsum{'inclvat'}+=$tot{'inclvat'};
@@ -684,16 +694,17 @@ sub ReadInvoices {
 
 			foreach my $k (keys(%invoices)) {
 				my $i=$invoices{$k};
-				my $r = goah::Modules::Invoice->ReadInvoicerows($i->id);
+				my $r = goah::Modules::Invoice->ReadInvoicerows($i->id,$pdf);
 				my %rows=%$r;
 				$invoices{'rows'}{$k}=$r;
 			}
 
 		}
 
-		$invoices{'total'}{'vat0'}=goah::GoaH->FormatCurrency($totalsum{'vat0'},0,$uid,'out',$settref);
-		$invoices{'total'}{'inclvat'}=goah::GoaH->FormatCurrency($totalsum{'inclvat'},0,$uid,'out',$settref);
-		$invoices{'total'}{'vat'}=goah::GoaH->FormatCurrency($totalsum{'vat'},0,$uid,'out',$settref);
+
+		$invoices{'total'}{'vat0'}=goah::GoaH->FormatCurrency($totalsum{'vat0'},0,$uid,'out',$settref,$pdf);
+		$invoices{'total'}{'inclvat'}=goah::GoaH->FormatCurrency($totalsum{'inclvat'},0,$uid,'out',$settref,$pdf);
+		$invoices{'total'}{'vat'}=goah::GoaH->FormatCurrency($totalsum{'vat'},0,$uid,'out',$settref,$pdf);
 		return \%invoices;
 	} else {
 		@data = goah::Database::Invoices->retrieve($_[0]);
@@ -715,6 +726,8 @@ sub ReadInvoices {
 # Parameters:
 #
 #   id - Invoice ID -number from database
+#   uid - User ID to use for settings retrieval
+#   pdf - If 1 return nubmers formatted correctly for PDF output, higher than 1 uses given number of decimals
 #
 # Returns:
 #
@@ -753,16 +766,25 @@ sub ReadInvoicerows {
 
 	#goah::Modules->AddMessage('debug',"Got ".scalar(@rows)." rows for invoice id ".$_[0],__FILE__,__LINE__);
 
+	my $pdf='0';
+	if($_[2]) {
+		if($_[2] eq 1) {
+			$pdf=2;
+		} else {
+			$pdf=$_[2];
+		}
+	}
+		
 	my $i=0;
 	my %rowdata;
 	my %productdata;
 	my $pdata;
 	my $vat;
 	foreach my $row (@rows) {
-		$rowdata{$i}{'purchase'} = goah::GoaH->FormatCurrency($row->purchase,0,$uid,'out',$settref);
-		$rowdata{$i}{'sell'} = goah::GoaH->FormatCurrency($row->sell,0,$uid,'out',$settref);
+		$rowdata{$i}{'purchase'} = goah::GoaH->FormatCurrency($row->purchase,0,$uid,'out',$settref,$pdf);
+		$rowdata{$i}{'sell'} = goah::GoaH->FormatCurrency($row->sell,0,$uid,'out',$settref,$pdf);
 		$rowdata{$i}{'amount'} = sprintf("%.02f",$row->amount);
-		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref);
+		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref,$pdf);
 		$rowdata{$i}{'rowinfo'} = $row->rowinfo;
 		$rowdata{$i}{'rowinfo'} =~s/€/&euro;/g;
 
@@ -783,9 +805,9 @@ sub ReadInvoicerows {
 
 		$vat = ($vath{'value'}/100)+1;
 		$rowdata{$i}{'vat'}=$vath{'item'};
-		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref);
-		$rowdata{$i}{'rowtotalvat'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount*$vat),0,$uid,'out',$settref);
-		$rowdata{$i}{'sellvat'} = goah::GoaH->FormatCurrency(($row->sell*$vat),0,$uid,'out',$settref);
+		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref,$pdf);
+		$rowdata{$i}{'rowtotalvat'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount*$vat),0,$uid,'out',$settref,$pdf);
+		$rowdata{$i}{'sellvat'} = goah::GoaH->FormatCurrency(($row->sell*$vat),0,$uid,'out',$settref,$pdf);
 
 		$rowdata{$i}{'code'} = $productdata{'code'};
 		$rowdata{$i}{'name'} = $productdata{'name'};
@@ -845,6 +867,7 @@ sub ReadInvoicehistory {
 # Parameters:
 #
 #   id - Invoice id
+#   pdf - If 1 return data for pdf output
 #
 # Returns:
 #
@@ -862,7 +885,7 @@ sub ReadInvoiceTotal {
 		return 0;
 	}
 
-	my $rowpointer = ReadInvoicerows($_[0]);
+	my $rowpointer = ReadInvoicerows($_[0],5);
 	if($rowpointer == 0) {
 		goah::Modules->AddMessage('error',__("Fatal error. Can't read invoice total due to faulty invoice rows!"));
 		return 0;
@@ -881,9 +904,12 @@ sub ReadInvoiceTotal {
 		$total{'vat'}+=$rows{$key}{'rowtotalvat'}-$rows{$key}{'rowtotal'};
 	}
 
-	$total{'vat0'}=goah::GoaH->FormatCurrency($total{'vat0'},0,$uid,'out',$settref);
-	$total{'inclvat'}=goah::GoaH->FormatCurrency($total{'inclvat'},0,$uid,'out',$settref);
-	$total{'vat'}=goah::GoaH->FormatCurrency($total{'vat'},0,$uid,'out',$settref);
+	my $pdf='';
+	$pdf=2 if($_[1]);
+
+	$total{'vat0'}=goah::GoaH->FormatCurrency($total{'vat0'},0,$uid,'out',$settref,$pdf);
+	$total{'inclvat'}=goah::GoaH->FormatCurrency($total{'inclvat'},0,$uid,'out',$settref,$pdf);
+	$total{'vat'}=goah::GoaH->FormatCurrency($total{'vat'},0,$uid,'out',$settref,$pdf);
 
 	return \%total;
 }

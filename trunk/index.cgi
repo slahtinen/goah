@@ -167,7 +167,11 @@ my %templatevars;
 
 $templatevars{'gettext'} = sub { return __($_[0]); };
 $templatevars{'locale'} = setlocale(LC_ALL);
+<<<<<<< HEAD
 $templatevars{'goahversion'} = 'TRUNK';
+=======
+$templatevars{'goahversion'} = '2.1.0 frozen beta';
+>>>>>>> ver2.1.0beta
 $templatevars{'demomode'} = $Config{'goah.demomode'};
 
 # Store users viewport information to switch between GongoUI desktop or tablet modes

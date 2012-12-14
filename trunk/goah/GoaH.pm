@@ -84,6 +84,7 @@ sub GetConfig {
 #   uid - User id who's using GoaH so that we can assign VAT correctly. If omitted defaults not to include VAT
 #   direction - in or out. Decides wether VAT is added or subtracted from amount. Defaults as out.
 #   settings reference - Reference to user settings hash
+#   decimal numbers - How many decimals to return, if omitted uses automatic algorithm
 #
 # Returns:
 #  
@@ -151,9 +152,32 @@ sub FormatCurrency {
 	} else {
 		my $format = "%.02f";
 		
-		if($settings{'decimals'} && $settings{'decimals'} > 0) {
-			$format = "%.0".$settings{'decimals'}."f";
+		my $decimals=$_[0];
+		$decimals=$decimals*$vat;
+
+		unless($decimals=~/\./) {
+			$decimals=0;
+		} else {
+			$decimals=~s/\d+\.+\d?\d?//;
 		}
+
+		if($decimals gt 0) {
+			##goah::Modules->AddMessage('debug',$_[0]."*$vat= $decimals greater than 0, adding decimals",__FILE__,__LINE__);
+			$format="%.03f";
+		}
+
+		# Override decimals from parameter
+		if($_[5]) {
+			$format="%.0".$_[5]."f";
+		}
+
+
+		# Ignoring user settings atleast temporarily, since
+		# they don't apply everywhere it kind of makes the whole 
+		# thing pointless
+		#if($settings{'decimals'} && $settings{'decimals'} > 0) {
+		#	$format = "%.0".$settings{'decimals'}."f";
+		#}
 		$ret = sprintf($format,($_[0]*$vat) );
 	}
 
@@ -174,6 +198,7 @@ sub FormatCurrency {
 #   includevat - Tells if number to format already contains VAT
 #   direction - In or out, Decides wether VAT is added or subtracted from amount. Defaults as out.
 #   returnwithvat - If set to 1 include VAT in outgoing number 
+#   decimals - How many decimals to show. If omitted returns decimals via automated algorithm
 #
 sub FormatCurrencyNopref {
 
@@ -216,10 +241,32 @@ sub FormatCurrencyNopref {
 	if($_[3] && $_[3] eq 'in') {
 		$ret = sprintf("%.05f",($_[0]/$vat));
 	} else {
-		if($_[4] && $_[4] == 1) {
-			$ret = sprintf("%.02f",($_[0]*$vat) );
+		my $format = "%.02f";
+
+		my $decimals=$_[0];
+		$decimals=$decimals*$vat if($_[4] && $_[4] == 1);
+
+		# Prevent an number without digits to match
+		unless($decimals=~/\./) {
+			$decimals=0;
 		} else {
-			$ret = sprintf("%.02f",$_[0]);
+			$decimals=~s/\d+\.+\d?\d?//;
+		}
+
+		if($decimals gt 0) {
+			##goah::Modules->AddMessage('debug',"$sum, $decimals greater than 0, adding decimals",__FILE__,__LINE__);
+			$format="%.03f";
+		}
+
+		# Override automated decimal count from parameter
+		if($_[5]) {
+			$format="%.0".$_[5]."f";
+		}
+
+		if($_[4] && $_[4] == 1) {
+			$ret = sprintf($format,($_[0]*$vat) );
+		} else {
+			$ret = sprintf($format,$_[0]);
 		}
 	}
 
