@@ -109,7 +109,7 @@ sub Start {
 		
 		if($q->param('action') eq 'writenewtask') {
 			if(WriteTasks($uid)) {
-				goah::Modules->AddMessage('info',__("Hours tracked"),__FILE__,__LINE__);
+				goah::Modules->AddMessage('info',__("New task added"),__FILE__,__LINE__);
 			} else {
 				goah::Modules->AddMessage('error',__("Couldn't write task to database!"),__FILE__,__LINE__);
 			}
@@ -215,9 +215,27 @@ sub WriteTasks {
 		goah::Modules->AddMessage('debug',"Got data with id ".$taskitem->id." and desc ".$taskitem->description,__FILE__,__LINE__);
 		$update=1;
 		if($q->param('delete')) {
-			return 1 if $taskitem->delete;
-			goah::Modules->AddMessage('error',__("Couldn't delete item from the database."),__FILE__,__LINE__);
-			return 0;
+			if ($taskitem->delete) {
+				# Create new email      
+        			if ($q->param('assigneeid') != '-1') {
+                			my %emailvars;
+                			$emailvars{'userid'} = $q->param('userid');
+                			$emailvars{'assigneeid'} = $q->param('assigneeid');
+                			$emailvars{'action'} = $q->param('action');
+                			$emailvars{'companyid'} = $q->param('companyid');
+                			$emailvars{'description'} = $q->param('description');
+                			$emailvars{'longdescription'} = $q->param('longdescription');
+                        		$emailvars{'status'} = $taskstates{'1'};
+                        		$emailvars{'action'} = "Task deleted";
+                        		$emailvars{'taskid'} = $q->param('target');
+
+                			Send2Email(\%emailvars);
+        			}
+				return 1;
+			} else {
+				goah::Modules->AddMessage('error',__("Couldn't delete item from the database."),__FILE__,__LINE__);
+				return 0;
+			}
 		}
 	}
 
@@ -321,48 +339,62 @@ sub WriteTasks {
 	# Create new task
 	$taskitem = goah::Db::Tasks->new(%dbdata) unless $update;
 	$taskitem->save;
-
-	# Specify taskid for email
-	my $taskid;
-	if ($update) {
-		$taskid = $q->param('target');
-	} else {
-		$taskid = $taskitem->{'id'};
-	}
 	
 	# Create new email	
 	if ($q->param('assigneeid') != '-1') {
 
-		# goah::Modules->AddMessage('debug',"Taskitem: ".$taskid);
+		my %emailvars;
+		$emailvars{'userid'} = $q->param('userid');
+		$emailvars{'assigneeid'} = $q->param('assigneeid');
+		$emailvars{'action'} = $q->param('action');
+		$emailvars{'companyid'} = $q->param('companyid');
+		$emailvars{'description'} = $q->param('description');
+		$emailvars{'longdescription'} = $q->param('longdescription');
 
-		my $status;
+		if ($q->param('taskstate')) {
+			$emailvars{'status'} = $taskstates{$q->param('taskstate')};
+		} else {
+			$emailvars{'status'} = $taskstates{'0'};
+		}
+
 		if ($update) {
-			$status = $q->param('taskstate');
+			$emailvars{'action'} = "Task updated";
+			$emailvars{'taskid'} = $q->param('target');
 		} else {
-			$status = 0;
+			$emailvars{'action'} = "New task";
+			$emailvars{'taskid'} = $taskitem->{'id'};
 		}
 
-		# Get customername	
-		my $customerinfo = goah::Modules::Customermanagement->ReadCompanydata($q->param('companyid'));
+		Send2Email(\%emailvars);
+	}
 
-		my $customername;
-		if ($customerinfo->vat_id eq '00000000') {
-			$customername = $customerinfo->name.' '.$customerinfo->firstname;
-		} else {
-			$customername = $customerinfo->name;
-		}
+	return 1 if ($taskitem->save);
+	return 0;
+}
 
-		my $ownerinfo = goah::Modules::Systemsettings->ReadOwnerInfo();
-		my $assigneepointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($q->param('assigneeid'));
-		my %assigneeinfo=%$assigneepointer;
-		my $userpointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($q->param('userid'));
-		my %userinfo=%$userpointer;
+#
+# Function: Send2Email 
+#
+#   Collect and send data from new/changed task to Email-module.
+#
+# Parameters:
+#
+#    Hashref
+#
+#    - userid
+#    - assigneeid
+#    - action (Description for action)
+#    - companyid
+#    - taskid
+#    - status (Description eq New Task)
+#
+# Returns:
+#
+#    1 - Success
+#    0 - Error
+#
 
-		my $assigneename = "$assigneeinfo{'firstname'} $assigneeinfo{'lastname'}";
-		my $creatorname = "$userinfo{'firstname'} $userinfo{'lastname'}";
-
-		goah::Modules->AddMessage('debug',"Comp: ".$customername);
-
+<<<<<<< HEAD
 		my %vars;
 		$vars{'from'} = $ownerinfo->email;
 		$vars{'to'} = $assigneeinfo{'email'};
@@ -378,36 +410,74 @@ sub WriteTasks {
 
 		$vars{'template'} = 'tasks.tt2';
 		$vars{'module'} = caller();
-
-		if ($update) {
-			$vars{'action'} = "Task updated";
-		} else {
-			$vars{'action'} = "New task";
-		}
-
-		my $subject = "[#$vars{'taskid'}]_".$vars{'action'}.":_"."$vars{'description'}";
-    
-		$subject =~ s/\s+/_/g;
-                $vars{'subject'} = $subject;
-
-		# Check that we have smtp-server specified before trying to send email
-		my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
-		my %smtp_server = %$tmp_smtp;	
+=======
+sub Send2Email {
 	
-		if ($tmp_smtp) {
-			my $tmp = $smtp_server{'value'};	
-			if (length($tmp) > 3) {
-				use goah::Modules::Email;
-				my $email = goah::Modules::Email->SendEmail(\%vars);
-			} else {
-				goah::Modules->AddMessage('info',"Smtp-server not specified! Cannot send email.");
-			}
-		}	
+	shift if ($_[0]=~/goah::Modules::Tasks/);
 	
+	my %evars = %{$_[0]};	
+
+	# Get customername	
+	my $customerinfo = goah::Modules::Customermanagement->ReadCompanydata($evars{'companyid'});
+>>>>>>> ver2.1.0beta
+
+	my $customername;
+	if ($customerinfo->vat_id eq '00000000') {
+		$customername = $customerinfo->name.' '.$customerinfo->firstname;
+	} else {
+		$customername = $customerinfo->name;
 	}
 
-	return 1 if ($taskitem->save);
-	return 0;
+	my $ownerinfo = goah::Modules::Systemsettings->ReadOwnerInfo();
+	my $assigneepointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($evars{'assigneeid'});
+	my %assigneeinfo=%$assigneepointer;
+	my $userpointer = goah::Modules::Systemsettings->ReadOwnerPersonnel($evars{'userid'});
+	my %userinfo=%$userpointer;
+
+	my $assigneename = "$assigneeinfo{'firstname'} $assigneeinfo{'lastname'}";
+	my $creatorname = "$userinfo{'firstname'} $userinfo{'lastname'}";
+
+	goah::Modules->AddMessage('debug',"Comp: ".$customername);
+
+	my %vars;
+	$vars{'from'} = $ownerinfo->email;
+	$vars{'to'} = $assigneeinfo{'email'};
+	$vars{'cc'} = $userinfo{'email'};
+	$vars{'status'} = $evars{'status'};
+	$vars{'taskid'} = $evars{'taskid'};
+	$vars{'customername'} = $customername;
+	$vars{'creatorname'} = $creatorname;
+	$vars{'assigneename'} = $assigneename;
+	$vars{'description'} = $evars{'description'};
+	$vars{'longdescription'} = $evars{'longdescription'};
+	$vars{'action'} = $evars{'action'};
+
+	$vars{'template'} = 'tasks.tt2';
+	$vars{'module'} = 'Tasks';
+
+	my $subject = "[#$vars{'taskid'}]_".$vars{'action'}.":_"."$vars{'description'}";
+    
+	$subject =~ s/\s+/_/g;
+	$vars{'subject'} = $subject;
+
+	# Check that we have smtp-server specified before trying to send email
+	my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
+	my %smtp_server = %$tmp_smtp;	
+
+	use Try::Tiny;	
+	if ($tmp_smtp) {
+		my $tmp = $smtp_server{'value'};	
+		if (length($tmp) > 3) {
+			try {
+				use goah::Modules::Email;
+				my $email = goah::Modules::Email->SendEmail(\%vars);
+			} catch {
+				goah::Modules->AddMessage('error',"$_");
+			}
+		}
+	}
+
+return 1;	
 }
 
 #
