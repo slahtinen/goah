@@ -94,6 +94,9 @@ if($auth==1) {
                 FileUpload(\%params);
         }
 
+	if ($params{'action'} eq 'download') {
+		FileDownload(\%params);
+	}
 	
 	#
 	# Function: FileUpload
@@ -121,7 +124,7 @@ if($auth==1) {
 
 		use Data::UUID;
 		use File::MimeInfo;
-
+		
         	my %vars = %{$_[0]};
 		my $url;
 
@@ -210,9 +213,59 @@ if($auth==1) {
 
 		$url = $vars{'url'}.'&files_action=upload&status=success';
 		print redirect($url);
-			
+	
+		
 	}
 	
+	#
+	# Function: FileDownload
+	#
+	# Module for download file. Process is controlled with hash-variables
+	# which are passed as hashref from another module.
+	#
+	# Parameters:
+	#
+	#   Hashref
+	#
+	#   Required
+	#
+	#   userid - User id of user who requests file
+	#   file - Filename
+	#
+	# Returns:
+	#
+	#   1 for success
+	#
+
+	sub FileDownload {
+		
+		my %vars = %{$_[0]};
+		my $file = $vars{'file'};
+
+		use goah::Modules::Files;
+		my $filerow_ref = goah::Modules::Files->GetFileRows('',$file);
+		my %dbdata = %$filerow_ref;
+ 
+		# File and directory
+		my $dir = $dbdata{'datadir'};
+		my $orig_filename = $dbdata{'orig_filename'};
+
+   		open(my $DOWNFILE, '<', "$dir/$file") or return(0);
+ 
+   		print $q->header(
+			-type => 'application/x-download',
+                    	-attachment => $orig_filename,
+                    	-Content_length => -s "$dir/$file",
+   		);
+ 
+   		binmode $DOWNFILE;
+   		print while <$DOWNFILE>;
+  		undef ($DOWNFILE);
+
+		close DOWNFILE;
+	}
+
+
 
 } else {
 	# Normal login
