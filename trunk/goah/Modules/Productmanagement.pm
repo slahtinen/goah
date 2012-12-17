@@ -1188,6 +1188,7 @@ sub ReadProductsByGroup {
 			return 0;
 		}
 	}
+	goah::Modules->AddMessage('debug',"Got UID $uid at ReadProductsByGroup",__FILE__,__LINE__,caller());
 
 	my $search = '-1';
 	if($_[0]) {
@@ -1226,6 +1227,7 @@ sub ReadProductsByGroup {
 				unless($prod->$field) {
 					$pdata{$i}{$field}=0;
 				} else {
+					$pdata{$i}{$field."_vat0"} = goah::GoaH->FormatCurrencyNopref($prod->$field,0,0,'out',0);
 					$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
 				}
 			} else {
@@ -1240,14 +1242,18 @@ sub ReadProductsByGroup {
 
 		if($_[2]!=1) {
 			if($prod->in_store) {
+				$pdata{$i}{'row_total_value_vat0'} = goah::GoaH->FormatCurrencyNopref($prod->purchase*$prod->in_store,0,0,'out',0);
 				$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
 			} else {
+				$pdata{$i}{'row_total_value_vat0'}=0;
 				$pdata{$i}{'row_total_value'}=0;
 			}
 
 		} else {
+			$pdata{$i}{'row_total_value_vat0'}=0;
 			$pdata{$i}{'row_total_value'}=0;
 			$pdata{$i}{'row_total_value'}=$prod->purchase*$prod->in_store if($prod->in_store);
+			$pdata{$i}{'row_total_value_vat0'}=$pdata{$i}{'row_total_value'} if($prod->in_store);
 
 		}
 		$i++;
@@ -1290,6 +1296,7 @@ sub ReadProductsByGrouptype {
 			$uid=$_[1];
 		}
 	}
+	goah::Modules->AddMessage('debug',"Got uid $uid at ReadProductsByGrouptype",__FILE__,__LINE__,caller());
 
 	use goah::Db::Productgroups::Manager;
 	my $groupsref = goah::Db::Productgroups::Manager->get_productgroups( query => [ grouptype => $_[0] ], sort_by => 'name' );

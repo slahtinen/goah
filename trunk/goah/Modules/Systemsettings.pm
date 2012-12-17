@@ -435,6 +435,7 @@ sub ReadSetup {
 		foreach (@data) {
 			
 			foreach my $k (@fields) {
+		
 				unless($_[1]) {	
 					$sdata{$sortidx}{$k}=$_->$k;
 				} else {
@@ -456,7 +457,13 @@ sub ReadSetup {
 		foreach my $k (@fields) {
 			$sdata{$k}=$datap->$k;
 		}
+
+		# Nasty hack to fix row floats on vat classes where number and % sign are on another lines
+		if($sdata{'category'}=~/vat/i) {
+			$sdata{'item'}=~s/\ /\&nbsp;/;
+		}
 	}
+
 
 	return \%sdata;
 

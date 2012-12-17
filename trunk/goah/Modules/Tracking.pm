@@ -29,39 +29,73 @@ use goah::Modules::Customermanagement;
 my $uid;
 my $settref;
 
-my %timetrackstatuses = (
-	0 => { id => 0, name => __("Normal"), selected => 1, hidden => 0 },
-	1 => { id => 1, name => __("Evening"), selected => 0, hidden => 0 },
-	2 => { id => 2, name => __("Night"), selected => 0, hidden => 0 },
-	3 => { id => 3, name => __("Other"), selected => 0, hidden => 0 },
-);
-
-my %timetrackingdb = (
-	0 => { field => 'id', name => 'id', type => 'hidden', required => '0' },
-	1 => { field => 'companyid', name => __("Customer"), type => 'selectbox', required => '1', data => goah::Modules::Customermanagement->ReadAllCompanies(1) },
-	2 => { field => 'userid', name => 'userid', type => 'hidden', required => '1' },
-	3 => { field => 'type', name => __('Work type'), type => 'selectbox', required => '1', data => \%timetrackstatuses },
-	4 => 	{ 	field => 'productcode', 
-			name => __('Product'), 
-			type => 'selectbox', 
-			required => '1', 
-			data => goah::Modules::Productmanagement->ReadProductsByGrouptype(1,$uid) },
-	5 => { field => 'day', name => __('Date'), type => 'textfield', required => '1' },
-	6 => { field => 'hours', name => __("Working hours"), type => 'textfield', required => '1' },
-	7 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1' },
-	#8 => { field => 'project', name => __("Project"), type => "textarea", required => '0' },
-	#9 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
-	8 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
-	9 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
-	91 => { field => 'no_billing', name => __("Internal"), type => 'checkbox', required => '0' },
-	92 => { field => 'basket_id', name => __("Imported to basket"), type => 'checkbox', required => '0' },
-	93 => { field => 'longdescription', name => __("Long description, only for internal use"), type => "textarea", required => 0 },
-);
-
+my %timetrackstatuses;
+my %timetrackingdb;
 
 my %submenu = (
 	0 => { title => __("Reporting"), action => 'reporting' }
 );
+
+#
+# Function InitVars
+#
+#   Initialize variables required for processing. This is required so
+#   that the process doesn't attempt to access functions without proper
+#   information
+#
+# Parameters:
+#   
+#   None
+#
+# Return:
+#
+#   Always 0
+#
+sub InitVars {
+
+	%timetrackstatuses = (
+		0 => { id => 0, name => __("Normal"), selected => 1, hidden => 0 },
+		1 => { id => 1, name => __("Evening"), selected => 0, hidden => 0 },
+		2 => { id => 2, name => __("Night"), selected => 0, hidden => 0 },
+		3 => { id => 3, name => __("Other"), selected => 0, hidden => 0 },
+	);
+
+	%timetrackingdb = (
+		0 => { field => 'id', name => 'id', type => 'hidden', required => '0' },
+		1 => { 
+			field => 'companyid', 
+			name => __("Customer"), 
+			type => 'selectbox', 
+			required => '1', 
+			data => goah::Modules::Customermanagement->ReadAllCompanies(1) 
+		},
+		2 => { field => 'userid', name => 'userid', type => 'hidden', required => '1' },
+		3 => { field => 'type', name => __('Work type'), type => 'selectbox', required => '1', data => \%timetrackstatuses },
+		4 => 	{ 	field => 'productcode', 
+				name => __('Product'), 
+				type => 'selectbox', 
+				required => '1', 
+				data => goah::Modules::Productmanagement->ReadProductsByGrouptype(1,$uid) },
+		5 => { field => 'day', name => __('Date'), type => 'textfield', required => '1' },
+		6 => { field => 'hours', name => __("Working hours"), type => 'textfield', required => '1' },
+		7 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1' },
+		#8 => { field => 'project', name => __("Project"), type => "textarea", required => '0' },
+		#9 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
+		8 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
+		9 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
+		91 => { field => 'no_billing', name => __("Internal"), type => 'checkbox', required => '0' },
+		92 => { field => 'basket_id', name => __("Imported to basket"), type => 'checkbox', required => '0' },
+		93 => { 
+			field => 'longdescription', 
+			name => __("Long description, only for internal use"), 
+			type => "textarea", 
+			required => 0 
+		},
+	);
+
+	return 0;
+}
+
 
 
 #
@@ -88,6 +122,10 @@ sub Start {
 
         my $q = CGI->new();
         my %variables;
+
+	unless(scalar(keys(%timetrackingdb)) || scalar(keys(%timetrackstatuses)) ) {
+		InitVars();
+	}
 
         $variables{'function'} = 'modules/Tracking/timetracking';
         $variables{'module'} = 'Tracking';
@@ -269,6 +307,11 @@ sub WriteHours {
 		}
 	}
 
+
+	unless(scalar(keys(%timetrackingdb)) || scalar(keys(%timetrackstatuses)) ) {
+		InitVars();
+	}
+
 	# Update values to an array from http variables
         my %fieldinfo;
         while(my($key,$value) = each (%timetrackingdb)) {
@@ -408,6 +451,10 @@ sub ReadData {
 		return 0;
 	}
 
+	unless(scalar(keys(%timetrackingdb)) || scalar(keys(%timetrackstatuses)) ) {
+		InitVars();
+	}
+
 	my %data;
 	my $field;
 	foreach my $key (keys %timetrackingdb) {
@@ -532,6 +579,10 @@ sub ReadHours {
 
 	my @data=@$datap;
 	return 0 unless scalar(@data);
+
+	unless(scalar(keys(%timetrackingdb)) || scalar(keys(%timetrackstatuses)) ) {
+		InitVars();
+	}
 
 	# Pack found data into hash and return data
 	my %tdata;
