@@ -15,3 +15,9 @@ name = /var/lib/goah/goah2.db
 theme = default
 # To enable anonymous login set this to 1
 demomode = 0
+
+[files]
+# Default directory for files
+data_dir = /var/lib/goah/goah_data
+# Maximum size for upload
+max_upload = 100

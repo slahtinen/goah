@@ -188,6 +188,34 @@ sub Start {
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 
+				# Search selected basket files
+				use goah::Modules::Files;
+				$variables{'basketfiles'} = goah::Modules::Files->GetFileRows($q->param('target'),'');
+
+				# Actions if we are returning from files.cgi
+				if ($q->param('files_action')) {
+
+					if ($q->param('status') eq 'success') {
+
+						my $success_message;
+						if ($q->param('files_action') eq 'upload') {$success_message = "File uploaded succesfully"}
+						if ($q->param('files_action') eq 'delete') {$success_message = "File deleted succesfully"}
+
+						goah::Modules->AddMessage('info',"$success_message");
+					}
+
+					if ($q->param('status') eq 'error') {
+
+						# Get and process error
+						my $tmp_msg = $q->param('msg');
+						my $error_message = ucfirst($tmp_msg);
+						$error_message =~ s/_/ /g;
+					
+						goah::Modules->AddMessage('error',"ERROR! $error_message");
+							
+					}
+				}
+
 		} elsif($q->param('action') eq 'recurring') {
 
 				$variables{'function'} = 'modules/Basket/recurringbaskets';
