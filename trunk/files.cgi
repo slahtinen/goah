@@ -77,6 +77,7 @@ if($auth==1) {
         $params{'info'} = $q->param('info');
         $params{'action'} = $q->param('action');
         $params{'target_id'} = $q->param('target_id');
+        $params{'row_id'} = $q->param('row_id');
 
 	# Get defaults from config file
 	my $cref = goah::GoaH->GetConfig;
@@ -97,6 +98,10 @@ if($auth==1) {
 
 	if ($params{'action'} eq 'download') {
 		FileDownload(\%params);
+	}
+
+	if ($params{'action'} eq 'delete') {
+		FileDelete(\%params);
 	}
 	
 	#
@@ -222,7 +227,7 @@ if($auth==1) {
 	# Function: FileDownload
 	#
 	# Module for download file. Process is controlled with hash-variables
-	# which are passed as hashref from another module.
+	# which are passed as hashref.
 	#
 	# Parameters:
 	#
@@ -231,7 +236,7 @@ if($auth==1) {
 	#   Required
 	#
 	#   userid - User id of user who requests file
-	#   file - Filename
+	#   file - Internal filename (int_filename)
 	#
 	# Returns:
 	#
@@ -289,6 +294,56 @@ if($auth==1) {
 	}
 
 
+	#
+	# Function: FileDelete
+	#
+	# Module for file delete. Process is controlled with hash-variables
+	# which are passed as hashref.
+	#
+	# Parameters:
+	#
+	#   Hashref
+	#
+	#   Required
+	#
+	#   userid - User id of user who requests file
+	#   file - Internal filename (int_filename)
+	#   rowid - Database row id
+	#
+	# Returns:
+	#
+	#   1 for success
+	#
+
+	sub FileDelete {
+
+		my %vars = %{$_[0]};
+		my $row_id = $vars{'row_id'};
+		my $int_filename = $vars{'file'};
+		my $url;
+
+		# Check that we have necessary variables
+		unless ($vars{'userid'}) { 
+			$url = $vars{'url'}.'&files_action=delete&status=error&msg=userid_missing';
+			die print redirect($url);
+		}
+		
+		unless ($vars{'file'}) { 
+			$url = $vars{'url'}.'&files_action=delete&status=error&msg=select_file_to_upload';
+			die print redirect($url);
+		}
+
+		unless ($vars{'row_id'}) { 
+			$url = $vars{'url'}.'&files_action=delete&status=error&msg=rowid_missing';
+			die print redirect($url);
+		}
+
+		my $del_ref = goah::Modules::Files->DeleteFileRows($row_id,$int_filename);
+		my %del = %$del_ref;
+ 
+		$url = $vars{'url'}.'&files_action=delete&status=success';
+		print redirect($url);
+	}
 
 } else {
 	# Normal login

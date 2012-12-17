@@ -2,16 +2,29 @@
 <table>
 <thead>
 <th>[% gettext("Filename") %]</th>
-<th>[% gettext("Description") %]</th>
 <th>[% gettext("Date") %]</th>
+<th>[% gettext("Time") %]</th>
+<th>[% gettext("Owner") %]</th>
+<th>[% gettext("Mime-type") %]</th>
+<th>[% gettext("Description") %]</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
 </thead>
 <tbody>
 [% FOREACH key IN basketfiles.keys.sort %]
 [% dbrow = basketfiles.$key %]
 	<tr>
-        <td>[% dbrow.int_filename %]</td>
-        <td>[% dbrow.info %]</td>
+        <td>[% dbrow.orig_filename %]</td>
         <td>[% dbrow.date %]</td>
+        <td>[% dbrow.time %]</td>
+        <td>[% dbrow.username %]</td>
+        <td>[% dbrow.mimetype %]</td>
+        <td>[% dbrow.info %]</td>
+        <td width='2%'><a href="files.cgi?action=delete&row_id=[% dbrow.id %]&file=[% dbrow.int_filename %]">
+		<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/edit-delete.png" 
+		onclick="return confirm('[% gettext("Do you really want to delete file ?") %]')"></td>
+        <td width='2%'><a href="files.cgi?action=download&file=[% dbrow.int_filename %]">
+		<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-save.png" /></a></td>
 	</tr>
 [% END %]
 </tr>
