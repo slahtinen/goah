@@ -1,9 +1,19 @@
 <h3>[% gettext("Basket files") %]</h3>
 <table>
-<tr>
-<td>
-Filelist
-</td>
-</form>
+<thead>
+<th>[% gettext("Filename") %]</th>
+<th>[% gettext("Description") %]</th>
+<th>[% gettext("Date") %]</th>
+</thead>
+<tbody>
+[% FOREACH key IN basketfiles.keys.sort %]
+[% dbrow = basketfiles.$key %]
+	<tr>
+        <td>[% dbrow.int_filename %]</td>
+        <td>[% dbrow.info %]</td>
+        <td>[% dbrow.date %]</td>
+	</tr>
+[% END %]
 </tr>
+</tbody>
 </table>

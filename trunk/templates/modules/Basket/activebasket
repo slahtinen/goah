@@ -241,6 +241,8 @@
 </tr>
 </table>
 
+[% INCLUDE modules/Basket/basketfiles %]
+
 <h3>[% gettext("Additional information") %]</h3>
 <table>
 <thead>
@@ -269,5 +271,4 @@
 </form>
 </tbody>
 </table>
-[% INCLUDE modules/Basket/basketfiles %]
 

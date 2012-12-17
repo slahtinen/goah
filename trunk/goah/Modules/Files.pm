@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use utf8;
 use Encode;
+use Try::Tiny;
 
 #
 # String: module
@@ -40,7 +41,7 @@ my $module='Files';
 my %filesdbfieldnames = (
 			0  => 'id',
 			1  => 'userid',
-			2  => 'moduleid',
+			2  => 'target_id',
 			3  => 'date',
 			4  => 'mimetype',
 			5  => 'md5',
@@ -69,8 +70,8 @@ my %filesdbfieldnames = (
 #
 #   At least One of these variables should be given.
 #
-#   0 - Moduleid to identify request (moduleid field from database)
-#   1 - Internal filename (int_filename from database)
+#   0 - target_id:	Id to identify request. Search multiple rows.
+#   1 - int_filename: 	Internal filename
 #
 #
 # Returns:
@@ -82,32 +83,65 @@ sub GetFileRows {
 
 	shift if($_[0]=~/goah::Modules::Files/);
 	my @vars = @_;
-	my $moduleid = $_[0];
+	my $target_id = $_[0];
 	my $int_filename = $_[1];
 	my %dbdata;
 
 	use goah::Db::Files::Manager;
 
-	# Get one row (searched with filename)
-	if ($int_filename) {
-        	my $frow_ref = goah::Db::Files::Manager->get_files( query => [ int_filename => "$int_filename" ] );
-        	my @frow = @$frow_ref;
-		
-		# Just for debugging
-		# use CGI;
-		# my $q = new CGI;
-		# print $q->header();
+	if (($int_filename) || ($target_id) ) {
 
-		my $dbrow;
-		foreach $dbrow (@frow) {
-			while (my ($key, $value) = each(%filesdbfieldnames)) {
-				$dbdata{$value} = $dbrow->{$value};
+		my $frow_ref;
+
+		if (($int_filename) && !($target_id)) {
+        		$frow_ref = goah::Db::Files::Manager->get_files( query => [ int_filename => "$int_filename" ] );
+        		my @frow = @$frow_ref;
+
+			my $dbrow;
+			foreach $dbrow (@frow) {
+				while (my ($key, $value) = each(%filesdbfieldnames)) {
+					$dbdata{$value} = $dbrow->{$value};
+				}
+			}
+			unless ($dbdata{'int_filename'}) {
+				return 0;
 			}
 		}
 
-	return (\%dbdata);
+		if (($target_id) && !($int_filename)) {
+        		$frow_ref = goah::Db::Files::Manager->get_files( query => [ target_id => "$target_id" ] );
+        		my @frow = @$frow_ref;
+
+			my $dbrow;
+			my $counter = 10000;
+			foreach $dbrow (@frow) {
+				while (my ($key, $value) = each(%filesdbfieldnames)) {
+					if ($dbrow->int_filename) {
+						$dbdata{$counter}{$value} = $dbrow->{$value};
+					}
+				}
+
+				unless ($dbrow->int_filename) {
+					return 0;
+				}
+				$counter++;
+			}
+
+			# Debugging
+			# use CGI;
+			# my $q = new CGI;
+			# print $q->header();
+			#die print @frow;
+			# foreach (keys %dbdata) {
+			#	if ($dbdata{$_}->{'id'} > 0) {
+			#		print $dbdata{$_}->{'id'}."<br />";
+			#	}
+			# }
+		}
+
 	}
 
+return (\%dbdata);
 }
 
 1;

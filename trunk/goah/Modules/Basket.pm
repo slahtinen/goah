@@ -188,6 +188,10 @@ sub Start {
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 
+				# Search selected basket files
+				use goah::Modules::Files;
+				$variables{'basketfiles'} = goah::Modules::Files->GetFileRows($q->param('target'),'');
+
 				# Actions if we are returning from files.cgi
 				if ($q->param('files_action')) {
 

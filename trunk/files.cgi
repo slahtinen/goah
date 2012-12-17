@@ -23,7 +23,6 @@ use utf8;
 
 use CGI qw(:standard);
 use Template;
-use File::Util;
 
 use lib qw(.);
 use goah::Auth;
@@ -87,6 +86,8 @@ if($auth==1) {
 	
 	# Get return url to open after file operation
 	my $tmp_url = referer();
+
+	# Split url, so we dont have same url many times after multiple uploads
 	my @url = split('&files_action', $tmp_url);
 	$params{'url'} = $url[0];
 
@@ -163,7 +164,7 @@ if($auth==1) {
 		$newfile =~ s/[^A-Za-z0-9]//g;
 		$newfile = $newfile.'.'.$tmp[1];
 
-		# Check does module have directory
+		# Check if module have directory. If not, create it
 		unless (-e $dir){
 			mkdir $dir or die "$!";
 		}
@@ -197,7 +198,7 @@ if($auth==1) {
 		# Add file information to database
 		my %dbvars;
 		$dbvars{'userid'} = $vars{'userid'};
-		$dbvars{'moduleid'} = $vars{'target_id'};
+		$dbvars{'target_id'} = $vars{'target_id'};
         	$dbvars{'date'} = sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec);
 		$dbvars{'mimetype'} = $vars{'mimetype'};
 		$dbvars{'datadir'} = "$dir/$subdir";
@@ -241,16 +242,38 @@ if($auth==1) {
 		
 		my %vars = %{$_[0]};
 		my $file = $vars{'file'};
+		my $target_id = $vars{'target_id'};
 
 		use goah::Modules::Files;
-		my $filerow_ref = goah::Modules::Files->GetFileRows('',$file);
+		my $filerow_ref;
+
+		#  only specified file
+		if (($file) && !($target_id)) {
+			$filerow_ref = goah::Modules::Files->GetFileRows('',$file);
+		}
+
+		# Return all files with id. 
+		# Commented out, atleast for now, because there ain't currently any reason why 
+		# files.cgi should handle more than one file per action.
+		#
+		# if (($target_id) && !($file)) {
+		# 	$filerow_ref = goah::Modules::Files->GetFileRows($target_id,'');
+		# }
+
+		unless ($filerow_ref) {
+			# Redirect an case of error. For now, this handles only internal calls from module.
+			# For getting error message out, module should have some function to parse status and msg.
+			my $url = $vars{'url'}.'&files_action=download&status=error&msg=file_not_found';
+			print redirect($url);
+		}
+
 		my %dbdata = %$filerow_ref;
- 
+
 		# File and directory
 		my $dir = $dbdata{'datadir'};
 		my $orig_filename = $dbdata{'orig_filename'};
 
-   		open(my $DOWNFILE, '<', "$dir/$file") or return(0);
+   		open(my $DOWNFILE, '<', "$dir/$file") or die "$!";
  
    		print $q->header(
 			-type => 'application/x-download',
