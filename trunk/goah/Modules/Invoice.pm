@@ -104,6 +104,8 @@ sub Start {
 			$tmp = ReadInvoices($q->param('target'));
 			$variables{'invoice'} = $tmp;
 
+			my $ordernumber = $tmp->ordernumber;
+
 			# Change date today if needed and update also due value
 			my $now = POSIX::strftime("%Y-%m-%d", localtime);
 			my $created = $tmp->created;
@@ -126,6 +128,38 @@ sub Start {
 			$variables{'invoicehistory'} = $tmp;
 	
 			$variables{'function'} = 'modules/Invoice/invoiceinfo';
+
+			# Search selected invoice files
+                     	use goah::Modules::Files;
+              	        $variables{'invoicefiles'} = goah::Modules::Files->GetFileRows($q->param('target'),'');
+
+			# Search Basket files
+              	       	$variables{'basketfiles'} = goah::Modules::Files->GetFileRows($ordernumber,'');
+
+                     	# Actions if we are returning from files.cgi
+                      	if ($q->param('files_action')) {
+
+                      		if ($q->param('status') eq 'success') {
+                    
+                      			my $success_message; 
+                              		if ($q->param('files_action') eq 'upload') {$success_message = "File uploaded succesfully"}
+                               		if ($q->param('files_action') eq 'delete') {$success_message = "File deleted succesfully"}
+
+                              		goah::Modules->AddMessage('info',"$success_message");
+                   		}
+
+                              	if ($q->param('status') eq 'error') {
+
+                                   	# Get and process error
+                                       	my $tmp_msg = $q->param('msg');
+                                      	my $error_message = ucfirst($tmp_msg);
+                                      	$error_message =~ s/_/ /g;
+                                        
+                                     	goah::Modules->AddMessage('error',"ERROR! $error_message");
+                                                        
+                             	}
+                  	}
+
 
 		} elsif($q->param('action') eq 'addevent') {
 

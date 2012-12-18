@@ -229,7 +229,7 @@
 </td>
 <td>
 <form action="files.cgi" method="post" enctype="multipart/form-data">
-[% gettext("Add file:") %] <input type="file" name="file" value='Test' />
+[% gettext("Add file:") %] <input type="file" name="file" />
 [% gettext("File information: ") %]<input type='text' class='big' name='info' />
 <input type='hidden' name='module' value='[% module %]'>
 <input type='hidden' name='target_id' value='[% basketdata.id %]'>
