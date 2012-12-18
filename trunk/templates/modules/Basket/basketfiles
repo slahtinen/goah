@@ -10,11 +10,7 @@
 <th>&nbsp;</th>
 <th>&nbsp;</th>
 </thead>
-<<<<<<< HEAD
-<tbody>
-=======
 <tbody class='rowdata'>
->>>>>>> ver2.1.0beta
 [% FOREACH key IN basketfiles.keys.sort %]
 [% dbrow = basketfiles.$key %]
 	<tr>
