@@ -161,7 +161,9 @@
 </table>
 
 [% INCLUDE modules/Invoice/invoice.productlist %]
-[% INCLUDE modules/Invoice/invoice.files %]
+[% IF invoicefiles.size || basketfiles.size %]
+	[% INCLUDE modules/Invoice/invoice.files %]
+[% END %]
 [% INCLUDE modules/Invoice/invoice.history %]
 
 <blockquote class="helptext"><p>[% gettext("You can alter the information of the invoice as 

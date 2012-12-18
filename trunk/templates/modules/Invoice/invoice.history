@@ -39,7 +39,7 @@
 <input type='hidden' name='module' value='[% module %]' />
 <input type='hidden' name='action' value='addevent' />
 <input type='hidden' name='target' value='[% invoice.id %]' />
-[% gettext("Add note:") %] <input name='information'> <input type='submit' value='[% gettext("Add") %]'>
+[% gettext("Add note:") %] <input name='information' class='huge'> <input type='submit' value='[% gettext("Add") %]'>
 </form>
 </td>
 </tr>

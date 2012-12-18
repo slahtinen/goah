@@ -241,7 +241,9 @@
 </tr>
 </table>
 
-[% INCLUDE modules/Basket/basketfiles %]
+[% IF basketfiles.size %]
+	[% INCLUDE modules/Basket/basketfiles %]
+[% END %]
 
 <h3>[% gettext("Additional information") %]</h3>
 <table>
