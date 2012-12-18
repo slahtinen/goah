@@ -78,6 +78,7 @@ if($auth==1) {
         $params{'action'} = $q->param('action');
         $params{'target_id'} = $q->param('target_id');
         $params{'row_id'} = $q->param('row_id');
+        $params{'customerid'} = $q->param('customerid');
 
 	# Get defaults from config file
 	my $cref = goah::GoaH->GetConfig;
@@ -120,6 +121,7 @@ if($auth==1) {
 	#   file - Filename
 	#   module - Module name for directory
 	#   target_id - Name for subdirectory
+	#   customerid - Customers id
 	#
 	# Returns:
 	#
@@ -152,6 +154,11 @@ if($auth==1) {
 
 		unless ($vars{'target_id'}) { 
 			$url = $vars{'url'}.'&files_action=upload&status=error&msg=targetid_missing';
+			die print redirect($url);
+		}
+
+		unless ($vars{'customerid'}) { 
+			$url = $vars{'url'}.'&files_action=upload&status=error&msg=customerid_missing';
 			die print redirect($url);
 		}
 
@@ -212,6 +219,7 @@ if($auth==1) {
 		$dbvars{'status'} = 1;
 		$dbvars{'info'} = $vars{'info'};
 		$dbvars{'module'} = $vars{'module'};
+		$dbvars{'customerid'} = $vars{'customerid'};
 
 		use goah::Db::Files;
 		my $filesitem = goah::Db::Files->new(%dbvars);

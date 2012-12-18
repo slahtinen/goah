@@ -152,6 +152,7 @@
 	[% gettext("File information: ") %]<input type='text' class='big' name='info' />
 	<input type='hidden' name='module' value='[% module %]'>
 	<input type='hidden' name='target_id' value='[% invoice.id %]'>
+	<input type='hidden' name='customerid' value='[% compinfo.id %]'>
 	<input type='hidden' name='action' value='upload'>
 	<input type='submit' value='[% gettext('Upload') %]'>
 	</form>
