@@ -25,6 +25,6 @@ package goah::Database::Invoices;
 use base 'goah::Database';
 
 __PACKAGE__->table('Invoices');
-__PACKAGE__->columns(All => qw/id invoicenumber companyid locationid billingid referralid created due referencenumber delayinterest customerreference state payment_condition received/);  
+__PACKAGE__->columns(All => qw/id invoicenumber companyid locationid billingid referralid created due referencenumber delayinterest customerreference state payment_condition received ordernumber/);  
 
 1;

@@ -408,7 +408,8 @@ sub NewInvoice {
 								created => $created,
 								due => $due,
 								payment_condition => $customerdata->payment_condition,
-								customerreference => $customerdata->customerreference });
+								customerreference => $customerdata->customerreference, 
+								ordernumber => $basketinfo{'id'} });
 	
 	# Read rows from basket as well, so they can be written into invoice rows
 	my $brows_pointer = goah::Modules::Basket::ReadBasketrows($refinfo->orderid,-1);

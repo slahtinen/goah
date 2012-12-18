@@ -27,7 +27,7 @@ use base qw(goah::Db::Object);
 __PACKAGE__->meta->setup
         (
 	table      => 'Invoices',
-	columns    => [ qw(id invoicenumber companyid locationid billingid referralid created due referencenumber delayinterest customerreference state payment_condition received) ],
+	columns    => [ qw(id invoicenumber companyid locationid billingid referralid created due referencenumber delayinterest customerreference state payment_condition received ordernumber) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );
