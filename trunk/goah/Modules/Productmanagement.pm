@@ -313,6 +313,7 @@ sub Start {
 			my %productgroups=%$prodgroupref;
 			my %productspergroup;
 			my $storagetotalvalue=0;
+			my $storagetotalvalue_vat0=0;
 			foreach my $key (keys %productgroups) {
 				my $gpoint = $productgroups{$key};
 				my %group=%$gpoint;
@@ -355,6 +356,8 @@ sub Start {
 					my %groupprods = %$prodpointer;
 					foreach my $prodkey (keys %groupprods) {
 						$storagetotalvalue+=$groupprods{$prodkey}{'row_total_value'};
+						$storagetotalvalue_vat0+=$groupprods{$prodkey}{'row_total_value_vat0'};
+						$productspergroup{$key}{'group_total_value_vat0'}+=$groupprods{$prodkey}{'row_total_value_vat0'};
 						$productspergroup{$key}{'group_total_value'}+=$groupprods{$prodkey}{'row_total_value'};
 					}
 				}
@@ -362,6 +365,7 @@ sub Start {
 			$variables{'produtgroups'}=$prodgroupref;
 			$variables{'productspergroup'}=\%productspergroup;
 			#$variables{'manufacturers'}=ReadData('manuf');
+			$variables{'storagetotalvalue_vat0'}=$storagetotalvalue_vat0;
 			$variables{'storagetotalvalue'}=$storagetotalvalue;
 		}	
 	}
@@ -674,13 +678,21 @@ sub WriteEditedItem {
 					%vat=%$vatp;
 				}
 
-				if($q->param($fieldinfo{'field'})) {
+				if($q->param($fieldinfo{'field'}) || $q->param($fieldinfo{'field'}."_vat0")) {
 
-					my $sum = $q->param($fieldinfo{'field'});
-					my $vat = $q->param('vat');
-					
-					$data->set($fieldinfo{'field'} => goah::GoaH->FormatCurrency($sum,$vat{'value'},$uid,'in',$settref));
+					# Check if price has been changed, VAT0 prices always have preference
+					if($q->param($fieldinfo{'field'}."_vat0") ne $q->param($fieldinfo{'field'}."_vat0_orig")) {
+						$data->set($fieldinfo{'field'} => 
+							goah::GoaH->FormatCurrencyNopref($q->param($fieldinfo{'field'}."_vat0"),0,0,"in",0)
+						);
+					} elsif($q->param($fieldinfo{'field'}) ne $q->param($fieldinfo{'field'}."_orig")) {
+						$data->set($fieldinfo{'field'} =>
+							goah::GoaH->FormatCurrencyNopref($q->param($fieldinfo{'field'}),$vat{'value'},1,'in',0));
+					}
 
+					#my $sum = $q->param($fieldinfo{'field'});
+					#my $vat = $q->param('vat');
+					#$data->set($fieldinfo{'field'} => goah::GoaH->FormatCurrency($sum,$vat{'value'},$uid,'in',$settref));
 				} else {
 					$data->set($fieldinfo{'field'} => '0.00');
 				}
@@ -833,7 +845,8 @@ sub ReadData {
 				$field = $productsdbfields{$key}{'field'};
 				if($field eq 'purchase' || $field eq 'sell') {
 					unless($_[4]) {
-						$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$vat{'value'},$uid,'out',$settref);
+						$pdata{$i}{$field."_vat0"} = goah::GoaH->FormatCurrencyNopref($prod->$field,$vat{'value'},0,'out',0);
+						$pdata{$i}{$field} = goah::GoaH->FormatCurrencyNopref($prod->$field,$vat{'value'},0,'out',1);
 					} else {
 						$pdata{$i}{$field} = $prod->$field;
 					}
@@ -886,9 +899,11 @@ sub ReadData {
 				unless($_[4] && $_[4] eq "1") {
 					#$pdata{$field} = goah::GoaH->FormatCurrency($data[0]->get($field),$data[0]->get('vat'),$uid,'out',$settref);
 					unless($dbdata->$field) {
+						$pdata{$field."_vat0"} = 0;
 						$pdata{$field}=0;
 					} else {
-						$pdata{$field} = goah::GoaH->FormatCurrency($dbdata->$field,$vat{'value'},$uid,'out',$settref);
+						$pdata{$field."_vat0"} = goah::GoaH->FormatCurrencyNopref($dbdata->$field,$vat{'value'},0,'out',0);
+						$pdata{$field} = goah::GoaH->FormatCurrencyNopref($dbdata->$field,$vat{'value'},0,'out',1);
 					}
 				} else {
 					$pdata{$field} = $dbdata->$field;
@@ -1188,6 +1203,7 @@ sub ReadProductsByGroup {
 			return 0;
 		}
 	}
+	##goah::Modules->AddMessage('debug',"Got UID $uid at ReadProductsByGroup",__FILE__,__LINE__,caller());
 
 	my $search = '-1';
 	if($_[0]) {
@@ -1226,6 +1242,7 @@ sub ReadProductsByGroup {
 				unless($prod->$field) {
 					$pdata{$i}{$field}=0;
 				} else {
+					$pdata{$i}{$field."_vat0"} = goah::GoaH->FormatCurrencyNopref($prod->$field,0,0,'out',0);
 					$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
 				}
 			} else {
@@ -1240,14 +1257,18 @@ sub ReadProductsByGroup {
 
 		if($_[2]!=1) {
 			if($prod->in_store) {
+				$pdata{$i}{'row_total_value_vat0'} = goah::GoaH->FormatCurrencyNopref($prod->purchase*$prod->in_store,0,0,'out',0);
 				$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
 			} else {
+				$pdata{$i}{'row_total_value_vat0'}=0;
 				$pdata{$i}{'row_total_value'}=0;
 			}
 
 		} else {
+			$pdata{$i}{'row_total_value_vat0'}=0;
 			$pdata{$i}{'row_total_value'}=0;
 			$pdata{$i}{'row_total_value'}=$prod->purchase*$prod->in_store if($prod->in_store);
+			$pdata{$i}{'row_total_value_vat0'}=$pdata{$i}{'row_total_value'} if($prod->in_store);
 
 		}
 		$i++;
@@ -1290,6 +1311,7 @@ sub ReadProductsByGrouptype {
 			$uid=$_[1];
 		}
 	}
+	goah::Modules->AddMessage('debug',"Got uid $uid at ReadProductsByGrouptype",__FILE__,__LINE__,caller());
 
 	use goah::Db::Productgroups::Manager;
 	my $groupsref = goah::Db::Productgroups::Manager->get_productgroups( query => [ grouptype => $_[0] ], sort_by => 'name' );

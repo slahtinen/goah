@@ -63,8 +63,8 @@
 	<th>[% gettext("Code") %]</th>
 	<th>[% gettext("Name") %]</th>
 	<th>[% gettext("Manufacturer") %]</th>
-	<th>[% gettext("Purchase price") %]</th>
-	<th>[% gettext("Sell price") %]</th>
+	<th class="center" colspan='2'>[% gettext("IN") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
+	<th class="center" colspan='2'>[% gettext("OUT") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
 	<th>[% gettext("VAT class") %]</th>
 	<th>[% gettext("In storage") %]</th>
 	<th>[% gettext("Row value") %]</th>
@@ -88,8 +88,10 @@
 		<td>[% product.code %]</td>
 		<td>[% product.name %]</td>
 		<td>[% product.manufacturer_name %]</td>
-		<td>[% product.purchase %]</td>
-		<td>[% product.sell %]</td>
+		<td class="number">[% product.purchase_vat0 %]</td>
+		<td class="number_buy">[% product.purchase %]</td>
+		<td class="number">[% product.sell_vat0 %]</td>
+		<td class="number_sell">[% product.sell %]</td>
 		<td>[% product.vatclass %]</td>
 		<td>[% product.in_store %]</td>
 		<td>[% product.row_total_value %]</td>
@@ -118,10 +120,24 @@
 		</td>
 		</tr>
 	[% END %]
-	<tr><th colspan="7" class='right'>[% gettext("Group total value:") %]</th><th>[% group.group_total_value %]</th><th colspan="2">&nbsp;</th></tr>
+	<tr>
+		<th colspan="9" class='right'>[% gettext("Group total value") %] [% gettext("VAT 0%") %]</th>
+		<th>[% group.group_total_value_vat0 %]</th><th colspan="2">&nbsp;</th>
+	</tr>
+	<tr>
+		<th colspan="9" class='right'>[% gettext("Group total value") %] [% gettext("Inc. VAT") %]</th>
+		<th>[% group.group_total_value %]</th><th colspan="2">&nbsp;</th>
+	</tr>
 	</tbody>
 	[% IF loop.last %]
-		<tr><th colspan='7' class='right'>[% gettext("Total for selected groups:") %]</th><th>[% storagetotalvalue %]</th><th colspan="2">&nbsp;</th></tr>
+		<tr>
+		<th colspan='9' class='right'>[% gettext("Total for selected groups") %] [% gettext("VAT 0%") %]</th>
+		<th>[% storagetotalvalue_vat0 %]</th><th colspan="2">&nbsp;</th>
+		</tr>
+		<tr>
+		<th colspan='9' class='right'>[% gettext("Total for selected groups") %] [% gettext("Inc. VAT") %]</th>
+		<th>[% storagetotalvalue %]</th><th colspan="2">&nbsp;</th>
+		</tr>
 	[% END %]
 	</table>
 [% END %]

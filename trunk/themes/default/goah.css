@@ -263,7 +263,7 @@ input.number_small {
 	font-size: 0.9em;
 }
 
-input.number_sell {
+.number_sell {
 	text-align: right;
 	width: 52px;
 	font-size: 0.9em;
@@ -274,7 +274,7 @@ input.number_sell {
 	-moz-border-radius: 3px;
 }
 
-input.number_buy {
+.number_buy {
 	text-align: right;
 	width: 52px;
 	font-size: 0.9em;
@@ -283,6 +283,10 @@ input.number_buy {
 	padding-bottom: 2px;
 	border: 1px solid #707070;
 	-moz-border-radius: 3px;
+}
+
+td.number_sell, td.number_buy {
+	border: 0;
 }
 
 input.number_alert {

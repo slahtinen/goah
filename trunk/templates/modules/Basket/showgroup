@@ -17,8 +17,8 @@
 <th>[% gettext("Select") %]</th>
 <th>[% gettext("Code") %]</th>
 <th>[% gettext("Name") %]</th>
-<th>[% gettext("IN") %] ([% vattxt %])</th>
-<th>[% gettext("OUT") %] ([% vattxt %])</th>
+<th class="center" colspan='2'>[% gettext("IN") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
+<th class="center" colspan='2'>[% gettext("OUT") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
 <th>[% gettext("In storage") %]</th>
 <th>[% gettext("Amount") %]</th>
 <th>[% gettext("VAT") %]</th>
@@ -35,8 +35,17 @@
 	<td><input name="addproducts" value="[% row.id %]" type="checkbox"></td>
 	<td>[% row.code %]</td>
 	<td>[% row.name %]</td>
-	<td><input class="number" name='purchase_[% row.id %]' value='[% row.purchase %]'></td>
-	<td><input class="number" name='sell_[% row.id %]' value='[% row.sell %]'></td>
+	<td class="number">
+		<input type="hidden" name='purchase_[% row.id %]' value='[% row.purchase %]'>
+		[% row.purchase_vat0 %]
+	</td>
+	<td class="number_buy">[% row.purchase %]</td>
+	<td class="number">
+		<input type="hidden" name='sell_[% row.id %]' value='[% row.sell %]'>
+		[% row.sell_vat0 %]
+	</td>
+	<td class="number_sell">[% row.sell %]</td>
+
 	<td>[% row.in_store %]</td>
 	<td><input class="number" name='amount_[% row.id %]' value='1'></td>
 	<td>[% row.vatclass %]</td>

@@ -53,7 +53,12 @@ my %filesdbfieldnames = (
 			11 => 'expires',
 			12 => 'downloads',
 			13 => 'info',
+<<<<<<< HEAD
 			14 => 'module'
+=======
+			14 => 'module',
+			15 => 'customerid'
+>>>>>>> ver2.1.0beta
 );
 
 #

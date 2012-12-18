@@ -119,7 +119,7 @@
 </table>
 <table>
 <tr class="even">
-	<td class="small"><a href="pdf.cgi?type=invoice&amp;id=[% invoice.id %]">
+	<td class="medium"><a href="pdf.cgi?type=invoice&amp;id=[% invoice.id %]">
 	<img class="link" alt="Download as PDF" title="Download as PDF" src="themes/[% theme %]/icon/32x32/actions/document-print.png" /></a></td>
 	[% IF invoice.state == 0 %]
 	<td><input type='submit' value='[% gettext("Save") %]'/></td>
@@ -144,9 +144,26 @@
 	</form>
 	[% END %]
 </tr>
+<tr>
+	<form action="files.cgi" method="post" enctype="multipart/form-data">
+	<td>[% gettext("Add file to invoice") %]</td> 
+	<td colspan='2'><input type="file" name="file" /></td>
+	<td colspan='3'>
+	[% gettext("File information: ") %]<input type='text' class='big' name='info' />
+	<input type='hidden' name='module' value='[% module %]'>
+	<input type='hidden' name='target_id' value='[% invoice.id %]'>
+	<input type='hidden' name='customerid' value='[% compinfo.id %]'>
+	<input type='hidden' name='action' value='upload'>
+	<input type='submit' value='[% gettext('Upload') %]'>
+	</form>
+	</td>
+</tr>
 </table>
 
 [% INCLUDE modules/Invoice/invoice.productlist %]
+[% IF invoicefiles.size || basketfiles.size %]
+	[% INCLUDE modules/Invoice/invoice.files %]
+[% END %]
 [% INCLUDE modules/Invoice/invoice.history %]
 
 <blockquote class="helptext"><p>[% gettext("You can alter the information of the invoice as 
