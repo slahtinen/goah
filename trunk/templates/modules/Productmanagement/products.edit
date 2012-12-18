@@ -12,20 +12,32 @@
 [% IF field.type != 'hidden' %]
 	<tr class="[% row %]">
 	  <td class="medium">[% field.name %]
+        [% IF field.field == 'purchase' || field.field == 'sell' %]
+		[%# IF usersettings.showvat == 'on' %]
+			[%# gettext("(incl. vat)") %]
+		[%# ELSE %]
+			[%# gettext("(vat 0%)") %]
+		[%# END %]
+		[% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]
+	[% END %]
+
 	[% IF field.required == 1 %]
 		*
-	[% END %]
-        [% IF field.field == 'purchase' || field.field == 'sell' %]
-		[% IF usersettings.showvat == 'on' %]
-			[% gettext("(incl. vat)") %]
-		[% ELSE %]
-			[% gettext("(vat 0%)") %]
-		[% END %]
 	[% END %]
 
 	</td>
 	[% IF field.type == 'textfield' %]
-		<td><input class="big" name="[% field.field %]" value="[% data.$fieldname %]" /></td>
+		<td>
+		[% IF field.field == 'sell' || field.field == 'purchase' %]
+			[% vat0field = "${field.field}_vat0" %]
+			<input class="number" name="[% field.field %]_vat0" value="[% data.$vat0field %]" />
+			<input class="number_buy" name="[% field.field %]" value="[% data.$fieldname %]" />
+			<input type="hidden" name="[% field.field %]_vat0_orig" value="[% data.$vat0field %]"/>
+			<input type="hidden" name="[% field.field %]_orig" value="[% data.$fieldname %]"/>
+		[% ELSE %]
+			<input class="big" name="[% field.field %]" value="[% data.$fieldname %]" />
+		[% END %]
+		</td>
 	[% ELSIF field.type == 'textarea' %]
 		<td><textarea name="[% field.field %]" class="medium">[% data.$fieldname %]</textarea></td>
 	[% ELSIF field.type == 'selectbox' %]
