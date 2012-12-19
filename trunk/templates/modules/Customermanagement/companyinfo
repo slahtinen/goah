@@ -35,9 +35,25 @@
 	</tr>
 [% END %]
 [% END %]
+<tr>
+<form action="files.cgi" method="post" enctype="multipart/form-data">
+<td>[% gettext("Add file to company") %]</td>
+<td><input type="file" name="file" />
+[% gettext("File information: ") %]<input type='text' class='big' name='info' />
+<input type='hidden' name='module' value='[% module %]'>
+<input type='hidden' name='target_id' value='[% companydata.id %]'>
+<input type='hidden' name='customerid' value='[% companydata.id %]'>
+<input type='hidden' name='action' value='upload'>
+<input type='submit' value='[% gettext('Upload') %]'>
+</form>
+</td>
+</tr>
 <tr class="[% row %]"><td colspan='2'><a href="?module=[% module %]&action=editcompany&companyid=[% companydata.id %]">[% gettext("Edit company information") %]</a></td></tr>
 </table>
 
 [% INCLUDE modules/Customermanagement/companyinfo.locations %]
 [% INCLUDE modules/Customermanagement/companyinfo.persons %]
+[% IF companyfiles.size %]
+	[% INCLUDE modules/Customermanagement/companyfiles %]
+[% END %]
 
