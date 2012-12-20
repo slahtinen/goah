@@ -99,6 +99,35 @@ sub Start {
      	use goah::Modules::Files;
         $variables{'files'} = goah::Modules::Files->GetFileRows('','','all');
 
+	# Get all customers
+	use goah::Modules::Customermanagement;
+	$variables{'companies'} = goah::Modules::Customermanagement->ReadAllCompanies(1);
+
+
+   	# Actions if we are returning from files.cgi
+      	if ($q->param('files_action')) {
+
+  		if ($q->param('status') eq 'success') {
+
+     			my $success_message;
+    			if ($q->param('files_action') eq 'upload') {$success_message = "File uploaded succesfully"}
+    			if ($q->param('files_action') eq 'delete') {$success_message = "File deleted succesfully"}
+
+  			goah::Modules->AddMessage('info',"$success_message");
+     		}	
+
+          	if ($q->param('status') eq 'error') {
+
+           		# Get and process error
+              		my $tmp_msg = $q->param('msg');
+            		my $error_message = ucfirst($tmp_msg);
+             		$error_message =~ s/_/ /g;
+
+          		goah::Modules->AddMessage('error',"ERROR! $error_message");
+
+           	}
+	}
+
 	return \%variables;
 }
 
@@ -284,7 +313,7 @@ sub DeleteFileRows {
 		die print "$!";
 	}
 
-	my $int_filename = $row{'int_filename'};
+	$int_filename = $row{'int_filename'};
 	my $dir = $row{'datadir'};
 
 	unless (unlink("$dir/$int_filename")) {

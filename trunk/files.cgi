@@ -136,7 +136,14 @@ if($auth==1) {
         	my %vars = %{$_[0]};
 		my $url;
 
-		# Check that we have necessary variables
+		# If we are uploading directly from files module, then only option for upload
+		# is upload for specified customer to Customermanagement module.
+		if ($vars{'module'} eq 'Files') {
+			$vars{'target_id'} = $vars{'customerid'};	
+			$vars{'module'} = 'Customermanagement';
+		}
+
+		# Check that we have necessary variables and manage errors.
 		unless ($vars{'dir'}) { 
 			$url = $vars{'url'}.'&files_action=upload&status=error&msg=data_directory_not_specified';
 			die print redirect($url);
@@ -157,12 +164,12 @@ if($auth==1) {
 			die print redirect($url);
 		}
 
-		unless ($vars{'customerid'}) { 
+		if (!($vars{'customerid'}) || ($vars{'customerid'} eq 'not_selected')) { 
 			$url = $vars{'url'}.'&files_action=upload&status=error&msg=customerid_missing';
 			die print redirect($url);
 		}
 
-		# File and directory
+		# Directory and file
 		my $dir = "$vars{'dir'}/$vars{'module'}";
 		my $subdir = $vars{'target_id'};
 		my $file = $vars{'file'};

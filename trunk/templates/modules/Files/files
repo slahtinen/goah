@@ -1,5 +1,31 @@
 <h2>[% gettext("Files") %]</h2>
 <table>
+<tr>
+        <form action="files.cgi" method="post" enctype="multipart/form-data">
+        <td>[% gettext("Add file ") %]</td>
+        <td colspan='2'><input type="file" name="file" /></td>
+        <td colspan='3'>
+        [% gettext("File information: ") %]<input type='text' class='big' name='info' />
+	<select name='customerid' class="medium">
+		<option value='not_selected'>[% gettext("-- Select customer --") %]</option>
+	[% FOREACH companies %]
+		[% IF companies.$key.vat_id == '00000000' %]
+			<option value='[% companies.$key.id %]'>[% companies.$key.name %] [% companies.$key.firstname %]</option>
+		[% ELSE %]
+			<option value='[% companies.$key.id %]'>[% companies.$key.name %]</option>
+		[% END %]
+	[% END %]
+	</select>
+        <input type='hidden' name='module' value='Files'>
+        <input type='hidden' name='action' value='upload'>
+        <input type='submit' value='[% gettext('Upload') %]'>
+        </form>
+        </td>
+</tr>
+</table>
+
+<h3>[% gettext("All files") %]</h3>
+<table>
 <thead>
 <th>[% gettext("Customer") %]</th>
 <th>[% gettext("Filename") %]</th>
