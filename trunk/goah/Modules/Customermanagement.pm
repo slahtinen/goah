@@ -184,6 +184,35 @@ sub Start {
 
 				# Read informationf or individual company
 				$variables{'function'} = 'modules/Customermanagement/companyinfo';
+
+                                # Search selected company files
+                                use goah::Modules::Files;
+                                $variables{'companyfiles'} = goah::Modules::Files->GetFileRows($q->param('companyid'),'');
+
+                                # Actions if we are returning from files.cgi
+                                if ($q->param('files_action')) {
+
+                                        if ($q->param('status') eq 'success') {
+
+                                                my $success_message;
+                                                if ($q->param('files_action') eq 'upload') {$success_message = "File uploaded succesfully"}
+                                                if ($q->param('files_action') eq 'delete') {$success_message = "File deleted succesfully"}
+
+                                                goah::Modules->AddMessage('info',"$success_message");
+                                        }
+
+                                        if ($q->param('status') eq 'error') {
+
+                                                # Get and process error
+                                                my $tmp_msg = $q->param('msg');
+                                                my $error_message = ucfirst($tmp_msg);
+                                                $error_message =~ s/_/ /g;
+
+                                                goah::Modules->AddMessage('error',"ERROR! $error_message");
+
+                                        }
+                                }
+
 		
 		} elsif($q->param('action') eq 'editcompany') {
 

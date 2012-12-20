@@ -24,6 +24,7 @@ use warnings;
 use utf8;
 use Encode;
 use Try::Tiny;
+use Template;
 
 #
 # String: module
@@ -58,6 +59,50 @@ my %filesdbfieldnames = (
 );
 
 #
+# String: uid
+#
+#   User id, get's stored via Start() -function
+#
+my $uid='';
+my $settref='';
+
+#
+# Function: Start
+#
+#   Start the actual module. Module process is controlled via HTTP
+#   variables which are created internally inside the module.
+#
+# Parameters:
+#
+#   0 - ??
+#   id - User ID
+#   settref - Reference to user settings
+#
+# Returns:
+#
+#   Reference to hash array which contains variables for Template::Toolkit
+#   process for the module.
+#
+sub Start {
+
+        $uid = $_[1];
+        $settref = $_[2];
+
+        my $q = CGI->new();
+
+        my %variables;
+        $variables{'module'} = 'Files';
+        $variables{'gettext'} = sub { return __($_[0]); };
+	$variables{'function'} = 'modules/Files/files';
+
+	# Get all files
+     	use goah::Modules::Files;
+        $variables{'files'} = goah::Modules::Files->GetFileRows('','','all');
+
+	return \%variables;
+}
+
+#
 # Function: GetFileRows
 #
 # Module process is controlled with variables which
@@ -71,8 +116,9 @@ my %filesdbfieldnames = (
 #
 #   At least One of these variables should be given.
 #
-#   0 - target_id:	Id to identify request. Search multiple rows.
+#   0 - target_id:	Id to identify request. Search multiple rows with id
 #   1 - int_filename: 	Internal filename
+#   2 - customer_id:	Search with customerid ("all" to search all)
 #
 #
 # Returns:
@@ -86,11 +132,12 @@ sub GetFileRows {
 	my @vars = @_;
 	my $target_id = $_[0];
 	my $int_filename = $_[1];
+	my $customer_id = $_[2];
 	my %dbdata;
 
 	use goah::Db::Files::Manager;
 
-	if (($int_filename) || ($target_id) ) {
+	if (($int_filename) || ($target_id) || ($customer_id)) {
 
 		my $frow_ref;
 
@@ -109,9 +156,19 @@ sub GetFileRows {
 			}
 		}
 
-		if (($target_id) && !($int_filename)) {
-        		$frow_ref = goah::Db::Files::Manager->get_files( query => [ target_id => "$target_id" ] );
-        		my @frow = @$frow_ref;
+		if (($target_id) || ($customer_id) && !($int_filename)) {
+
+			my @frow;
+			
+			if ($target_id) {
+        			$frow_ref = goah::Db::Files::Manager->get_files( query => [ target_id => "$target_id" ] );
+        			@frow = @$frow_ref;
+			}
+
+			if ($customer_id) {
+        			$frow_ref = goah::Db::Files::Manager->get_files();
+        			@frow = @$frow_ref;
+			}
 
 			use goah::Modules::Systemsettings;
 
@@ -119,21 +176,50 @@ sub GetFileRows {
 			my $counter = 10000;
 			foreach $dbrow (@frow) {
 				while (my ($key, $value) = each(%filesdbfieldnames)) {
-					if ($dbrow->int_filename) 
-{
-						$dbdata{$counter}{$value} = $dbrow->{$value};
+					if ($dbrow->int_filename) {
 
 						# Get username for selected row
 						my $user_ref = goah::Modules::Systemsettings->ReadOwnerPersonnel($dbrow->userid);
 						my %userinfo = %$user_ref;
-						$dbdata{$counter}{'username'} = $userinfo{'firstname'}.' '.$userinfo{'lastname'};
-			
+
+						# Get company name
+						my (%companyinfo,$company_ref);
+						if ($dbrow->customerid) {
+							$company_ref = goah::Modules::Customermanagement->ReadCompanydata($dbrow->customerid,1);
+						}
+
+						unless ($company_ref == 0) {
+							%companyinfo = %$company_ref;
+						}
+
+						# Create two way to count. First one for alphabetical sort
+						my $new_counter;
+						if ($customer_id) {
+							my $tmp_name = $companyinfo{'name'};
+							$tmp_name =~ s/[\n\r\s]+//g;
+							$new_counter = $tmp_name.$counter;
+						} else {
+							$new_counter = $counter;
+						}
+
+						$dbdata{$new_counter}{$value} = $dbrow->{$value};
+
+						# Store username
+						$dbdata{$new_counter}{'username'} = $userinfo{'firstname'}.' '.$userinfo{'lastname'};
+
+						# Store customername
+						if ($companyinfo{'vat_id'} ne '00000000') {
+							$dbdata{$new_counter}{'companyname'} = $companyinfo{'name'};
+						} else {
+							$dbdata{$new_counter}{'companyname'} = $companyinfo{'name'}.' '.$companyinfo{'firstname'};
+						}
+
 						# Format date
 						use goah::GoaH;
 						my $date = goah::GoaH->FormatDate($dbrow->date);
 						my @datetime = split(/ /, $date);
-						$dbdata{$counter}{'date'} = $datetime[0];
-						$dbdata{$counter}{'time'} = $datetime[1];
+						$dbdata{$new_counter}{'date'} = $datetime[0];
+						$dbdata{$new_counter}{'time'} = $datetime[1];
 					}
 				}
 
@@ -145,7 +231,6 @@ sub GetFileRows {
 		}
 
 	}
-
 return (\%dbdata);
 }
 
