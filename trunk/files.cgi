@@ -131,10 +131,13 @@ if($auth==1) {
 	sub FileUpload {
 
 		use Data::UUID;
-		use File::MimeInfo;
 		
         	my %vars = %{$_[0]};
 		my $url;
+
+		# Put module to another variable, so we can preserve real information even if 
+		# call comes directly from Files.pm (which case we need to change it).
+		my $email_module = $vars{'module'};
 
 		# If we are uploading directly from files module, then only option for upload
 		# is upload for specified customer to Customermanagement module.
@@ -209,7 +212,9 @@ if($auth==1) {
 		rename("$dir/$subdir/$file", "$dir/$subdir/$newfile");
 
 		# Get MIME-Type
-		$vars{'mimetype'} = mimetype("$dir/$subdir/$newfile");
+		use File::Type;
+		my $ft = File::Type->new();
+		$vars{'mimetype'} = $ft->checktype_filename("$dir/$subdir/$newfile");
 
 		# Get date
 		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
@@ -278,6 +283,7 @@ if($auth==1) {
              		$emailvars{'companyname'} = $companyname;
 			$emailvars{'date'} = goah::GoaH->FormatDate($filesitem->date);
 			$emailvars{'url'} = $email_url.'&action=download&file='.$newfile;
+			$emailvars{'module'} = $email_module;
 
 	       	 	# Check that we have smtp-server specified before trying to send email
         		my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
@@ -290,6 +296,11 @@ if($auth==1) {
                         		try {
                                 		use goah::Modules::Email;
                                 		my $email = goah::Modules::Email->SendEmail(\%emailvars);
+				
+						if ($email == 0) {
+							$url = $vars{'url'}.'&files_action=upload&status=error&msg=sending_email_failed_but_file_added_succesfully';
+							die print redirect($url);
+						}
                         		} catch {
 						$url = $vars{'url'}.'&files_action=upload&status=error&msg=sending_email_failed_but_file_added_succesfully';
 						die print redirect($url);

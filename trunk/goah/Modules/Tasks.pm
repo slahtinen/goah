@@ -422,7 +422,6 @@ sub Send2Email {
 	goah::Modules->AddMessage('debug',"Comp: ".$customername);
 
 	my %vars;
-	$vars{'from'} = $ownerinfo->email;
 	$vars{'to'} = $assigneeinfo{'email'};
 	$vars{'cc'} = $userinfo{'email'};
 	$vars{'status'} = $evars{'status'};

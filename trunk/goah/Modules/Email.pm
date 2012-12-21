@@ -47,11 +47,12 @@ my $module='Email';
 #   to - Where to send email
 #   subject - Subject of the email
 #   template - Template to process
-#
+#   module - modulename where call comes from
 #
 # Returns:
 #
 #   1 for success
+#   0 for fail
 #
 
 sub SendEmail {
@@ -62,6 +63,27 @@ sub SendEmail {
 	my $template;
 
 	$params{'gettext'} = sub { return __($_[0]); };
+	
+	# Check that we have necessary values
+	unless ($params{'to'}) {
+		goah::Modules->AddMessage('error', __('Required value to missing'));
+		return 0;			
+	}
+
+	unless ($params{'subject'}) {
+		goah::Modules->AddMessage('error', __('Required value subject missing'));
+		return 0;			
+	}
+
+	unless ($params{'template'}) {
+		goah::Modules->AddMessage('error', __('Required value template missing'));
+		return 0;			
+	}
+
+	unless ($params{'module'}) {
+		goah::Modules->AddMessage('error', __('Required value module missing'));
+		return 0;			
+	}
 
 	# Read setup values
 	my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
