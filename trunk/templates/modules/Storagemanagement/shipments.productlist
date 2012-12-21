@@ -74,7 +74,8 @@
 [% rowc = 'info' %]
 
 <tr class="[% rowc %]">
-<td colspan='6'>[% gettext("Total") %]</td>
+<td colspan='7'>[% gettext("Total") %]</td>
+<td class='number'>[% row.shipmenttotal_vat0 %]</td>
 <td class='number'>[% row.shipmenttotal %]</td>
 <td>&nbsp;</td>
 </tr>
