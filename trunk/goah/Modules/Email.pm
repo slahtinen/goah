@@ -44,7 +44,6 @@ my $module='Email';
 #
 #   Required
 #
-#   from - Sender address
 #   to - Where to send email
 #   subject - Subject of the email
 #   template - Template to process
@@ -91,6 +90,10 @@ sub SendEmail {
 	if ($smtp_ssl{'value'} != 1) {$smtp_ssl{'value'} = '0';}
 	if (length($smtp_user{'value'}) < 1) {$smtp_user{'value'} = '0';}
 	if (length($smtp_password{'value'}) < 1) {$smtp_password{'value'} = '0';}
+
+	# Get 'from' address
+       	my $ownerinfo = goah::Modules::Systemsettings->ReadOwnerInfo();
+        $params{'from'} = $ownerinfo->email;	
 
 	# Process email template
 	my $tt = Template->new({

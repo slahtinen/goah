@@ -5,8 +5,8 @@
         <td>[% gettext("Add file ") %]</td>
         <td colspan='2'><input type="file" name="file" /></td>
         <td colspan='3'>
-        [% gettext("File information: ") %]<input type='text' class='big' name='info' />
-	<select name='customerid' class="medium">
+        [% gettext("File information: ") %]<input type='text' class='big' name='info' />&nbsp;&nbsp;
+	<select name='customerid' class="medium">&nbsp;&nbsp;
 		<option value='not_selected'>[% gettext("-- Select customer --") %]</option>
 	[% FOREACH companies %]
 		[% IF companies.$key.vat_id == '00000000' %]
@@ -15,9 +15,11 @@
 			<option value='[% companies.$key.id %]'>[% companies.$key.name %]</option>
 		[% END %]
 	[% END %]
-	</select>
+	</select>&nbsp;&nbsp;
         <input type='hidden' name='module' value='Files'>
         <input type='hidden' name='action' value='upload'>
+	[% gettext("Notify users") %]
+	<input type='checkbox' name='notify_goah_users' checked>&nbsp;&nbsp;
         <input type='submit' value='[% gettext('Upload') %]'>
         </form>
         </td>

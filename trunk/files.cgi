@@ -230,8 +230,75 @@ if($auth==1) {
 
 		use goah::Db::Files;
 		my $filesitem = goah::Db::Files->new(%dbvars);
-		$filesitem->save;
+		my $dbsave = $filesitem->save;
 
+		# Send email if notify option is selected
+		if ($q->param('notify_goah_users') eq 'on') {
+
+                	# Get company name
+                    	my (%companyinfo,$company_ref);
+                       	if ($vars{'customerid'}) {
+                   		$company_ref = goah::Modules::Customermanagement->ReadCompanydata($vars{'customerid'},1);
+                    	}
+
+                    	unless ($company_ref == 0) {
+                  		%companyinfo = %$company_ref;
+                    	}
+	
+			my $companyname;
+			if ($companyinfo{'vat_id'} eq '00000000') {
+				$companyname = $companyinfo{'name'}.' '.$companyinfo{'firstname'};
+			} else {
+				$companyname = $companyinfo{'name'};
+			}
+
+			# Get GoaH internal users email-addresses
+			use goah::Modules::Systemsettings;
+			my $g_user_ref = goah::Modules::Systemsettings->ReadOwnerPersonnel;
+			my %g_users = %$g_user_ref;
+
+			my $email_to;
+			foreach my $key (keys %g_users) {
+				$email_to = $g_users{$key}{'email'}.','.$email_to;
+			}
+			chop $email_to;
+
+			# Fix url if we are coming from index.cgi
+			my $email_url = $vars{'url'};
+			$email_url =~ s/index\.cgi/files\.cgi/;
+
+			# Generate and send email
+             		my %emailvars;
+            		$emailvars{'to'} = $email_to;
+            		$emailvars{'subject'} = __('New file').': '.$file;
+            		$emailvars{'orig_filename'} = $file;
+             		$emailvars{'action'} = 'File '.$vars{'action'};
+              		$emailvars{'info'} = $vars{'info'};
+             		$emailvars{'template'} = 'files.tt2';
+             		$emailvars{'companyname'} = $companyname;
+			$emailvars{'date'} = goah::GoaH->FormatDate($filesitem->date);
+			$emailvars{'url'} = $email_url.'&action=download&file='.$newfile;
+
+	       	 	# Check that we have smtp-server specified before trying to send email
+        		my $tmp_smtp = goah::Modules::Systemsettings->ReadSetup('smtpserver_name',1);
+        		my %smtp_server = %$tmp_smtp;
+
+        		use Try::Tiny;
+        		if ($tmp_smtp) {
+                		my $tmp = $smtp_server{'value'};
+                		if (length($tmp) > 3) {
+                        		try {
+                                		use goah::Modules::Email;
+                                		my $email = goah::Modules::Email->SendEmail(\%emailvars);
+                        		} catch {
+						$url = $vars{'url'}.'&files_action=upload&status=error&msg=sending_email_failed_but_file_added_succesfully';
+						die print redirect($url);
+                        		}
+                		}	
+        		}
+		}
+		
+		# Redirect back
 		$url = $vars{'url'}.'&files_action=upload&status=success';
 		print redirect($url);
 	

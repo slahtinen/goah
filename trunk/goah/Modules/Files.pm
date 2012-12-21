@@ -110,8 +110,8 @@ sub Start {
   		if ($q->param('status') eq 'success') {
 
      			my $success_message;
-    			if ($q->param('files_action') eq 'upload') {$success_message = "File uploaded succesfully"}
-    			if ($q->param('files_action') eq 'delete') {$success_message = "File deleted succesfully"}
+    			if ($q->param('files_action') eq 'upload') {$success_message = __('File uploaded succesfully')}
+    			if ($q->param('files_action') eq 'delete') {$success_message = __('File deleted succesfully')}
 
   			goah::Modules->AddMessage('info',"$success_message");
      		}	
