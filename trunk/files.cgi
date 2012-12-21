@@ -268,9 +268,10 @@ if($auth==1) {
 			}
 			chop $email_to;
 
-			# Fix url if we are coming from index.cgi
+			# Fix download url for emails.
 			my $email_url = $vars{'url'};
 			$email_url =~ s/index\.cgi/files\.cgi/;
+			$email_url =~ s/module=[a-z]+//i;
 
 			# Generate and send email
              		my %emailvars;
