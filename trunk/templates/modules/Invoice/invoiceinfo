@@ -130,9 +130,8 @@
 	<input type='submit' name="invoicebacktobasket" value='[% gettext("Return invoice to basket") %]' onclick="return confirm('[% gettext("Confirm returning invoice to basket") %]')" />
 	</td>
 	</form>
-	[% END %]
-	[% IF invoice.state == 1 %]
-	<td>
+	[% ELSIF invoice.state == 1 %]
+	<td colspan='3'>
         <form action='' method='post'>
         <input type='hidden' name='module' value='[% module %]' />
         <input type='hidden' name='target' value='[% invoice.id %]' />
@@ -140,8 +139,10 @@
         <input type='hidden' name='action' value='invoicepaymentreceived' />
         [% gettext("Payment received") %] <input name='received' class="date" value="[% date.format(date.now, '%d.%m.%Y') %]" />
         <input type='submit' value='[% gettext("Save") %]' onclick="return confirm('[% gettext("Confirm payment as received") %]')" />
-   </td>
+   	</td>
 	</form>
+	[% ELSE %]
+	<td colspan='3'>&nbsp;</td>
 	[% END %]
 </tr>
 <tr>
