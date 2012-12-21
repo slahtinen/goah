@@ -235,6 +235,7 @@
 <input type='hidden' name='target_id' value='[% basketdata.id %]'>
 <input type='hidden' name='action' value='upload'>
 <input type='hidden' name='customerid' value='[% basketdata.companyid %]'>
+[% gettext("Notify users") %]<input type='checkbox' value='notify_goah_users' checked>
 <input type='submit' value='[% gettext('Upload') %]'>
 </form>
 </td>
