@@ -1425,8 +1425,8 @@ sub ReadShipmentrows {
 				$rowdata{$i}{'amount'}=0;
 			}
 
-			$rowdata{$i}{'total_vat0'} = goah::GoaH->FormatCurrencyNopref(	($rowdata{$i}{'purchase'}*$rowdata{$i}{'amount'}),
-											$rowdata{$i}{'vatvalue'},0,'out',0);
+			$rowdata{$i}{'total_vat0'} = goah::GoaH->FormatCurrencyNopref(	($rowdata{$i}{'purchase_vat0'}*$rowdata{$i}{'amount'}),
+											0,0,'out',0);
 			$rowdata{$i}{'total'} = goah::GoaH->FormatCurrencyNopref(	($rowdata{$i}{'purchase'}*$rowdata{$i}{'amount'}),
 											$rowdata{$i}{'vatvalue'},0,'out',1);
 			$shipmenttotal+=$rowdata{$i}{'total'};
