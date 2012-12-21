@@ -1085,7 +1085,7 @@ sub ReadProductByCode {
 	}
 
 	unless($_[2]) {
-		goah::Modules->AddMessage('debug',"Using old version of ReadProductByCode",__LINE__,__FILE__);
+		goah::Modules->AddMessage('debug',"Using old version of ReadProductByCode",__LINE__,__FILE__,caller());
 	}
 
 	#goah::Modules->AddMessage('debug',"Retrieving data with code $prodcode",__LINE__,__FILE__);
@@ -1126,6 +1126,11 @@ sub ReadProductByCode {
 		return 0;
 	}
 
+
+	unless(scalar(keys(%productsdbfields))) {
+		InitVars;
+	}
+
 	# Pack found data into hash and return data in new format
 	my %pdata;
 	my $field;
@@ -1143,7 +1148,8 @@ sub ReadProductByCode {
 		foreach my $key (keys %productsdbfields) {
 			$field = $productsdbfields{$key}{'field'};
 			if($field eq 'purchase' || $field eq 'sell') {
-				$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
+				$pdata{$i}{$field."_vat0"}=goah::GoaH->FormatCurrencyNopref($prod->$field,0,0,'out',0);
+				$pdata{$i}{$field}=goah::GoaH->FormatCurrencyNopref($prod->$field,$pdata{$i}{'vatvalue'},0,'out',1);
 			} else {
 				$pdata{$i}{$field} = $prod->$field;
 			}
@@ -1154,7 +1160,10 @@ sub ReadProductByCode {
 			$pdata{$i}{'manufacturer_name'}=$m{'name'};
 		}
 		if($prod->in_store) {
-			$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
+			$pdata{$i}{'row_total_value_vat0'}=goah::GoaH->FormatCurrencyNopref($prod->purchase*$prod->in_store,0,0,'out',0);
+			$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrencyNopref(	$prod->purchase*$prod->in_store,
+											$pdata{$i}{'vatvalue'},0,'out',1);
+
 		} else {
 			$pdata{$i}{'row_total_value'}=0;
 		}
@@ -1243,7 +1252,7 @@ sub ReadProductsByGroup {
 					$pdata{$i}{$field}=0;
 				} else {
 					$pdata{$i}{$field."_vat0"} = goah::GoaH->FormatCurrencyNopref($prod->$field,0,0,'out',0);
-					$pdata{$i}{$field} = goah::GoaH->FormatCurrency($prod->$field,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
+					$pdata{$i}{$field} = goah::GoaH->FormatCurrencyNopref($prod->$field,$pdata{$i}{'vatvalue'},0,'out',1);
 				}
 			} else {
 				$pdata{$i}{$field} = $prod->$field;
@@ -1258,7 +1267,7 @@ sub ReadProductsByGroup {
 		if($_[2]!=1) {
 			if($prod->in_store) {
 				$pdata{$i}{'row_total_value_vat0'} = goah::GoaH->FormatCurrencyNopref($prod->purchase*$prod->in_store,0,0,'out',0);
-				$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrency($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},$uid,'out',$settref);
+				$pdata{$i}{'row_total_value'}=goah::GoaH->FormatCurrencyNopref($prod->purchase*$prod->in_store,$pdata{$i}{'vatvalue'},0,'out',1);
 			} else {
 				$pdata{$i}{'row_total_value_vat0'}=0;
 				$pdata{$i}{'row_total_value'}=0;

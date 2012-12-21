@@ -248,6 +248,7 @@ sub Start {
 			$variables{'shipment'} = ReadShipments($q->param('target'));
 			$variables{'productgroups'} = sub { goah::Modules::Productmanagement::ReadData('productgroups') };
 			$variables{'shipmentrows'} = ReadShipmentrows($q->param('target'));
+			$variables{'submenuselect'} = "shipments";
 
 		} elsif($action eq 'addtoshipment') {
 
@@ -1056,25 +1057,31 @@ sub AddToShipment {
 		my $prod;
 		# If we have an EAN-code, or Product code, then read product information via that
 		if($_[0]) {
+			my %proddata;
 			if($_[1] eq "ean") {
 				goah::Modules->AddMessage('debug',"Adding product to shipmet via barcode".$_[0],__FILE__,__LINE__);
 				$prod = goah::Modules::Productmanagement->ReadProductByEAN($_[0]);
+
+				if($prod==0) {
+					goah::Modules->AddMessage('error',__("Product not found"),__FILE__,__LINE__);
+					return 1;
+				}
+				my $proddataptr = goah::Modules::Productmanagement->ReadData('products',$prod,$uid);
+				if($proddataptr == 0) {
+					goah::Modules->AddMessage('error',"Something went badly wrong...",__FILE__,__LINE__);
+				}
+				%proddata = %$proddataptr;
 			}
 			if($_[1] eq "productcode") {
 				goah::Modules->AddMessage('debug',"Adding product to shipment via product code ".$_[0],__FILE__,__LINE__);
-				$prod = goah::Modules::Productmanagement->ReadProductByCode($_[0]);
-			}
-			if($prod==0) {
-				goah::Modules->AddMessage('error',__("Product not found"),__FILE__,__LINE__);
-				return 1;
+				$prod = goah::Modules::Productmanagement->ReadProductByCode($_[0],'',1,'','');
+				my %tmpprod=%$prod;
+				$prod=each(%tmpprod);
+				%proddata=%{$tmpprod{$prod}};
 			}
 			$amount=1;
-			my $proddataptr = goah::Modules::Productmanagement->ReadData('products',$prod,$uid);
-			if($proddataptr == 0) {
-				goah::Modules->AddMessage('error',"Something went badly wrong...",__FILE__,__LINE__);
-			}
-			my %proddata = %$proddataptr;
 			$purchase = $proddata{'purchase'};
+			$prod=$proddata{'id'};
 		} else {
 			$prod = $q->param('productid');
 			$purchase = $q->param('purchase');
@@ -1374,6 +1381,7 @@ sub ReadShipmentrows {
 	my %rowdata;
 	my $field;
 	my $shipmenttotal=0;
+	my $shipmenttotal_vat0=0;
 	my $rowtotal=0;
 
 	unless($_[1]) {
@@ -1401,9 +1409,13 @@ sub ReadShipmentrows {
 					} else {
 						%vat=%$vatp;
 						$rowdata{$i}{'vatitem'}=$vat{'item'};
+						$rowdata{$i}{'vatvalue'}=$vat{'value'};
 					}
 
-					$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->get($field),$vat{'value'},$uid,'out',$settref);
+					$rowdata{$i}{$field."_vat0"} = goah::GoaH->FormatCurrencyNopref($row->get($field),
+													$vat{'value'},0,'out',0);
+					$rowdata{$i}{$field} = goah::GoaH->FormatCurrencyNopref(	$row->get($field),
+													$vat{'value'},0,'out',1);
 				} else {
 					$rowdata{$i}{$field} = $row->get($field);
 				}
@@ -1413,11 +1425,16 @@ sub ReadShipmentrows {
 				$rowdata{$i}{'amount'}=0;
 			}
 
-			$rowdata{$i}{'total'} = goah::GoaH->FormatCurrency( ($rowdata{$i}{'purchase'}*$rowdata{$i}{'amount'}),0,$uid,'out',$settref);
-			$shipmenttotal+=($rowdata{$i}{'purchase'}*$rowdata{$i}{'amount'});
+			$rowdata{$i}{'total_vat0'} = goah::GoaH->FormatCurrencyNopref(	($rowdata{$i}{'purchase'}*$rowdata{$i}{'amount'}),
+											$rowdata{$i}{'vatvalue'},0,'out',0);
+			$rowdata{$i}{'total'} = goah::GoaH->FormatCurrencyNopref(	($rowdata{$i}{'purchase'}*$rowdata{$i}{'amount'}),
+											$rowdata{$i}{'vatvalue'},0,'out',1);
+			$shipmenttotal+=$rowdata{$i}{'total'};
+			$shipmenttotal_vat0+=$rowdata{$i}{'total_vat0'};
 		}
 
-		$rowdata{$i}{'shipmenttotal'} = goah::GoaH->FormatCurrency($shipmenttotal,0,$uid,'out',$settref);
+		$rowdata{$i}{'shipmenttotal'} = goah::GoaH->FormatCurrencyNopref($shipmenttotal,0,0,'out',0);
+		$rowdata{$i}{'shipmenttotal_vat0'}=goah::GoaH->FormatCurrencyNopref($shipmenttotal_vat0,0,0,'out',0);
 		return \%rowdata;
 	} else {
 
@@ -1439,12 +1456,14 @@ sub ReadShipmentrows {
 					%vat=%$vatp;
 				}
 
-				$rowdata{$field} = goah::GoaH->FormatCurrency($data->get($field),$vat{'value'},$uid,'out',$settref);
+				$rowdata{$field."_vat0"}=goah::GoaH->FormatCurrencyNopref($data->get($field),0,0,'out',0);
+				$rowdata{$field} = goah::GoaH->FormatCurrencyNopref($data->get($field),$vat{'value'},0,'out',1);
 			} else {
 				$rowdata{$field} = $data->get($field);
 			}
 		}
-		$rowdata{'total'} = goah::GoaH->FormatCurrency( ($rowdata{'sell'}*$rowdata{'amount'}),0,$uid,'out',$settref);
+		$rowdata{'total_vat0'} = goah::GoaH->FormatCurrencyNopref(($rowdata{'sell_vat0'}*$rowdata{'amount'}),0,0,'out',0);
+		$rowdata{'total'} = goah::GoaH->FormatCurrencyNopref(($rowdata{'sell'}*$rowdata{'amount'}),0,0,'out',0);
 		return \%rowdata;
 	}
 	return 0;
@@ -1563,17 +1582,27 @@ sub UpdateShipmentRow {
 
 			if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
 				
-				my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
-				my %vat;
-				unless($vatp) {
-					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
-				} else {
-					%vat=%$vatp;
+				my $amt='na';
+				if($q->param($fieldinfo{'field'}.'_vat0_orig') ne $q->param($fieldinfo{'field'}.'_vat0')) {
+					$amt=goah::GoaH->FormatCurrencyNopref($q->param($fieldinfo{'field'}."_vat0"),0,0,'in',0);
+				} elsif($q->param($fieldinfo{'field'}.'_orig') ne $q->param($fieldinfo{'field'})) {
+					
+					my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+					my %vat;
+					unless($vatp) {
+						my $msg=__("Couldn't get VAT class from setup! VAT calculations are incorrect!");
+						goah::Modules->AddMessage('error',$msg,__FILE__,__LINE__,caller());
+					} else {
+						%vat=%$vatp;
+					}
+
+					$amt = goah::GoaH->FormatCurrencyNopref($q->param($fieldinfo{'field'}),$vat{'value'},1,'in',0);
 				}
 
-				my $amt = goah::GoaH->FormatCurrency($q->param($fieldinfo{'field'}),$vat{'value'},$uid,'in',$settref);
-				$rowinfo->set($fieldinfo{'field'} => $amt);
-				goah::Modules->AddMessage('debug',"Updated ".$fieldinfo{'field'}." to value $amt",__FILE__,__LINE__);
+				unless($amt eq 'na') {
+					$rowinfo->set($fieldinfo{'field'} => $amt);
+					goah::Modules->AddMessage('debug',"Updated ".$fieldinfo{'field'}." to value $amt",__FILE__,__LINE__);
+				}
 			} else {
 				$rowinfo->set($fieldinfo{'field'} => decode("utf-8",$q->param($fieldinfo{'field'})));
 			}
