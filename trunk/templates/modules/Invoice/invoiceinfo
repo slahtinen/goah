@@ -155,6 +155,7 @@
 	<input type='hidden' name='target_id' value='[% invoice.id %]'>
 	<input type='hidden' name='customerid' value='[% compinfo.id %]'>
 	<input type='hidden' name='action' value='upload'>
+	[% gettext("Notify users") %] <input type='checkbox' value='notify_goah_users' checked>
 	<input type='submit' value='[% gettext('Upload') %]'>
 	</form>
 	</td>
