@@ -1057,9 +1057,14 @@ sub UpdateBasketRow {
 				if($q->param('purchase_orig') ne $q->param('purchase')) {
 					$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase'),0,0,'in',0);
 				} elsif($q->param('purchase_vat_orig') ne $q->param('purchase_vat')) {
-					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$q->param('productid'),$uid,$settref,1);
+					my $prodpoint = goah::Modules::Productmanagement::ReadData(	'products',
+													$q->param('productid'),
+													$uid,$settref,1);
 					if($prodpoint==0) {
-						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
+						goah::Modules->AddMessage('error',
+									__("Can't read VAT class for product id ").$q->param('productid'),
+									__FILE__,__LINE__,caller());
+
 					} else {
 						my %prod = %$prodpoint;
 						my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
@@ -1300,9 +1305,13 @@ sub AddToBasket {
 					goah::Modules->AddMessage('error',"Product code not found",__FILE__,__LINE__);
 					return 1;
 				} else {
+					
+					# Fetch only first product from hash, since we won't add multiple
+					# products to basket via only product code
 					my %proddata=%$prodpointer;
 					$prodpointer=each(%proddata);
 					%proddata=%{$proddata{$prodpointer}};
+					
 					$purchase=$proddata{'purchase'};
 					$sell=$proddata{'sell'};
 					$prod=$proddata{'id'};

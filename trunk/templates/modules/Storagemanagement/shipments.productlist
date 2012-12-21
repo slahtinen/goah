@@ -1,19 +1,14 @@
 <h3>[% gettext("Products in shipment") %]</h3>
 
-[% IF usersettings.showvat == 'on' %] 
-	[% vattxt = gettext("Incl.VAT") %]
-[% ELSE %]
-	[% vattxt = gettext("VAT 0%") %]
-[% END %]
 <table>
 <thead>
 <tr>
 <th>[% gettext("Code") %]</th>
 <th>[% gettext("Name") %]</th>
-<th>[% gettext("IN") %] ([% vattxt %])</th>
+<th class="center" colspan='2'>[% gettext("IN") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
 <th>[% gettext("VAT") %]</th>
 <th colspan='2'>[% gettext("Amount") %]</th>
-<th>[% gettext("Total") %]</th>
+<th class="center" colspan='2'>[% gettext("Total") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
 <th>[% gettext("Row info") %]</th>
 [% IF shipment.received != 1 %]
 <th>[% gettext("Delete") %]</th>
@@ -38,25 +33,34 @@
 	<td>[% prodinfo.code %]</td>
 	<td>[% prodinfo.name %]</td>
 	[% IF shipment.received == 1 %]
-	<td>[% row.purchase %]</td>
+		<td class="number">[% row.purchase %]</td>
+		<td class="number_buy">[% row.purchase %]</td>
 	[% ELSE %]
-	<td><input class="small" name='purchase' value='[% row.purchase %]'></td>
+		<input type="hidden" name="purchase_vat0_orig" value='[% row.purchase_vat0 %]'/>
+		<input type="hidden" name="purchase_orig" value='[% row.purchase %]'/>
+
+		<td class="number"><input class="number" name="purchase_vat0" value="[% row.purchase_vat0 %]" /></td>
+		<td><input class="number_buy" name='purchase' value='[% row.purchase %]' /></td>
 	[% END %]
 	<td>[% row.vatitem %]</td>
 	[% IF shipment.received == 1 %]
-	<td>[% row.amount %]</td>
+		<td>[% row.amount %]</td>
 	[% ELSE %]
-	<td><input class="small" name='amount' value='[% row.amount %]'></td>
+		<td><input class="small" name='amount' value='[% row.amount %]'></td>
 	[% END %]
+
 	<td>[% prodinfo.unit %]</td>
-	<td>[% row.total %]</td>
+
+	<td class="number">[% row.total_vat0 %]</td>
+	<td class="number">[% row.total %]</td>
+	
 	[% IF shipment.received == 1 %]
-	<td>[% row.rowinfo %]</td>
+		<td>[% row.rowinfo %]</td>
 	[% ELSE %]
-	<td><input name='rowinfo' value='[% row.rowinfo %]'></td>
-	<td class="center"><input type='checkbox' name='delete' /></td>
-	<td class="center"><input type='image' src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="Update"/></td>
-	</form>
+		<td><input name='rowinfo' value='[% row.rowinfo %]'></td>
+		<td class="center"><input type='checkbox' name='delete' /></td>
+		<td class="center"><input type='image' src="themes/[% theme %]/icon/32x32/actions/document-save.png" alt="Update"/></td>
+		</form>
 	[% END %]
 	</tr>
 
