@@ -79,6 +79,7 @@ if($auth==1) {
         $params{'target_id'} = $q->param('target_id');
         $params{'row_id'} = $q->param('row_id');
         $params{'customerid'} = $q->param('customerid');
+        $params{'notified_users'} = $q->param('notified_users');
 
 	# Get defaults from config file
 	my $cref = goah::GoaH->GetConfig;
@@ -237,8 +238,8 @@ if($auth==1) {
 		my $filesitem = goah::Db::Files->new(%dbvars);
 		my $dbsave = $filesitem->save;
 
-		# Send email if notify option is selected
-		if ($q->param('notify_goah_users') eq 'on') {
+		# Send email if some option, except none is selected
+		if (($vars{'notified_users'} ne 'none') && (length($vars{'notified_users'}) > 1) ) {
 
                 	# Get company name
                     	my (%companyinfo,$company_ref);
@@ -263,10 +264,25 @@ if($auth==1) {
 			my %g_users = %$g_user_ref;
 
 			my $email_to;
+             		my %emailvars;
+
+			# Process email addresses
 			foreach my $key (keys %g_users) {
-				$email_to = $g_users{$key}{'email'}.','.$email_to;
+				if ($vars{'notified_users'} eq 'all') {
+					$email_to = $g_users{$key}{'email'}.','.$email_to;
+				}
+
+				# Get name for person who uploaded file
+				if ($g_users{$key}{'id'} == $vars{'userid'}) {
+					$emailvars{'user'} = $g_users{$key}{'firstname'}.' '.$g_users{$key}{'lastname'};
+				}
 			}
-			chop $email_to;
+			
+			if ($vars{'notified_users'} ne 'all') {
+				$email_to = $vars{'notified_users'};
+			} else {
+				chop $email_to;
+			}
 
 			# Fix download url for emails.
 			my $email_url = $vars{'url'};
@@ -274,7 +290,6 @@ if($auth==1) {
 			$email_url =~ s/module=[a-z]+//i;
 
 			# Generate and send email
-             		my %emailvars;
             		$emailvars{'to'} = $email_to;
             		$emailvars{'subject'} = __('New file').': '.$file;
             		$emailvars{'orig_filename'} = $file;

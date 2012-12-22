@@ -150,12 +150,18 @@
 	<td>[% gettext("Add file to invoice") %]</td> 
 	<td colspan='2'><input type="file" name="file" /></td>
 	<td colspan='3'>
-	[% gettext("File information: ") %]<input type='text' class='big' name='info' />
+	[% gettext("Info: ") %]<input type='text' class='big' name='info' />
 	<input type='hidden' name='module' value='[% module %]'>
 	<input type='hidden' name='target_id' value='[% invoice.id %]'>
 	<input type='hidden' name='customerid' value='[% compinfo.id %]'>
 	<input type='hidden' name='action' value='upload'>
-	[% gettext("Notify users") %] <input type='checkbox' value='notify_goah_users' checked>
+	<select name='notified_users' class='medium'>
+	<option value='all'>[% gettext("- Notify all -") %]</option>
+	<option value='none'>[% gettext("- Notify none -") %]</option>
+	[% FOREACH goah_users %]
+        	<option value='[% goah_users.$key.email %]'>[% goah_users.$key.lastname %] [% goah_users.$key.firstname %]</option>
+	[% END %]
+	</select>
 	<input type='submit' value='[% gettext('Upload') %]'>
 	</form>
 	</td>

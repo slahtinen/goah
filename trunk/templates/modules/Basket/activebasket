@@ -178,6 +178,15 @@
 
 <h3>[% gettext("Basket functions") %]</h3>
 <table>
+<thead>
+<tr>
+<th class='info' colspan='2'>&nbsp; [% gettext("Actions") %]</th>
+<th class='info'>&nbsp;[% gettext("Add file") %]</th>
+<th class='info'>[% gettext("File description") %]</th>
+<th class='info'>[% gettext("Notify") %]</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 [% IF state == 0 %]
 <td>
@@ -229,13 +238,23 @@
 </td>
 <td>
 <form action="files.cgi" method="post" enctype="multipart/form-data">
-[% gettext("Add file:") %] <input type="file" name="file" />
-[% gettext("File information: ") %]<input type='text' class='big' name='info' />
+<input type="file" name="file" />
+</td>
+<td>
+<input type='text' class='big' name='info' />
 <input type='hidden' name='module' value='[% module %]'>
 <input type='hidden' name='target_id' value='[% basketdata.id %]'>
 <input type='hidden' name='action' value='upload'>
 <input type='hidden' name='customerid' value='[% basketdata.companyid %]'>
-[% gettext("Notify users") %]<input type='checkbox' value='notify_goah_users' checked>
+</td>
+<td>
+<select name='notified_users' class='medium'>
+<option value='all'>[% gettext("-- All --") %]</option>
+<option value='none'>[% gettext("-- None --") %]</option>
+[% FOREACH goah_users %]
+	<option value='[% goah_users.$key.email %]'>[% goah_users.$key.lastname %] [% goah_users.$key.firstname %]</option>
+[% END %]
+</select>
 <input type='submit' value='[% gettext('Upload') %]'>
 </form>
 </td>

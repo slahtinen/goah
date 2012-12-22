@@ -103,6 +103,9 @@ sub Start {
 	use goah::Modules::Customermanagement;
 	$variables{'companies'} = goah::Modules::Customermanagement->ReadAllCompanies(1);
 
+     	# Get GoaH internal users email-addresses
+     	use goah::Modules::Systemsettings;
+      	$variables{'goah_users'} = goah::Modules::Systemsettings->ReadOwnerPersonnel;
 
    	# Actions if we are returning from files.cgi
       	if ($q->param('files_action')) {

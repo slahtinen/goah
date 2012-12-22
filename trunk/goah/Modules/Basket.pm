@@ -192,6 +192,10 @@ sub Start {
 				use goah::Modules::Files;
 				$variables{'basketfiles'} = goah::Modules::Files->GetFileRows($q->param('target'),'');
 
+				# Get GoaH internal users email-addresses
+        			use goah::Modules::Systemsettings;
+        			$variables{'goah_users'} = goah::Modules::Systemsettings->ReadOwnerPersonnel;
+
 				# Actions if we are returning from files.cgi
 				if ($q->param('files_action')) {
 

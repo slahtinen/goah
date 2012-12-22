@@ -136,6 +136,10 @@ sub Start {
 			# Search Basket files
               	       	$variables{'basketfiles'} = goah::Modules::Files->GetFileRows($ordernumber,'');
 
+        		# Get GoaH internal users email-addresses
+        		use goah::Modules::Systemsettings;
+        		$variables{'goah_users'} = goah::Modules::Systemsettings->ReadOwnerPersonnel;
+
                      	# Actions if we are returning from files.cgi
                       	if ($q->param('files_action')) {
 

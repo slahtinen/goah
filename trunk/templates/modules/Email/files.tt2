@@ -1,5 +1,6 @@
 [% gettext("Customer .......... ") %][% companyname %]
 [% gettext("Action ............ ") %][% action %]
+[% gettext("User .............. ") %][% user %]
 [% gettext("Date .............. ") %][% date %]
 [% gettext("Filename .......... ") %][% orig_filename %]
 [% gettext("Url ............... ") %][% url %]

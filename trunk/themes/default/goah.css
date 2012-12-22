@@ -319,7 +319,11 @@ thead th, tbody td.heading {
 }
 
 thead th.info {
-	background: transparent url('gfx/bg-table-header-info.png') repeat-x 0 0;
+    background: none;
+    color: #6d6e71;
+    border-left: 1px solid #dae8f1;
+    border-bottom: 1px solid #dae8f1;
+    margin-left: 3px;
 }
 
 thead th.maxwidth {

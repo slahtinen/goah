@@ -1,13 +1,21 @@
 <h2>[% gettext("Files") %]</h2>
 <table>
+<thead>
 <tr>
         <form action="files.cgi" method="post" enctype="multipart/form-data">
-        <td>[% gettext("Add file ") %]</td>
-        <td colspan='2'><input type="file" name="file" /></td>
-        <td colspan='3'>
-        [% gettext("File information: ") %]<input type='text' class='big' name='info' />&nbsp;&nbsp;
+        <th class='info'>&nbsp; [% gettext("Add file") %]</th>
+        <th class='info'>[% gettext("File information") %]</th>
+        <th class='info'>[% gettext("Select company") %]</th>
+	<th class='info'>[% gettext("Notified users") %]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+        <td><input type="file" name="file" /></td>
+        <td><input type='text' class='big' name='info' /></td>
+	<td>
 	<select name='customerid' class="medium">&nbsp;&nbsp;
-		<option value='not_selected'>[% gettext("-- Select customer --") %]</option>
+		<option value='not_selected'>[% gettext("-- Select --") %]</option>
 	[% FOREACH companies %]
 		[% IF companies.$key.vat_id == '00000000' %]
 			<option value='[% companies.$key.id %]'>[% companies.$key.name %] [% companies.$key.firstname %]</option>
@@ -15,15 +23,23 @@
 			<option value='[% companies.$key.id %]'>[% companies.$key.name %]</option>
 		[% END %]
 	[% END %]
-	</select>&nbsp;&nbsp;
+	</select>
         <input type='hidden' name='module' value='Files'>
         <input type='hidden' name='action' value='upload'>
-	[% gettext("Notify users") %]
-	<input type='checkbox' name='notify_goah_users' checked>&nbsp;&nbsp;
+	</td>
+	<td>
+	<select name='notified_users' class='medium'>
+	<option value='all'>[% gettext("-- All --") %]</option>
+	<option value='none'>[% gettext("-- None --") %]</option>
+	[% FOREACH goah_users %]
+		<option value='[% goah_users.$key.email %]'>[% goah_users.$key.lastname %] [% goah_users.$key.firstname %]</option>
+	[% END %]
+	</select>
         <input type='submit' value='[% gettext('Upload') %]'>
         </form>
         </td>
 </tr>
+</tbody>
 </table>
 
 <h3>[% gettext("All files") %]</h3>
