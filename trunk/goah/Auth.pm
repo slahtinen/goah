@@ -97,7 +97,7 @@ sub CreateSessionid {
 	# Create session id from random number, remote address and user id
 	use Digest::MD5;
 	my $md5 = new Digest::MD5;
-	$md5->add($uid.$ENV{'REMOTE_ADDR'});
+	$md5->add($uid.$ENV{'REMOTE_ADDR'}.rand(100).time());
 	my $id = $md5->hexdigest;
 	
 	# Search user id from the database
