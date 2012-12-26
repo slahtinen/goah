@@ -323,6 +323,10 @@ sub DeleteFileRows {
 		die print "$!: $dir/$int_filename";	
 	}
 
+	if (!($row_id) or ($row_id eq '')) {
+		$row_id = $row{'id'};
+	}
+
 	use goah::Db::Files;
 	my $del = goah::Db::Files->new( id => $row_id);
 	$del->delete;

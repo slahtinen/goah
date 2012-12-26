@@ -1617,6 +1617,16 @@ sub DeleteBasket {
 		goah::Modules->AddMessage('error',__("DeleteBasket called outside package goah::Modules::Basket!"),__FILE__,__LINE__);
 		return 0;
 	}
+
+	# Delete basket files
+	my $frows = goah::Modules::Files->GetFileRows($_[0]);
+	my %filerows = %$frows;
+
+	my ($key,$val);
+	while (($key,$val) = each %filerows) {
+		my %h = %$val;
+		goah::Modules::Files->DeleteFileRows('',$h{'int_filename'});
+	}
 	
 	unless($_[0]) {
 		goah::Modules->AddMessage('error',__("Can't delete basket! Basket id is missing!"),__FILE__,__LINE__);
