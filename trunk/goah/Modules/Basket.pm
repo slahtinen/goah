@@ -1409,7 +1409,6 @@ sub AddProductToBasket {
 	$data{'rowinfo'} = decode("utf-8",$_[5]);
 	$data{'code'} = $prod{'code'};
 	$data{'name'} = $prod{'name'};
-	$data{'vat'} = $vat{'value'};
 
 	use goah::Database::Basketrows;
 	goah::Database::Basketrows->insert(\%data);
@@ -1482,8 +1481,8 @@ sub ReadBasketrows {
 			foreach my $key (keys %basketrowdbfields) {
 				$field = $basketrowdbfields{$key}{'field'};
 
-				my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
 				my %vat;
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
 				unless($vatp) {
 					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
 				} else {
