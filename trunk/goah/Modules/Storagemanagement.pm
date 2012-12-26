@@ -1391,7 +1391,7 @@ sub ReadShipmentrows {
 		if(scalar(@data)==0) {
 			return 0;
 		}
-		my $i=-1;
+		my $i=1000000;
 		foreach my $row (@data) {
 
 			$i++;
