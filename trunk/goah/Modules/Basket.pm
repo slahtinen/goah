@@ -740,7 +740,8 @@ sub ReadBaskets {
 				$f=$basketdbfields{$k}{'field'};		
 				$baskets{$state}{$i}{$f}=$b->$f;
 				$baskets{$state}{'name'}=$statename;
-				$sorthash{$state}{$cname.".".$i}=$i;
+
+				$sorthash{$state}{$cname.".".$i}=$i unless ($b->state eq 2);
 			} else {
 				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
@@ -752,10 +753,11 @@ sub ReadBaskets {
 					$baskets{$f}=$b->$f;
 				} else {
 					$baskets{$i}{$f}=$b->$f;
-					$sorthash{$cname.".".$i}=$i;
+					$sorthash{$cname.".".$i}=$i unless ($b->state eq 2);
 				}
 			}
 		}
+
 		$br=ReadBasketrows($b->id);
 		unless($br) {
 			goah::Modules->AddMessage('error',__("Couldn't read basket's rows with basket id ").$b->id."!",__FILE__,__LINE__);
@@ -766,6 +768,7 @@ sub ReadBaskets {
 		$totalvat+=$basketrows{-1}{'baskettotal_vat'};
 		@rows=sort keys(%basketrows);
 		my $state=$b->state;
+
 		if($groupstates) {
 			$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
 			$baskets{$state}{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
@@ -794,6 +797,7 @@ sub ReadBaskets {
 			if($state eq "2") {
 				my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
 				$nexttrigger=~s/^..\.//;
+				my @nexttrigger_arr=split(/\./,$nexttrigger);
 
 				my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
 				my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
@@ -808,6 +812,8 @@ sub ReadBaskets {
 				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
 				$baskets{$i}{'repeat'}=$b->repeat;
 				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
+				
+				$sorthash{$nexttrigger_arr[1].'.'.$nexttrigger_arr[0].'.'.$cname.'.'.$i}=$i;
 			}
 		}
 
@@ -821,7 +827,7 @@ sub ReadBaskets {
 	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
-	unless($_[0] || !$_[0] eq '' || $search{'state'}!=2) {
+	unless($_[0] || !$_[0] eq '') {
 		# Sort baskets hash by customer names, unless we're reading recurring baskets
 		$i=1000000;
 		my %sortedbaskets;
@@ -850,6 +856,8 @@ sub ReadBaskets {
 		}	
 
 		$sortedbaskets{-1}=$baskets{-1};
+		$sortedbaskets{'headingtotal'}=$baskets{'headingtotal'};
+		$sortedbaskets{'headingtotal_vat'}=$baskets{'headingtotal_vat'};
 
 		return \%sortedbaskets;
 	} 

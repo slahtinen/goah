@@ -72,7 +72,9 @@
 	[% END %]
 	[% IF basket.triggerheading != triggerheading %]
 		[% IF triggerheading != 'first' %]
-		<td>[% gettext("Total") %]</td><td>[% baskets.headingtotal.$triggerheading %]</td><td colspan=5>&nbsp;</td></tr>
+		[%# Line below seems to be required for some reason, which I can't figure out %]
+		[% total = baskets.headingtotal %]
+		<td>[% gettext("Total") %]</td><td class="number">[% total.$triggerheading %]</td><td colspan=5>&nbsp;</td></tr>
 		</table>
 		[% END %]
 		<h3>[% basket.triggerheading %]</h3>
