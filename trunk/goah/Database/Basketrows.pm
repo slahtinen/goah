@@ -19,7 +19,7 @@ package goah::Database::Basketrows;
 use base 'goah::Database';
 
 __PACKAGE__->table('Basketrows');
-__PACKAGE__->columns(All => qw/id basketid productid purchase sell amount rowinfo code name/);  
+__PACKAGE__->columns(All => qw/id basketid productid purchase sell amount rowinfo code name vat/);  
 
 
 1;

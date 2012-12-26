@@ -464,7 +464,7 @@ sub NewInvoice {
 		if($rowkey<0) { next; }
 		my @tmp = goah::Database::Referralrows->search_where({ rowid => $basketrows{$rowkey}{'id'} });
 		my $refrow = $tmp[0];
-		unless( AddRowToInvoice($invoice->id,$basketrows{$rowkey}{'productid'},$basketrows{$rowkey}{'purchase'},$basketrows{$rowkey}{'sell'},$refrow->sent,$basketrows{$rowkey}{'rowinfo'},$basketrows{$rowkey}{'productcode'},$basketrows{$rowkey}{'productname'}) ) {
+		unless( AddRowToInvoice($invoice->id,$basketrows{$rowkey}{'productid'},$basketrows{$rowkey}{'purchase'},$basketrows{$rowkey}{'sell'},$refrow->sent,$basketrows{$rowkey}{'rowinfo'},$basketrows{$rowkey}{'productcode'},$basketrows{$rowkey}{'productname'},$basketrows{$rowkey}{'vatvalue'}) ) {
 			goah::Modules->AddMessage("debug","Insert check failed");
 			return 0;
 		}
@@ -549,6 +549,7 @@ sub CreateReferencenumber {
 #   rowinfo - Additional information for the row
 #   product code - Product code
 #   product name - Product name
+#   product vat - Vat value for product
 #
 # Returns:
 #
@@ -575,7 +576,8 @@ sub AddRowToInvoice {
 						amount => $_[4],
 						rowinfo => $_[5],
 						code => $_[6],
-						name => $_[7]});
+						name => $_[7],
+						vat => $_[8]});
 	
 	return 1;
 
@@ -842,7 +844,12 @@ sub ReadInvoicerows {
 			%vath=%$vatp;
 		}
 
-		$vat = ($vath{'value'}/100)+1;
+		if($row->vat) {
+			$vat=($row->vat/100)+1;
+		} else {
+			goah::Modules->AddMessage('warn',__("Reading VAT from product info! There's no VAT stored for invoice row!"),__FILE__,__LINE__);
+			$vat = ($vath{'value'}/100)+1;
+		}
 		$rowdata{$i}{'vat'}=$vath{'item'};
 		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref,$pdf);
 		$rowdata{$i}{'rowtotalvat'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount*$vat),0,$uid,'out',$settref,$pdf);

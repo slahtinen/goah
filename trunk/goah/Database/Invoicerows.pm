@@ -24,7 +24,7 @@ package goah::Database::Invoicerows;
 use base 'goah::Database';
 
 __PACKAGE__->table('Invoicerows');
-__PACKAGE__->columns(All => qw/id invoiceid productid purchase sell amount rowinfo code name/);  
+__PACKAGE__->columns(All => qw/id invoiceid productid purchase sell amount rowinfo code name vat/);  
 
 
 1;

@@ -26,7 +26,7 @@ use base qw(goah::Db::Object);
 __PACKAGE__->meta->setup
         (
 	table      => 'Invoicerows',
-	columns    => [ qw(id invoiceid productid purchase sell amount rowinfo code name) ],
+	columns    => [ qw(id invoiceid productid purchase sell amount rowinfo code name vat) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );
