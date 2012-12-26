@@ -676,8 +676,8 @@ sub ReadHours {
 
 		$tdata{-1}{$t}{'hours'}{0}=$totalhours{$t}{0}; # Total internal hours for current type
 		$tdata{-1}{$t}{'hours'}{1}=$totalhours{$t}{1}; # Total billed hours for current ype
-		$tdata{-1}{-1}{'hours'}{0}+=$totalhours{$t}{0}; # Total internal hours for all types
-		$tdata{-1}{-1}{'hours'}{1}+=$totalhours{$t}{1}; # Total billed hours for all types
+		$tdata{-1}{-1}{'hours'}{0}+=$totalhours{$t}{0} unless($t eq 3); # Total internal hours for all types
+		$tdata{-1}{-1}{'hours'}{1}+=$totalhours{$t}{1} unless($t eq 3); # Total billed hours for all types
 
 		$tdata{-1}{$t}{'hours'}{-1}=~s/\.\d*$//; # Total
 		$tdata{-1}{$t}{'hours'}{0}=~s/\.\d*$//; # Internal
