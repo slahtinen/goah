@@ -906,7 +906,7 @@ sub ReadOwnerPersonnel {
 	my $i=100000;
 	foreach my $per (@persons) {
 
-		goah::Modules->AddMessage('debug',"Reading personnel info for ".$per->lastname." ".$per->firstname,__FILE__,__LINE__);
+		##goah::Modules->AddMessage('debug',"Reading personnel info for ".$per->lastname." ".$per->firstname,__FILE__,__LINE__);
 
 		# Quick and dirty fix for basket search
 		if(scalar(keys(%persondbfieldnames))>0) {

@@ -314,6 +314,7 @@ sub WriteHours {
 
 	# Update values to an array from http variables
         my %fieldinfo;
+	my $forcedtype=0; # Helper variable to keep forced row type when it's automatically corrected from user input
         while(my($key,$value) = each (%timetrackingdb)) {
                 %fieldinfo = %$value;
                 if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) && !($fieldinfo{'field'} eq 'hours') ) {
@@ -331,8 +332,14 @@ sub WriteHours {
                 } else {
 			if(length($q->param($fieldinfo{'field'})) || $fieldinfo{'field'} eq 'hours' || $fieldinfo{'type'} eq 'checkbox') {
 				my $tmpcol=$fieldinfo{'field'};
-				$dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
+
+				if($tmpcol eq 'type' && $forcedtype) {
+					goah::Modules->AddMessage('debug',"Forcedtype enabled, won't alter type field again!");
+					next;
+				}
 				
+				$dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
+
 				if($fieldinfo{'field'} eq 'hours') {
 
 					# Read product information so that we can separate between time and
@@ -366,6 +373,12 @@ sub WriteHours {
 							$dbdata{$tmpcol}=0;
 						} else {
 							$dbdata{$tmpcol}=$q->param('amount');
+						}
+
+						if($dbdata{'type'} ne 3) {
+							goah::Modules->AddMessage('debug',"Tracked type not 'other' even if given value isn't hours and minutes! Forcing type to 3",__FILE__,__LINE__);
+							$dbdata{'type'}=3;
+							$forcedtype=1;
 						}
 					}
 				}	
@@ -676,8 +689,8 @@ sub ReadHours {
 
 		$tdata{-1}{$t}{'hours'}{0}=$totalhours{$t}{0}; # Total internal hours for current type
 		$tdata{-1}{$t}{'hours'}{1}=$totalhours{$t}{1}; # Total billed hours for current ype
-		$tdata{-1}{-1}{'hours'}{0}+=$totalhours{$t}{0}; # Total internal hours for all types
-		$tdata{-1}{-1}{'hours'}{1}+=$totalhours{$t}{1}; # Total billed hours for all types
+		$tdata{-1}{-1}{'hours'}{0}+=$totalhours{$t}{0} unless($t eq 3); # Total internal hours for all types
+		$tdata{-1}{-1}{'hours'}{1}+=$totalhours{$t}{1} unless($t eq 3); # Total billed hours for all types
 
 		$tdata{-1}{$t}{'hours'}{-1}=~s/\.\d*$//; # Total
 		$tdata{-1}{$t}{'hours'}{0}=~s/\.\d*$//; # Internal

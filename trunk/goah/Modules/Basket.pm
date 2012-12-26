@@ -1480,19 +1480,21 @@ sub ReadBasketrows {
 			my %prod = %$prodpoint;
 			foreach my $key (keys %basketrowdbfields) {
 				$field = $basketrowdbfields{$key}{'field'};
+
+				my %vat;
+				my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
+				unless($vatp) {
+					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				} else {
+					%vat=%$vatp;
+				}
+
 				if($field eq 'purchase' || $field eq 'sell') {
 					unless($_[2]) {
 						if($_[1] && $_[1]==-1) {
-							$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($row->$field,0,$uid,'in',$settref);
+							$rowdata{$i}{$field} = goah::GoaH->FormatCurrencyNopref($row->$field,0,0,'in',0);
+							$rowdata{$i}{'vatvalue'} = $vat{'value'};
 						} else {
-
-							my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
-							my %vat;
-							unless($vatp) {
-								goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
-							} else {
-								%vat=%$vatp;
-							}
 
 							# Calculate rows sums for display
 							if($field eq 'purchase') {
@@ -1511,6 +1513,7 @@ sub ReadBasketrows {
 								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$vat{'value'},$uid,'out',$settref);
 							}
 							$rowdata{$i}{'vat'} = $vat{'item'};
+							$rowdata{$i}{'vatvalue'} = $vat{'value'};
 							
 						}
 					} else {
