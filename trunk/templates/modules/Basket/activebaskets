@@ -108,8 +108,10 @@
 [% FOREACH state IN baskets.keys.sort %]
 [% IF state >= 0 %]
 	[% basketsinstate = baskets.$state %]
-	<tr><th colspan=7>[% basketstates.$state %]</th></tr>	
 	[% FOREACH key IN basketsinstate.keys.sort %]
+		[% IF loop.first %]
+			<tr><th colspan=7>[% basketstates.$state %]</th></tr>
+		[% END %]
 		[% IF key > 0 %]
 			[% basket = basketsinstate.$key %]
 		[% IF rclass == 'odd' %]
@@ -161,7 +163,7 @@
 	<tr class='[% rclass %]'>
 		<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]</td>
 		<td>[% baskets.-1.totalvat %]</td>
-		<td colspan=2>&nbsp;</td></tr>
+		<td colspan=4>&nbsp;</td></tr>
 		</tbody>
 		</table>
 [% END %]

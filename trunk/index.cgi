@@ -106,17 +106,20 @@ my $q = CGI->new();
 # Read information from cookie, and check session id.
 
 # 
-# String: keksi
+# String: cookie
 #
 #   Authentication cookie to and from user
 #
-my $keksi = $q->cookie('goah');
-if($keksi && length($keksi)>1) {
-        my @tmp = split(/\./,$keksi);
+
+my $cookie = $q->cookie('goah');
+if($cookie && length($cookie)>1) {
+        my @tmp = split(/\./,$cookie);
         $uid = $tmp[0];
         $sessid = $tmp[1];
         $theme = $tmp[2];
+        $loginperiod = $tmp[3];
         $auth = goah::Auth->CheckSessionid($uid,$sessid);
+
 } 
 
 # 
@@ -142,17 +145,17 @@ if($auth == 0) {
 	# Check if user has given information and make sure they're not empty
 	if($q->param('user') && $q->param('pass')) {
 			
-		# Tarkistetaan syötetyt tiedot
+		# Check login information
 		$uid = goah::Auth->CheckLogin($q->param('user'),$q->param('pass'));
-		if($uid!=0) {
-			$auth=1; # Login ok
-		} elsif($uid==-1) {
-			$auth=-2;
+		if($uid != 0) {
+			$auth = 1; # Login ok
+		} elsif($uid == -1) {
+			$auth = -2;
 		} else {
-			$auth=-1; # Incorrect username/password
+			$auth = -1; # Incorrect username/password
 		}
 	} elsif($q->param('user') || $q->param('pass') ) {
-		$auth=-1;
+		$auth = -1;
 	}
 
 }
@@ -184,7 +187,7 @@ if ($q->param('theme')) {
 
 
 # We're logged in to system
-if($auth==1) {
+if ($auth == 1) {
 
 	use goah::Modules::Personalsettings;
 	my $settref = goah::Modules::Personalsettings->ReadSettings($uid);
@@ -204,25 +207,26 @@ if($auth==1) {
 		$templatevars{'action'}=$action;
 	}
 
-	if($sessid=~/^([0-9])+$/ && $sessid==-1) {
+	if($sessid =~ /^([0-9])+$/ && $sessid == -1) {
 		$action='disabled';
 
-		$keksi = cookie ( -name => 'goah', -value => '0', -expires => '0' );
+		$cookie = cookie ( -name => 'goah', -value => '0', -expires => '0' );
 		$viewport = cookie ( -name => 'viewport', -value => '0', -expires => '0' );
 		$templatevars{'page'} = 'login.tt2';
 		$templatevars{'function'} = 'accountdisabled';
 
 	} else {
-		# Read users login period
-		$loginperiod = $q->param('loginperiod');
-
+		# Set user's login period after login
+		if ($q->param('from_login') eq 'yes') {
+			$loginperiod = $q->param('loginperiod');
+		}
+			
 		# Create cookie which has only one value. Value is assembled
-		# by combining userid, session id and theme with a dot.
-		$keksi = $q->cookie ( -name => 'goah',
-				  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'},
+		# by combining userid, session id, theme and loginperiod with a dot.
+		$cookie = $q->cookie ( -name => 'goah',
+				  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'}.'.'.$loginperiod,
 				  -expires => '+'.$loginperiod.'h');
 				  
-
 		$templatevars{'page'} = 'main.tt2';
 		$templatevars{'uid'} = $uid;
 
@@ -238,7 +242,7 @@ if($auth==1) {
 			# Destroy session from database
 			goah::Auth->DestroySessionid($uid);
 
-			$keksi = cookie ( -name => 'goah',
+			$cookie = cookie ( -name => 'goah',
 					  -value => '0',
 					  -expires => '0');
 					  
@@ -251,7 +255,7 @@ if($auth==1) {
 		}
 	}
 
-	print header( -cookie => $keksi,
+	print header( -cookie => $cookie,
 		      -charset => 'UTF-8');
 
 	# Check that information isn't processed if there's no

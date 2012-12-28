@@ -72,7 +72,7 @@ $(document).ready(function() {
   </select>
   </td>
   <tr>
-  <td>&nbsp;</td>
+  <td><input type='hidden' name='from_login' value='yes' />&nbsp;</td>
   <td><input type="submit" id="viewport" value="[% gettext("Login") %]" /></td>
   </tr>
   <!-- <tr><td>Current locale: [% locale %]</td></tr> -->
