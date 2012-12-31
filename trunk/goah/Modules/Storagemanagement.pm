@@ -882,7 +882,7 @@ sub ReadInventories {
 
 	use goah::GoaH;
 	my %data;
-	my $i=0;
+	my $i=1000000;
 	my $tmp;
 	my $field;
 	my $row;
