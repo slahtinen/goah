@@ -111,6 +111,9 @@ sub FormatCurrency {
 	$_[0]=~s/,/\./g;
 	$_[0]=~s/\ //g;
 
+
+	goah::Modules->AddMessage('debug',"FormatCurrency called, this shouldn't happen anymore.",__FILE__,__LINE__,caller());
+
 	my $vat=1; # Even if we set up VAT% as 0% we still need to use 1 as an multiplier
 	unless ($_[1]=~/^[0-9\.\ ]+$/) {
 		goah::Modules->AddMessage('error',__("Incorrectly formatted VAT% (".$_[1]."). Reverting to 0."),__FILE__,__LINE__);

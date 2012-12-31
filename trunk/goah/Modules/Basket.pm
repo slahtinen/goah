@@ -1411,8 +1411,8 @@ sub AddProductToBasket {
 	}
 
 	goah::Modules->AddMessage('debug',"Calculating prices with VAT ".$vat{'value'},__FILE__,__LINE__);
-	$data{'purchase'} = goah::GoaH->FormatCurrency($_[2],$vat{'value'},$uid,'in',$settref);
-	$data{'sell'} = goah::GoaH->FormatCurrency($_[3],$vat{'value'},$uid,'in',$settref);
+	$data{'purchase'} = goah::GoaH->FormatCurrencyNopref($_[2],$vat{'value'},1,'in',0);
+	$data{'sell'} = goah::GoaH->FormatCurrencyNopref($_[3],$vat{'value'},1,'in',0);
 	$data{'amount'} = decode("utf-8",$_[4]);
 	$data{'rowinfo'} = decode("utf-8",$_[5]);
 	$data{'code'} = $prod{'code'};
