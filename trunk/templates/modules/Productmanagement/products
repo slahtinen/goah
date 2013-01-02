@@ -23,6 +23,8 @@
 	[% END %]
 	</select>
 	<input type="submit" value=">" />
+	<br/>
+	<input type="checkbox" name="onlyinstorage" /> [% gettext("Only products in storage") %]
 	</p>
 	</form>
 	
