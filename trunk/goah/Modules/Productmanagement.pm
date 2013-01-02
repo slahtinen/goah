@@ -339,11 +339,13 @@ sub Start {
 					$prodpointer=ReadProductByCode($q->param('code'),$group{'id'},1);
 					$variables{'searchcode'}=$q->param('code');
 				} else {
-					$prodpointer=ReadProductsByGroup($group{'id'},$uid);
+					my $onlyinstorage=0;
+					$onlyinstorage=1 if($q->param('onlyinstorage') && $q->param('onlyinstorage') eq 'on');
+					$prodpointer=ReadProductsByGroup($group{'id'},$uid,0,$onlyinstorage);
 				}
 
 				unless($prodpointer) {
-					unless($action=~/search/) {
+					unless($action=~/search/ || $action=~/selectgroup/) {
 						goah::Modules->AddMessage('warn',__("Empty product group")." ".$group{'name'});
 						$productspergroup{$key}{'products'}=0;
 						$productspergroup{$key}{'name'}=$group{'name'};
@@ -1183,8 +1185,10 @@ sub ReadProductByCode {
 #
 #    groupid - ID number for group to read products. If groupid isn't given read all
 #    	       products which aren't in any group.
-#    uid - Sometimes the module isn't "started" when the function is called, so we provide UID via parameter
-#    noprice - Ignore prices and VAT calculations when searching only for product names and codes
+#    uid - OBSOLETE VARIABLE! Should be removed!
+#    noprice - If set ignore prices and VAT calculations when searching only for product names and codes
+#    onlyinstorage - If set search only for products in storage
+#    
 #
 # Returns:
 #
@@ -1218,14 +1222,28 @@ sub ReadProductsByGroup {
 	if($_[0]) {
 		$search = $_[0];
 	}
+
+
+	my %dbsearch;
+	$dbsearch{'hidden'}=0;
+	$dbsearch{'groupid'}=$search;
+
+	# Search only for products in storage
+	if($_[3]) {
+		$dbsearch{'in_store'}={ gt => 0 };
+	}
 	
 	use goah::Db::Products::Manager;
-	my $dbdata = goah::Db::Products::Manager->get_products( query => [ hidden => 0, groupid => $search ], sort_by => 'code' );
+	#my $dbdata = goah::Db::Products::Manager->get_products( query => [ hidden => 0, groupid => $search ], sort_by => 'code' );
+	my $dbdata = goah::Db::Products::Manager->get_products(\%dbsearch, sort_by => 'code' );
 	unless($dbdata) {
 		return 0;
 	}
 
 	my @data=@$dbdata;
+	unless(scalar(@data)) {
+		return 0;
+	}
 	
 	if(scalar(keys(%productsdbfields))==0) {
 		InitVars();
