@@ -27,6 +27,18 @@ body {
 	display: none;
 }
 
+p.msg-warning {
+	display: none;
+}
+
+p.msg-error {
+	display: none;
+}
+
+p.msg-debug {
+	display: none;
+}
+
 form {
 	display: none;
 }
