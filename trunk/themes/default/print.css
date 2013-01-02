@@ -52,6 +52,10 @@ table {
 	color: #000;
 }
 
+tr.noprint {
+	display: none;
+}
+
 h2 {
 	color: #000;
 }
@@ -74,6 +78,10 @@ tbody tr {
 }
 
 br {
+	display: none;
+}
+
+blockquote {
 	display: none;
 }
 

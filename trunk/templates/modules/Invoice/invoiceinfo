@@ -145,7 +145,7 @@
 	<td colspan='3'>&nbsp;</td>
 	[% END %]
 </tr>
-<tr>
+<tr class='noprint'>
 	<form action="files.cgi" method="post" enctype="multipart/form-data">
 	<td>[% gettext("Add file to invoice") %]</td> 
 	<td colspan='2'><input type="file" name="file" /></td>
@@ -163,8 +163,8 @@
 	[% END %]
 	</select>
 	<input type='submit' value='[% gettext('Upload') %]'>
-	</form>
 	</td>
+	</form>
 </tr>
 </table>
 
