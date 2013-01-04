@@ -515,11 +515,18 @@ sub WriteSetup {
 		if($q->param('def') && $q->param('def') eq 'on') {
 			
 			# First, reset default value from everything in this category
-			my $itemptr = ReadSetup($q->param('category'));
-			foreach my $item (@$itemptr) {
-				$item->def(0);
-				$item->update;
-				$item->commit;
+			use goah::Db::Setup::Manager;
+			my $datap = goah::Db::Setup::Manager->get_setup( [ category => $q->param('category') ] );
+
+			unless($datap) {
+				goah::Modules->AddMessage('error',__("Could't reset default options for category!"),__FILE__,__LINE__);
+			} else {
+
+				my @catdata=@$datap;
+				foreach my $item (@catdata) {
+					$item->def(0);
+					$item->update;
+				}
 			}
 
 			$data->def(1);
