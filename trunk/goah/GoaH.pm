@@ -240,6 +240,9 @@ sub FormatCurrencyNopref {
 		$sum=$sum/$vat;
 	}
 
+
+	#goah::Modules->AddMessage('debug',"Formatting number ".$_[0]." vat $vat",__FILE__,__LINE__);
+
 	my $ret;
 	if($_[3] && $_[3] eq 'in') {
 		$ret = sprintf("%.05f",($_[0]/$vat));

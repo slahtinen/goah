@@ -743,9 +743,9 @@ sub ReadInvoices {
 		}
 
 
-		$invoices{'total'}{'vat0'}=goah::GoaH->FormatCurrency($totalsum{'vat0'},0,$uid,'out',$settref,$pdf);
-		$invoices{'total'}{'inclvat'}=goah::GoaH->FormatCurrency($totalsum{'inclvat'},0,$uid,'out',$settref,$pdf);
-		$invoices{'total'}{'vat'}=goah::GoaH->FormatCurrency($totalsum{'vat'},0,$uid,'out',$settref,$pdf);
+		$invoices{'total'}{'vat0'}=goah::GoaH->FormatCurrencyNopref($totalsum{'vat0'},0,0,'out',0,$pdf);
+		$invoices{'total'}{'inclvat'}=goah::GoaH->FormatCurrencyNopref($totalsum{'inclvat'},0,0,'out',0,$pdf);
+		$invoices{'total'}{'vat'}=goah::GoaH->FormatCurrencyNopref($totalsum{'vat'},0,0,'out',0,$pdf);
 		return \%invoices;
 	} else {
 		@data = goah::Database::Invoices->retrieve($_[0]);
@@ -822,10 +822,10 @@ sub ReadInvoicerows {
 	my $pdata;
 	my $vat;
 	foreach my $row (@rows) {
-		$rowdata{$i}{'purchase'} = goah::GoaH->FormatCurrency($row->purchase,0,$uid,'out',$settref,$pdf);
-		$rowdata{$i}{'sell'} = goah::GoaH->FormatCurrency($row->sell,0,$uid,'out',$settref,$pdf);
+		$rowdata{$i}{'purchase'} = goah::GoaH->FormatCurrencyNopref($row->purchase,0,0,'out',0,$pdf);
+		$rowdata{$i}{'sell'} = goah::GoaH->FormatCurrencyNopref($row->sell,0,0,'out',1,$pdf);
 		$rowdata{$i}{'amount'} = sprintf("%.02f",$row->amount);
-		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref,$pdf);
+		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrencyNopref(($row->sell*$row->amount),0,0,'out',0,$pdf);
 		$rowdata{$i}{'rowinfo'} = $row->rowinfo;
 		$rowdata{$i}{'rowinfo'} =~s/€/&euro;/g;
 
@@ -836,24 +836,26 @@ sub ReadInvoicerows {
 		}
 		%productdata = %$pdata;
 		
-		my $vatp=goah::Modules::Systemsettings->ReadSetup($productdata{'vat'});
-		my %vath;
-		unless($vatp) {
-			goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+		if($row->vat || $row->vat eq 0) {
+			$vat=$row->vat;
+			$rowdata{$i}{'vatitem'}=$row->vat."%";
 		} else {
-			%vath=%$vatp;
-		}
+			my $vatp=goah::Modules::Systemsettings->ReadSetup($productdata{'vat'});
+			my %vath;
+			unless($vatp) {
+				goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+			} else {
+				%vath=%$vatp;
+			}
 
-		if($row->vat) {
-			$vat=($row->vat/100)+1;
-		} else {
 			goah::Modules->AddMessage('warn',__("Reading VAT from product info! There's no VAT stored for invoice row!"),__FILE__,__LINE__);
-			$vat = ($vath{'value'}/100)+1;
+			$vat = $vath{'value'};
+			$rowdata{$i}{'vatitem'}=$vath{'item'};
 		}
-		$rowdata{$i}{'vat'}=$vath{'item'};
-		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount),0,$uid,'out',$settref,$pdf);
-		$rowdata{$i}{'rowtotalvat'} = goah::GoaH->FormatCurrency(($row->sell*$row->amount*$vat),0,$uid,'out',$settref,$pdf);
-		$rowdata{$i}{'sellvat'} = goah::GoaH->FormatCurrency(($row->sell*$vat),0,$uid,'out',$settref,$pdf);
+		$rowdata{$i}{'vat'}=$vat;
+		$rowdata{$i}{'rowtotal'} = goah::GoaH->FormatCurrencyNopref(($row->sell*$row->amount),0,0,'out',0,$pdf);
+		$rowdata{$i}{'rowtotalvat'} = goah::GoaH->FormatCurrencyNopref(($row->sell*$row->amount),$vat,0,'out',1,$pdf);
+		$rowdata{$i}{'sellvat'} = goah::GoaH->FormatCurrencyNopref($row->sell,$vat,0,'out',1,$pdf);
 
 		$rowdata{$i}{'code'} = $productdata{'code'};
 		$rowdata{$i}{'name'} = $productdata{'name'};
@@ -913,7 +915,7 @@ sub ReadInvoicehistory {
 # Parameters:
 #
 #   id - Invoice id
-#   pdf - If 1 return data for pdf output
+#   pdf - If 1 return data for pdf output - DEPRECATED!
 #
 # Returns:
 #
@@ -929,6 +931,11 @@ sub ReadInvoiceTotal {
 	unless($_[0]) {
 		goah::Modules->AddMessage('error',__("Can't calculate total sum for invoice! Invoice id is missing!"));
 		return 0;
+	}
+
+
+	if($_[1]) {
+		goah::Modules->AddMessage('debug',"Got deprecated parameter pdf (".$_[1].") at ReadInvoiceTotal",__FILE__,__LINE__,caller());
 	}
 
 	my $rowpointer = ReadInvoicerows($_[0],5);
@@ -950,12 +957,9 @@ sub ReadInvoiceTotal {
 		$total{'vat'}+=$rows{$key}{'rowtotalvat'}-$rows{$key}{'rowtotal'};
 	}
 
-	my $pdf='';
-	$pdf=2 if($_[1]);
-
-	$total{'vat0'}=goah::GoaH->FormatCurrency($total{'vat0'},0,$uid,'out',$settref,$pdf);
-	$total{'inclvat'}=goah::GoaH->FormatCurrency($total{'inclvat'},0,$uid,'out',$settref,$pdf);
-	$total{'vat'}=goah::GoaH->FormatCurrency($total{'vat'},0,$uid,'out',$settref,$pdf);
+	$total{'vat0'}=goah::GoaH->FormatCurrencyNopref($total{'vat0'},0,0,'out',0,2);
+	$total{'inclvat'}=goah::GoaH->FormatCurrencyNopref($total{'inclvat'},0,0,'out',0,2);
+	$total{'vat'}=goah::GoaH->FormatCurrencyNopref($total{'vat'},0,0,'out',0,2);
 
 	return \%total;
 }

@@ -24,7 +24,7 @@
 	<td>[% row.name %]</td>
 	<td class="number">[% row.purchase %]</td>
 	<td class="number">[% row.sell %]</td>
-	<td class="number">[% row.vat %]</td>
+	<td class="number">[% row.vatitem %]</td>
 	<td class="number">[% row.sellvat %]</td>
 	<td class="number">[% row.amount %]</td>
 	<td>[% row.unit %]</td>
