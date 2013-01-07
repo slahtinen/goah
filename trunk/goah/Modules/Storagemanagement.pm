@@ -1075,6 +1075,12 @@ sub AddToShipment {
 			if($_[1] eq "productcode") {
 				goah::Modules->AddMessage('debug',"Adding product to shipment via product code ".$_[0],__FILE__,__LINE__);
 				$prod = goah::Modules::Productmanagement->ReadProductByCode($_[0],'',1,'','');
+
+				unless($prod) {
+					goah::Modules->AddMessage('error',__("Product code not found. Can't add product to shipment!"),__FILE__,__LINE__);
+					return 1;
+				}
+
 				my %tmpprod=%$prod;
 				$prod=each(%tmpprod);
 				%proddata=%{$tmpprod{$prod}};
