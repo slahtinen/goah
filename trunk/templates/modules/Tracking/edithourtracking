@@ -19,9 +19,9 @@
         [% END %]
         </td>
         [% IF data.type == 'textfield' %]
-		[% IF field == 'hours' %]
+		[% IF field == 'hours' || field == 'inthours' %]
 			<td>
-			[% IF dbdata.type == 3 %]
+			[% IF dbdata.type == 3 && field != 'inthours' %]
 			[%# Other time tracking %]
 				[% IF dbdata.basket_id > 0 || dbdata.basket_id == -1 %]
 					[% dbdata.$field %][% gettext("st") %]
@@ -33,7 +33,11 @@
 					[% dbdata.$field %]h [% dbdata.$field %]min
 				[% ELSE %]
 					<input class="small" name="[% data.field %]" value="[% dbdata.$field %]" />h 
+					[% IF field == 'inthours' %]
+					<input class="small" name="intminutes" value="[% dbdata.intminutes %]" />min
+					[% ELSE %]
 					<input class="small" name="minutes" value="[% dbdata.minutes %]" />min
+					[% END %]
 				[% END %]
 			[% END %]
 			</td>

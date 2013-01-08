@@ -6,7 +6,8 @@
     <th>[% gettext("Type") %]</th>
     <th>[% gettext("Product") %]</th>
     <th>[% gettext("Date") %]</th>
-    <th>[% gettext("Time") %]</th>
+    <th>[% gettext("Working hrs") %]</th>
+    <th>[% gettext("Intern. hrs") %]</th>
     <th>[% gettext("Amount") %]</th>
     <th>[% gettext("Description") %]</th>
 <!--    <th>[% gettext("Project") %]</th>
@@ -24,12 +25,14 @@
   [% IF data.type != "hidden" %]
         [% IF data.type == 'textfield' %]
 		[% IF data.field == 'day' %]
-                <td><input  name="[% data.field %]" class="small" value="[% datenow %]" /></td>
-		[% ELSIF data.field == 'hours' %]
-		<td><input class="tiny" name="[% data.field %]" /> h <input class="tiny" name="minutes" /> min</td>
-		<td><input class="tiny" name="amount" /> [% gettext("st") %]</td>
+			<td><input  name="[% data.field %]" value="[% datenow %]" /></td>
+		[% ELSIF data.field == 'hours' || data.field == 'inthours' %]
+			<td><input class="tiny" name="[% data.field %]" title="[% gettext("1:30 or 1,5") %]" /></td>
+			[% IF data.field == 'inthours' %]
+				<td><input class="tiny" name="amount" /> [% gettext("st") %]</td>
+			[% END %]
 		[% ELSE %]
-                <td><input  name="[% data.field %]" /></td>
+			<td><input  name="[% data.field %]" /></td>
 		[% END %]
         [% ELSIF data.type == 'textarea' %]
                 <td><input class="huge" name="[% data.field %]" /></td>
@@ -99,6 +102,7 @@
   <th>[% gettext("Date") %]</th>
   <th>[% gettext("Customer") %]</th>
   <th>[% gettext("Time") %]/[% gettext("Amount") %]</th>
+  <th>[% gettext("Intern. hrs") %]</th>
   <th>[% gettext("Product") %]</th>
   <th>[% gettext("Type") %]</th>
   <th colspan=2>[% gettext("Description") %]</th>
@@ -132,6 +136,16 @@
 <img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
 [% END %]
 </td>
+
+<td>
+[% IF row.inthours > 0 %]
+	[% row.inthours %]h
+[% END %]
+[% IF row.intminutes > 0 %]
+	[% row.intminutes %]min
+[% END %]
+</td>
+
 <td>
 [% row.productcode %] - [% row.productname %]
 </td>

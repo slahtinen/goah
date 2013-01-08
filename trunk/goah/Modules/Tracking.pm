@@ -78,19 +78,21 @@ sub InitVars {
 				data => goah::Modules::Productmanagement->ReadProductsByGrouptype(1,$uid) },
 		5 => { field => 'day', name => __('Date'), type => 'textfield', required => '1' },
 		6 => { field => 'hours', name => __("Working hours"), type => 'textfield', required => '1' },
-		7 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1' },
+		7 => { field => 'inthours', name => __("Internal hours"), type => 'textfield', required => '0' },
+		8 => { field => 'description', name => __('Description'),  type => 'textarea', required => '1' },
 		#8 => { field => 'project', name => __("Project"), type => "textarea", required => '0' },
 		#9 => { field => 'personnel', name => __("Related personnel"), type => 'textarea', required => '0' },
-		8 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
-		9 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
-		91 => { field => 'no_billing', name => __("Internal"), type => 'checkbox', required => '0' },
-		92 => { field => 'basket_id', name => __("Imported to basket"), type => 'checkbox', required => '0' },
-		93 => { 
+		9 => { field => 'project', name => __("Project"), type => "hidden", required => '0' },
+		91 => { field => 'personnel', name => __("Related personnel"), type => 'hidden', required => '0' },
+		#92 => { field => 'no_billing', name => __("Internal"), type => 'checkbox', required => '0' },
+		93 => { field => 'basket_id', name => __("Imported to basket"), type => 'checkbox', required => '0' },
+		94 => { 
 			field => 'longdescription', 
 			name => __("Long description, only for internal use"), 
 			type => "textarea", 
 			required => 0 
 		},
+		
 	);
 
 	return 0;
@@ -308,6 +310,7 @@ sub WriteHours {
 	}
 
 
+	# Initialize database variables if they're missing
 	unless(scalar(keys(%timetrackingdb)) || scalar(keys(%timetrackstatuses)) ) {
 		InitVars();
 	}
@@ -359,13 +362,24 @@ sub WriteHours {
 
 						my $hours = $q->param($fieldinfo{'field'});
 						$hours=~s/,/\./g;
-						unless($hours=~/\d+\.?\d*/) {
+						my $fhours = $hours; # Helper varible to check if we should include minutes-field in time
+
+						if($hours=~/:/) {
+							my @hoursarr=split(/:/,$hours);
+							my $tmphours=$hoursarr[1]/60;
+							$tmphours+=$hoursarr[0];
+							$hours=$tmphours;
+						} elsif(!$hours=~/\d+\.?\d*/) {
 							goah::Modules->AddMessage('warn',__("Hours column not numeric! Setting hours -value to 0!"));
-							$dbdata{$tmpcol}="0";
+							$hours=0;
 						}
-						if($q->param('minutes')>0) {
-							$dbdata{$tmpcol}+=$q->param('minutes')/60;
+
+						
+						if($q->param('minutes')>0 && !($fhours=~/:/) && !($fhours=~/\./) ) {
+							$hours+=$q->param('minutes')/60;
 						}
+						$dbdata{$tmpcol}=$hours;
+
 					} else {
 						
 						unless($q->param('amount') && $q->param('amount')=~/^\d+\.?\d*/) {
@@ -382,6 +396,30 @@ sub WriteHours {
 						}
 					}
 				}	
+
+				# Record internal hours, these will be included no matter what the tracking type is
+				if($fieldinfo{'field'} eq 'inthours') {
+
+					my $hours=$q->param($fieldinfo{'field'});
+					$hours=~s/,/\./g;
+					my $fhours=$hours; # Helper variable for checking if we should include minutes-field in total time
+
+					if($hours=~/:/) {
+						my @hoursarr=split(/:/,$hours);
+						my $tmphours=$hoursarr[1]/60;
+						$tmphours+=$hoursarr[0];
+						$hours=$tmphours;
+					} elsif(!$hours=~/\d+\.?\d*/) {
+						goah::Modules->AddMessage('warn',__("Hours column not numeric! Setting hours -value to 0!"));
+						$hours=0;
+					}
+
+					if($q->param('intminutes')>0 && !($fhours=~/:/) && !($fhours=~/\./) ) {
+						$hours+=$q->param('intminutes')/60;
+					}
+					$dbdata{$tmpcol}=$hours;
+				}
+
 				if($fieldinfo{'field'} eq 'day') {
 					my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 					$year+=1900;    
@@ -474,13 +512,20 @@ sub ReadData {
 		$field = $timetrackingdb{$key}{'field'};
 		if($field eq 'day') {
 			$data{$field} = goah::GoaH::FormatDate($datap->$field);
-		} elsif ($field eq 'hours') {
+		} elsif ($field eq 'hours' || $field eq 'inthours') {
 			$data{$field}=$datap->$field;
+
+			# It's possible to skip hour formatting with function parameter, hence the if-block
 			if(!($_[2]) || $_[2] eq '0') {
+
+				my $minfield='minutes';
+				$minfield='intminutes' if($field eq 'inthours');
+
 				$data{$field}=~s/\.\d*$//;
-				$data{'minutes'}=$datap->$field;
-				$data{'minutes'}=~s/^\d*/0/;
-				$data{'minutes'}=sprintf("%.0f",60*$data{'minutes'});
+				$data{$minfield}=$datap->$field;
+				$data{$minfield}=~s/^\d*/0/;
+				$data{$minfield}=sprintf("%.0f",60*$data{$minfield});
+
 			}
 		} else {
 			$data{$field} = $datap->$field;	
@@ -641,19 +686,30 @@ sub ReadHours {
 			if($field eq 'day') {
 				$tdata{$i}{$field} = goah::GoaH::FormatDate($row->$field);
 			}
-			if ($field eq 'hours') {
+			if ($field eq 'hours' || $field eq 'inthours') {
 				$tdata{$i}{$field}=$row->$field;
 				$tdata{$i}{$field}=~s/\.\d*$//;
-				$tdata{$i}{'minutes'}=$row->$field;
-				$tdata{$i}{'minutes'}=~s/^\d*/0/;
-				if($tdata{$i}{'minutes'} > 0) {
-					$tdata{$i}{'minutes'}=sprintf("%.0f",60*$tdata{$i}{'minutes'});
+
+				my $minfield='minutes';
+				$minfield='intminutes' if($field eq 'inthours');
+
+				$tdata{$i}{$minfield}=$row->$field;
+				$tdata{$i}{$minfield}=~s/^\d*/0/;
+				if($tdata{$i}{$minfield} > 0) {
+					$tdata{$i}{$minfield}=sprintf("%.0f",60*$tdata{$i}{$minfield});
 				} else {
-					$tdata{$i}{'minutes'}=0;
+					$tdata{$i}{$minfield}=0;
 				}
-				my $billing=1;
-				$billing = 0 if($row->no_billing);
-				$totalhours{$row->type}{$billing}+=$row->$field;
+
+				# Calculate total hours
+				if($field eq 'hours') {
+					my $billing=1;
+					$billing = 0 if($row->no_billing);
+					$totalhours{$row->type}{$billing}+=$row->$field;
+				}
+				if($field eq 'inthours') {
+					$totalhours{$row->type}{0}+=$row->$field;
+				}
 			}
 			if ($field eq 'longdescription') {
 				$tdata{$i}{$field}=$row->$field;

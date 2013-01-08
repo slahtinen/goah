@@ -119,6 +119,7 @@
 <th>[% gettext("Customer") %]</th>
 <th>[% gettext("User") %]</th>
 <th>[% gettext("Time") %]/[% gettext("Amount") %]</th>
+<th>[% gettext("Intern. hrs") %]</th>
 <th>[% gettext("Type") %]</th>
 <th>[% gettext("Product") %]</th>
 <th>[% gettext("Description") %]</th>
@@ -163,6 +164,16 @@
 		<img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
 	[% END %]
 	</td>
+
+	<td>
+	[% IF row.inthours > 0 %]
+		[% row.inthours %]h
+	[% END %]
+	[% IF row.intminutes > 0 %]
+		[% row.intminutes %]min
+	[% END %]
+	</td>
+
 	<td>
 	[% FOREACH statkey IN timetrackstatuses.keys %]
 		[% timetrackstatus = timetrackstatuses.$statkey %]

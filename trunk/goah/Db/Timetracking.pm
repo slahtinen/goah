@@ -23,7 +23,7 @@ use warnings;
 __PACKAGE__->meta->setup
         (
 	table      => 'Timetracking',
-	columns    => [ qw(id companyid userid type day description project personnel hours no_billing productcode basket_id longdescription) ],
+	columns    => [ qw(id companyid userid type day description project personnel hours no_billing productcode basket_id longdescription inthours) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );
