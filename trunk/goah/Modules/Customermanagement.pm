@@ -161,6 +161,8 @@ sub Start {
 
 	my $q = CGI->new();
 	my $companyid='';
+	$companyid = $q->param('companyid') if($q->param('companyid'));
+
 	if($q->param('action')) {
 
 		if($q->param('action') eq 'addnewcompany') {
@@ -382,20 +384,16 @@ sub Start {
 				$variables{'function'} = 'modules/blank';
 		}
 
+		$variables{'companylocations'} = ReadCompanylocations($companyid);
+		$variables{'companypersonnel'} = ReadCompanypersonnel($companyid);
+
 	} else {
 		$variables{'companies'} = ReadAllCompanies(1);
 	}
 
-	if($companyid eq '') {
-		$companyid = $q->param('companyid');
-	}
 
-	$variables{'companylocations'} = ReadCompanylocations($companyid);
-	$variables{'companypersonnel'} = ReadCompanypersonnel($companyid);
         $variables{'customertypes'} = ReadCustomerIdentifiers("1");
 	$variables{'customergroups'} = ReadCustomerIdentifiers("2");
-	$variables{'companylocations'} = ReadCompanylocations($companyid);
-	$variables{'companypersonnel'} = ReadCompanypersonnel($companyid);
 	$variables{'customeridentifier'} = sub { ReadCustomerIdentifier($_[0]) };
 
 	if($companyid eq '') {
@@ -1018,7 +1016,7 @@ sub ReadCompanypersonnel {
 	my $uid = $_[1];
 
 	unless($id) {
-		goah::Modules->AddMessage('error',__("Can't read company personnel! Company id is missing!"));
+		goah::Modules->AddMessage('error',__("Can't read company personnel! Company id is missing!"),__FILE__,__LINE__,caller());
 		return 0;
 	}
 
