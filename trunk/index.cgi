@@ -197,6 +197,11 @@ if ($auth == 1) {
 		$templatevars{'locale'} = setlocale(LC_ALL);
 	} 
 
+	if($settings{'showdebug'} && $settings{'showdebug'} eq 'on') {
+		$templatevars{'showdebug'}=1;
+	}	
+		
+
 	# Create new (renew) session id
 	$sessid = goah::Auth->CreateSessionid($uid);
 	
