@@ -12,12 +12,8 @@
 [% IF field.type != 'hidden' %]
 	<tr class="[% row %]">
 	  <td class="medium">[% field.name %]
+
         [% IF field.field == 'purchase' || field.field == 'sell' %]
-		[%# IF usersettings.showvat == 'on' %]
-			[%# gettext("(incl. vat)") %]
-		[%# ELSE %]
-			[%# gettext("(vat 0%)") %]
-		[%# END %]
 		[% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]
 	[% END %]
 

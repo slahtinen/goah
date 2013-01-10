@@ -201,6 +201,7 @@ sub Start {
 		} elsif($action eq 'productgroups') {
 			$variables{'function'} = $function.'productgroups';
 		} elsif($action eq 'addnew') {
+
 			$variables{'function'} = $function.'.new';
 			if($q->param('subaction') && $q->param('subaction') eq 'ean') {
 				$variables{'prefill'}=ReadProductPrefill($q->param('barcode'),$uid);
@@ -435,6 +436,7 @@ sub WriteNewItem {
 
 	# Check that user can't insert duplicate products and that we have manufacturer and group
 	if($q->param('type') eq 'products') {
+
 		my $code=uc($q->param('code'));
 		$code=~s/ä/Ä/g;
 		$code=~s/ö/Ö/g;
@@ -494,9 +496,8 @@ sub WriteNewItem {
 			$manufid = $data[0]->id;
 		}
 	}
-	if($manufid==-1) {
-		$manufid=$q->param('manufacturer');
-	}
+
+	$manufid=$q->param('manufacturer') if($manufid==-1);
 
 	my $prodgroupid=-1;
 	if($q->param('type') eq 'products' && $q->param('groupid.new') && $q->param('groupid')==-1) {
@@ -515,9 +516,7 @@ sub WriteNewItem {
 			$prodgroupid=$data[0]->id;
 		}
 	}
-	if($prodgroupid==-1) {
-		$prodgroupid=$q->param('groupid');
-	}
+	$prodgroupid=$q->param('groupid') if($prodgroupid==-1);
 
 	# Loop trough database fields and create an hash to store into database.
 	# Loop run has some additional features to format eq. currencies and some
@@ -541,18 +540,23 @@ sub WriteNewItem {
 
 			if($q->param($fieldinfo{'field'})) {
 
-				my $sum = $q->param($fieldinfo{'field'});
-
-				my $vatp=goah::Modules::Systemsettings->ReadSetup($q->param('vat'));
-				my %vath;
-				unless($vatp) {
-					goah::Modules->AddMessage('error',__("Couldn't get VAT class from setup! VAT calculations are incorrect!"),__FILE__,__LINE__);
+				# VAT0 price has priority
+				if($q->param($fieldinfo{'field'}.'_vat0')) {
+					my $sum = $q->param($fieldinfo{'field'}.'_vat0');
+					$data{$fieldinfo{'field'}}=goah::GoaH->FormatCurrencyNopref($sum,0,0,'in',0);
 				} else {
-					%vath=%$vatp;
+					my $sum = $q->param($fieldinfo{'field'});
+					my $vatp=goah::Modules::Systemsettings->ReadSetup($q->param('vat'));
+					my %vath;
+					unless($vatp) {
+						my $msg=__("Couldn't get VAT class from setup! VAT calculations are incorrect!");
+						goah::Modules->AddMessage('error',$msg,__FILE__,__LINE__);
+					} else {
+						%vath=%$vatp;
+					}
+					my $vat=$vath{'value'};
+					$data{$fieldinfo{'field'}} = goah::GoaH->FormatCurrencyNopref($sum,$vat,1,'in',0);
 				}
-				my $vat=$vath{'value'};
-
-				$data{$fieldinfo{'field'}} = goah::GoaH->FormatCurrency($sum,$vat,$uid,'in',$settref);
 			}
 	
 		} elsif($fieldinfo{'field'} eq 'manufacturer') {

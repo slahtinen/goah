@@ -11,20 +11,23 @@
 	[% prefillfield = data.field %]
 	<tr class="[% row %]">
 	<td class="medium">[% data.name %]
+
 	[% IF data.field == 'purchase' || data.field == 'sell' %]
-		[% IF usersettings.showvat == 'on' %]
-			(incl. vat)
-	[% ELSE %]
-		(vat 0%)
-		[% END %]
+		[% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]
 	[% END %]
+
 	[% IF data.required == 1 %]
 		*
 	[% END %]
 	</td>
 	[% IF data.type == 'textfield' %]
-		<td><input class="big" name="[% data.field %]" value="[% prefill.$prefillfield %]" />
-		</td>
+		[% IF data.field == 'purchase' || data.field == 'sell' %]
+			<td><input class="number" name="[% data.field %]_vat0" />
+			<input class="number_buy" name="[% data.field %]" />
+			</td>
+		[% ELSE %]
+			<td><input class="big" name="[% data.field %]" value="[% prefill.$prefillfield %]" /></td>
+		[% END %]
 	[% ELSIF data.type == 'textarea' %]
 		<td><textarea class="medium" name="[% data.field %]"></textarea></td>
 	[% ELSIF data.type == 'selectbox' %]
