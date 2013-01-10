@@ -93,7 +93,7 @@
 		<td class="number">[% product.purchase_vat0 %]</td>
 		<td class="number_buy">[% product.purchase %]</td>
 		<td class="number">[% product.sell_vat0 %]</td>
-		<td class="number_sell">[% product.sell %]</td>
+		<td class="number_buy">[% product.sell %]</td>
 		<td>[% product.vatclass %]</td>
 		<td>[% product.in_store %]</td>
 		<td>[% product.row_total_value %]</td>
