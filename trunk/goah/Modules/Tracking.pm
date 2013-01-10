@@ -348,12 +348,14 @@ sub WriteHours {
 					# Read product information so that we can separate between time and
 					# other types
 					unless($q->param('productcode')) {
-						goah::Modules->AddMessage('error',__("Can't add tracked hours to database! Product code is missing!"),__FILE__,__LINE__);
+						my $msg=__("Can't add tracked hours to database! Product code is missing!");
+						goah::Modules->AddMessage('error',$msg,__FILE__,__LINE__);
 						return 0;
 					}
 					my $prodinfo_p = goah::Modules::Productmanagement->ReadData('products',$q->param('productcode'),$uid,$settref,1);
 					unless($prodinfo_p) {
-						goah::Modules->AddMessage('error',__("Can't read product data from the database! Can't add tracked hours!"),__FILE__,__LINE__);
+						my $msg=__("Can't read product data from the database! Can't add tracked hours!");
+						goah::Modules->AddMessage('error',$msg,__FILE__,__LINE__);
 						return 0;
 					}
 					my %prodinfo=%$prodinfo_p;
@@ -390,7 +392,9 @@ sub WriteHours {
 						}
 
 						if($dbdata{'type'} ne 3) {
-							goah::Modules->AddMessage('debug',"Tracked type not 'other' even if given value isn't hours and minutes! Forcing type to 3",__FILE__,__LINE__);
+							my $msg="Tracked type not 'other' even if given value isn't hours and minutes! ";
+							$msg.="Forcing type to 3";
+							goah::Modules->AddMessage('debug',$msg,__FILE__,__LINE__);
 							$dbdata{'type'}=3;
 							$forcedtype=1;
 						}
@@ -435,6 +439,7 @@ sub WriteHours {
 					}
 
 				}
+
 				if($fieldinfo{'type'} eq 'checkbox') {
 					if($q->param($tmpcol) eq 'on') {
 						if($fieldinfo{'field'} eq 'basket_id') {
@@ -834,12 +839,96 @@ sub AddHoursToBasket {
 	if($_[1]>0) {
 		$datap->basket_id($_[1]);
 	} else {
-		$datap->basket_id(0);
+		$datap->basket_id(-1);
 	}
 
 	return 1 if($datap->save);
 	return 0;
 }
+
+#
+# Function: RemoveHoursFromBasket
+#
+#   An function to remove basket assignment from tracked hours on 
+#   individual row
+#
+# Parameters:
+#
+#   rowid - Database id for hours to unassign
+#
+# Return:
+#
+#   Success - 1
+#   Fail - 0
+#
+sub RemoveHoursFromBasket {
+
+	shift if($_[0]=~/goah::Modules::Tracking/);
+
+	use goah::Db::Timetracking;
+	my $datap = goah::Db::Timetracking->new(id => $_[0]);
+
+	unless($datap->load(speculative => 1)) {
+		goah::Modules->AddMessage('error',__("Couldn't read any hour data from the database with id ").$_[0],__FILE__,__LINE__);
+		return 0;
+	}
+
+	$datap->basket_id('');
+
+	return 1 if($datap->save);
+	return 0;
+}
+
+#
+# Function: UpdateHoursFromBasket
+#   
+#   An function to maintain tracked hours according to changes made on baskets.
+#   If basket amount is bigger than the tracked hours then increase hours into tracking,
+#   if basket amount is smaller then remove hours from tracking and add the remainder
+#   into internal hours
+#
+# Parameters:
+#
+#   rowid - Database id for hours to alter
+#   amount - Amount to use on calculations
+#
+# Returns:
+#
+#   Success - 1
+#   Fail - 0
+#
+sub UpdateHoursFromBasket {
+
+	shift if($_[0]=~/goah::Modules::Tracking/);
+
+	use goah::Db::Timetracking;
+	my $datap = goah::Db::Timetracking->new(id => $_[0]);
+
+	unless($datap->load(speculative => 1)) {
+		goah::Modules->AddMessage('error',__("Couldn't read any hour data from the database with id ").$_[0],__FILE__,__LINE__);
+		return 0;
+	}
+
+
+	if($_[1]>$datap->hours) {
+
+		$datap->hours($_[1]);
+
+	} elsif($_[1]<$datap->hours) {
+		
+		my $sep=$datap->hours-$_[1];
+		my $inthours=$datap->inthours;
+		$inthours+=$sep;
+		
+		$datap->hours($_[1]);
+		$datap->inthours($inthours);
+	}
+
+	return 1 if($datap->save);
+	return 0;
+
+}
+
 
 # 
 # Function: DeleteBasket

@@ -21,7 +21,7 @@ use base qw(goah::Db::Object);
 __PACKAGE__->meta->setup
         (
 	table      => 'Basketrows',
-	columns    => [ qw(id basketid productid purchase sell amount rowinfo code name) ],
+	columns    => [ qw(id basketid productid purchase sell amount rowinfo code name remoteid) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );

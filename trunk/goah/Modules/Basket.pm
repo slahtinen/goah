@@ -63,7 +63,8 @@ my %basketrowdbfields = (
 		3 => { field => 'purchase', name => __("Purchase price"), type => 'textbox', required => '0' },
 		4 => { field => 'sell', name => __("Sell price"), type => 'textbox', required => '1' },
 		5 => { field => 'amount', name => __("Amount"), type => 'textbox', required => '1' },
-		6 => { field => 'rowinfo', name => __("Row information"), type => 'textbox', required => '0' }
+		6 => { field => 'rowinfo', name => __("Row information"), type => 'textbox', required => '0' },
+		7 => { field => 'remoteid', name => 'remoteid', type => 'hidden', required => '0', hidden => 1 }
 	);
 
 #
@@ -243,6 +244,7 @@ sub Start {
 				$variables{'basketrows'} = ReadBasketrows($basket);
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 
 		} elsif($q->param('action') eq 'showbasket') {
 
@@ -1046,6 +1048,18 @@ sub UpdateBasketRow {
 	}
 
 	if($q->param('delete') eq 'on') {
+		unless($rowinfo->remoteid eq '') {
+			# If we've got an remote id remove the assignment as well. Currently
+			# this applies only to tracked hours, but this isn't too big of a deal
+			# to expand for other uses as well
+			my $remoteid=$rowinfo->remoteid;
+			$remoteid=~s/^.*://;
+			use goah::Modules::Tracking;
+			unless(goah::Modules::Tracking->RemoveHoursFromBasket($remoteid)) {
+				goah::Modules->AddMessage('error',__("Couldn't remove hour assignment from the basket! Won't delete row!"),__FILE__,__LINE__);
+				return 1;
+			}
+		}
 		goah::Modules->AddMessage('info',__("Row deleted from basket"));
 		$rowinfo->delete;
 		return 0;
@@ -1130,6 +1144,18 @@ sub UpdateBasketRow {
 					$amount=0.00;
 				}
 				$rowinfo->set($fieldinfo{'field'} => $amount);
+
+				unless($rowinfo->remoteid eq '') {
+					goah::Modules->AddMessage('debug',"Updating remote amount",__FILE__,__LINE__);
+					# If we have an remote id update remote values accordingly.
+					# Currently this applies only to tracked hours
+					my $remoteid=$rowinfo->remoteid;
+					$remoteid=~s/^.*://;
+					use goah::Modules::Tracking;
+					unless(goah::Modules::Tracking->UpdateHoursFromBasket($remoteid,$amount)) {
+						goah::Modules->AddMessage('error',__("Couldn't update tracked hours according to new amount!"),__FILE__,__LINE__);
+					}
+				}
 
 			} else {
 				my $tmprowinfo=decode("utf-8",$q->param($fieldinfo{'field'}));
@@ -1278,7 +1304,7 @@ sub AddToBasket {
 				}
 			}
 
-			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount,$desc,1)==1) {
+			if(AddProductToBasket($prod,$basketid,$purchase,$sell,$amount,$desc,1,"timetracking:".$hourid)==1) {
 				goah::Modules->AddMessage('debug',"Added productid $prod to basket",__FILE__,__LINE__);
 			} else {
 				goah::Modules->AddMessage('error',"Can't add product id $prod to basket!",__FILE__,__LINE__);
@@ -1382,6 +1408,7 @@ sub AddToBasket {
 #   amount - Row amount 
 #   rowinfo - Additional information for the row
 #   vat0 - Leave vat caclulations out of the process, for example when importing hours to basket
+#   remoteid - To maintain tracking of products which are imported from ie. timetracking
 #
 sub AddProductToBasket {
 
@@ -1417,6 +1444,7 @@ sub AddProductToBasket {
 	$data{'rowinfo'} = decode("utf-8",$_[5]);
 	$data{'code'} = $prod{'code'};
 	$data{'name'} = $prod{'name'};
+	$data{'remoteid'}=$_[7];
 
 	use goah::Database::Basketrows;
 	goah::Database::Basketrows->insert(\%data);
