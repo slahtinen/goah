@@ -114,55 +114,64 @@
 		[% END %]
 		[% IF key > 0 %]
 			[% basket = basketsinstate.$key %]
-		[% IF rclass == 'odd' %]
-			[% rclass = 'even' %]
-		[% ELSE %]
-			[% rclass = 'odd' %]
+			[% IF rclass == 'odd' %]
+				[% rclass = 'even' %]
+			[% ELSE %]
+				[% rclass = 'odd' %]
+			[% END %]
+			<tr class="[% rclass %]">
+			[% cinfo = companyinfo(basket.companyid) %]
+			<td>
+			<b>[% cinfo.name %]
+			[% IF cinfo.vat_id == "00000000" %]
+				[% cinfo.firstname %]
+			[% END %]
+			</b><br/>
+			[% linfo = locationinfo(basket.locationid) %]
+			[% IF linfo == 0 %] 
+				[% gettext("Not selected!") %]
+			[% ELSE %]
+				[% linfo.addr1 %]
+			[% IF linfo.addr2 != "" %]
+				, [% linfo.addr2 %]<br/>
+			[% END %]
+			, [% linfo.postalcode %] [% linfo.postaloffice %]
 		[% END %]
-		<tr class="[% rclass %]">
-		[% cinfo = companyinfo(basket.companyid) %]
-		<td>
-		<b>[% cinfo.name %]
-		[% IF cinfo.vat_id == "00000000" %]
-			[% cinfo.firstname %]
+		</td>
+		<td class='number'>[% basket.total %]</td>
+		<td class='number_buy'>[% basket.total_vat %]</td>
+		<td class='number'>[% basket.rows %]</td>
+		<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
+		[% gettext("Updated") %]: [% formatdate(basket.updated) %]
+		[% IF basket.state == 2 %]
+			<br/>[% gettext("Previous run") %]: [% formatdate(basket.lasttrigger) %]<br/>
+			[% gettext("Next run") %]: [% formatdate(basket.nexttrigger) %]
 		[% END %]
-		</b><br/>
-		[% linfo = locationinfo(basket.locationid) %]
-		[% IF linfo == 0 %] 
-			[% gettext("Not selected!") %]
-		[% ELSE %]
-			[% linfo.addr1 %]
-		[% IF linfo.addr2 != "" %]
-			, [% linfo.addr2 %]<br/>
+		</td>
+		<td >[% basket.info %]
+		[% uinfo = userinfo(basket.ownerid) %]
+		<br/>[% gettext("Owner:") %] [% uinfo.firstname %] [% uinfo.lastname %]
+		</td>
+		<td class="center"><a href="?module=[% module %]&amp;action=selectbasket&amp;target=[% basket.id %]">
+			<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
+		</tr>
+
+		[% IF loop.last %]
+			<tr><td>[% basketstates.$state %] [% gettext("Total") %]</td>
+			<td class='number'>[% baskets.-1.$state.total %]</td>
+			<td class='number_buy'>[% baskets.-1.$state.totalvat %]</td>
+			</tr>
 		[% END %]
-		, [% linfo.postalcode %] [% linfo.postaloffice %]
+
 	[% END %]
-	</td>
-	<td>[% basket.total %]</td>
-	<td>[% basket.total_vat %]</td>
-	<td>[% basket.rows %]</td>
-	<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
-	[% gettext("Updated") %]: [% formatdate(basket.updated) %]
-	[% IF basket.state == 2 %]
-		<br/>[% gettext("Previous run") %]: [% formatdate(basket.lasttrigger) %]<br/>
-		[% gettext("Next run") %]: [% formatdate(basket.nexttrigger) %]
-	[% END %]
-	</td>
-	<td >[% basket.info %]
-	[% uinfo = userinfo(basket.ownerid) %]
-	<br/>[% gettext("Owner:") %] [% uinfo.firstname %] [% uinfo.lastname %]
-	</td>
-	<td class="center"><a href="?module=[% module %]&amp;action=selectbasket&amp;target=[% basket.id %]">
-		<img class="link" alt="select" src="themes/[% theme %]/icon/32x32/actions/document-open.png" /></a></td>
-	</tr>
-	[% END %]
-	[% END %]
+[% END %]
 [% END %]
 
 [% IF loop.last %]
 	<tr class='[% rclass %]'>
-		<td>[% gettext("Total from all baskets") %]</td><td>[% baskets.-1.total %]</td>
-		<td>[% baskets.-1.totalvat %]</td>
+		<td>[% gettext("Total from all baskets") %]</td>
+		<td class='number'>[% baskets.-1.total %]</td>
+		<td class='number_buy'>[% baskets.-1.totalvat %]</td>
 		<td colspan=4>&nbsp;</td></tr>
 		</tbody>
 		</table>

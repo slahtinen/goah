@@ -766,10 +766,13 @@ sub ReadBaskets {
 			return 0;
 		}
 		%basketrows=%$br;
-		$total+=$basketrows{-1}{'baskettotal'};
-		$totalvat+=$basketrows{-1}{'baskettotal_vat'};
 		@rows=sort keys(%basketrows);
 		my $state=$b->state;
+
+		$total+=$basketrows{-1}{'baskettotal'};
+		$totalvat+=$basketrows{-1}{'baskettotal_vat'};
+		$baskets{-1}{$state}{'total'}+=$basketrows{-1}{'baskettotal'};
+		$baskets{-1}{$state}{'totalvat'}+=$basketrows{-1}{'baskettotal_vat'};
 
 		if($groupstates) {
 			$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
