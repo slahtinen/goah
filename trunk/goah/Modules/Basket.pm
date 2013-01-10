@@ -262,10 +262,15 @@ sub Start {
 				} else {
 					goah::Modules->AddMessage('error',__("Can't update basket information"));
 				}
-				$variables{'basketdata'} = ReadBaskets($q->param('id'));
+	
+				my $tmpdata=ReadBaskets($q->param('id'));
+				my %tmpd=%$tmpdata;
+
+				$variables{'basketdata'} = $tmpdata;
 				$variables{'activebasket'} = $q->param('id');
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'basketrows'} = ReadBasketrows($q->param('id'));
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 
 		} elsif($q->param('action') eq 'addtobasket') {
 
