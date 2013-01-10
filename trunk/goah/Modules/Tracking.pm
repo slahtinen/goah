@@ -598,19 +598,19 @@ sub ReadHours {
 	if($_[4]) {
 		if($_[4]=~/^yes$/i) {
 			goah::Modules->AddMessage('debug',"Searching debit hours",__FILE__,__LINE__);
-			$dbsearch{'no_billing'} = "0";
+			$dbsearch{'hours'} = { gt => 0 };
 		}
 
 		if($_[4]=~/^no$/i) {
 			goah::Modules->AddMessage('debug',"Searching internal hours",__FILE__,__LINE__);
-			$dbsearch{'no_billing'} = "1";
+			$dbsearch{'inthours'} = { gt => 0 };
 		}
 
 		# Limit search for only hours not moved to basket
 		# This implies billable -option
 		if($_[4]=~/^open$/i) {
 			goah::Modules->AddMessage('debug',"Searching open, debit hours",__FILE__,__LINE__);
-			$dbsearch{'no_billing'} = '0';
+			$dbsearch{'hours'} = { gt => 0 };
 			$dbsearch{'or'} = [ basket_id => '', basket_id => 0 ];
 			$dbsearch{'productcode'} = { ne => '' };
 		}
