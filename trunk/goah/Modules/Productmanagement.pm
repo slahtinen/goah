@@ -526,8 +526,14 @@ sub WriteNewItem {
 	while(my($key,$value) = each (%dbschema)) {
 		%fieldinfo = %$value;
 		if( $fieldinfo{'required'} == '1' && !($q->param($fieldinfo{'field'})) ) {
-			goah::Modules->AddMessage('warn',__('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!'));
-			return 1;
+
+			# Check if we've got an VAT0 price, since only required field is incl.vat -field
+			unless($q->param($fieldinfo{'field'}."_vat0")) {
+				goah::Modules->AddMessage('warn',__('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!'));
+				return 1;
+			} else {
+				goah::Modules->AddMessage('debug',"Required field ".$fieldinfo{'field'}." empty but overriding it with vat0-field",__FILE__,__LINE__);
+			}
 		}
 
 		if( $fieldinfo{'required'} == '1' && $fieldinfo{'type'} eq 'selectbox' && $q->param($fieldinfo{'field'}) eq "-1" ) {
@@ -538,10 +544,11 @@ sub WriteNewItem {
 
 		if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell') {
 
-			if($q->param($fieldinfo{'field'})) {
+			if($q->param($fieldinfo{'field'}) || $q->param($fieldinfo{'field'}."_vat0") ) {
 
 				# VAT0 price has priority
 				if($q->param($fieldinfo{'field'}.'_vat0')) {
+					goah::Modules->AddMessage('debug',"Got VAT0 price for field ".$fieldinfo{'field'},__FILE__,__LINE__);
 					my $sum = $q->param($fieldinfo{'field'}.'_vat0');
 					$data{$fieldinfo{'field'}}=goah::GoaH->FormatCurrencyNopref($sum,0,0,'in',0);
 				} else {
