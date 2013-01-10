@@ -372,7 +372,7 @@ sub WriteHours {
 							$tmphours+=$hoursarr[0];
 							$hours=$tmphours;
 						} elsif(!$hours=~/\d+\.?\d*/) {
-							goah::Modules->AddMessage('warn',__("Hours column not numeric! Setting hours -value to 0!"));
+							goah::Modules->AddMessage('debug',__("Hours column not numeric! Setting hours -value to 0!"),__FILE__,__LINE__);
 							$hours=0;
 						}
 

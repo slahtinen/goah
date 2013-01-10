@@ -132,7 +132,7 @@
 	[% row.minutes %] min
 	[% END %]
 [% END %]
-[% IF row.hours <= 0 && row.minutes <= 0 %]
+[% IF row.hours <= 0 && row.minutes <= 0 && row.inthours<=0 && row.intminutes<=0 %]
 <img src="themes/[% theme %]/icon/16x16/status/dialog-warning.png">
 [% END %]
 </td>
