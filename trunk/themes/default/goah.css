@@ -278,7 +278,8 @@ input.number_small {
 	text-align: right;
 	width: 52px;
 	font-size: 0.9em;
-	background-color: #dae8f1;
+	/*background-color: #dae8f1;*/
+	background-color: #e7f1f3;
 	padding-top: 2px;
 	padding-bottom: 2px;
 	border: 1px solid #707070;
