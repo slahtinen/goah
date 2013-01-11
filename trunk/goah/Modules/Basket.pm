@@ -649,7 +649,7 @@ sub WriteRecurringBasket {
 #
 # Returns:
 #
-#   Success - Pointer to Class::DBI results
+#   Success - Pointer to hash array containing retrieved data
 #   Fail - 0 
 #
 sub ReadBaskets {
@@ -765,7 +765,7 @@ sub ReadBaskets {
 			}
 		}
 
-		$br=ReadBasketrows($b->id);
+		$br=ReadBasketrows($b->id,'',1);
 		unless($br) {
 			goah::Modules->AddMessage('error',__("Couldn't read basket's rows with basket id ").$b->id."!",__FILE__,__LINE__);
 			return 0;
@@ -776,12 +776,12 @@ sub ReadBaskets {
 
 		$total+=$basketrows{-1}{'baskettotal'};
 		$totalvat+=$basketrows{-1}{'baskettotal_vat'};
-		$baskets{-1}{$state}{'total'}+=$basketrows{-1}{'baskettotal'};
-		$baskets{-1}{$state}{'totalvat'}+=$basketrows{-1}{'baskettotal_vat'};
+		$baskets{-1}{$state}{'total'}=goah::GoaH->FormatCurrencyNopref($baskets{-1}{$state}{'total'}+$basketrows{-1}{'baskettotal'},0,0,'out',0);
+		$baskets{-1}{$state}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($baskets{-1}{$state}{'totalvat'}+$basketrows{-1}{'baskettotal_vat'},0,0,'out',1);
 
 		if($groupstates) {
-			$baskets{$state}{$i}{'total'}=$basketrows{-1}{'baskettotal'};
-			$baskets{$state}{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
+			$baskets{$state}{$i}{'total'}=goah::GoaH->FormatCurrencyNopref($basketrows{-1}{'baskettotal'},0,0,'out',0);
+			$baskets{$state}{$i}{'total_vat'}=goah::GoaH->FormatCurrencyNopref($basketrows{-1}{'baskettotal_vat'},0,0,'out',1);
 			$baskets{$state}{$i}{'rows'}=scalar(@rows);
 			$baskets{$state}{$i}{'rows'}--; # This since @rows has index -1 which contains sums from rows
 
@@ -793,13 +793,13 @@ sub ReadBaskets {
 			# Check if we're reading individual basket or do we need additional 
 			# counter included
 			if($_[0] || length($_[0])) {
-				$baskets{'total'}=$basketrows{-1}{'baskettotal'};
-				$baskets{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
+				$baskets{'total'}=goah::GoaH->FormatCurrencyNopref($basketrows{-1}{'baskettotal'},0,0,'out',0);
+				$baskets{'total_vat'}=goah::GoaH->FormatCurrencyNopref($basketrows{-1}{'baskettotal_vat'},0,0,'out',1);
 				$baskets{'rows'}=scalar(@rows);
 				$baskets{'rows'}--;
 			} else {
-				$baskets{$i}{'total'}=$basketrows{-1}{'baskettotal'};
-				$baskets{$i}{'total_vat'}=$basketrows{-1}{'baskettotal_vat'};
+				$baskets{$i}{'total'}=goah::GoaH->FormatCurrencyNopref($basketrows{-1}{'baskettotal'},0,0,'out',0);
+				$baskets{$i}{'total_vat'}=goah::GoaH->FormatCurrencyNopref($basketrows{-1}{'baskettotal_vat'},0,0,'out',1);
 				$baskets{$i}{'rows'}=scalar(@rows);
 				$baskets{$i}{'rows'}--;
 			}
@@ -819,7 +819,7 @@ sub ReadBaskets {
 				$headingtotalvat=0 unless($headingtotalvat);
 
 				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
-				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',0);
+				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',1);
 				$baskets{$i}{'repeat'}=$b->repeat;
 				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
 				
@@ -834,7 +834,7 @@ sub ReadBaskets {
 	$totalvat=0 unless($totalvat);
 
 	$baskets{-1}{'total'}=goah::GoaH->FormatCurrencyNopref($total,0,0,'out',0);
-	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',0);
+	$baskets{-1}{'totalvat'}=goah::GoaH->FormatCurrencyNopref($totalvat,0,0,'out',1);
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
 	unless($_[0] || !$_[0] eq '') {
@@ -1534,7 +1534,6 @@ sub ReadBasketrows {
 				}
 
 				if($field eq 'purchase' || $field eq 'sell') {
-					unless($_[2]) {
 						if($_[1] && $_[1]==-1) {
 							$rowdata{$i}{$field} = goah::GoaH->FormatCurrencyNopref($row->$field,0,0,'in',0);
 							$rowdata{$i}{'vatvalue'} = $vat{'value'};
@@ -1544,25 +1543,33 @@ sub ReadBasketrows {
 							if($field eq 'purchase') {
 								my $tmppurchase=0;
 								$tmppurchase=$row->purchase if ($row->purchase);
-								$rowdata{$i}{'purchase'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$vat{'value'},0,'out',0);
-								$rowdata{$i}{'purchase_vat'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$vat{'value'},0,'out',1);
+								unless($_[2]) {
+									$rowdata{$i}{'purchase'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$vat{'value'},0,'out',0);
+									$rowdata{$i}{'purchase_vat'}=goah::GoaH->FormatCurrencyNopref($tmppurchase,$vat{'value'},0,'out',1);
+								} else {
+									$rowdata{$i}{'purchase'}=$tmppurchase;
+									$rowdata{$i}{'purchase_vat'}=$tmppurchase*(1+($vat{'value'}/100));
+								}
 							} elsif ( $field eq 'sell' ) {
 								my $tmpsell=0;
 								$tmpsell=$row->sell if ($row->sell);
-								$rowdata{$i}{'sell'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$vat{'value'},0,'out',0);
-								$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$vat{'value'},0,'out',1);
+								unless($_[2]) {
+									$rowdata{$i}{'sell'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$vat{'value'},0,'out',0);
+									$rowdata{$i}{'sell_vat'}=goah::GoaH->FormatCurrencyNopref($tmpsell,$vat{'value'},0,'out',1);
+								} else {
+									$rowdata{$i}{'sell'}=$tmpsell;
+									$rowdata{$i}{'sell_vat'}=$tmpsell*(1+($vat{'value'}/100));
+								}
 							} else {
+								# This code should never run
 								my $tmpfield=0;
 								$tmpfield=$row->$field if ($row->$field);
 								$rowdata{$i}{$field} = goah::GoaH->FormatCurrency($tmpfield,$vat{'value'},$uid,'out',$settref);
 							}
 							$rowdata{$i}{'vat'} = $vat{'item'};
 							$rowdata{$i}{'vatvalue'} = $vat{'value'};
-							
+						
 						}
-					} else {
-						$rowdata{$i}{$field}=$row->$field;
-					}
 				} else {
 					$rowdata{$i}{$field} = $row->$field;
 				}
@@ -1573,11 +1580,11 @@ sub ReadBasketrows {
 			unless($_[2]) {
 				my $tmpsell=0;
 				$tmpsell=$rowdata{$i}{'sell'} if ($rowdata{$i}{'sell'});
-				$rowdata{$i}{'total'} = goah::GoaH->FormatCurrencyNopref( ($tmpsell*$rowdata{$i}{'amount'}),0,'out',0);
+				$rowdata{$i}{'total'} = goah::GoaH->FormatCurrencyNopref(($tmpsell*$rowdata{$i}{'amount'}),0,0,'out',0);
 
 				$tmpsell=0;
 				$tmpsell=$rowdata{$i}{'sell_vat'} if ($rowdata{$i}{'sell_vat'});
-				$rowdata{$i}{'total_vat'} = goah::GoaH->FormatCurrencyNopref( ($tmpsell*$rowdata{$i}{'amount'}),0,'out',0);
+				$rowdata{$i}{'total_vat'} = goah::GoaH->FormatCurrencyNopref( ($tmpsell*$rowdata{$i}{'amount'}),0,0,'out',1);
 			} else {
 				$rowdata{$i}{'total'} = $rowdata{$i}{'sell'}*$rowdata{$i}{'amount'};
 				$rowdata{$i}{'total_vat'} = $rowdata{$i}{'sell_vat'}*$rowdata{$i}{'amount'};
@@ -1590,7 +1597,10 @@ sub ReadBasketrows {
 		}
 		unless($_[2]) {
 			$rowdata{-1}{'baskettotal'} = goah::GoaH->FormatCurrencyNopref($baskettotal,0,'out',0);
-			$rowdata{-1}{'baskettotal_vat'} = goah::GoaH->FormatCurrencyNopref($baskettotal_vat,0,'out',0);
+			$rowdata{-1}{'baskettotal_vat'} = goah::GoaH->FormatCurrencyNopref($baskettotal_vat,0,'out',1);
+		} else {
+			$rowdata{-1}{'baskettotal'}=$baskettotal;
+			$rowdata{-1}{'baskettotal_vat'}=$baskettotal_vat;
 		}
 		return \%rowdata;
 	} else {

@@ -744,7 +744,7 @@ sub ReadInvoices {
 
 
 		$invoices{'total'}{'vat0'}=goah::GoaH->FormatCurrencyNopref($totalsum{'vat0'},0,0,'out',0,$pdf);
-		$invoices{'total'}{'inclvat'}=goah::GoaH->FormatCurrencyNopref($totalsum{'inclvat'},0,0,'out',0,$pdf);
+		$invoices{'total'}{'inclvat'}=goah::GoaH->FormatCurrencyNopref($totalsum{'inclvat'},0,0,'out',1,$pdf);
 		$invoices{'total'}{'vat'}=goah::GoaH->FormatCurrencyNopref($totalsum{'vat'},0,0,'out',0,$pdf);
 		return \%invoices;
 	} else {
@@ -958,7 +958,7 @@ sub ReadInvoiceTotal {
 	}
 
 	$total{'vat0'}=goah::GoaH->FormatCurrencyNopref($total{'vat0'},0,0,'out',0,2);
-	$total{'inclvat'}=goah::GoaH->FormatCurrencyNopref($total{'inclvat'},0,0,'out',0,2);
+	$total{'inclvat'}=goah::GoaH->FormatCurrencyNopref($total{'inclvat'},0,0,'out',1,2);
 	$total{'vat'}=goah::GoaH->FormatCurrencyNopref($total{'vat'},0,0,'out',0,2);
 
 	return \%total;

@@ -153,27 +153,14 @@ sub FormatCurrency {
 	if($_[3] && $_[3] eq 'in') {
 		$ret = sprintf("%.05f",($_[0]/$vat) );
 	} else {
-		my $format = "%.02f";
+
+		my $format = "%.03f";
+		$format=".02f" if($vat!=1);
 		
-		my $decimals=$_[0];
-		$decimals=$decimals*$vat;
-
-		unless($decimals=~/\./) {
-			$decimals=0;
-		} else {
-			$decimals=~s/\d+\.+\d?\d?//;
-		}
-
-		if($decimals gt 0) {
-			##goah::Modules->AddMessage('debug',$_[0]."*$vat= $decimals greater than 0, adding decimals",__FILE__,__LINE__);
-			$format="%.03f";
-		}
-
 		# Override decimals from parameter
 		if($_[5]) {
 			$format="%.0".$_[5]."f";
 		}
-
 
 		# Ignoring user settings atleast temporarily, since
 		# they don't apply everywhere it kind of makes the whole 
@@ -211,9 +198,16 @@ sub FormatCurrencyNopref {
 
 	unless ($_[0]) { 
 		if(length($_[0])>0) {
-			return "0.00";
+			if($_[3] && $_[3] eq 'out') {
+				if($_[4] && $_[4]==1) {
+					return "0.00";
+				} else {
+					return "0.000";
+				}
+			}
+			return "0";
 		}
-		goah::Modules->AddMessage('error',__('No number to reformat at all.'),__FILE__,__LINE__);
+		goah::Modules->AddMessage('error',__('No number to reformat at all.'),__FILE__,__LINE__,caller());
 		return 0;
 	}
 
@@ -247,33 +241,22 @@ sub FormatCurrencyNopref {
 	if($_[3] && $_[3] eq 'in') {
 		$ret = sprintf("%.05f",($_[0]/$vat));
 	} else {
-		my $format = "%.02f";
-
-		my $decimals=$_[0];
-		$decimals=$decimals*$vat if($_[4] && $_[4] == 1);
-
-		# Prevent an number without digits to match
-		unless($decimals=~/\./) {
-			$decimals=0;
+		my $format;
+		my $sum;
+		if($_[4] && $_[4]==1) {
+			$format = "%.02f";
+			$sum = $_[0]*$vat;
+			#goah::Modules->AddMessage('debug',"Returning $ret from ".$_[0]*$vat,__FILE__,__LINE__);
 		} else {
-			$decimals=~s/\d+\.+\d?\d?//;
+			$format = "%.03f";
+			$sum = $_[0];
+			#goah::Modules->AddMessage('debug',"Number $ret passed trough",__FILE__,__LINE__,caller());
 		}
-
-		if($decimals gt 0) {
-			##goah::Modules->AddMessage('debug',"$sum, $decimals greater than 0, adding decimals",__FILE__,__LINE__);
-			$format="%.03f";
-		}
-
-		# Override automated decimal count from parameter
 		if($_[5]) {
-			$format="%.0".$_[5]."f";
+			$format = "%.0".$_[5]."f";
 		}
 
-		if($_[4] && $_[4] == 1) {
-			$ret = sprintf($format,($_[0]*$vat) );
-		} else {
-			$ret = sprintf($format,$_[0]);
-		}
+		$ret=sprintf($format,$sum);
 	}
 
 	return $ret;
