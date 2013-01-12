@@ -910,14 +910,18 @@ sub UpdateHoursFromBasket {
 	}
 
 
-	if($_[1]>$datap->hours) {
+	$datap->orighours($datap->hours) unless($datap->orighours);
+	$datap->originthours($datap->inthours) unless($datap->originthours);
+	
+
+	if($_[1]>$datap->orighours) {
 
 		$datap->hours($_[1]);
 
-	} elsif($_[1]<$datap->hours) {
+	} elsif($_[1]<$datap->orighours) {
 		
-		my $sep=$datap->hours-$_[1];
-		my $inthours=$datap->inthours;
+		my $sep=$datap->orighours-$_[1];
+		my $inthours=$datap->originthours;
 		$inthours+=$sep;
 		
 		$datap->hours($_[1]);
