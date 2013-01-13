@@ -777,7 +777,7 @@ sub ReadBaskets {
 				$baskets{$state}{$i}{$f}=$b->$f;
 				$baskets{$state}{'name'}=$statename;
 
-				$sorthash{$state}{$cname.".".$i}=$i unless ($b->state eq 2);
+				$sorthash{$state}{$cname.".".$i}=$i;
 			} else {
 				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
@@ -789,7 +789,8 @@ sub ReadBaskets {
 					$baskets{$f}=$b->$f;
 				} else {
 					$baskets{$i}{$f}=$b->$f;
-					$sorthash{$cname.".".$i}=$i unless ($b->state eq 2);
+					#$sorthash{$cname.".".$i}=$i unless ($b->state eq 2);
+					$sorthash{$cname.".".$i}=$i;
 				}
 			}
 		}
