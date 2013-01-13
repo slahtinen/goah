@@ -3,6 +3,7 @@
 <table>
 <thead>
 <tr>
+<th>ID</th>
 <th>[% gettext("Code") %] / [% gettext("Product") %]</th>
 <th>[% gettext("In stor.") %]</th>
 <th class="center" colspan='2'>[% gettext("IN") %] [% gettext("VAT 0%") %] / [% gettext("Inc. VAT") %]</th>
@@ -37,6 +38,7 @@
 	<input type='hidden' name='target' value='[% row.basketid %]'/>
 	<input type='hidden' name='activebasket' value="[% activebasket %]"/>
 	<input type='hidden' name='productid' value="[% row.productid %]"/>
+	<td>[% row.id %]</td>
 	<td>[% prodinfo.code %]<br/>
 	[% prodinfo.name %]</td>
 	<td class="center">

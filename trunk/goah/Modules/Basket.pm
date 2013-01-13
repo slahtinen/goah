@@ -67,6 +67,22 @@ my %basketrowdbfields = (
 		7 => { field => 'remoteid', name => 'remoteid', type => 'hidden', required => '0', hidden => 1 }
 	);
 
+
+# 
+# Hash: baskethistoryfields
+#
+#  Database field definitions for basket history
+#
+my %baskethistorydbfields = (
+		0 => { field => 'id', name => 'id', required => 0 },
+		1 => { field => 'basketid', name => 'basketid', required => 1 },
+		2 => { field => 'rowid', name => 'rowid', required => 0 },
+		3 => { field => 'time', name => 'time', required => 1 },
+		4 => { field => 'uid', name => 'uid', required => 0 },
+		5 => { field => 'action', name => 'action', required => 1 },
+		6 => { field => 'info', name => 'info', required => 1 },
+	);
+
 #
 # Hash: submenu
 #
@@ -188,6 +204,7 @@ sub Start {
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
+				$variables{'baskethistory'} = ReadHistoryEvents($tmpd{'id'});
 
 				# Search selected basket files
 				use goah::Modules::Files;
@@ -245,6 +262,7 @@ sub Start {
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				$variables{'baskethistory'} = ReadHistoryEvents($tmpd{'id'});
 
 		} elsif($q->param('action') eq 'showbasket') {
 
@@ -254,6 +272,7 @@ sub Start {
 				$variables{'function'} = 'modules/Basket/basketinfo';
 				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
 				$variables{'activebasket'} = '0';
+				$variables{'baskethistory'} = ReadHistoryEvents($q->param('target'));
 
 		} elsif($q->param('action') eq 'editcustomerinfo') {
 
@@ -271,15 +290,16 @@ sub Start {
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'basketrows'} = ReadBasketrows($q->param('id'));
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				$variables{'baskethistory'} = ReadHistoryEvents($q->param('id'));
 
 		} elsif($q->param('action') eq 'addtobasket') {
 
 				my $returnvalue;
 
-				if($q->param('subaction') eq 'ean') {
+				if($q->param('subaction') && $q->param('subaction') eq 'ean') {
 					goah::Modules->AddMessage('debug',"Add to basket via EAN",__FILE__,__LINE__);
 					$returnvalue = AddToBasket($q->param('barcode'),$q->param('subaction'));
-				} elsif($q->param('subaction') eq 'productcode') {
+				} elsif($q->param('subaction') && $q->param('subaction') eq 'productcode') {
 					goah::Modules->AddMessage('debug',"Add to basket via product code",__FILE__,__LINE__);
 					$returnvalue = AddToBasket($q->param('code'),$q->param('subaction'));
 				} else {
@@ -301,6 +321,7 @@ sub Start {
 				$variables{'activebasket'} = $q->param('basketid');
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
+				$variables{'baskethistory'} = ReadHistoryEvents($q->param('basketid'));
 
 		} elsif($q->param('action') eq 'editrow') {
 
@@ -320,6 +341,7 @@ sub Start {
 				$variables{'activebasket'} = $q->param('activebasket');
 
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				$variables{'baskethistory'} = ReadHistoryEvents($q->param('target'));
 
 				if($q->param('activebasket') == '0') {
 					$variables{'function'} = 'modules/Basket/basketinfo';
@@ -464,6 +486,12 @@ sub WriteNewBasket {
 	$data{'ownerid'} = $_[0];
 
 	my $basket = $db->insert(\%data);
+
+	# Write history event for basket
+	if(AddHistoryEvent($basket->id,'',$uid,'Created','Basket created')) {
+		goah::Modules->AddMessage('warn',__("Couldn't add history event for basket creation!"),__FILE__,__LINE__,caller());
+	}
+
 	return $basket->id;
 }
 
@@ -553,7 +581,7 @@ sub WriteRecurringBasket {
 	$year+=1900;
 
 	$mon+=$repeat;
-	if($mon>12) {
+	while($mon>12) {
 		$year++;
 		$mon-=12;
 	}
@@ -631,6 +659,9 @@ sub WriteRecurringBasket {
 		$rdb->insert(\%rowdata);
 	}
 	$rbasket->update;
+
+	AddHistoryEvent($basket->id,'','','Created Recurring','Basket created from recurring baskets');
+
 	return 1;
 }
 
@@ -698,8 +729,6 @@ sub ReadBaskets {
 	}
 
 	my $datap=goah::Db::Baskets::Manager->get_baskets(\%search,sort_by => $sort);
-
-	#@data = $db->search_where(\%search, { order_by => $sort });
 
 	unless($datap) {
 		goah::Modules->AddMessage('warn',__("No baskets found!"));
@@ -838,7 +867,7 @@ sub ReadBaskets {
 	$baskets{-1}{'vat'}=goah::GoaH->FormatCurrencyNopref( ($totalvat-$total) ,0,0,'out',0);
 
 	unless($_[0] || !$_[0] eq '') {
-		# Sort baskets hash by customer names, unless we're reading recurring baskets
+		# Sort baskets hash by customer names
 		$i=1000000;
 		my %sortedbaskets;
 		if($groupstates) {
@@ -1018,7 +1047,11 @@ sub UpdateBasket {
 	# Finally update basket modified -timestamp
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 	$data->set('updated' =>sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
+
+	AddHistoryEvent($data->id,'',$uid,'Updated','Updated basket information');
+
 	$data->update();
+
 	return 0;
 }
 
@@ -1153,7 +1186,7 @@ sub UpdateBasketRow {
 				}
 				$rowinfo->set($fieldinfo{'field'} => $amount);
 
-				unless($rowinfo->remoteid eq '') {
+				unless($rowinfo->remoteid eq '' || $rowinfo->remoteid=~/-1$/) {
 					goah::Modules->AddMessage('debug',"Updating remote amount",__FILE__,__LINE__);
 					# If we have an remote id update remote values accordingly.
 					# Currently this applies only to tracked hours
@@ -1195,6 +1228,9 @@ sub UpdateBasketRow {
 	my $data = goah::Database::Baskets->retrieve($q->param('target'));
 	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
 	$data->set('updated' =>sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
+
+	AddHistoryEvent($data->id,$rowinfo->id,$uid,'Updated row',"Updated basket row ".$rowinfo->code." amount ".$rowinfo->amount);
+
 	$data->update();
 
 	return 0;
@@ -1395,6 +1431,7 @@ sub AddToBasket {
 	$bdata->set('updated' =>sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
 	$bdata->update();
 	$bdata->commit;
+
 	return 0;
 
 }
@@ -1454,8 +1491,11 @@ sub AddProductToBasket {
 	$data{'name'} = $prod{'name'};
 	$data{'remoteid'}=$_[7];
 
-	use goah::Database::Basketrows;
-	goah::Database::Basketrows->insert(\%data);
+	use goah::Db::Basketrows;
+	my $db = goah::Db::Basketrows->new(%data);
+	$db->save;
+
+	AddHistoryEvent($data{'basketid'},$db->id,$uid,'Add product',"Added product ".$data{'code'}." amount ".$data{'amount'});
 
 	return 1;
 }
@@ -1699,12 +1739,31 @@ sub DeleteBasket {
 		return 0;
 	}
 
-	use goah::Database::Basketrows;
-	my @basketrows = goah::Database::Basketrows->search_where({ basketid => $_[0]});
 
-	foreach(@basketrows) {
-		$_->delete;
+	# Remove rows from basket
+	use goah::Db::Basketrows::Manager;
+	my $rowsp=goah::Db::Basketrows::Manager->get_basketrows({ basketid => $_[0]});
+
+	if($rowsp) {
+		my @basketrows=@$rowsp;
+
+		foreach(@basketrows) {
+			$_->delete;
+		}
+	} 
+
+
+	# Remove history from basket
+	use goah::Db::Baskethistory::Manager;
+	my $historyp = goah::Db::Baskethistory::Manager->get_baskethistory({ basketid => $_[0]});
+
+	if($historyp) {
+		my @history=@$historyp;
+		foreach(@history) {
+			$_->delete;
+		}
 	}
+
 
 	my $basket = goah::Database::Baskets->retrieve($_[0]);
 	$basket->delete;
@@ -1873,5 +1932,145 @@ sub BasketToInvoice {
 	return 1;
 
 }
+
+
+
+#
+# Function: AddHistoryEvent
+#
+#   Function to add history event for individual basket
+#
+# Parameters:
+#
+#   Basketid - Database id for basket
+#   rowid - Database id for basket row
+#   uid - User ID
+#   action - Short explanation for event (add, update, remove etc)
+#   info - Long explanation for event
+#
+# Returns:
+#   
+#   0 - Success
+#   1 - Error
+#
+sub AddHistoryEvent {
+
+	shift if($_[0]=~/goah::Modules::Basket/);
+
+	my $basketid=$_[0];
+	my $rowid=$_[1];
+	my $uid=$_[2];
+	my $action=$_[3];
+	my $info=$_[4];
+
+	unless($basketid) {
+		goah::Modules->AddMessage('error',__("Basket id missing! Can't add new history event to basket!"),__FILE__,__LINE__,caller());
+		return 1;
+	}
+
+	unless($action && $info) {
+		goah::Modules->AddMessage('error',__("Action or information missing! Can't add new history event to basket!"),__FILE__,__LINE__,caller());
+		return 1;
+	}
+
+	use goah::Db::Baskethistory;
+	use POSIX qw(strftime);
+
+	my %data;
+
+	$data{'basketid'}=$basketid;
+	$data{'time'}=strftime("%Y-%m-%d %H:%M:%S",(localtime(time)));
+	$data{'action'}=$action;
+	$data{'info'}=$info;
+
+	$data{'rowid'}=$rowid if($rowid);
+	$data{'uid'}=$uid if($uid);
+
+
+	my $item = goah::Db::Baskethistory->new(%data);
+
+	return 0 if($item->save);
+
+	goah::Modules->AddMessage('error',__("Couldn't add new history event to database!"),__FILE__,__LINE__,caller());
+	return 1;
+
+}
+
+
+# Function: ReadHistoryEvents
+#
+#   Function to read history events for individual basket
+#
+# Parameters:
+#
+#   id - Basket id which history to read
+#
+# Returns:
+#
+#   Fail - 0
+#   Success - Hash reference to found events
+#
+sub ReadHistoryEvents {
+
+	shift if($_[0]=~/goah::Modules::Basket/);
+
+	unless($_[0] && $_[0]=~/([0-9]+)/) {
+		goah::Modules->AddMessage('error',__("No database id for history events search! Aborting!"),__FILE__,__LINE__,caller());
+		return 0;
+	}
+
+	use goah::Db::Baskethistory::Manager;
+	my $datap=goah::Db::Baskethistory::Manager->get_baskethistory({ basketid => $_[0]}, sort_by => 'time');
+
+	unless($datap) {
+		goah::Modules->AddMessage('error',__("Couldn't search history events for basket! Aborting!"),__FILE__,__LINE__,caller());
+		return 0;
+	}
+
+	use goah::Modules::Customermanagement;
+	
+	my @data=@$datap;
+	my $i=1000000;
+	my %history;
+	foreach my $row (@data) {
+
+		$i++;
+
+		foreach my $k (keys %baskethistorydbfields) {
+
+			my %field = %{$baskethistorydbfields{$k}};
+			my $fname=$field{'field'};
+			
+			if($fname eq 'uid') {
+
+				$history{$i}{$fname}='';
+				if($row->$fname) {
+					my $person = goah::Modules::Customermanagement->ReadPersondata($row->$fname);
+
+					unless($person) {
+						goah::Modules->AddMessage('warn',__("Couldn't read person information with id ").$row->$fname,__FILE__,__LINE__);
+					} else {
+						$history{$i}{'realname'}=$person->lastname." ".$person->firstname;
+						$history{$i}{$fname}=$person->id;
+					}
+				}
+
+			} elsif ($fname eq 'time') {
+
+				$history{$i}{$fname}=goah::GoaH->FormatDate($row->$fname);
+
+			} else {
+
+				$history{$i}{$fname}=$row->$fname;
+
+			}
+		}
+
+
+	}
+
+	return \%history;
+}
+
 
 1;

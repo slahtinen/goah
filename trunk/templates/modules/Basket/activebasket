@@ -294,3 +294,24 @@
 </tbody>
 </table>
 
+[% IF baskethistory.size %]
+<h3>[% gettext("Basket history") %]</h3>
+<table>
+<thead>
+<tr><th>[% gettext("Time") %]</th><th>[% gettext("User") %]</th><th>[% gettext("Basket row id") %]</th>
+<th>[% gettext("Action") %]</th><th>[% gettext("Info") %]</th></tr>
+</thead>
+<tbody>
+[% FOREACH hkey IN baskethistory.keys.sort %]
+[% hrow=baskethistory.$hkey %]
+<tr>
+<td>[% hrow.time %]</td>
+<td>[% hrow.realname %]</td>
+<td>[% hrow.rowid %]</td>
+<td>[% hrow.action %]</td>
+<td>[% hrow.info %]</td>
+</tr>
+[% END %]
+</tbody>
+</table>
+[% END %]
