@@ -1506,8 +1506,8 @@ sub AddToBasket {
 					%vat=%$vatp;
 				}
 
-				$purchase=goah::GoaH->FormatCurrency($product{'purchase'},$vat{'value'},$uid,'out',$settref);;
-				$sell=goah::GoaH->FormatCurrency($product{'sell'},$vat{'value'},$uid,'out',$settref);
+				$purchase=goah::GoaH->FormatCurrencyNopref($product{'purchase'},$vat{'value'},0,'out',1,5);
+				$sell=goah::GoaH->FormatCurrencyNopref($product{'sell'},$vat{'value'},0,'out',1,5);
 				$amount=$hours{'hours'};
 				$desc=$hours{'day'}.' '.$hours{'username'}.': '.$hours{'description'};
 
