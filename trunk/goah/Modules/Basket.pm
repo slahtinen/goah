@@ -1300,14 +1300,15 @@ sub UpdateBasketRow {
 
 
 		# Check if we're handling numeral field
-		if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell' || $fieldinfo{'field'} eq 'amount') {
-			my $rowsum=sprintf("%.03f",$rowinfo->get($fieldinfo{'field'}));
-			my $fieldsum=sprintf("%.03f",$rdata{$fieldinfo{'field'}});
-			if($rowsum-$fieldsum==0) {
-				# Sum hasn't changed, don't do anything
-				next;
-			}
-		} elsif($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) {
+		#if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell' || $fieldinfo{'field'} eq 'amount') {
+		#	my $rowsum=sprintf("%.03f",$rowinfo->get($fieldinfo{'field'}));
+		#	my $fieldsum=sprintf("%.03f",$rdata{$fieldinfo{'field'}});
+		#	if($rowsum-$fieldsum==0) {
+		#		# Sum hasn't changed, don't do anything
+		#		next;
+		#	}
+		#} elsif($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) {
+		if($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) {
 			#goah::Modules->AddMessage('debug',"SKIP ".$fieldinfo{'field'}.": ".$rowinfo->get($fieldinfo{'field'})." == ".$rdata{$fieldinfo{'field'}},__FILE__,__LINE__);
 			# Value hasn't changed so don't do any changes
 			next;
@@ -1347,6 +1348,7 @@ sub UpdateBasketRow {
 	
 				unless($purchase eq 'na') {
 					$rowinfo->set('purchase' => $purchase);
+					$update=0;
 				}
 
 			} elsif($fieldinfo{'field'} eq 'sell') {
@@ -1373,6 +1375,7 @@ sub UpdateBasketRow {
 
 				unless($sell eq 'na') {
 					$rowinfo->set('sell' => $sell);
+					$update=0;
 				}
 
 			} elsif($fieldinfo{'field'} eq 'amount') {
