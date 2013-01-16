@@ -349,6 +349,31 @@ sub Start {
 					$variables{'function'} = 'modules/Basket/activebasket';
 				}
 
+		} elsif($q->param('action') eq 'editrows') {
+
+				my @rows=$q->param('selrows');
+				goah::Modules->AddMessage('debug',"Editing rows @rows",__FILE__,__LINE__);
+
+				if(ChangeBasketRows()) {
+					goah::Modules->AddMessage('info',__("Row data updated"),__FILE__,__LINE__);
+				} else {
+					goah::Modules->AddMessage('error',__("couldn't update row data!"),__FILE__,__LINE__);
+				}
+
+				my $tmpdata=ReadBaskets($q->param('target'));
+				my %tmpd=%$tmpdata;
+				$variables{'basketdata'} = $tmpdata;
+				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
+				$variables{'activebasket'} = $q->param('activebasket');
+				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
+				$variables{'baskethistory'} = ReadHistoryEvents($q->param('target'));
+
+				if($q->param('activebasket') == '0') {
+					$variables{'function'} = 'modules/Basket/basketinfo';
+				} else {
+					$variables{'function'} = 'modules/Basket/activebasket';
+				}
+
 		} elsif($q->param('action') eq 'deletebasket') {
 
 				if(DeleteBasket($q->param('target')) == 1) {
@@ -1056,17 +1081,176 @@ sub UpdateBasket {
 	return 0;
 }
 
+
+#
+# Function: ChangeBasketRows
+#
+#   Function to update multiple basket rows via single form
+#   upload. This function works as an wrapper for all the other
+#   functions, so that there's no need to read HTTP-variables
+#   from multiple locations
+#
+# Parameters:
+#
+#  None, uses HTTP-variables
+#
+# Returns:
+#
+#  Success - 1 
+#  Fail - 0 
+#
+sub ChangeBasketRows {
+
+	shift if($_[0]=~/goah::Modules::Basket/);
+
+	my $q = CGI->new();
+
+	
+	# Function works in two different states,
+	# one is that we're removing selected rows
+	# and another is that we're updating all
+	# the rows available
+	
+	# Update all the rows available
+	if($q->param('update')) {
+
+		my @rows=$q->param('allrows');
+		goah::Modules->AddMessage('debug',"Updating rows @rows",__FILE__,__LINE__);
+
+
+		# First, we'll build an hash containing all
+		# the rows and then we'll go trough the hash
+		# and update rows individually
+		my %rowsdata;
+		my @allparams=$q->param;
+		
+		foreach my $p (@allparams) {
+
+			if($p=~/^([0-9]+_)/) {
+
+				my $id=$1;
+				$id=~s/_$//;
+
+				my $val=$p;
+				$val=~s/^([0-9]+_)(.*)$/$2/;
+
+				#goah::Modules->AddMessage('debug',"Got row ".$id." variable ".$val,__FILE__,__LINE__);
+
+				$rowsdata{$id}{$val}=$q->param($p) if($q->param($p));
+			}
+
+		}
+
+		my $success=1;
+		foreach my $id (keys (%rowsdata)) {
+			
+			if(UpdateBasketRow($rowsdata{$id})) {
+				goah::Modules->AddMessage('debug',"Row $id updated successfully",__FILE__,__LINE__);
+			} else {
+				$success=0;
+				goah::Modules->AddMessage('error',__("Couldn't update basket row with id ").$id,__FILE__,__LINE__);
+			}
+		}
+
+		return 1 if($success);
+		return 0;
+
+
+	} else {
+
+		if($q->param('delete') || $q->param('deleteandreturn')) {
+
+			# Assemble an hash similar than with all rows, but include
+			# only rows which are selected
+
+			my @selrows=$q->param('selrows');
+			my $return=0;
+
+			$return=1 if($q->param('deleteandreturn'));
+
+			my $success=1;
+			foreach (@selrows) {
+				
+				if(DeleteBasketRow($_,$return)) {
+					goah::Modules->AddMessage('debug',"Row $_ deleted from basket",__FILE__,__LINE__);
+				} else {
+					goah::Modules->AddMessage('error',__("Couldn't remove row from basket!"),__FILE__,__LINE__);
+					$success=0;
+				}
+			}
+
+			return 1 if($success);
+			return 0;
+		}
+	}
+
+	# This shouldn't ever run
+	return 0;
+
+}
+
+
+#
+# Function: DeleteBasketRow
+#
+#   Delete an row from basket
+#
+# Parameters:
+#
+#   id - Row id to delete
+#   return - If set return remote imports
+#
+# Returns:
+#
+#   Fail - 0
+#   Success - 1
+#
+sub DeleteBasketRow {
+
+	shift if($_[0]=~/goah::Modules::Basket/);
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("Couldn't delete basket row, id is missing!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	use goah::Db::Basketrows;
+	my $rdata=goah::Db::Basketrows->new(id => $_[0]);
+
+	unless($rdata->load(speculative => 1)) {
+		goah::Modules->AddMessage('error',__("Couldn't retrieve basket row from the database!")." ".__("Id not found: "),__FILE__,__LINE__);
+		return 0;
+	}
+
+	if($_[1]) {
+		unless($rdata->remoteid eq '') {
+			# If we've got an remote id remove the assignment as well. Currently
+			# this applies only to tracked hours, but this isn't too big of a deal
+			# to expand for other uses as well
+			my $remoteid=$rdata->remoteid;
+			$remoteid=~s/^.*://;
+			use goah::Modules::Tracking;
+			unless(goah::Modules::Tracking->RemoveHoursFromBasket($remoteid)) {
+				goah::Modules->AddMessage('error',__("Couldn't remove hour assignment from the basket! Won't delete row!"),__FILE__,__LINE__);
+				return 0;
+			}
+		}
+	}
+	goah::Modules->AddMessage('info',__("Row deleted from basket"));
+	return 1 if $rdata->delete;
+	return 0;
+}
+
 #
 # Function: UpdateBasketRow
 #
 #   Update values for individual basket row. Update obviously
 #   doesn't touch into referencing id values, so rows can't
-#   be moved or copied to different baskets. However deleting
-#   an row is included into functionality.
+#   be moved or copied to different baskets. 
 #
 # Parameters:
 #
-#  None, uses HTTP variables 
+#  hashref - Hash reference with data for row to be updated
 #
 # Returns:
 #
@@ -1075,62 +1259,62 @@ sub UpdateBasket {
 #
 sub UpdateBasketRow {
 
-	my $q = CGI->new();
-	unless($q->param('rowid')) {
+	shift if($_[0]=~/goah::Modules::Basket/);
+
+	unless($_[0]) {
+		goah::Modules->AddMessage('error',__("Couldn't update basket row, update data is missing!"),__FILE__,__LINE__);
+		return 0;
+	}
+
+	my %rdata=%{$_[0]};
+
+	unless($rdata{'rowid'}) {
 		goah::Modules->AddMessage('error',__('ID -field missing.')." ".__("Can't update row information in database!"));
-		return 1;
+		return 0;
 	}
 
 	use goah::Database::Basketrows;
-	my $rowinfo = goah::Database::Basketrows->retrieve($q->param('rowid')-0);
+	my $rowinfo = goah::Database::Basketrows->retrieve($rdata{'rowid'}-0);
 
-	unless($rowinfo && ($rowinfo->id eq $q->param('rowid'))) {
+	unless($rowinfo && ($rowinfo->id eq $rdata{'rowid'})) {
 		goah::Modules->AddMessage('error',__("Can't read row information from database.")." ".__("Can't update row information in database!"));
 		return 0;
 	}
 
-	if($q->param('delete') eq 'on') {
-		unless($rowinfo->remoteid eq '') {
-			# If we've got an remote id remove the assignment as well. Currently
-			# this applies only to tracked hours, but this isn't too big of a deal
-			# to expand for other uses as well
-			my $remoteid=$rowinfo->remoteid;
-			$remoteid=~s/^.*://;
-			use goah::Modules::Tracking;
-			unless(goah::Modules::Tracking->RemoveHoursFromBasket($remoteid)) {
-				goah::Modules->AddMessage('error',__("Couldn't remove hour assignment from the basket! Won't delete row!"),__FILE__,__LINE__);
-				return 1;
-			}
-		}
-		goah::Modules->AddMessage('info',__("Row deleted from basket"));
-		$rowinfo->delete;
-		return 0;
-	}
 
 	my $prodinfo = goah::Modules::Productmanagement->ReadData('products',$rowinfo->productid,$uid);
 	my %prod = %$prodinfo;
 
 	my %fieldinfo;
+	my $update=0;
 	while(my($key,$value)= each (%basketrowdbfields)) {
 		%fieldinfo = %$value;
-		if($fieldinfo{'field'} eq 'productid' || $fieldinfo{'field'} eq 'basketid' || $fieldinfo{'id'} eq 'id') {
+		if($fieldinfo{'field'} eq 'productid' || $fieldinfo{'field'} eq 'basketid' || $fieldinfo{'id'} eq 'id' || $fieldinfo{'field'} eq 'id') {
 			next;
 		}
 
-		if($q->param($fieldinfo{'field'}) || length($q->param($fieldinfo{'field'}))>0) {
+		if( ($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) || ($rowinfo->get($fieldinfo{'field'})-$rdata{$fieldinfo{'field'}}==0) ) {
+			# Value hasn't changed so don't do any changes
+			next;
+		}
+
+		goah::Modules->AddMessage('debug',$fieldinfo{'field'}.": ".$rowinfo->get($fieldinfo{'field'})." != ".$rdata{$fieldinfo{'field'}});
+		$update=1;
+
+		if($rdata{$fieldinfo{'field'}} || length($rdata{$fieldinfo{'field'}})>0) {
 
 			if($fieldinfo{'field'} eq 'purchase') {
 			
 				my $purchase='na';
-				if($q->param('purchase_orig') ne $q->param('purchase')) {
-					$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase'),0,0,'in',0);
-				} elsif($q->param('purchase_vat_orig') ne $q->param('purchase_vat')) {
+				if($rdata{'purchase_orig'} ne $rdata{'purchase'}) {
+					$purchase=goah::GoaH->FormatCurrencyNopref($rdata{'purchase'},0,0,'in',0);
+				} elsif($rdata{'purchase_vat_orig'} ne $rdata{'purchase_vat'}) {
 					my $prodpoint = goah::Modules::Productmanagement::ReadData(	'products',
-													$q->param('productid'),
+													$rdata{'productid'},
 													$uid,$settref,1);
 					if($prodpoint==0) {
 						goah::Modules->AddMessage('error',
-									__("Can't read VAT class for product id ").$q->param('productid'),
+									__("Can't read VAT class for product id ").$rdata{'productid'},
 									__FILE__,__LINE__,caller());
 
 					} else {
@@ -1142,7 +1326,7 @@ sub UpdateBasketRow {
 						} else {
 							%vat=%$vatp;
 						}
-						$purchase=goah::GoaH->FormatCurrencyNopref($q->param('purchase_vat'),$vat{'value'},0,'in',0);
+						$purchase=goah::GoaH->FormatCurrencyNopref($rdata{'purchase_vat'},$vat{'value'},0,'in',0);
 					}
 				}
 	
@@ -1153,12 +1337,12 @@ sub UpdateBasketRow {
 			} elsif($fieldinfo{'field'} eq 'sell') {
 
 				my $sell='na';
-				if($q->param('sell_orig') ne $q->param('sell')) {
-					$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell'),0,0,'in',0);
-				} elsif($q->param('sell_vat_orig') ne $q->param('sell_vat')) {
-					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$q->param('productid'),$uid,$settref,1);
+				if($rdata{'sell_orig'} ne $rdata{'sell'}) {
+					$sell=goah::GoaH->FormatCurrencyNopref($rdata{'sell'},0,0,'in',0);
+				} elsif($rdata{'sell_vat_orig'} ne $rdata{'sell_vat'}) {
+					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$rdata{'productid'},$uid,$settref,1);
 					if($prodpoint==0) {
-						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$q->param('productid'),__FILE__,__LINE__);
+						goah::Modules->AddMessage('error',__("Can't read VAT class for product id ").$rdata{'productid'},__FILE__,__LINE__);
 					} else {
 						my %prod = %$prodpoint;
 						my $vatp=goah::Modules::Systemsettings->ReadSetup($prod{'vat'});
@@ -1168,7 +1352,7 @@ sub UpdateBasketRow {
 						} else {
 							%vat=%$vatp;
 						}
-						$sell=goah::GoaH->FormatCurrencyNopref($q->param('sell_vat'),$vat{'value'},0,'in',0);
+						$sell=goah::GoaH->FormatCurrencyNopref($rdata{'sell_vat'},$vat{'value'},0,'in',0);
 					}
 				}
 
@@ -1178,7 +1362,7 @@ sub UpdateBasketRow {
 
 			} elsif($fieldinfo{'field'} eq 'amount') {
 				# Feed validation
-				my $amount=$q->param($fieldinfo{'field'});
+				my $amount=$rdata{$fieldinfo{'field'}};
 				$amount=~s/,/./g;
 				$amount=~s/\ //;
 				unless($amount=~/^-?([0-9]+\.?[0-9]*)$/) {
@@ -1200,7 +1384,7 @@ sub UpdateBasketRow {
 				}
 
 			} else {
-				my $tmprowinfo=decode("utf-8",$q->param($fieldinfo{'field'}));
+				my $tmprowinfo=decode("utf-8",$rdata{$fieldinfo{'field'}});
 				$tmprowinfo=~s/€/&euro;/g;
 				$rowinfo->set($fieldinfo{'field'} => $tmprowinfo);
 			}
@@ -1225,16 +1409,18 @@ sub UpdateBasketRow {
 	# for the basket
 	#   TODO: This functionality could be done as an function, i.e. TouchBasket() since it's
 	#         used on various locations.
-	use goah::Database::Baskets;
-	my $data = goah::Database::Baskets->retrieve($q->param('target'));
-	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-	$data->set('updated' =>sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
+	if($update) {
+		use goah::Database::Baskets;
+		my $data = goah::Database::Baskets->retrieve($rdata{'target'});
+		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+		$data->set('updated' =>sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
 
-	AddHistoryEvent($data->id,$rowinfo->id,$uid,'Updated row',"Updated basket row ".$rowinfo->code." amount ".$rowinfo->amount);
+		AddHistoryEvent($data->id,$rowinfo->id,$uid,'Updated row',"Updated basket row ".$rowinfo->code." amount ".$rowinfo->amount);
 
-	$data->update();
+		$data->update();
+	}
 
-	return 0;
+	return 1;
 }
 
 # 
