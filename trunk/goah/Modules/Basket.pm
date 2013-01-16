@@ -1314,7 +1314,7 @@ sub UpdateBasketRow {
 			next;
 		}
 
-		goah::Modules->AddMessage('debug',$fieldinfo{'field'}.": ".$rowinfo->get($fieldinfo{'field'})." != ".$rdata{$fieldinfo{'field'}});
+		#goah::Modules->AddMessage('debug',$fieldinfo{'field'}.": ".$rowinfo->get($fieldinfo{'field'})." != ".$rdata{$fieldinfo{'field'}});
 		$update=1;
 
 		if($rdata{$fieldinfo{'field'}} || length($rdata{$fieldinfo{'field'}})>0) {
@@ -1323,8 +1323,10 @@ sub UpdateBasketRow {
 			
 				my $purchase='na';
 				if($rdata{'purchase_orig'} ne $rdata{'purchase'}) {
+					goah::Modules->AddMessage('debug',"Purchase changed! orig/new: ".$rdata{'purchase_orig'}."/".$rdata{'purchase'},__FILE__,__LINE__);
 					$purchase=goah::GoaH->FormatCurrencyNopref($rdata{'purchase'},0,0,'in',0);
 				} elsif($rdata{'purchase_vat_orig'} ne $rdata{'purchase_vat'}) {
+					goah::Modules->AddMessage('debug',"Purchase vat changed! orig/new: ".$rdata{'purchase_vat_orig'}."/".$rdata{'purchase_vat'},__FILE__,__LINE__);
 					my $prodpoint = goah::Modules::Productmanagement::ReadData(	'products',
 													$rdata{'productid'},
 													$uid,$settref,1);
@@ -1348,6 +1350,8 @@ sub UpdateBasketRow {
 	
 				unless($purchase eq 'na') {
 					$rowinfo->set('purchase' => $purchase);
+				} else {
+					goah::Modules->AddMessage("debug","Purchase price not changed, setting update to 0",__FILE__,__LINE__);
 					$update=0;
 				}
 
@@ -1375,6 +1379,8 @@ sub UpdateBasketRow {
 
 				unless($sell eq 'na') {
 					$rowinfo->set('sell' => $sell);
+				} else {
+					goah::Modules->AddMessage("debug","Sell price not changed, setting update to 0",__FILE__,__LINE__);
 					$update=0;
 				}
 
@@ -1420,7 +1426,6 @@ sub UpdateBasketRow {
 		}
 	}
 
-	$rowinfo->update();
 
 	#
 	# Finally, update last modified information 
@@ -1428,6 +1433,10 @@ sub UpdateBasketRow {
 	#   TODO: This functionality could be done as an function, i.e. TouchBasket() since it's
 	#         used on various locations.
 	if($update) {
+
+		goah::Modules->AddMessage('debug',"updating row since update=$update",__FILE__,__LINE__);
+		$rowinfo->update();
+
 		use goah::Database::Baskets;
 		my $data = goah::Database::Baskets->retrieve($rdata{'target'});
 		my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
