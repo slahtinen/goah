@@ -1289,11 +1289,23 @@ sub UpdateBasketRow {
 	my $update=0;
 	while(my($key,$value)= each (%basketrowdbfields)) {
 		%fieldinfo = %$value;
-		if($fieldinfo{'field'} eq 'productid' || $fieldinfo{'field'} eq 'basketid' || $fieldinfo{'id'} eq 'id' || $fieldinfo{'field'} eq 'id') {
-			next;
-		}
 
-		if( ($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) || ($rowinfo->get($fieldinfo{'field'})-$rdata{$fieldinfo{'field'}}==0) ) {
+		# Skip fields we won't touch since it'd break quite a lot of things if
+		# ie. row's basketid would change at this point.
+		next if(	$fieldinfo{'field'} eq 'productid' || 
+				$fieldinfo{'field'} eq 'basketid' || 
+				$fieldinfo{'id'} eq 'id' || 
+				$fieldinfo{'field'} eq 'id' ||
+				$fieldinfo{'field'} eq 'remoteid'); 
+
+
+		# Check if we're handling numeral field
+		if($fieldinfo{'field'} eq 'purchase' || $fieldinfo{'field'} eq 'sell' || $fieldinfo{'field'} eq 'amount') {
+			if($rowinfo->get($fieldinfo{'field'})-$rdata{$fieldinfo{'field'}}==0) {
+				next;
+			}
+		} elsif($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) {
+			goah::Modules->AddMessage('debug',"SKIP ".$fieldinfo{'field'}.": ".$rowinfo->get($fieldinfo{'field'})." == ".$rdata{$fieldinfo{'field'}},__FILE__,__LINE__);
 			# Value hasn't changed so don't do any changes
 			next;
 		}
