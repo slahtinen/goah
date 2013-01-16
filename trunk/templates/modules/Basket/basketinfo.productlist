@@ -99,8 +99,8 @@
 <tr class="[% rowc %]">
 <td colspan=14>
 <input type="submit" name="update" value="[% gettext("Update changes") %]" />
-<input type="submit" name="delete" value="[% gettext("Delete selected rows") %]" />
-<input type="submit" name="deleteandreturn" value="[% gettext("Delete selected rows and return imported values") %]" />
+<input type="submit" name="delete" title="[% gettext("Delete selected rows from basket") %] " value="[% gettext("Delete selected") %]" />
+<input type="submit" name="deleteandreturn" title="[% gettext("Delete selected from basket and return rows to original destination") %]" value="[% gettext("Delete and return") %]" />
 </td>
 </tr>
 </form>
