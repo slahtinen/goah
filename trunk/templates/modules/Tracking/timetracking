@@ -204,7 +204,7 @@
 	<td>[% gettext("Debit:") %] [% totcount.hours.1 %]h [% totcount.minutes.1 %]min</td>
 	<td>[% gettext("Internal:") %] [% totcount.hours.0 %]h [% totcount.minutes.0 %]min</td>
 	[% END %]
-	<td>&nbsp;</td>
+	<td colspan='3'>&nbsp;</td>
 	</tr>
 [% END %]
 <tr><td colspan=2 class="right">[% gettext("Total hours") %]</td>
@@ -212,7 +212,7 @@
 <td>[% totcount.hours.-1 %]h&nbsp;[% totcount.minutes.-1 %]min</td>
 <td>[% gettext("Debit:") %]&nbsp;[% totcount.hours.1 %]h&nbsp;[% totcount.minutes.1 %]min</td>
 <td>[% gettext("Internal:") %]&nbsp;[% totcount.hours.0 %]h&nbsp;[% totcount.minutes.0 %]min</td>
-<td>&nbsp;</td>
+<td colspan='3'>&nbsp;</td>
 </tr>
 </tbody>
 </table>

@@ -144,7 +144,7 @@
 	</td>
 	</tr>
 [% ELSE %]
-	<tr><td>[% gettext("Hours moved to basket") %]</td></tr>
+	<tr><td colspan=''>[% gettext("Hours moved to basket") %]</td></tr>
 [% END %]
 </table>
 </form>

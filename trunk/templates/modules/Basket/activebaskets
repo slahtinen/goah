@@ -160,6 +160,7 @@
 			<tr><td>[% basketstates.$state %] [% gettext("Total") %]</td>
 			<td class='number'>[% baskets.-1.$state.total %]</td>
 			<td class='number_buy'>[% baskets.-1.$state.totalvat %]</td>
+            <td colspan='3'>&nbsp;</td>
 			</tr>
 		[% END %]
 
