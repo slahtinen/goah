@@ -114,13 +114,13 @@ sub SendEmail {
 	if (length($smtp_password{'value'}) < 1) {$smtp_password{'value'} = '0';}
 
 	# Get 'from' address
-       	my $ownerinfo = goah::Modules::Systemsettings->ReadOwnerInfo();
-        $params{'from'} = $ownerinfo->email;	
+    my $ownerinfo = goah::Modules::Systemsettings->ReadOwnerInfo();
+    $params{'from'} = $ownerinfo->email;	
 
 	# Process email template
 	my $tt = Template->new({
-    		INCLUDE_PATH => 'templates/modules/Email/',
-    		EVAL_PERL    => 1,
+    	INCLUDE_PATH => 'templates/modules/Email/',
+    	EVAL_PERL    => 1,
 	});
 
 	my $message;
@@ -137,51 +137,55 @@ sub SendEmail {
 	$params{'type'} = '1';	
 
 	# Save email to database.
-	my $dbitem = goah::Modules::Email->WriteEmail(\%params);
-	my %dbdata = %$dbitem;
-	my $rowid = $dbdata{'id'};
+	my $dbitem  = goah::Modules::Email->WriteEmail(\%params);
+	my %dbdata  = %$dbitem;
+	my $rowid   = $dbdata{'id'};
 
 	# Create and send email
 	use Email::Sender::Simple qw(sendmail);
  	use Email::Simple;
   	use Email::Simple::Creator;
 	use Email::Sender::Transport::SMTP;
+    use MIME::Words qw(:all);
 
 	# Specify SMTP-connection parameters
 	my $transport;
 	if (($smtp_user{'value'}) && $smtp_password{'value'}){
 
 		$transport = Email::Sender::Transport::SMTP->new({
-    			host => $smtp_server{'value'},
-    			port => $smtp_port{'value'},
-			ssl => $smtp_ssl{'value'},
-			sasl_username => $smtp_user{'value'}, 
-			sasl_password => $smtp_password{'value'}, 
+            host            => $smtp_server{'value'},
+            port            => $smtp_port{'value'},
+            ssl             => $smtp_ssl{'value'},
+            sasl_username   => $smtp_user{'value'}, 
+            sasl_password   => $smtp_password{'value'}, 
   		});
 
 	} else {
 
 		$transport = Email::Sender::Transport::SMTP->new({
-    			host => $smtp_server{'value'},
-    			port => $smtp_port{'value'},
-			ssl => $smtp_ssl{'value'},
+            host    => $smtp_server{'value'},
+            port    => $smtp_port{'value'},
+            ssl     => $smtp_ssl{'value'},
 		});
-
 	}
 
 	# Put all together and process email
 	my $email;
 	if ($smtp_server{'value'}){
   		$email = Email::Simple->create(
-    			header => [
-      			To => $params{'to'},
-			Cc=> $params{'cc'},
-      			From => $params{'from'},
-      			Subject => "=?UTF-8?Q?".$params{'subject'}."?=",
-			'X-GoaH-Message-Id' => $params{'messageid'},
-    			],
-    			body => $message,
+            header => [
+                To      => $params{'to'},
+                Cc      => $params{'cc'},
+                From    => $params{'from'},
+                Subject => encode_mimeword($params{'subject'}, 'Q', 'utf-8'),
+            ],
+            body => $message,
 		);
+
+	    $email->header_set('Content-type'               => 'text/plain; charset="utf-8"');
+	    $email->header_set('Content-Disposition'        => 'inline');
+	    $email->header_set('Content-Transfer-Encoding'  => 'quoted-printable');
+	    $email->header_set('X-GoaH-Message-Id'          => $params{'messageid'});
 
 		# Ask confirmation for email reading?
 		my $asknotify = $params{'asknotify'};
@@ -208,8 +212,6 @@ sub SendEmail {
 			goah::Modules::Email->UpdateEmail($rowid, \%dbupdata); 
 		}
 	}
-
-
 }
 
 
@@ -288,9 +290,10 @@ sub WriteEmail {
 
 sub UpdateEmail {
 
-	shift if($_[0]=~/goah::Modules::Email/);
-	my $rowid = $_[0];
-	my %vars = %{$_[1]};
+	shift if($_[0] =~ /goah::Modules::Email/);
+
+	my $rowid   = $_[0];
+	my %vars    = %{$_[1]};
 
 	my $emailitem = goah::Db::Email->new( id => $rowid );
 	$emailitem->load;

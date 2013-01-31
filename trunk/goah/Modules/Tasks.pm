@@ -32,8 +32,7 @@ my $settref;
 
 my %tasksdb = (
 	0 => { field => 'id', name => 'id', type => 'hidden', required => '0', hidden => 1 },
-	1 => { 	field => 'companyid', 
-		name => __("Customer"), 
+	1 => { field => 'companyid', name => __("Customer"), 
 		type => 'selectbox', 
 		required => '1', 
 		data => goah::Modules::Customermanagement->ReadAllCompanies(1), 
@@ -86,18 +85,18 @@ my %taskstates = (
 #
 sub Start {
 
-        $uid = $_[1];
-        $settref = $_[2];
+    $uid = $_[1];
+    $settref = $_[2];
 
-        my $q = CGI->new();
-        my %variables;
+    my $q = CGI->new();
+    my %variables;
 
-        $variables{'function'} = 'modules/Tasks/tasks';
-        $variables{'module'} = 'Tasks';
-        $variables{'gettext'} = sub { return __($_[0]); };
-        $variables{'submenu'} = \%submenu;
-	$variables{'tasksdb'} = \%tasksdb;
-	$variables{'taskstates'} = \%taskstates;
+    $variables{'function'} = 'modules/Tasks/tasks';
+    $variables{'module'} = 'Tasks';
+    $variables{'gettext'} = sub { return __($_[0]); };
+    $variables{'submenu'} = \%submenu;
+    $variables{'tasksdb'} = \%tasksdb;
+    $variables{'taskstates'} = \%taskstates;
 
 
 	my ($sec,$min,$hour,$mday,$mon,$yearnow,$wday,$yday,$isdst) = localtime(time);
@@ -110,70 +109,79 @@ sub Start {
 		if($q->param('action') eq 'writenewtask') {
 			if(WriteTasks($uid)) {
 				goah::Modules->AddMessage('info',__("New task added"),__FILE__,__LINE__);
+
 			} else {
 				goah::Modules->AddMessage('error',__("Couldn't write task to database!"),__FILE__,__LINE__);
 			}
+
 		} elsif($q->param('action') eq 'writeeditedtask') {
 			if(WriteTasks($uid)) {
 				if($q->param('delete')) {
 					goah::Modules->AddMessage('info',__("Task removed from the database."),__FILE__,__LINE__);
+
 				} else {
 					goah::Modules->AddMessage('info',__("Task info updated."),__FILE__,__LINE__);
 				}
+
 			} else {
 				goah::Modules->AddMessage('error',__("Couldn't update information into database!"),__FILE__,__LINE__);
 			}
 
 		} elsif($q->param('action') eq 'edittask') {
-			$variables{'function'} = "modules/Tasks/edittask";
-			$variables{'dbdata'} = ReadData('tasks',"id".$q->param('target'));
+
+			$variables{'function'}  = "modules/Tasks/edittask";
+			$variables{'dbdata'}    = ReadData('tasks',"id".$q->param('target'));
 
 		} elsif($q->param('action') eq 'reporting') {
-			$variables{'function'} = "modules/Tasks/reporting";
-			$variables{'dbdata'} = ReadTasks('all','all');
-			$variables{'dbcompanies'}=goah::Modules::Customermanagement->ReadAllCompanies(1);
-			$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
 
-			$variables{'stateselect'} = {   0 => { key => 'open', value => __("Open tasks") },
-							1 => { key => 'closed', value => __("Closed tasks") },
-							2 => { key => 'all', value => __("All tasks") } };
+			$variables{'function'}      = "modules/Tasks/reporting";
+			$variables{'dbdata'}        = ReadTasks('all','all');
+			$variables{'dbcompanies'}   = goah::Modules::Customermanagement->ReadAllCompanies(1);
+			$variables{'dbusers'}       = goah::Modules::Systemsettings->ReadOwnerPersonnel();
+
+			$variables{'stateselect'}   = { 0 => { key => 'open', value => __("Open tasks") },
+							                1 => { key => 'closed', value => __("Closed tasks") },
+							                2 => { key => 'all', value => __("All tasks") } 
+                                        };
 
 			# Get data for actual search, or if no parameters are given, search for everything open
 			if($q->param('subaction') && $q->param('subaction') eq 'search' && !($q->param('submit-reset'))) {
+
 				my $company;
 				my $uid;
 				my $stateselect;
 
-				$company = $q->param('customer') if($q->param('customer') && !($q->param('customer')=~/\*/) );
-				$uid = $q->param('user') if($q->param('user'));
+				$company     = $q->param('customer') if($q->param('customer') && !($q->param('customer')=~/\*/) );
+				$uid         = $q->param('user') if($q->param('user'));
 				$stateselect = $q->param('stateselect') if ($q->param('stateselect'));
 				
-				$variables{'dbdata'}=ReadTasks($uid,$company,'','',$stateselect);
-				$variables{'search_customer'}=$company;
-				$variables{'search_owners'}=$uid;
-				$variables{'search_stateselect'}=$stateselect;
-				$variables{'search_longdesc'}='checked' if($q->param('search_longdesc'));
+				$variables{'dbdata'}             = ReadTasks($uid,$company,'','',$stateselect);
+				$variables{'search_customer'}    = $company;
+				$variables{'search_owners'}      = $uid;
+				$variables{'search_stateselect'} = $stateselect;
+				$variables{'search_longdesc'}    = 'checked' if($q->param('search_longdesc'));
 
 			} else {
 				$variables{'dbdata'}=ReadTasks('','','','','open');
+
 			}
 
-                } else {
-                        goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
-                        $variables{'function'} = 'modules/blank';
-                }
-
+        } else {
+            goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
+            $variables{'function'} = 'modules/blank';
+     
+        }
 	}
 
 	if($variables{'function'}=~/modules\/Tasks\/tasks/) {
-		$variables{'opentasks'}=ReadTasks($uid,'','','','open');
-		$variables{'closedtasks'}=ReadTasks($uid,'','-50','','closed');
-		$variables{'openaddedtasks'}=ReadTasks('','','','','open',$uid);
-		$variables{'closedaddedtasks'}=ReadTasks('','','-50','','closed',$uid);
-		$variables{'dbusers'}=goah::Modules::Systemsettings->ReadOwnerPersonnel();
+
+		$variables{'opentasks'}         = ReadTasks($uid,'','','','open');
+		$variables{'closedtasks'}       = ReadTasks($uid,'','-50','','closed');
+		$variables{'openaddedtasks'}    = ReadTasks('','','','','open',$uid);
+		$variables{'closedaddedtasks'}  = ReadTasks('','','-50','','closed',$uid);
+		$variables{'dbusers'}           = goah::Modules::Systemsettings->ReadOwnerPersonnel();
 	}
 		
-
 	return \%variables;
 }
 
@@ -195,43 +203,49 @@ sub Start {
 #
 sub WriteTasks {
 
-	shift if ($_[0]=~/goah::Modules::Tasks/);
+	shift if ($_[0] =~ /goah::Modules::Tasks/);
 
 	use goah::Db::Tasks;
+
 	my $q = new CGI;
-
+	my $update = 0;
 	my %dbdata;
-
 	my $taskitem;
-	my $update=0;
 
 	# Check if we're updating an existing item or creating a new one
 	if($q->param('target')) {
+
 		$taskitem = goah::Db::Tasks->new(id => $q->param('target'));
-		unless($taskitem->load(speculative => 1, for_update => 1)) {
+
+        unless($taskitem->load(speculative => 1, for_update => 1)) {
 			goah::Modules->AddMessage('error',__("Couldn't load data from the database for modifications!"),__LINE__,__FILE__);
 			return 0;
-		}
+		
+        }
+
 		goah::Modules->AddMessage('debug',"Got data with id ".$taskitem->id." and desc ".$taskitem->description,__FILE__,__LINE__);
-		$update=1;
+		
+        $update=1;
 		if($q->param('delete')) {
 			if ($taskitem->delete) {
 				# Create new email      
-        			if ($q->param('assigneeid') != '-1') {
-                			my %emailvars;
-                			$emailvars{'userid'} = $q->param('userid');
-                			$emailvars{'assigneeid'} = $q->param('assigneeid');
-                			$emailvars{'action'} = $q->param('action');
-                			$emailvars{'companyid'} = $q->param('companyid');
-                			$emailvars{'description'} = $q->param('description');
-                			$emailvars{'longdescription'} = $q->param('longdescription');
-                        		$emailvars{'status'} = $taskstates{'1'};
-                        		$emailvars{'action'} = "Task deleted";
-                        		$emailvars{'taskid'} = $q->param('target');
+                if ($q->param('assigneeid') != '-1') {
 
-                			Send2Email(\%emailvars);
-        			}
+                    my %emailvars;
+                    $emailvars{'userid'} = $q->param('userid');
+                    $emailvars{'assigneeid'} = $q->param('assigneeid');
+                    $emailvars{'action'} = $q->param('action');
+                    $emailvars{'companyid'} = $q->param('companyid');
+                    $emailvars{'description'} = $q->param('description');
+                    $emailvars{'longdescription'} = $q->param('longdescription');
+                    $emailvars{'status'} = $taskstates{'1'};
+                    $emailvars{'action'} = "Task deleted";
+                    $emailvars{'taskid'} = $q->param('target');
+
+                    Send2Email(\%emailvars);
+                }
 				return 1;
+
 			} else {
 				goah::Modules->AddMessage('error',__("Couldn't delete item from the database."),__FILE__,__LINE__);
 				return 0;
@@ -240,98 +254,124 @@ sub WriteTasks {
 	}
 
 	# Update values to an array from http variables
-        my %fieldinfo;
-        while(my($key,$value) = each (%tasksdb)) {
-                %fieldinfo = %$value;
+    my %fieldinfo;
+    while(my($key,$value) = each (%tasksdb)) {
 
-                if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) && !($fieldinfo{'field'} eq 'hours') ) {
+        %fieldinfo = %$value;
+        if($fieldinfo{'required'} == '1' && !(length($q->param($fieldinfo{'field'}))) && !($fieldinfo{'field'} eq 'hours') ) {
 
-			# Using variable just to make source look nicer
-			my $errstr = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!')." ";
-			goah::Modules->AddMessage('error',$errstr);
-			return 0;
+            # Using variable just to make source look nicer
+            my $errstr = __('Required field').' <b>'.$fieldinfo{'name'}.'</b> '.__('empty!')." ";
+            goah::Modules->AddMessage('error',$errstr);
+            return 0;
 
-                } elsif($fieldinfo{'required'} == '1' && $fieldinfo{'type'} eq 'selectbox' && $q->param($fieldinfo{'field'}) eq "-1") {
-                        my $errstr = __('Required dropdown field').' <b>'.$fieldinfo{'name'}.'</b> '.__('unselected!').' ';
-                        $errstr.= __("Leaving value unaltered.");
-                        goah::Modules->AddMessage('error',$errstr);
-			return 0;
-                } else {
-			if(length($q->param($fieldinfo{'field'})) || $fieldinfo{'field'} eq 'hours' || $fieldinfo{'type'} eq 'checkbox' || $fieldinfo{'field'} eq 'day' ) {
-				my $tmpcol=$fieldinfo{'field'};
-				$dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
-				
-				if($fieldinfo{'field'} eq 'hours') {
+        } elsif($fieldinfo{'required'} == '1' && $fieldinfo{'type'} eq 'selectbox' && $q->param($fieldinfo{'field'}) eq "-1") {
 
-					my $hours = $q->param($fieldinfo{'field'});
-					$hours=~s/,/\./g;
-					if($hours=~/:/) {
-						my @hoursarr=split(/:/,$hours);
-						my $tmphours=$hoursarr[1]/60;
-						$tmphours+=$hoursarr[0];
-						$hours=$tmphours;
-					} elsif(!$hours=~/\d+\.?\d*/) {
-						goah::Modules->AddMessage('debug',__("Hours column not numeric! Setting hours -value to 0!"));
-						$hours=0;
-					}
-					if($q->param('minutes')) {
-						$hours+=$q->param('minutes')/60;
-					}
-					$dbdata{$tmpcol}=$hours;
-				}	
-				if($fieldinfo{'field'} eq 'inthours') {
-					my $inthours=$q->param($fieldinfo{'field'});
-					$inthours=~s/,/./g;
-					if($inthours=~/:/) {
-						my @inthoursarr=split(/:/,$inthours);
-						my $tmpinthours=$inthoursarr[1]/60;
-						$tmpinthours+=$inthoursarr[0];
-						$inthours=$tmpinthours;
-					} elsif (!$inthours=~/\d+\.?\d*/) {
-						goah::Modules->AddMessage('debug',__("Internal hours column not numeric! Setting value to 0!"));
-						$inthours=0;
-					}
-					if($q->param('intminutes')) {
-						$inthours+=$q->param('intminutes')/60;
-					}
-					$dbdata{$tmpcol}=$inthours;
-				}		
-				if($fieldinfo{'field'} eq 'day') {
-					my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
-					$year+=1900;    
-					$mon++; 
-					unless($dbdata{$tmpcol}) {
-						$dbdata{$tmpcol}=sprintf("%04d-%02d-%02d",$year,$mon,$mday);
-						goah::Modules->AddMessage("debug","Set date to ".$dbdata{$tmpcol},__FILE__,__LINE__);
-					} else {
-						if($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
-							$dbdata{$tmpcol}=goah::GoaH::FormatDate($q->param('day')." 00:00:01");
-						} elsif($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}/) {
-							$dbdata{$tmpcol}=goah::GoaH::FormatDate($q->param('day').".".$year." 00:00:01");
-						} else {
-						goah::Modules->AddMessage('warn',__("Incorrectly formatted date!  Using current date."),__LINE__,__FILE__);
-						$dbdata{$tmpcol}=sprintf("%04d-%02d-%02d",$year,$mon,$mday);
-						}
-					}
+            my $errstr = __('Required dropdown field').' <b>'.$fieldinfo{'name'}.'</b> '.__('unselected!').' ';
+            $errstr.= __("Leaving value unaltered.");
+            goah::Modules->AddMessage('error',$errstr);
+            return 0;
 
-				}
-				if($fieldinfo{'type'} eq 'checkbox') {
-					if($q->param($tmpcol) eq 'on') {
-						$dbdata{$tmpcol}=1;
-					} else {
-						$dbdata{$tmpcol}=0;
-					}
-				}
+        } else {
 
-				# Update existing tracking item
-				$taskitem->$tmpcol($dbdata{$tmpcol}) if $update;
-			}
+            if(length($q->param($fieldinfo{'field'})) || $fieldinfo{'field'} eq 'hours' || $fieldinfo{'type'} eq 'checkbox' || $fieldinfo{'field'} eq 'day' ) {
+
+                my $tmpcol=$fieldinfo{'field'};
+                $dbdata{$tmpcol}=(decode('utf-8',$q->param($fieldinfo{'field'})));
+            
+                if($fieldinfo{'field'} eq 'hours') {
+
+                    my $hours = $q->param($fieldinfo{'field'});
+                    $hours=~s/,/\./g;
+
+                    if($hours=~/:/) {
+
+                        my @hoursarr=split(/:/,$hours);
+                        my $tmphours=$hoursarr[1]/60;
+                        $tmphours+=$hoursarr[0];
+                        $hours=$tmphours;
+
+                    } elsif(!$hours=~/\d+\.?\d*/) {
+                        goah::Modules->AddMessage('debug',__("Hours column not numeric! Setting hours -value to 0!"));
+                        $hours=0;
+                    }
+
+                    if($q->param('minutes')) {
+                        $hours+=$q->param('minutes')/60;
+                    }
+
+                    $dbdata{$tmpcol}=$hours;
+                }	
+
+            if($fieldinfo{'field'} eq 'inthours') {
+
+                my $inthours=$q->param($fieldinfo{'field'});
+                $inthours=~s/,/./g;
+
+                if($inthours=~/:/) {
+
+                    my @inthoursarr=split(/:/,$inthours);
+                    my $tmpinthours=$inthoursarr[1]/60;
+                    $tmpinthours+=$inthoursarr[0];
+                    $inthours=$tmpinthours;
+
+                } elsif (!$inthours=~/\d+\.?\d*/) {
+                    goah::Modules->AddMessage('debug',__("Internal hours column not numeric! Setting value to 0!"));
+                    $inthours=0;
                 }
+                if($q->param('intminutes')) {
+                    $inthours+=$q->param('intminutes')/60;
+                }
+
+                $dbdata{$tmpcol}=$inthours;
+            }
+
+            if($fieldinfo{'field'} eq 'day') {
+
+                my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+                $year+=1900;    
+                $mon++;
+
+                unless($dbdata{$tmpcol}) {
+                    $dbdata{$tmpcol}=sprintf("%04d-%02d-%02d",$year,$mon,$mday);
+                    goah::Modules->AddMessage("debug","Set date to ".$dbdata{$tmpcol},__FILE__,__LINE__);
+                
+                } else {
+
+                    if($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+                        $dbdata{$tmpcol}=goah::GoaH::FormatDate($q->param('day')." 00:00:01");
+                    
+                    } elsif($q->param('day')=~/[0-9]{1,2}\.[0-9]{1,2}/) {
+                        $dbdata{$tmpcol}=goah::GoaH::FormatDate($q->param('day').".".$year." 00:00:01");
+                    
+                    } else {
+                        goah::Modules->AddMessage('warn',__("Incorrectly formatted date!  Using current date."),__LINE__,__FILE__);
+                        $dbdata{$tmpcol}=sprintf("%04d-%02d-%02d",$year,$mon,$mday);
+                    }
+                }
+            }
+
+            if($fieldinfo{'type'} eq 'checkbox') {
+
+                if($q->param($tmpcol) eq 'on') {
+                    $dbdata{$tmpcol}=1;
+
+                } else {
+                    $dbdata{$tmpcol}=0;
+                }
+            }
+
+            # Update existing tracking item
+            $taskitem->$tmpcol($dbdata{$tmpcol}) if $update;
+
+            }
         }
+    }
 
 	# Update task state
 	if ($update) { 
-		$taskitem->completed($q->param('taskstate')); 
+		$taskitem->completed($q->param('taskstate'));
+
 	} else {
 		$dbdata{'completed'} = 0;
 	}
@@ -353,14 +393,16 @@ sub WriteTasks {
 
 		if ($q->param('taskstate')) {
 			$emailvars{'status'} = $taskstates{$q->param('taskstate')};
-		} else {
+		
+        } else {
 			$emailvars{'status'} = $taskstates{'0'};
 		}
 
 		if ($update) {
 			$emailvars{'action'} = "Task updated";
 			$emailvars{'taskid'} = $q->param('target');
-		} else {
+		
+        } else {
 			$emailvars{'action'} = "New task";
 			$emailvars{'taskid'} = $taskitem->{'id'};
 		}
@@ -406,7 +448,8 @@ sub Send2Email {
 	my $customername;
 	if ($customerinfo->vat_id eq '00000000') {
 		$customername = $customerinfo->name.' '.$customerinfo->firstname;
-	} else {
+	
+    } else {
 		$customername = $customerinfo->name;
 	}
 
@@ -436,9 +479,8 @@ sub Send2Email {
 	$vars{'template'} = 'tasks.tt2';
 	$vars{'module'} = 'Tasks';
 
-	my $subject = "[#$vars{'taskid'}]_".$vars{'action'}.":_"."$vars{'description'}";
+	my $subject = '[#'.$vars{'taskid'}.'] '.$vars{'action'}.': '.$vars{'description'};
     
-	$subject =~ s/\s+/_/g;
 	$vars{'subject'} = $subject;
 
 	# Check that we have smtp-server specified before trying to send email
@@ -509,21 +551,26 @@ sub ReadData {
 		$field = $tasksdb{$key}{'field'};
 		if($field eq 'day') {
 			$data{$field} = goah::GoaH::FormatDate($datap->$field);
+
 		} elsif ($field eq 'hours' || $field eq 'inthours') {
 			$data{$field}=$datap->$field;
 			if(!($_[2]) || $_[2] eq '0') {
+
 				$data{$field}=~s/\.\d*$//;
-				if($field eq 'hours') {
+			
+                if($field eq 'hours') {
 					$data{'minutes'}=$datap->$field;
 					$data{'minutes'}=~s/^\d*/0/;
 					$data{'minutes'}=sprintf("%.0f",60*$data{'minutes'});
-				} 
+				}
+
 				if($field eq 'inthours') {
 					$data{'intminutes'}=$datap->$field;
 					$data{'intminutes'}=~s/^\d*/0/;
 					$data{'intminutes'}=sprintf("%.0f",60*$data{'intminutes'});
 				}
 			}
+
 		} else {
 			$data{$field} = $datap->$field;	
 		}
@@ -565,10 +612,12 @@ sub ReadTasks {
 		$dbsearch{'assigneeid'}=$_[0];
 		goah::Modules->AddMessage('debug',"Searching with uid ".$dbsearch{'userid'},__FILE__,__LINE__);
 	}
+
 	if($_[1]) {
 		$dbsearch{'companyid'}=$_[1];
 		goah::Modules->AddMessage('debug',"Searching with companyid ".$dbsearch{'companyid'},__FILE__,__LINE__);
 	}
+
 	# Start date, no end date
 	if($_[2] && !($_[3])) {
 		unless($_[2]<0) {
@@ -576,11 +625,13 @@ sub ReadTasks {
 			goah::Modules->AddMessage('debug',"Searching with startdate ".$_[2],__FILE__,__LINE__);
 		}
 	}
+
 	# End date, no start date
 	if($_[3] && !($_[2])) {
 		$dbsearch{'day'} = { le => $_[3] };
 		goah::Modules->AddMessage('debug',"Searching with enddate ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
+
 	# Both start and end date
 	if($_[2] && $_[3]) {
 		$dbsearch{'and'} = [ day => { ge => $_[2] }, day => { le => $_[3] } ];
@@ -591,7 +642,8 @@ sub ReadTasks {
 	if($_[4]) {
 		if($_[4]=~/open/) {
 			$dbsearch{'completed'} = [0,3,4];
-		}
+		
+        }
 		elsif($_[4]=~/closed/) {
 			goah::Modules->AddMessage('debug',"Searching for completed tasks",__FILE__,__LINE__);
 			$dbsearch{'completed'} = [1,2];
@@ -626,31 +678,42 @@ sub ReadTasks {
 		$i++;
 		my $field;
 		foreach my $key (keys %tasksdb) {
+
 			$field = $tasksdb{$key}{'field'};
 			$tdata{$i}{$field} = $row->$field;
-			if($field eq 'companyid') {
+		
+            if($field eq 'companyid') {
+
 				use goah::Modules::Customermanagement;
 				my $companypointer = goah::Modules::Customermanagement->ReadCompanydata($row->companyid,1);
+
 				unless($companypointer==0) {
 					my %compdata = %$companypointer;
 					$tdata{$i}{'companyname'}=$compdata{'name'}.' '.$compdata{'firstname'};
-				} else {
+				
+                } else {
 					$tdata{$i}{'companyname'}=__("Not available!");
 				}
 			}
+
 			if($field eq 'userid') {
-				my $personp=goah::Modules::Systemsettings->ReadOwnerPersonnel($row->userid);
-				unless($personp==0) {
+			
+                my $personp=goah::Modules::Systemsettings->ReadOwnerPersonnel($row->userid);
+				
+                unless($personp==0) {
 					my %person=%$personp;
 					$tdata{$i}{'username'}=$person{'lastname'}." ".$person{'firstname'};
-				} else {
+				
+                } else {
 					$tdata{$i}{'username'}=__("Not available!");
 				}
 			}
 			if($field eq 'day') {
 				$tdata{$i}{$field} = goah::GoaH::FormatDate($row->$field);
 			}
+
 			if ($field eq 'hours' || $field eq 'inthours') {
+
 				my $minfield='minutes';
 				$minfield='intminutes' if($field eq 'inthours');
 
@@ -658,32 +721,40 @@ sub ReadTasks {
 				$tdata{$i}{$field}=~s/\.\d*$//;
 				$tdata{$i}{$minfield}=$row->$field;
 				$tdata{$i}{$minfield}=~s/^\d*/0/;
+
 				if($tdata{$i}{$minfield} > 0) {
 					$tdata{$i}{$minfield}=sprintf("%.0f",60*$tdata{$i}{$minfield});
-				} else {
+				
+                } else {
 					$tdata{$i}{$minfield}=0;
 				}
 
 				if($field eq 'inthours') {
 					$totalhours{'internal'}+=$row->$field;
-				} else {
+				
+                } else {
 					$totalhours{'normal'}+=$row->$field;
 					goah::Modules->AddMessage('debug',"Normal hours now ".$totalhours{'normal'}." after +".$row->$field);
 				}
 			}
-			if ($field eq 'longdescription') {
+			
+            if ($field eq 'longdescription') {
+
 				$tdata{$i}{$field}=$row->$field;
 				$tdata{$i}{$field}=~s/\n/<br\/>\n/g;
-
 				$tdata{$i}{'longdescription_tooltip'}=$row->$field;
+
 				if(length($tdata{$i}{'longdescription_tooltip'})>100) {
-					$tdata{$i}{'longdescription_tooltip'}=substr($tdata{$i}{'longdescription_tooltip'},0,100);
+					$tdata{$i}{'longdescription_tooltip'} = substr($tdata{$i}{'longdescription_tooltip'},0,100);
 					$tdata{$i}{'longdescription_tooltip'}.='...';
+
 				}
 			}
 		}
+
 		$tdata{$i}{'completed'} = $row->completed;
 	}	
+
 	goah::Modules->AddMessage('debug',"Got ".($i-10000000)." rows from the database.",__FILE__,__LINE__);
 
 	# Go trough hours and calc total hours
