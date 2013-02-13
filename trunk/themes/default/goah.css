@@ -352,6 +352,11 @@ tbody td {
    border-left: 1px solid #dae8f1;
 }
 
+tbody font.note {
+    font-size: 0.9em;
+    font-style: italic;
+}
+
 textarea.small {
 	width: 150px;
 	height: 50px;

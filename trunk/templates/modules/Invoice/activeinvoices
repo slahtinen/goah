@@ -104,7 +104,7 @@
 [% END %]
 </th>
 <th>[% gettext("Customer") %]</th>
-
+<th>[% gettext("Reference") %]</th>
 <th>[% gettext("Created") %]
 [% IF SORTBYD=='checked' && CHECKC=='checked' %]
 [% IF SORTDASC == 'checked' %]
@@ -159,6 +159,7 @@
 		[% linfo.postalcode %] [% linfo.postaloffice %]
 	[% END %]
 	</td>
+    <td>[% invoice.customerreference %]</td>
 	[% IF invoice.invoicenumber != 0 %]
 		<td>[% formatdate(invoice.created) %]</td>
 		<td>[% formatdate(invoice.due) %]</td>

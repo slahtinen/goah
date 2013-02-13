@@ -123,7 +123,7 @@
 			<td>&nbsp;<br/>
 			&nbsp;</td>
 		[% END %]
-		<td>[% row.code %]<br/>[% row.name %]</td>
+		<td>[% row.code %] / [% row.name %]<br /><font class='note'>[% row.rowinfo %]</font></td>
 		<td class="number">[% row.amount %]</td><td>[% row.unit %]</td>
 		<td class="number">[% row.rowtotal %]<td class="number">[% row.rowtotalvat %]</td>
 
