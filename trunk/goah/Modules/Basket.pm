@@ -1273,14 +1273,13 @@ sub UpdateBasketRow {
 		return 0;
 	}
 
-	use goah::Database::Basketrows;
-	my $rowinfo = goah::Database::Basketrows->retrieve($rdata{'rowid'}-0);
+	use goah::Db::Basketrows;
+	my $rowinfo = goah::Db::Basketrows->new(id =>$rdata{'rowid'}-0);
 
-	unless($rowinfo && ($rowinfo->id eq $rdata{'rowid'})) {
+	unless($rowinfo->load(speculative => 1)) {
 		goah::Modules->AddMessage('error',__("Can't read row information from database.")." ".__("Can't update row information in database!"));
 		return 0;
 	}
-
 
 	my $prodinfo = goah::Modules::Productmanagement->ReadData('products',$rowinfo->productid,$uid);
 	my %prod = %$prodinfo;
@@ -1289,6 +1288,7 @@ sub UpdateBasketRow {
 	my $update=0;
 	while(my($key,$value)= each (%basketrowdbfields)) {
 		%fieldinfo = %$value;
+		my $fieldname=$fieldinfo{'field'};
 
 		# Skip fields we won't touch since it'd break quite a lot of things if
 		# ie. row's basketid would change at this point.
@@ -1297,6 +1297,7 @@ sub UpdateBasketRow {
 				$fieldinfo{'id'} eq 'id' || 
 				$fieldinfo{'field'} eq 'id' ||
 				$fieldinfo{'field'} eq 'remoteid'); 
+
 
 
 		# Check if we're handling numeral field
@@ -1308,14 +1309,11 @@ sub UpdateBasketRow {
 		#		next;
 		#	}
 		#} elsif($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) {
-		if($rowinfo->get($fieldinfo{'field'}) eq $rdata{$fieldinfo{'field'}}) {
-			#goah::Modules->AddMessage('debug',"SKIP ".$fieldinfo{'field'}.": ".$rowinfo->get($fieldinfo{'field'})." == ".$rdata{$fieldinfo{'field'}},__FILE__,__LINE__);
+		if($rowinfo->$fieldname eq $rdata{$fieldinfo{'field'}}) {
+			goah::Modules->AddMessage('debug',$rowinfo->id." SKIP field ".$fieldinfo{'field'}.": ".$rowinfo->$fieldname." == ".$rdata{$fieldinfo{'field'}},__FILE__,__LINE__);
 			# Value hasn't changed so don't do any changes
 			next;
 		}
-
-		#goah::Modules->AddMessage('debug',$fieldinfo{'field'}.": ".$rowinfo->get($fieldinfo{'field'})." != ".$rdata{$fieldinfo{'field'}});
-		$update=1;
 
 		if($rdata{$fieldinfo{'field'}} || length($rdata{$fieldinfo{'field'}})>0) {
 
@@ -1349,16 +1347,17 @@ sub UpdateBasketRow {
 				}
 	
 				unless($purchase eq 'na') {
-					$rowinfo->set('purchase' => $purchase);
+					$rowinfo->purchase($purchase);
+					$update++;
 				} else {
-					goah::Modules->AddMessage("debug","Purchase price not changed, setting update to 0",__FILE__,__LINE__);
-					$update=0;
+					goah::Modules->AddMessage("debug",$rowinfo->id." Purchase price not changed",__FILE__,__LINE__);
 				}
 
 			} elsif($fieldinfo{'field'} eq 'sell') {
 
 				my $sell='na';
 				if($rdata{'sell_orig'} ne $rdata{'sell'}) {
+					goah::Modules->AddMessage('debug',"Sell price VAT0 changed",__FILE__,__LINE__);
 					$sell=goah::GoaH->FormatCurrencyNopref($rdata{'sell'},0,0,'in',0);
 				} elsif($rdata{'sell_vat_orig'} ne $rdata{'sell_vat'}) {
 					my $prodpoint = goah::Modules::Productmanagement::ReadData('products',$rdata{'productid'},$uid,$settref,1);
@@ -1373,15 +1372,16 @@ sub UpdateBasketRow {
 						} else {
 							%vat=%$vatp;
 						}
+						goah::Modules->AddMessage('debug',"Sell price VAT23 changed",__FILE__,__LINE__);
 						$sell=goah::GoaH->FormatCurrencyNopref($rdata{'sell_vat'},$vat{'value'},0,'in',0);
 					}
 				}
 
 				unless($sell eq 'na') {
-					$rowinfo->set('sell' => $sell);
+					$rowinfo->sell($sell);
+					$update++;
 				} else {
-					goah::Modules->AddMessage("debug","Sell price not changed, setting update to 0",__FILE__,__LINE__);
-					$update=0;
+					goah::Modules->AddMessage("debug",$rowinfo->id." Sell price not changed",__FILE__,__LINE__);
 				}
 
 			} elsif($fieldinfo{'field'} eq 'amount') {
@@ -1393,7 +1393,8 @@ sub UpdateBasketRow {
 					goah::Modules->AddMessage('warn',__("Amount field is not numeric. Setting amount to 0"));
 					$amount=0.00;
 				}
-				$rowinfo->set($fieldinfo{'field'} => $amount);
+				$rowinfo->$fieldname($amount);
+				$update++;
 
 				unless($rowinfo->remoteid eq '' || $rowinfo->remoteid=~/-1$/) {
 					goah::Modules->AddMessage('debug',"Updating remote amount",__FILE__,__LINE__);
@@ -1410,7 +1411,16 @@ sub UpdateBasketRow {
 			} else {
 				my $tmprowinfo=decode("utf-8",$rdata{$fieldinfo{'field'}});
 				$tmprowinfo=~s/€/&euro;/g;
-				$rowinfo->set($fieldinfo{'field'} => $tmprowinfo);
+				if(!($tmprowinfo eq $rowinfo->$fieldname)) {
+
+					goah::Modules->AddMessage('debug',$rowinfo->id." Field ".$fieldinfo{'field'}." changed",__FILE__,__LINE__);
+					$rowinfo->$fieldname($tmprowinfo);
+					$update++;
+					goah::Modules->AddMessage('debug',"Update jar now $update",__FILE__,__LINE__);
+				} else {
+					goah::Modules->AddMessage('debug',$rowinfo->id." Field ".$fieldinfo{'field'}." unchanged",__FILE__,__LINE__);
+					goah::Modules->AddMessage('debug',$rowinfo->id." ".$tmprowinfo." != ".$rowinfo->$fieldname,__FILE__,__LINE__);
+				}
 			}
 			
 		} else {
@@ -1432,7 +1442,7 @@ sub UpdateBasketRow {
 	# for the basket
 	#   TODO: This functionality could be done as an function, i.e. TouchBasket() since it's
 	#         used on various locations.
-	if($update) {
+	if($update > 0) {
 
 		goah::Modules->AddMessage('debug',"updating row since update=$update",__FILE__,__LINE__);
 		$rowinfo->update();
@@ -1445,6 +1455,8 @@ sub UpdateBasketRow {
 		AddHistoryEvent($data->id,$rowinfo->id,$uid,'Updated row',"Updated basket row ".$rowinfo->code." amount ".$rowinfo->amount);
 
 		$data->update();
+	} else {
+		goah::Modules->AddMessage('debug',$rowinfo->id." Won't update row, update=$update",__FILE__,__LINE__);
 	}
 
 	return 1;
