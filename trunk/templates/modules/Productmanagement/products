@@ -94,9 +94,9 @@
 		<td class="number_buy">[% product.purchase %]</td>
 		<td class="number">[% product.sell_vat0 %]</td>
 		<td class="number_buy">[% product.sell %]</td>
-		<td>[% product.vatclass %]</td>
-		<td>[% product.in_store %]</td>
-		<td>[% product.row_total_value %]</td>
+		<td class="number">[% product.vatclass %]</td>
+		<td class="number">[% product.in_store %]</td>
+		<td class="number">[% product.row_total_value_vat0 %]</td>
 		<td class="center">
 		<form action="" method="post">
 		<p>
