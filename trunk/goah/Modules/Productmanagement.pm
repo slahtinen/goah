@@ -935,8 +935,11 @@ sub ReadData {
 						$pdata{$field} = goah::GoaH->FormatCurrencyNopref($dbdata->$field,$vat{'value'},0,'out',1);
 					}
 				} else {
-					$pdata{$field} = $dbdata->$field;
+						$pdata{$field} = $dbdata->$field;
 				}
+			} elsif($field eq 'name') {
+				$pdata{$field}=$dbdata->$field;
+				$pdata{$field}=~s/"/&quot;/g;
 			#} elsif ($field eq 'vat') {
 			#	$pdata{$field} = sprintf("%.2f",$dbdata->$field);
 			} else {
