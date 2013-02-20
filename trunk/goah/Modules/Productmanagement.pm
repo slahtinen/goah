@@ -342,7 +342,12 @@ sub Start {
 				} else {
 					my $onlyinstorage=0;
 					$onlyinstorage=1 if($q->param('onlyinstorage') && $q->param('onlyinstorage') eq 'on');
-					$prodpointer=ReadProductsByGroup($group{'id'},$uid,0,$onlyinstorage);
+					my $includeremoved=0;
+					$includeremoved=1 if($q->param('includeremoved') && $q->param('includeremoved') eq 'on');
+					$prodpointer=ReadProductsByGroup($group{'id'},$uid,0,$onlyinstorage,$includeremoved);
+
+					$variables{'check_onlyinstorage'}=$onlyinstorage;
+					$variables{'check_includeremoved'}=$includeremoved;
 				}
 
 				unless($prodpointer) {
@@ -443,8 +448,19 @@ sub WriteNewItem {
 		$code=~s/å/Å/g;
 		my @data = $db->search_where([ code => $code, barcode => $q->param('barcode') ], { logic => 'OR'});
 		if(scalar(@data)>0) {
-			goah::Modules->AddMessage('error',__("Product already exists in database!"));
-			return 1;
+			my $item=$data[0];
+			if($item->hidden) {
+				$item->hidden(0);
+				$item->update();
+				my $msg=__("Product already exists in database but it's removed from production! The product has been re-enabled with ORIGINAL information, not the one you provided!");
+				$msg.=" <a href='?module=Productmanagement&action=edit&type=products&id=".$item->id."'>";
+				$msg.=__("Open product information.")."</a>";
+				goah::Modules->AddMessage('warn',$msg,__FILE__,__LINE__);
+				return 1;
+			} else {
+				goah::Modules->AddMessage('error',__("Product already exists in database!"));
+				return 1;
+			}
 		}
 
 		if(($q->param('manufacturer') eq "-1") && !($q->param('manufacturer.new'))) {
@@ -1214,7 +1230,7 @@ sub ReadProductByCode {
 #    uid - OBSOLETE VARIABLE! Should be removed!
 #    noprice - If set ignore prices and VAT calculations when searching only for product names and codes
 #    onlyinstorage - If set search only for products in storage
-#    
+#    includeremoved - If set include removed products into search
 #
 # Returns:
 #
@@ -1251,7 +1267,7 @@ sub ReadProductsByGroup {
 
 
 	my %dbsearch;
-	$dbsearch{'hidden'}=0;
+	$dbsearch{'hidden'}=0 unless($_[4]);
 	$dbsearch{'groupid'}=$search;
 
 	# Search only for products in storage

@@ -24,7 +24,20 @@
 	</select>
 	<input type="submit" value=">" />
 	<br/>
-	<input type="checkbox" name="onlyinstorage" /> [% gettext("Only products in storage") %]
+	[% IF check_onlyinstorage == 1 %]
+		<input checked type="checkbox" name="onlyinstorage" /> 
+	[% ELSE %]
+		<input type="checkbox" name="onlyinstorage" /> 
+	[% END %]
+	[% gettext("Only products in storage") %]
+
+	<br/>
+	[% IF check_includeremoved == 1 %]
+		<input checked type="checkbox" name="includeremoved" /> 
+	[% ELSE %]
+		<input type="checkbox" name="includeremoved" /> 
+	[% END %]
+	[% gettext("Include removed products") %]
 	</p>
 	</form>
 	
@@ -79,12 +92,16 @@
 	[% products = productspergroup.$g.products %]
 	[% FOREACH key IN products.keys.sort %]
 		[% product  = products.$key %]
-		[% IF odd == 1 %]
-			<tr class="odd">
-			[% odd = 0 %]
+		[% IF product.hidden == 1 %]
+			<tr class="removed">
 		[% ELSE %]
-			<tr class="even">
-			[% odd = 1 %]
+			[% IF odd == 1 %]
+				<tr class="odd">
+				[% odd = 0 %]
+			[% ELSE %]
+				<tr class="even">
+				[% odd = 1 %]
+			[% END %]
 		[% END %]
 
 		<td>[% product.code %]</td>

@@ -221,6 +221,10 @@ table p {
     padding: 0;
 }
 
+tr.removed {
+    background: #faa;
+}
+
 th {
     text-align: left;
     font-size: 0.9em;
