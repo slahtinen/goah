@@ -1222,16 +1222,22 @@ sub DeleteBasketRow {
 		return 0;
 	}
 
-	if($_[1]) {
-		unless($rdata->remoteid eq '') {
+	unless($rdata->remoteid eq '') {
+		use goah::Modules::Tracking;
+		my $remoteid=$rdata->remoteid;
+		$remoteid=~s/^.*://;
+		if($_[1]) {
 			# If we've got an remote id remove the assignment as well. Currently
 			# this applies only to tracked hours, but this isn't too big of a deal
 			# to expand for other uses as well
-			my $remoteid=$rdata->remoteid;
-			$remoteid=~s/^.*://;
-			use goah::Modules::Tracking;
 			unless(goah::Modules::Tracking->RemoveHoursFromBasket($remoteid)) {
 				goah::Modules->AddMessage('error',__("Couldn't remove hour assignment from the basket! Won't delete row!"),__FILE__,__LINE__);
+				return 0;
+			}
+		} else {
+			# If we're removing an row then we'll change all hours to internal
+			unless(goah::Modules::Tracking->RemoveHoursFromBasket($remoteid,1)) {
+				goah::Modules->AddMessage('error',__("Couldn't change included hours to internal hours! Won't delete row!"),__FILE__,__LINE__);
 				return 0;
 			}
 		}

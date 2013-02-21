@@ -855,6 +855,7 @@ sub AddHoursToBasket {
 # Parameters:
 #
 #   rowid - Database id for hours to unassign
+#   changetointernal - If set then just assign hours to internal ones instead of billable hours
 #
 # Return:
 #
@@ -874,6 +875,12 @@ sub RemoveHoursFromBasket {
 	}
 
 	$datap->basket_id('');
+	if($_[1]) {
+		my $inthours=$datap->inthours;
+		$inthours+=$datap->hours;
+		$datap->inthours($inthours);
+		$datap->hours(0);
+	}
 
 	return 1 if($datap->save);
 	return 0;
