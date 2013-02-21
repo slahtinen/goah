@@ -288,7 +288,9 @@ if($auth==1) {
 			my $email_url = $vars{'url'};
 			$email_url =~ s/index\.cgi/files\.cgi/;
 			$email_url =~ s/module=[a-z]+//i;
-
+			# If we don't have an filename append it in URL
+			$email_url=~s/\?{0,1}$/files.cgi?/ unless($email_url=~/files\.cgi/);
+				
 			# Generate and send email
             		$emailvars{'to'} = $email_to;
             		$emailvars{'subject'} = __('New file').': '.$file;
