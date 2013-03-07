@@ -3,6 +3,7 @@
 <head>
 <title>GoaH [% goahversion %] - Development</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link rel="shortcut icon" href="./themes/[% theme %]/gfx/favicon.ico" />
 <link rel="stylesheet" type="text/css" href="themes/[% theme %]/goah.css" />
 <link rel="stylesheet" type="text/css" href="themes/[% theme %]/menu.css" />
 <link rel="stylesheet" type="text/css" href="themes/[% theme %]/print.css" media="print" />
