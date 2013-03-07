@@ -39,8 +39,9 @@ use warnings;
 #
 sub CheckLogin {
 
-	my $login = $_[1];
-	my $pass = $_[2];
+	shift if($_[0]=~/goah::Auth/);
+	my $login = $_[0];
+	my $pass = $_[1];
 
 	use Cwd;
 	use Locale::TextDomain ('GoaH', getcwd()."/locale");
@@ -92,7 +93,9 @@ sub CheckLogin {
 #
 sub CreateSessionid {
 
-	my $uid = $_[1];
+	shift if($_[0]=~/goah::Auth/);
+
+	my $uid = $_[0];
 
 	# Create session id from random number, remote address and user id
 	use Digest::MD5;
@@ -122,9 +125,53 @@ sub CreateSessionid {
 
 	$user[0]->session_id($id);
 	$user[0]->remote_addr($ENV{'REMOTE_ADDR'});
+
+	if($_[1]) {
+		$user[0]->session_active($_[1]);
+	}
+
 	$user[0]->update();
 
 	return $id;
+}
+
+#
+# Function: RenewSession
+#
+#   Function creates renews session by updating last_active
+#   field into database
+#
+# Parameters:
+#
+#   uid - User id
+#
+# Returns:
+#
+#   None
+#
+sub RenewSession {
+
+	shift if($_[0]=~/goah::Auth/);
+
+	my $uid = $_[0];
+
+	# Search user id from the database
+	use goah::Database::users;
+	my @user = goah::Database::users->search(accountid => $uid);
+
+	unless(scalar(@user)) {
+		goah::Modules->AddMessage('error',__("Can't read session data from the database!"));
+		return -1;
+	}
+
+	my $u=$user[0];
+
+	# Store created session id and other information into database
+	my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+	$user[0]->set('last_active' => sprintf("%04d-%02d-%02d %02d:%02d:%02d",$year+1900,$mon+1,$mday,$hour,$min,$sec));
+	$user[0]->update();
+
+	return;
 }
 
 #
@@ -151,6 +198,7 @@ sub DestroySessionid {
 
 	$user[0]->session_id('');
 	$user[0]->remote_addr('');
+	$user[0]->session_active('');
 	$user[0]->update();
 	$user[0]->commit();
 
@@ -186,6 +234,30 @@ sub CheckSessionid {
 			$logininfo[0]->session_id('');
 			return -2;
 		}
+		# Check that the session hasn't timed out
+		use DateTime;
+
+		my @last_active=split(/ /,$logininfo[0]->last_active);
+		my @day=split(/-/,$last_active[0]);
+		my @time=split(/:/,$last_active[1]);
+
+		my $dt=DateTime->new( 	year => $day[0],
+					month => $day[1],
+					day => $day[2],
+					hour => $time[0],
+					minute => $time[1],
+					second => $time[2]);
+		my $dt_now=DateTime->now();
+		my $duration=$dt_now->subtract_datetime($dt);
+		
+		unless($logininfo[0]->session_active) {
+			return 0;
+		}
+
+		if($duration->hours > $logininfo[0]->session_active) {
+			return -3;
+		}
+
 		return 1;
 	} else {
 		return 0;

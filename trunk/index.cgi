@@ -149,8 +149,11 @@ if($auth == 0) {
 		$uid = goah::Auth->CheckLogin($q->param('user'),$q->param('pass'));
 		if($uid != 0) {
 			$auth = 1; # Login ok
+			$sessid=goah::Auth->CreateSessionid($uid,$q->param('loginperiod'));		
 		} elsif($uid == -1) {
 			$auth = -2;
+		} elsif($uid == -3) {
+			$auth = -3; # Session timed out
 		} else {
 			$auth = -1; # Incorrect username/password
 		}
@@ -185,6 +188,9 @@ if ($q->param('theme')) {
 		$templatevars{'theme'} = $Config{'goah.theme'};
 }
 
+my $emptycookie = cookie ( -name => 'goah',
+				-value => '0',
+				-expires => '0');
 
 # We're logged in to system
 if ($auth == 1) {
@@ -201,9 +207,8 @@ if ($auth == 1) {
 		$templatevars{'showdebug'}=1;
 	}	
 		
-
-	# Create new (renew) session id
-	$sessid = goah::Auth->CreateSessionid($uid);
+	# Create renew session so that it won't time out
+	goah::Auth->RenewSession($uid);
 	
 	# Move q->param('action') into own variable
 	my $action = '';
@@ -215,22 +220,17 @@ if ($auth == 1) {
 	if($sessid =~ /^([0-9])+$/ && $sessid == -1) {
 		$action='disabled';
 
-		$cookie = cookie ( -name => 'goah', -value => '0', -expires => '0' );
+		$cookie = $emptycookie;
 		$viewport = cookie ( -name => 'viewport', -value => '0', -expires => '0' );
 		$templatevars{'page'} = 'login.tt2';
 		$templatevars{'function'} = 'accountdisabled';
 
 	} else {
-		# Set user's login period after login
-		if ($q->param('from_login') eq 'yes') {
-			$loginperiod = $q->param('loginperiod');
-		}
-			
 		# Create cookie which has only one value. Value is assembled
 		# by combining userid, session id, theme and loginperiod with a dot.
 		$cookie = $q->cookie ( -name => 'goah',
-				  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'}.'.'.$loginperiod,
-				  -expires => '+'.$loginperiod.'h');
+				  -value => $uid.'.'.$sessid.'.'.$templatevars{'theme'},
+				  -expires => '+7d');
 				  
 		$templatevars{'page'} = 'main.tt2';
 		$templatevars{'uid'} = $uid;
@@ -346,13 +346,17 @@ if ($auth == 1) {
 } elsif( $auth == -1) {
 	# User has given faulty login information, assign
 	# proper template and information in templatevars -hash
-	print header( -charset => 'UTF-8');
+	print header( -cookie => $emptycookie, -charset => 'UTF-8');
 	$templatevars{'page'} = 'login.tt2';
 	$templatevars{'function'} = 'wronglogin';
 } elsif( $auth == -2) {
-	print header( -charset => 'UTF-8');
+	print header( -cookie => $emptycookie, -charset => 'UTF-8');
 	$templatevars{'page'} = 'login.tt2';
 	$templatevars{'function'} = 'accountdisabled';
+} elsif( $auth == -3) {
+	print header( -cookie => $emptycookie, -charset => 'UTF-8');
+	$templatevars{'page'} = 'login.tt2';
+	$templatevars{'function'} = 'logintimedout';
 } else {
 	# Normal login
 	print header( -charset => 'UTF-8');

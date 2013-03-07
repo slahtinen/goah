@@ -22,7 +22,7 @@ use base 'goah::Db';
 __PACKAGE__->meta->setup
         (
 	table      => 'users',
-	columns    => [ qw(id accountid login pass last_active remote_addr session_id) ],
+	columns    => [ qw(id accountid login pass last_active remote_addr session_id, session_active) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );

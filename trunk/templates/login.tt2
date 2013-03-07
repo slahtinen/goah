@@ -40,6 +40,8 @@ $(document).ready(function() {
         [% INCLUDE wronglogin.tt2 %]
   [% ELSIF function == 'accountdisabled' %]
   	[% INCLUDE accountdisabled.tt2 %]
+  [% ELSIF function == 'logintimedout' %]
+  	[% INCLUDE logintimedout.tt2 %]
   [% ELSIF function == 'logout' %]
         [% INCLUDE logout.tt2 %]
   [% END %]
