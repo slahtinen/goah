@@ -311,8 +311,15 @@ sub FormatDate {
 		# Without timestamp
 		my @date = split(/-/,$_[0]);
 		return $date[2].'.'.$date[1].'.'.$date[0];
-	} elsif ($_[0]=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{4}/) {
+	} elsif ($_[0]=~/[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{0,4}/) {
+		# Date in dd.mm.yyyy -format
 		my @date = split(/\./,$_[0]);
+		
+		unless($date[2]=~/[0-9]{4}/) {
+			my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime(time);
+			goah::Modules->AddMessage('warn',"Year missing, using current year",__FILE__,__LINE__,caller());
+			$date[2]=$year+1900;
+		}
 
 		# Check that there's reasonable month
 		if($date[1]>12) {
@@ -331,7 +338,7 @@ sub FormatDate {
 
 		return sprintf("%04d-%02d-%02d",$date[2],$date[1],$date[0]);
 	} else {
-		goah::Modules->AddMessage('error',__("Given variable isn't in supported format"),__FILE__,__LINE__);
+		goah::Modules->AddMessage('error',__("Given variable isn't in supported format"),__FILE__,__LINE__,caller());
 		return 0;
 	}
 
