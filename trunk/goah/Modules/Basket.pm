@@ -763,7 +763,7 @@ sub ReadBaskets {
 	@data=@$datap;
 
 	my %baskets;
-	my $i=10000; # sort counter
+	my $i=100000; # sort counter
 	my $f; # Field, helper variable
 	my $br; # Basket row, helper variable
 	my %basketrows;
@@ -795,25 +795,34 @@ sub ReadBaskets {
 
 
 		foreach my $k (keys(%basketdbfields)) {
+
+			my $fieldvalue;
+			$f=$basketdbfields{$k}{'field'};		
+			# Reformat date if necessary, saves some trouble from the template
+			# processing
+			if($f=~/created/ || $f=~/updated/) {
+				$fieldvalue=goah::GoaH->FormatDate($b->$f);
+			} else {
+				$fieldvalue=$b->$f;
+			}
+
 			if($groupstates) {
 				my $state=$b->state;
 				my $statename=$basketstates{$state};
-				$f=$basketdbfields{$k}{'field'};		
-				$baskets{$state}{$i}{$f}=$b->$f;
 				$baskets{$state}{'name'}=$statename;
+				$baskets{$state}{$i}{$f}=$fieldvalue;
 
 				$sorthash{$state}{$cname.".".$i}=$i;
 			} else {
-				$f=$basketdbfields{$k}{'field'};		
 				if($_[0] || length($_[0])) {
 					if($f=~/state/i) {
 						goah::Modules->AddMessage('debug',"Got state: ".$b->$f,__FILE__,__LINE__);
 						$baskets{'statename'}=$basketstates{$b->$f};
 						goah::Modules->AddMessage('debug',"Set state name: ".$baskets{'statename'},__FILE__,__LINE__);
 					}
-					$baskets{$f}=$b->$f;
+					$baskets{$f}=$fieldvalue;
 				} else {
-					$baskets{$i}{$f}=$b->$f;
+					$baskets{$i}{$f}=$fieldvalue;
 					#$sorthash{$cname.".".$i}=$i unless ($b->state eq 2);
 					$sorthash{$cname.".".$i}=$i;
 				}
@@ -841,8 +850,8 @@ sub ReadBaskets {
 			$baskets{$state}{$i}{'rows'}--; # This since @rows has index -1 which contains sums from rows
 
 			if($state eq "2") {
-				$baskets{$state}{$i}{'lasttrigger'}=$b->lasttrigger;
-				$baskets{$state}{$i}{'nexttrigger'}=$b->nexttrigger;
+				$baskets{$state}{$i}{'lasttrigger'}=goah::GoaH->FormatDate($b->lasttrigger) if($b->lasttrigger);
+				$baskets{$state}{$i}{'nexttrigger'}=goah::GoaH->FormatDate($b->nexttrigger) if($b->nexttrigger);
 			}
 		} else {
 			# Check if we're reading individual basket or do we need additional 
@@ -860,7 +869,7 @@ sub ReadBaskets {
 			}
 
 			if($state eq "2") {
-				my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger);
+				my $nexttrigger = goah::GoaH::FormatDate($b->nexttrigger) if($b->nexttrigger);
 				$nexttrigger=~s/^..\.//;
 				my @nexttrigger_arr=split(/\./,$nexttrigger);
 
@@ -871,14 +880,14 @@ sub ReadBaskets {
 				# need to include additional counter
 				if($_[0] || length($_[0])) {
 					$baskets{'triggerheading'}=$nexttrigger;
-					$baskets{'lasttrigger'}=$b->lasttrigger;
-					$baskets{'nexttrigger'}=$b->nexttrigger;
+					$baskets{'lasttrigger'}=goah::GoaH->FormatDate($b->lasttrigger) if($b->lasttrigger);
+					$baskets{'nexttrigger'}=goah::GoaH->FormatDate($b->nexttrigger) if($b->nexttrigger);
 					$baskets{'repeat'}=$b->repeat;
 					$baskets{'dayinmonth'}=$b->dayinmonth;
 				} else {
 					$baskets{$i}{'triggerheading'}=$nexttrigger;
-					$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
-					$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
+					$baskets{$i}{'lasttrigger'}=goah::GoaH->FormatDate($b->lasttrigger) if($b->lasttrigger);
+					$baskets{$i}{'nexttrigger'}=goah::GoaH->FormatDate($b->nexttrigger) if($b->nexttrigger);
 					$baskets{$i}{'repeat'}=$b->repeat;
 					$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
 				}

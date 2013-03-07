@@ -3,8 +3,8 @@
 <tr>
 <td>[% gettext("Basket state:") %]</td><td>[% state = basketdata.state %][% gettext(basketstates.$state) %]</td></tr>
 <tr>
-<td>[% gettext("Basket created:") %]</td><td>[% formatdate(basketdata.created) %]</td></tr>
-<tr><td>[% gettext("Last update:") %]</td><td>[% formatdate(basketdata.updated) %]</td></tr>
+<td>[% gettext("Basket created:") %]</td><td>[% basketdata.created %]</td></tr>
+<tr><td>[% gettext("Last update:") %]</td><td>[% basketdata.updated %]</td></tr>
 <form action="" method=post>
 <input type="hidden" name="module" value="[% module %]">
 <input type="hidden" name="action" value="editcustomerinfo">
@@ -107,8 +107,8 @@
 [% END %]
 [% END %]
 [% IF state == 2 %]
-<tr><td>[% gettext("Last triggered") %]</td><td>[% formatdate(basketdata.lasttrigger) %]</td></tr>
-<tr><td>[% gettext("Next trigger") %]</td><td>[% formatdate(basketdata.nexttrigger) %]</td></tr>
+<tr><td>[% gettext("Last triggered") %]</td><td>[% basketdata.lasttrigger %]</td></tr>
+<tr><td>[% gettext("Next trigger") %]</td><td>[% basketdata.nexttrigger %]</td></tr>
 <tr>
 <td>[% gettext("Change next trigger to") %]</td>
 <td>[% gettext("Year") %] <input name="nexttrigger_year" class="small" /> 

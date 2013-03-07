@@ -284,7 +284,7 @@ sub FormatDate {
 	}
 
 	unless($_[0]) {
-		goah::Modules->AddMessage('error',__("No date to reformat"),__FILE__,__LINE__);
+		goah::Modules->AddMessage('error',__("No date to reformat"),__FILE__,__LINE__,caller());
 		return 0;
 	}
 

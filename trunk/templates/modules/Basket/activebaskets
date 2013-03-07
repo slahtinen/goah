@@ -141,11 +141,11 @@
 		<td class='number'>[% basket.total %]</td>
 		<td class='number_buy'>[% basket.total_vat %]</td>
 		<td class='number'>[% basket.rows %]</td>
-		<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
-		[% gettext("Updated") %]: [% formatdate(basket.updated) %]
+		<td>[% gettext("Created") %]: [% basket.created %]<br/>
+		[% gettext("Updated") %]: [% basket.updated %]
 		[% IF basket.state == 2 %]
-			<br/>[% gettext("Previous run") %]: [% formatdate(basket.lasttrigger) %]<br/>
-			[% gettext("Next run") %]: [% formatdate(basket.nexttrigger) %]
+			<br/>[% gettext("Previous run") %]: [% basket.lasttrigger %]<br/>
+			[% gettext("Next run") %]: [% basket.nexttrigger %]
 		[% END %]
 		</td>
 		<td >[% basket.info %]

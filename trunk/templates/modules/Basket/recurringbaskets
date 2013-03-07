@@ -109,10 +109,10 @@
 	[% END %]
 	</td>
 	<td>[% gettext("Total") %]: [% basket.total %]<br/>[% gettext("Rows") %]: [% basket.rows %]</td>
-	<td>[% gettext("Created") %]: [% formatdate(basket.created) %]<br/>
-	[% gettext("Updated") %]: [% formatdate(basket.updated) %]</td>
-	<td>[% gettext("Previous") %]: [% formatdate(basket.lasttrigger) %]<br/>
-	[% gettext("Next") %]: [% formatdate(basket.nexttrigger) %]</td>
+	<td>[% gettext("Created") %]: [% basket.created %]<br/>
+	[% gettext("Updated") %]: [% basket.updated %]</td>
+	<td>[% gettext("Previous") %]: [% basket.lasttrigger %]<br/>
+	[% gettext("Next") %]: [% basket.nexttrigger %]</td>
 	<td>[% basket.repeat %] [% gettext("mo") %], [% basket.dayinmonth %] 
 	[% IF basket.dayinmonth == 1 %]
 		[% gettext("st day") %]
