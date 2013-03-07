@@ -201,7 +201,7 @@ sub Start {
 				$variables{'function'} = 'modules/Basket/activebasket';
 				$variables{'activebasket'} = $q->param('target');
 				$variables{'basketdata'} = $tmpdata;
-				$variables{'basketrows'} = ReadBasketrows($q->param('target'));
+				$variables{'basketrows'} = ReadBasketrows($q->param('target'),,,0);
 				$variables{'trackedhours'} = goah::Modules::Tracking->ReadHours('',$tmpd{'companyid'},'0','0','open');
 				$variables{'productinfo'} = sub { goah::Modules::Productmanagement::ReadData('products',$_[0],$uid) };
 				$variables{'baskethistory'} = ReadHistoryEvents($tmpd{'id'});
@@ -866,18 +866,28 @@ sub ReadBaskets {
 
 				my $headingtotal=$baskets{'headingtotal'}{$nexttrigger}+$basketrows{-1}{'baskettotal'};
 				my $headingtotalvat=$baskets{'headingtotal_vat'}{$nexttrigger}+$basketrows{-1}{'baskettotal_vat'};
-				$baskets{$i}{'triggerheading'}=$nexttrigger;
-				$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
-				$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
+
+				# Check if we're reading single basket or if we'll
+				# need to include additional counter
+				if($_[0] || length($_[0])) {
+					$baskets{'triggerheading'}=$nexttrigger;
+					$baskets{'lasttrigger'}=$b->lasttrigger;
+					$baskets{'nexttrigger'}=$b->nexttrigger;
+					$baskets{'repeat'}=$b->repeat;
+					$baskets{'dayinmonth'}=$b->dayinmonth;
+				} else {
+					$baskets{$i}{'triggerheading'}=$nexttrigger;
+					$baskets{$i}{'lasttrigger'}=$b->lasttrigger;
+					$baskets{$i}{'nexttrigger'}=$b->nexttrigger;
+					$baskets{$i}{'repeat'}=$b->repeat;
+					$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
+				}
 
 				$headingtotal=0 unless($headingtotal);
 				$headingtotalvat=0 unless($headingtotalvat);
 
 				$baskets{'headingtotal'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotal,0,0,'out',0);
 				$baskets{'headingtotal_vat'}{$nexttrigger}=goah::GoaH->FormatCurrencyNopref($headingtotalvat,0,0,'out',1);
-				$baskets{$i}{'repeat'}=$b->repeat;
-				$baskets{$i}{'dayinmonth'}=$b->dayinmonth;
-				
 				$sorthash{$nexttrigger_arr[1].'.'.$nexttrigger_arr[0].'.'.$cname.'.'.$i}=$i;
 			}
 		}
