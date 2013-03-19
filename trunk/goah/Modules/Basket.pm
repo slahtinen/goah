@@ -1241,7 +1241,7 @@ sub DeleteBasketRow {
 		return 0;
 	}
 
-	if($rdata->remoteid) {
+	if($rdata->remoteid > 0) {
 		use goah::Modules::Tracking;
 		my $remoteid=$rdata->remoteid;
 		$remoteid=~s/^.*://;
