@@ -63,7 +63,7 @@
 
 \hspace{-0.5cm}
 \begin{tabular}{p{2.3cm} p{6.6cm} p{2.8cm} p{6cm}}
-\textbf{Laskutuspvm} & [% formatdate(data.created) %] & \textbf{Maksuehto} & [% customerinfo.payment_condition %] pv \\
+\textbf{Laskutuspvm} & [% formatdate(data.created) %] & \textbf{Maksuehto} & [% data.payment_condition %] pv \\
 \textbf{Eräpäivä} & [% formatdate(data.due) %] & \textbf{Viivästyskorko} & [% customerinfo.delay_interest %] \% \\
 \textbf{Viitenumero} & [% data.referencenumber %] & \textbf{Huomautusaika} & [% customerinfo.reclamation_time %] pv \\
 \textbf{Maksettava} & [% total.inclvat %] EUR & \textbf{Viitteenne} & [% escape(data.customerreference) %] \\
