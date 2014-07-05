@@ -21,7 +21,7 @@ use base qw(goah::Db::Object);
 __PACKAGE__->meta->setup
         (
 	table      => 'Persons',
-	columns    => [ qw(id companyid firstname lastname title phone mobile fax email locationid) ],
+	columns    => [ qw(id companyid firstname lastname title phone mobile fax email locationid desirablehours) ],
 	pk_columns => 'id',
 	unique_key => 'id',
 );

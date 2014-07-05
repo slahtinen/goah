@@ -180,9 +180,10 @@ $templatevars{'demomode'} = $Config{'goah.demomode'};
 $templatevars{'viewport'} = $viewport;
 
 # Read theme from login, or use one from cookie. Get fallback from config.
+my $themeset=length($theme) || 0;
 if ($q->param('theme')) {
 		$templatevars{'theme'} = $q->param('theme');
-} elsif (length($theme) > 1) {
+} elsif ($themeset > 1) {
 		$templatevars{'theme'} = $theme;
 } else {
 		$templatevars{'theme'} = $Config{'goah.theme'};

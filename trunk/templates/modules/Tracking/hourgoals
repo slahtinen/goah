@@ -1,0 +1,92 @@
+<h2>[% gettext("Hour goal statistics for whole company") %]</h2>
+
+[% FOREACH pkey IN hourgoals_total.keys.sort %]
+	[% persondata = hourgoals_total.$pkey %]
+	[% hourgoals = persondata.hourgoals %]
+
+	<h3>[% gettext("Statistics for") %] [% persondata.name %]</h3>
+	<table>
+	<thead>
+	<tr>
+	<th>[% gettext("Week") %]</th>
+	<th>[% gettext("Mon") %]</th>
+	<th>[% gettext("Tue") %]</th>
+	<th>[% gettext("Wed") %]</th>
+	<th>[% gettext("Thu") %]</th>
+	<th>[% gettext("Fri") %]</th>
+	<th>[% gettext("Sat") %]</th>
+	<th>[% gettext("Sun") %]</th>
+	<th>[% gettext("Total") %]</th>
+	<th>[% gettext("Company total") %]</th>
+	</tr>
+	</thead>
+
+	[% even = 1 %]
+	[% daygoals = hourgoals.days %]
+	[% FOREACH key IN daygoals.keys.sort %]
+		[% IF key.match('[a-z]') %]
+			[% NEXT %]
+		[% END %] 
+
+		[% week = daygoals.$key %]
+		[% IF even == 1 %] 
+			<tr class="even">
+			[% even=0 %]
+		[% ELSE %]
+			<tr class="odd">
+			[% even=1 %]
+		[% END %]
+	
+		<td>[% week.number %]</td>
+		[% FOREACH dk IN week.keys.sort %]
+			[% IF dk.match('[a-z]') %]
+				[% NEXT %]
+			[% END %]
+			[% day = week.$dk %]
+			<td class="number">[% day.done %]</td>
+		[% END %]
+		<td class="number">[% week.total %] / [% week.goal %] ([% week.percent %]%)</td>
+		<td class="number">[% week.all_total %] / [% week.all_goal %] ([% week.all_percent %]%)</td>
+		</tr>
+	[% END %]
+		
+	<tr>
+	[% current = daygoals.current %]
+	<td>[% current.number %]</td>
+	[% FOREACH key IN current.keys.sort %]
+		[% IF key.match('[a-z]') %]
+			[% NEXT %]
+		[% END %]
+		<td class="number">[% current.$key.done %]</td>
+	[% END %]
+	<td class="number">[% current.total %] / [% current.goal %] ([% current.percent %]%)</td>
+	<td class="number">[% current.all_total %] / [% current.all_goal %] ([% current.all_percent %]%)</td>
+	</tr>
+	</table>
+
+	[% monthgoals = hourgoals.months %]
+	<h3>[% gettext("Monthly statistics for") %] [% persondata.name %]</h3>
+	<table>
+	<thead>
+	<tr><th>[% gettext("Month") %]</th>
+	<th>[% gettext("Your statistics") %]</th>
+	<th>[% gettext("Company total") %]</th></tr>
+	</thead>
+	[% FOREACH key IN monthgoals.keys.nsort %]
+		[% IF key.match("[a-z]") %]
+			[% NEXT %]
+		[% END %]
+		[% month = monthgoals.$key %]
+		<tr>
+		<td>[% month.name %] [% month.year %]</td>
+		<td class="number">[% month.done %] / [% month.goal %] ([% month.percent %]%)</td>
+		<td class="number">[% month.all_done %] / [% month.all_goal %] ([% month.all_percent %]%)</td>
+		</tr>
+	[% END %]
+	<tr><td>[% gettext("This month so far") %]</td>
+	<td class="number">[% monthgoals.current.done %] / [% monthgoals.current.goal %] ([% monthgoals.current.percent %]%)</td>
+	<td class="number">[% monthgoals.current.all_done %] / [% monthgoals.current.all_goal %] ([% monthgoals.current.all_percent %]%)</td>
+	</tr>
+	</table>
+[% END %]
+

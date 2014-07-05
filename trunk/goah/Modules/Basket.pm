@@ -28,7 +28,7 @@ use goah::Modules::Productmanagement;
 
 my %baskettypes = ( 0 => { id => 0, name => __("Pending"), selected => 1, hidden => 0, validstates => (4) },
 		    1 => { id => 1, name => __("Sold"), selected => 0, hidden => 1 },
-		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 0, validstates => () },
+		    2 => { id => 2, name => __("Recurring"), selected => 0, hidden => 0 },
 		    3 => { id => 3, name => __("Offer"), selected => 0, hidden => 0, validstates => (4) },
 		    4 => { id => 4, name => __("Order"), selected => 0, hidden => 0, validstates => (0,4) }
 		    );

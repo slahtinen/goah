@@ -97,9 +97,10 @@ my %persondbfieldnames = (
                         7 => { field => 'fax', name => __('Fax'), type =>  'textfield', required => '0' },
                         8 => { field => 'email', name => __('E-mail'), type => 'textfield', required => '1' },
                         9 => { field => 'locationid', name => __('Location'), type => 'textfield', required => '0' },
-			91 => { field => 'login', name => __("Login name"), type=> 'textfield', required => '0' },
-			92 => { field => 'pass', name => __("Password"), type => 'textfield', required => '0' },
-			93 => { field => 'disabled', name => __("Disabled"), type => 'checkbox', required => '0' },
+			91 => { field => 'desirablehours', name => __('Desirable billed hours per day'), type => 'textfield', required => '0' },
+			93 => { field => 'login', name => __("Login name"), type=> 'textfield', required => '0' },
+			94 => { field => 'pass', name => __("Password"), type => 'textfield', required => '0' },
+			95 => { field => 'disabled', name => __("Disabled"), type => 'checkbox', required => '0' },
                 );
 
 
@@ -733,7 +734,7 @@ sub ReadOwnerLocations {
 #
 sub ReadBankAccounts {
 
-	if($_[0]=~/Systemsettings/) {
+	if($_[0] && $_[0]=~/Systemsettings/) {
 		shift;
 	}
 
@@ -898,7 +899,7 @@ sub EditBankAccount {
 #
 sub ReadOwnerPersonnel {
 
-	shift if ($_[0]=~/goah::Modules::Systemsettings/);
+	shift if ($_[0] && $_[0]=~/goah::Modules::Systemsettings/);
 
 	use goah::Database::Companies;
 	use goah::Database::users;

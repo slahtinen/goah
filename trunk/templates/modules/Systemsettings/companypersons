@@ -4,7 +4,7 @@
 <tr>
 [% FOREACH key IN persondbfields.keys.sort %]
 [% field = persondbfields.$key %]
-[% IF field.type != "hidden" && field.field != "pass" && field.field != 'disabled' %]
+[% IF field.type != "hidden" && field.field != "pass" && field.field != 'disabled' && field.field != 'desirablehours' %]
 	<th>[% gettext(field.name) %]</th>
 [% END %]
 [% END %]
@@ -18,7 +18,7 @@
 <tr class="[% row %]">
 [% FOREACH key IN persondbfields.keys.sort %]
 [% field = persondbfields.$key %]
-	[% IF field.type != "hidden" && field.field != "pass" && field.field != 'disabled' %]
+	[% IF field.type != "hidden" && field.field != "pass" && field.field != 'disabled' && field.field != 'desirablehours' %]
 		[% field = field.field %]
 		<td>[% person.$field %]
 		</td>

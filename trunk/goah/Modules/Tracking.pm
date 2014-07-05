@@ -33,7 +33,8 @@ my %timetrackstatuses;
 my %timetrackingdb;
 
 my %submenu = (
-	0 => { title => __("Reporting"), action => 'reporting' }
+	0 => { title => __("Reporting"), action => 'reporting' },
+	1 => { title => __("Full company details"), action => 'hourgoals' },
 );
 
 #
@@ -143,11 +144,32 @@ sub Start {
 	$variables{'debitselect'} = { 	0 => { key => 'unimported', value => __("Only not imported hours") },
 					1 => { key => 'imported', value => __("Only imported hours") },
 					2 => { key => 'all', value => __("All hours") } };
-	
+
 	my ($sec,$min,$hour,$mday,$mon,$yearnow,$wday,$yday,$isdst) = localtime(time);
 	$yearnow+=1900;
 	$mon++;
 	$variables{'datenow'} = sprintf("%02d.%02d.%04d",$mday,$mon,$yearnow);
+
+	# Calculate working days for the week and for the month
+	my %workinghours;
+	$workinghours{'week'}=$wday;
+	$workinghours{'month'}=0;
+
+
+	use DateTime;
+	for(my $md=1;$md<=$mday;$md++) {
+			
+		my $dt = DateTime->new(
+			year => $yearnow,
+			month => $mon,
+			day => $mday,
+			hour => 1,
+			minute => 1,
+			second => 0);
+
+		$workinghours{'month'}++ if($dt->day_of_week < 6);
+	}
+		
 	
 	if($q->param('action')) {
 		
@@ -248,6 +270,11 @@ sub Start {
 				$variables{'dbdata'}=ReadHours('','','','','yes','unimported');
 			}
 
+		} elsif($q->param('action')=~/hourgoals/) {
+
+			$variables{'function'}='modules/Tracking/hourgoals';
+			$variables{'hourgoals_total'}=HourGoals(-2,8,12);
+
                 } else {
                         goah::Modules->AddMessage('error',__("Module doesn't have function ")."'".$q->param('action')."'.");
                         $variables{'function'} = 'modules/blank';
@@ -259,12 +286,319 @@ sub Start {
 		#$variables{'latesthours'}=ReadHours($uid,'',$year.'-'.$mon.'-01');
 		$variables{'latesthours'}=ReadHours($uid,'','-20','');
 		$variables{'timetrackstatuses'}=\%timetrackstatuses;
+		$variables{'hourgoals'}=HourGoals($uid);
 	}
 		
-
 	return \%variables;
 }
 
+
+# 
+# Function: HourGoals
+#   
+#   Calculate done/goal hours for statistics
+#
+# Parameters:
+#
+#	1 - Uid, if omitted calculate totals for all company personnel
+#	2 - Week numbers, how many weeks to retrieve
+#	3 - Month numbers, how many months to retrieve
+#
+# Returns:
+#
+# 	0 - Error
+# 	Hash ref - Hash reference containing hour values weekly and monthly
+#
+sub HourGoals {
+
+	my $uid=-1;
+	
+	$uid=$_[0] if($_[0]);
+
+	if($uid == -2) {
+		# Read hourgoals for every person
+		use goah::Modules::Systemsettings;
+		my $all_personnel_p=goah::Modules::Systemsettings->ReadOwnerPersonnel();
+
+		unless($all_personnel_p) {
+			goah::Modules->AddMessage('error',__("Couldn't read owner personnel info, can't get results for company performance"),__FILE__,__LINE__);
+			return 0;
+		}
+
+		my %all_personnel = %$all_personnel_p;
+		
+		my %hourgoaldata;
+		while(my ($key,$user)=each(%all_personnel)) {
+
+			my %userdata=%$user;
+			$hourgoaldata{$key}{'name'}=$userdata{'lastname'}.' '.$userdata{'firstname'};
+			$hourgoaldata{$key}{'hourgoals'}=HourGoals($userdata{'id'},$_[1],$_[2]);
+		}
+		
+		return \%hourgoaldata;
+	}
+
+	my $getweeks=4;
+	my $getmonths=4;
+
+	if($_[1] && $_[1]=~/^[0-9]+$/) {
+		$getweeks=$_[1];
+	}
+
+	if($_[2] && $_[2]=~/^[0-9]+$/) {
+		$getmonths=$_[2];
+	}
+
+	my ($sec,$min,$hour,$mday,$mon,$yearnow,$wday,$yday,$isdst) = localtime(time);
+	$yearnow+=1900;
+	$mon++;
+	$yday++;
+
+	use DateTime;
+
+	# Get desirable hours and precalc desirable hours
+	use goah::Modules::Customermanagement;
+	my $persondata = goah::Modules::Customermanagement->ReadPersondata($uid);
+
+	unless($persondata) {
+		goah::Modules->AddMessage('error',__("Couldn't retrieve user data for id ").$uid,__FILE__,__LINE__);
+		return 0;
+	}
+
+	my %desirable;
+	if($persondata->desirablehours) {
+		$desirable{'day'}=$persondata->desirablehours;
+	} else {
+		goah::Modules->AddMessage('error',__("Desirable hours missing for user, defaulting to 1."),__FILE__,__LINE__);
+		$desirable{'day'}=1;
+	}
+	$desirable{'week'}=$desirable{'day'}*5; # we've got 5 working days in a week
+
+	# Get desirable hours for all personnel total
+	use goah::Modules::Systemsettings;
+	my @all_personnel_id;
+	my $all_personnel_p=goah::Modules::Systemsettings->ReadOwnerPersonnel();
+	unless($all_personnel_p) {
+		goah::Modules->AddMessage('error',__("Couldn't read owner personnel info, can't get results for company performance"),__FILE__,__LINE__);
+		$desirable{'all_day'}=1;
+		$desirable{'all_week'}=5;
+	} else {
+		
+		my %all_personnel=%$all_personnel_p;
+
+		while( my ($key,$person_p) = each (%all_personnel)) {
+			
+			my %person=%$person_p;
+			push(@all_personnel_id,$person{'id'});
+			$desirable{'all_day'}+=$person{'desirablehours'};
+			$desirable{'all_week'}+=($person{'desirablehours'}*5);
+		}
+	}
+
+	unless($desirable{'all_day'}) {
+		goah::Modules->AddMessage('error',__("Desirable hours for whole company is 0! Defaulting to 1."),__FILE__,__LINE__);
+		$desirable{'all_day'}=1;
+		$desirable{'all_week'}=5;
+	}
+
+	my %hourdata;
+
+	# Read 4 previous weeks into array
+	
+	# Get monday from current week, wday 0..6
+	my $dt = DateTime->from_day_of_year(
+			year => $yearnow,
+			day_of_year => $yday);
+	$dt->truncate(to => 'week');
+
+	# Start traverse, go $getweeks mondays back
+	$dt->subtract( days => $getweeks*7 ); 
+
+	# Verify that we're indeed on monday
+	while($dt->day_of_week != 1) {
+		
+		goah::Modules->AddMessage('debug','Looking for monday at '.$dt->dmy,__FILE__,__LINE__);
+		if($dt->day_of_week() > 1) {
+			$dt->subtract(days => 1);
+		} else {
+			$dt->add(days => 1);
+		}
+	}
+	goah::Modules->AddMessage('debug','Starting from day '.$dt->dmy." which is ".$dt->day_of_week,__FILE__,__LINE__);
+
+	my %pasthours;
+	for(my $w=1;$w<=$getweeks;$w++) {
+	
+		$pasthours{$w}{'number'}=$dt->strftime("%W");
+		$pasthours{$w}{'goal'}=$desirable{'week'};
+		$pasthours{$w}{'all_goal'}=$desirable{'all_week'};
+		for(my $d=1;$d<=7;$d++) {
+			
+			my $hours=0;
+			my $allhours=0;
+			my $donehours_p=ReadHours($uid,'',$dt->ymd,$dt->ymd,'yes','all');
+			if($donehours_p) {
+				my %donehours=%$donehours_p;
+				$hours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+			}
+
+			$donehours_p=ReadHours(\@all_personnel_id,'',$dt->ymd,$dt->ymd,'yes','all');
+			if($donehours_p) {
+				my %donehours=%$donehours_p;
+				$allhours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+			}
+
+			$pasthours{$w}{$d}{'dmy'}=$dt->dmy;
+			$pasthours{$w}{$d}{'goal'}=$desirable{'day'};
+			$pasthours{$w}{$d}{'done'}=$hours;
+			$pasthours{$w}{$d}{'all_goal'}=$desirable{'all_day'};
+			$pasthours{$w}{$d}{'all_done'}=$allhours;
+			$pasthours{$w}{$d}{'percent'}=sprintf("%.1f",$hours/$desirable{'day'}*100);
+			$pasthours{$w}{$d}{'all_percent'}=sprintf("%.1f",$allhours/$desirable{'all_day'}*100);
+			$pasthours{$w}{'total'}+=$hours;
+			$pasthours{$w}{'all_total'}+=$allhours;
+			$dt->add(days => 1);
+
+		}
+		$pasthours{$w}{'percent'}=sprintf("%.1f",$pasthours{$w}{'total'}/$desirable{'week'}*100);
+		$pasthours{$w}{'all_percent'}=sprintf("%.1f",$pasthours{$w}{'all_total'}/$desirable{'all_week'}*100);
+
+	}
+	
+	# Read current week
+	$dt=DateTime->from_day_of_year( year => $yearnow, day_of_year => $yday );
+	$dt->truncate(to => 'week');
+
+	$pasthours{'current'}{'number'}=$dt->strftime("%W"); 
+	$pasthours{'current'}{'goal'}=$desirable{'week'};
+	$pasthours{'current'}{'all_goal'}=$desirable{'all_week'};
+	for(my $d=1;$d<=7;$d++) {
+		
+		$pasthours{'current'}{$d}{'goal'}=$desirable{'day'};
+		$pasthours{'current'}{$d}{'all_goal'}=$desirable{'all_day'};
+		$pasthours{'current'}{$d}{'dmy'}=$dt->dmy;
+		if($d<=$wday) {
+			my $hours='0';
+			my $allhours=0;
+			my $donehours_p=ReadHours($uid,'',$dt->ymd,$dt->ymd,'yes','all');
+			if($donehours_p) {
+				my %donehours=%$donehours_p;
+				$hours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+			}
+
+			my $donehours_p=ReadHours(\@all_personnel_id,'',$dt->ymd,$dt->ymd,'yes','all');
+			if($donehours_p) {
+				my %donehours=%$donehours_p;
+				$allhours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+			}
+			$pasthours{'current'}{$d}{'done'}=$hours;
+			$pasthours{'current'}{$d}{'all_done'}=$allhours;
+			$pasthours{'current'}{$d}{'percent'}=sprintf("%.1f",$hours/$desirable{'day'}*100);
+			$pasthours{'current'}{$d}{'all_percent'}=sprintf("%.1f",$allhours/$desirable{'all_day'}*100);
+			$pasthours{'current'}{'total'}+=$hours;
+			$pasthours{'current'}{'all_total'}+=$allhours;
+
+		} 
+		$dt->add(days => 1);
+	}
+	$pasthours{'current'}{'percent'}=sprintf("%.1f",$pasthours{'current'}{'total'}/$desirable{'week'}*100);
+	$pasthours{'current'}{'all_percent'}=sprintf("%.1f",$pasthours{'current'}{'all_total'}/$desirable{'all_week'}*100);
+			
+	$hourdata{'days'}=\%pasthours;
+
+
+	# Read monthly data as well
+	my $end_dt=DateTime->new(year => $yearnow, month=> $mon, day => 1);
+	my $start_dt=$end_dt->clone();
+	$start_dt->subtract(months=>$getmonths);
+
+	goah::Modules->AddMessage('debug',"Getting statistics for $getmonths, starting from ".$start_dt->dmy,__FILE__,__LINE__);
+	
+	my %pasthours_month;
+	my $loopcounter=1;
+	until($end_dt->year == $start_dt->year && $end_dt->month == $start_dt->month) {
+
+		# Loop trough working days on given month to calculate
+		# hour goal
+		
+		my $dt=DateTime->new( 
+				year => $start_dt->year,
+				month => $start_dt->month,
+				day => 1
+			);
+
+		until($dt->month != $start_dt->month) {
+
+			if($dt->day_of_week < 6) {
+				$pasthours_month{$loopcounter}{'goal'}+=$desirable{'day'};
+				$pasthours_month{$loopcounter}{'all_goal'}+=$desirable{'all_day'};
+			}
+			$dt->add(days=>1);
+		}
+
+		$dt->set_day(1);
+		my $dt2=$dt->clone;
+		$dt2->add(months=>1)->subtract(days=>1);
+
+
+		my $donehours_p=ReadHours($uid,'',$dt->ymd,$dt2->ymd,'yes','all');
+		my $hours=0;
+		my $allhours=0;
+		if($donehours_p) {
+			my %donehours=%$donehours_p;
+			$hours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+		}
+		$donehours_p=ReadHours(\@all_personnel_id,'',$dt->ymd,$dt2->ymd,'yes','all');
+		if($donehours_p) {
+			my %donehours=%$donehours_p;
+			$allhours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+		}
+
+		$pasthours_month{$loopcounter}{'done'}=$hours;
+		$pasthours_month{$loopcounter}{'all_done'}=$allhours;
+		$pasthours_month{$loopcounter}{'name'}=__($dt->month_abbr);
+		$pasthours_month{$loopcounter}{'year'}=$start_dt->year;
+		$pasthours_month{$loopcounter}{'percent'}=sprintf("%.1f",$pasthours_month{$loopcounter}{'done'}/$pasthours_month{$loopcounter}{'goal'}*100);
+		$pasthours_month{$loopcounter}{'all_percent'}=sprintf("%.1f",$pasthours_month{$loopcounter}{'all_done'}/$pasthours_month{$loopcounter}{'all_goal'}*100);
+
+		$start_dt->add(months => 1);
+		$loopcounter++;
+	}
+
+	
+	$dt=DateTime->from_day_of_year( year => $yearnow, day_of_year => $yday);
+	for(my $d=1;$d<=$dt->day;$d++) {
+		my $dt2=DateTime->new( year => $dt->year, month => $dt->month, day => $d);
+		if($dt2->day_of_week < 6) {
+			$pasthours_month{'current'}{'goal'}+=$desirable{'day'};
+			$pasthours_month{'current'}{'all_goal'}+=$desirable{'all_day'};
+		}
+	}
+
+	my $donehours_p=ReadHours($uid,'',$dt->year.'-'.sprintf("%02d",$dt->month).'-01',$dt->ymd,'yes','all');
+	if($donehours_p) {
+		my %donehours=%$donehours_p;
+		$pasthours_month{'current'}{'done'}=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+	}
+
+	$donehours_p=ReadHours(\@all_personnel_id,'',$dt->year.'-'.sprintf("%02d",$dt->month).'-01',$dt->ymd,'yes','all');
+	if($donehours_p) {
+		my %donehours=%$donehours_p;
+		$pasthours_month{'current'}{'all_done'}=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
+	}
+
+	if($pasthours_month{'current'}{'goal'}) {
+		$pasthours_month{'current'}{'percent'}=sprintf("%.1f",$pasthours_month{'current'}{'done'}/$pasthours_month{'current'}{'goal'}*100);
+	}
+
+	if($pasthours_month{'current'}{'all_goal'}) {
+		$pasthours_month{'current'}{'all_percent'}=sprintf("%.1f",$pasthours_month{'current'}{'all_done'}/$pasthours_month{'current'}{'all_goal'}*100);
+	}
+
+	$hourdata{'months'}=\%pasthours_month;
+
+	return \%hourdata;
+}
 
 #
 # Function: WriteHours 
@@ -570,46 +904,46 @@ sub ReadHours {
 
 	if($_[0]) {
 		$dbsearch{'userid'}=$_[0];
-		goah::Modules->AddMessage('debug',"Searching with uid ".$dbsearch{'userid'},__FILE__,__LINE__);
+		#goah::Modules->AddMessage('debug',"Searching with uid ".$dbsearch{'userid'},__FILE__,__LINE__);
 	}
 	if($_[1]) {
 		$dbsearch{'companyid'}=$_[1];
-		goah::Modules->AddMessage('debug',"Searching with companyid ".$dbsearch{'companyid'},__FILE__,__LINE__);
+		#goah::Modules->AddMessage('debug',"Searching with companyid ".$dbsearch{'companyid'},__FILE__,__LINE__);
 	}
 	# Start date, no end date
 	if($_[2] && !($_[3])) {
 		unless($_[2]<0) {
 			$dbsearch{'day'} = { ge => $_[2] };
-			goah::Modules->AddMessage('debug',"Searching with startdate ".$_[2],__FILE__,__LINE__);
+			#goah::Modules->AddMessage('debug',"Searching with startdate ".$_[2],__FILE__,__LINE__);
 		}
 	}
 	# End date, no start date
 	if($_[3] && !($_[2])) {
 		$dbsearch{'day'} = { le => $_[3] };
-		goah::Modules->AddMessage('debug',"Searching with enddate ".$dbsearch{'day'},__FILE__,__LINE__);
+		#goah::Modules->AddMessage('debug',"Searching with enddate ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
 	# Both start and end date
 	if($_[2] && $_[3]) {
 		$dbsearch{'and'} = [ day => { ge => $_[2] }, day => { le => $_[3] } ];
-		goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
+		#goah::Modules->AddMessage('debug',"Searching with start and end date ".$dbsearch{'day'},__FILE__,__LINE__);
 	}
 
 	# Limit search by billable/internal
 	if($_[4]) {
 		if($_[4]=~/^yes$/i) {
-			goah::Modules->AddMessage('debug',"Searching debit hours",__FILE__,__LINE__);
+			#goah::Modules->AddMessage('debug',"Searching debit hours",__FILE__,__LINE__);
 			$dbsearch{'hours'} = { gt => 0 };
 		}
 
 		if($_[4]=~/^no$/i) {
-			goah::Modules->AddMessage('debug',"Searching internal hours",__FILE__,__LINE__);
+			#goah::Modules->AddMessage('debug',"Searching internal hours",__FILE__,__LINE__);
 			$dbsearch{'inthours'} = { gt => 0 };
 		}
 
 		# Limit search for only hours not moved to basket
 		# This implies billable -option
 		if($_[4]=~/^open$/i) {
-			goah::Modules->AddMessage('debug',"Searching open, debit hours",__FILE__,__LINE__);
+			#goah::Modules->AddMessage('debug',"Searching open, debit hours",__FILE__,__LINE__);
 			$dbsearch{'hours'} = { gt => 0 };
 			$dbsearch{'or'} = [ basket_id => '', basket_id => 0 ];
 			$dbsearch{'productcode'} = { ne => '' };
@@ -619,12 +953,12 @@ sub ReadHours {
 	# Limit search by imported to basket -status
 	if($_[5]) {
 		if($_[5]=~/^unimported$/i) {
-			goah::Modules->AddMessage('debug',"Searching only unimported hours",__FILE__,__LINE__);
+			#goah::Modules->AddMessage('debug',"Searching only unimported hours",__FILE__,__LINE__);
 			$dbsearch{'or'}= [ basket_id => '', basket_id => 0 ];
 		}
 
 		if($_[5]=~/^imported$/i) {
-			goah::Modules->AddMessage('debug',"Searching only imported hours",__FILE__,__LINE__);
+			#goah::Modules->AddMessage('debug',"Searching only imported hours",__FILE__,__LINE__);
 			$dbsearch{'or'} = [ basket_id => { gt => 0 }, basket_id => -1 ];
 		}
 	}
@@ -632,7 +966,7 @@ sub ReadHours {
 	my $datap; 
 	
 	if($_[2]<0) {
-		goah::Modules->AddMessage('debug',"Limiting search by result count",__FILE__,__LINE__);
+		#goah::Modules->AddMessage('debug',"Limiting search by result count",__FILE__,__LINE__);
 		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC', limit => -1*$_[2]);
 	} else {
 		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC');
@@ -692,6 +1026,7 @@ sub ReadHours {
 				$tdata{$i}{$field} = goah::GoaH::FormatDate($row->$field);
 			}
 			if ($field eq 'hours' || $field eq 'inthours') {
+				
 				$tdata{$i}{$field}=$row->$field;
 				$tdata{$i}{$field}=~s/\.\d*$//;
 
@@ -728,7 +1063,7 @@ sub ReadHours {
 			}
 		}
 	}	
-	goah::Modules->AddMessage('debug',"Got ".($i-10000000)." rows from the database.",__FILE__,__LINE__);
+	#goah::Modules->AddMessage('debug',"Got ".($i-10000000)." rows from the database.",__FILE__,__LINE__);
 
 	# Go trough hours and cacl total hours
 	# Warning: Here be dragons.
@@ -739,7 +1074,7 @@ sub ReadHours {
 		# 0 index = total for internal hours
 		# 1 index = total for billed hours
 
-		goah::Modules->AddMessage('debug',"Total hour count for key $t ".$totalhours{$t}{1}."/".$totalhours{$t}{0},__FILE__,__LINE__);
+		#goah::Modules->AddMessage('debug',"Total hour count for key $t ".$totalhours{$t}{1}."/".$totalhours{$t}{0},__FILE__,__LINE__);
 
 		$tdata{-1}{$t}{'hours'}{-1}=$totalhours{$t}{0}+$totalhours{$t}{1}; # Total hours for current type
 

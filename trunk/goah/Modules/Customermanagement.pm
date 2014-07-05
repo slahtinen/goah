@@ -108,7 +108,8 @@ my %persondbfieldnames = (
 			6 => { field => 'mobile', name => __('Mobile'), type => 'textfield', required => '0' },
 			7 => { field => 'fax', name => __('Fax'), type =>  'textfield', required => '0' },
 			8 => { field => 'email', name => __('E-mail'), type => 'textfield', required => '1' },
-			9 => { field => 'locationid', name => __('Location'), type => 'textfield', required => '0' }
+			9 => { field => 'locationid', name => __('Location'), type => 'textfield', required => '0' },
+			10 => { field => 'desirablehours', name => __('Desirable hours per day'), type => 'hidden', required => '0' },
 		);
 
 #

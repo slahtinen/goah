@@ -19,6 +19,6 @@ package goah::Database::Persons;
 use base 'goah::Database';
 
 __PACKAGE__->table('Persons');
-__PACKAGE__->columns(All => qw/id companyid firstname lastname title phone mobile fax email locationid/);
+__PACKAGE__->columns(All => qw/id companyid firstname lastname title phone mobile fax email locationid desirablehours/);
 
 1;

@@ -16,7 +16,11 @@
 	[% END %]
 	</td>
 	[% IF data.type == 'textfield' %]
-		<td><input class="big" name="[% data.field %]" value="[% persondata.$field %]" /></td>
+		[% IF data.field == 'pass' %] 
+			<td><input type='password' class="big" name="[% data.field %]" value="[% persondata.$field %]" /></td>
+		[% ELSE %]
+			<td><input class="big" name="[% data.field %]" value="[% persondata.$field %]" /></td>
+		[% END %]
 	[% ELSIF data.type == 'textarea' %]
 		<td><textarea class="medium" name="[% data.field %]">[% persondata.$field %]</textarea></td>
 	[% ELSIF data.type == 'checkbox' %]
