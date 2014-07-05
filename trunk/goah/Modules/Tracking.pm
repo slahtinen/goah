@@ -34,7 +34,7 @@ my %timetrackingdb;
 
 my %submenu = (
 	0 => { title => __("Reporting"), action => 'reporting' },
-	1 => { title => __("Full company details"), action => 'hourgoals' },
+	#1 => { title => __("Full company details"), action => 'hourgoals' },
 );
 
 #

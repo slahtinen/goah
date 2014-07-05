@@ -1,5 +1,5 @@
-GoaH 2.0.0 beta 
-===============
+GoaH README
+============
 
 GoaH is an open source application for small and mid sized business for 
 billing and financial management. 
@@ -7,15 +7,12 @@ billing and financial management.
 
 MORE INFORMATION
 ================
-Project website... : http://www.goah.org
-Project forum..... : http://forum.goah.org
-Project management : http://redmine.tietovirta.fi/projects/show/goah
+Project website... : http://www.goah.org (somewhat obsolete at 07/2014)
+Project management : https://github.com/tietovirta/goah
 
-Redmine installation contains project wiki and additional information. Unfortunately
-due to lack of your resources most of the content is in finnish, but we try to 
-translate relevant parts to english. If you wish to help with the translation process
-please do contact us.
-
+We're merging our content to github with very loose timetable, so there isn't
+much data available at the moment. This README will some day contain installation
+instructions and other information. Meanwhile contact us via email or via github.
 
 LICENSE AND COPYRIGHT
 =====================
