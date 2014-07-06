@@ -20,6 +20,7 @@
 	<th>[% gettext("Company total") %]</th>
 	</tr>
 	</thead>
+	<tbody class="rowdata">
 
 	[% even = 1 %]
 	[% daygoals = hourgoals.days %]
@@ -62,7 +63,9 @@
 	<td class="number">[% current.total %] / [% current.goal %] ([% current.percent %]%)</td>
 	<td class="number">[% current.all_total %] / [% current.all_goal %] ([% current.all_percent %]%)</td>
 	</tr>
+	</tbody>
 	</table>
+	
 
 	[% monthgoals = hourgoals.months %]
 	<h3>[% gettext("Monthly statistics for") %] [% persondata.name %]</h3>
@@ -72,13 +75,14 @@
 	<th>[% gettext("Your statistics") %]</th>
 	<th>[% gettext("Company total") %]</th></tr>
 	</thead>
+	<tbody class="rowdata">
 	[% FOREACH key IN monthgoals.keys.nsort %]
 		[% IF key.match("[a-z]") %]
 			[% NEXT %]
 		[% END %]
 		[% month = monthgoals.$key %]
 		<tr>
-		<td>[% month.name %] [% month.year %]</td>
+		<td>[% month.number %] / [% month.year %]</td>
 		<td class="number">[% month.done %] / [% month.goal %] ([% month.percent %]%)</td>
 		<td class="number">[% month.all_done %] / [% month.all_goal %] ([% month.all_percent %]%)</td>
 		</tr>
@@ -87,6 +91,7 @@
 	<td class="number">[% monthgoals.current.done %] / [% monthgoals.current.goal %] ([% monthgoals.current.percent %]%)</td>
 	<td class="number">[% monthgoals.current.all_done %] / [% monthgoals.current.all_goal %] ([% monthgoals.current.all_percent %]%)</td>
 	</tr>
+	</tbody>
 	</table>
 [% END %]
 

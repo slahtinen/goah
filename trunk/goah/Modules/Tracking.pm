@@ -557,6 +557,7 @@ sub HourGoals {
 		$pasthours_month{$loopcounter}{'done'}=$hours;
 		$pasthours_month{$loopcounter}{'all_done'}=$allhours;
 		$pasthours_month{$loopcounter}{'name'}=__($dt->month_abbr);
+		$pasthours_month{$loopcounter}{'number'}=sprintf("%02d",$dt->month);
 		$pasthours_month{$loopcounter}{'year'}=$start_dt->year;
 		$pasthours_month{$loopcounter}{'percent'}=sprintf("%.1f",$pasthours_month{$loopcounter}{'done'}/$pasthours_month{$loopcounter}{'goal'}*100);
 		$pasthours_month{$loopcounter}{'all_percent'}=sprintf("%.1f",$pasthours_month{$loopcounter}{'all_done'}/$pasthours_month{$loopcounter}{'all_goal'}*100);
@@ -965,7 +966,7 @@ sub ReadHours {
 
 	my $datap; 
 	
-	if($_[2]<0) {
+	if($_[2]=~/^[0-9]+$/ && $_[2]<0) {
 		#goah::Modules->AddMessage('debug',"Limiting search by result count",__FILE__,__LINE__);
 		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC', limit => -1*$_[2]);
 	} else {
@@ -996,7 +997,8 @@ sub ReadHours {
 				my $companypointer = goah::Modules::Customermanagement->ReadCompanydata($row->companyid,1);
 				unless($companypointer==0) {
 					my %compdata = %$companypointer;
-					$tdata{$i}{'companyname'}=$compdata{'name'}.' '.$compdata{'firstname'};
+					$tdata{$i}{'companyname'}=$compdata{'name'};
+					$tdata{$i}{'companyname'}.' '.$compdata{'firstname'} if($compdata{'firstname'});
 				} else {
 					$tdata{$i}{'companyname'}=__("Not available!");
 				}
@@ -1027,13 +1029,13 @@ sub ReadHours {
 			}
 			if ($field eq 'hours' || $field eq 'inthours') {
 				
-				$tdata{$i}{$field}=$row->$field;
+				$tdata{$i}{$field}=$row->$field || 0;
 				$tdata{$i}{$field}=~s/\.\d*$//;
 
 				my $minfield='minutes';
 				$minfield='intminutes' if($field eq 'inthours');
 
-				$tdata{$i}{$minfield}=$row->$field;
+				$tdata{$i}{$minfield}=$row->$field || 0;
 				$tdata{$i}{$minfield}=~s/^\d*/0/;
 				if($tdata{$i}{$minfield} > 0) {
 					$tdata{$i}{$minfield}=sprintf("%.0f",60*$tdata{$i}{$minfield});
@@ -1045,18 +1047,21 @@ sub ReadHours {
 				if($field eq 'hours') {
 					my $billing=1;
 					$billing = 0 if($row->no_billing);
-					$totalhours{$row->type}{$billing}+=$row->$field;
+
+					$totalhours{$row->type}{$billing}=0 unless($totalhours{$row->type}{$billing} && $totalhours{$row->type}{$billing}=~/^\d+$/);
+
+					$totalhours{$row->type}{$billing}+=$row->$field if $row->$field;
 				}
 				if($field eq 'inthours') {
-					$totalhours{$row->type}{0}+=$row->$field;
+					$totalhours{$row->type}{0}+=$row->$field if $row->$field;
 				}
 			}
-			if ($field eq 'longdescription') {
+			if ($field eq 'longdescription' && $tdata{$i}{$field}) {
 				$tdata{$i}{$field}=$row->$field;
 				$tdata{$i}{$field}=~s/\n/<br\/>\n/g;
 
 				$tdata{$i}{'longdescription_tooltip'}=$row->$field;
-				if(length($tdata{$i}{'longdescription_tooltip'})>100) {
+				if($tdata{$i}{'longdescription_tooltip'}  && length($tdata{$i}{'longdescription_tooltip'})>100) {
 					$tdata{$i}{'longdescription_tooltip'}=substr($tdata{$i}{'longdescription_tooltip'},0,100);
 					$tdata{$i}{'longdescription_tooltip'}.='...';
 				}
