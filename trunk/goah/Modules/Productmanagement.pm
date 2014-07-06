@@ -880,7 +880,8 @@ sub ReadData {
 						$pdata{$i}{$field} = $prod->$field;
 					}
 				} else {
-					$pdata{$i}{$field} = $prod->$field;
+					$pdata{$i}{$field} = 0;
+					$pdata{$i}{$field} = $prod->$field if($prod->$field);
 				}
 			}
 			$pdata{$i}{'row_total_value'}=$pdata{$i}{'purchase'}*$pdata{$i}{'in_store'};
