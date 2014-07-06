@@ -47,7 +47,7 @@
 			<td class="number">[% day.done %]</td>
 		[% END %]
 		<td class="number">[% week.total %] / [% week.goal %] ([% week.percent %]%)</td>
-		<td class="number">[% week.all_total %] / [% week.all_goal %] ([% week.all_percent %]%)</td>
+		<td class="number_buy">[% week.all_total %] / [% week.all_goal %] ([% week.all_percent %]%)</td>
 		</tr>
 	[% END %]
 		
@@ -61,7 +61,7 @@
 		<td class="number">[% current.$key.done %]</td>
 	[% END %]
 	<td class="number">[% current.total %] / [% current.goal %] ([% current.percent %]%)</td>
-	<td class="number">[% current.all_total %] / [% current.all_goal %] ([% current.all_percent %]%)</td>
+	<td class="number_buy">[% current.all_total %] / [% current.all_goal %] ([% current.all_percent %]%)</td>
 	</tr>
 	</tbody>
 	</table>
@@ -84,12 +84,12 @@
 		<tr>
 		<td>[% month.number %] / [% month.year %]</td>
 		<td class="number">[% month.done %] / [% month.goal %] ([% month.percent %]%)</td>
-		<td class="number">[% month.all_done %] / [% month.all_goal %] ([% month.all_percent %]%)</td>
+		<td class="number_buy">[% month.all_done %] / [% month.all_goal %] ([% month.all_percent %]%)</td>
 		</tr>
 	[% END %]
 	<tr><td>[% gettext("This month so far") %]</td>
 	<td class="number">[% monthgoals.current.done %] / [% monthgoals.current.goal %] ([% monthgoals.current.percent %]%)</td>
-	<td class="number">[% monthgoals.current.all_done %] / [% monthgoals.current.all_goal %] ([% monthgoals.current.all_percent %]%)</td>
+	<td class="number_buy">[% monthgoals.current.all_done %] / [% monthgoals.current.all_goal %] ([% monthgoals.current.all_percent %]%)</td>
 	</tr>
 	</tbody>
 	</table>
