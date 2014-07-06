@@ -225,11 +225,11 @@
 </td>
 
 <td>
-[% IF row.inthours > 0 %]
-	[% row.inthours %]h
+[% IF row.inthours && row.inthours > 0 %]
+    [% row.inthours %] h
 [% END %]
-[% IF row.intminutes > 0 %]
-	[% row.intminutes %]min
+[% IF row.intminutes && row.intminutes > 0 %]
+	[% row.intminutes %] min
 [% END %]
 </td>
 
