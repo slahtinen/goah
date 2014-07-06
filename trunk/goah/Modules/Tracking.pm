@@ -390,8 +390,11 @@ sub HourGoals {
 			
 			my %person=%$person_p;
 			push(@all_personnel_id,$person{'id'});
-			$desirable{'all_day'}+=$person{'desirablehours'};
-			$desirable{'all_week'}+=($person{'desirablehours'}*5);
+
+			my $desirable_tmp=0;
+			$desirable_tmp=$person{'desirablehours'} if($person{'desirablehours'});
+			$desirable{'all_day'}+=$desirable_tmp;
+			$desirable{'all_week'}+=($desirable_tmp*5);
 		}
 	}
 
@@ -488,7 +491,7 @@ sub HourGoals {
 				$hours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
 			}
 
-			my $donehours_p=ReadHours(\@all_personnel_id,'',$dt->ymd,$dt->ymd,'yes','all');
+			$donehours_p=ReadHours(\@all_personnel_id,'',$dt->ymd,$dt->ymd,'yes','all');
 			if($donehours_p) {
 				my %donehours=%$donehours_p;
 				$allhours=sprintf("%.2f",$donehours{-1}{-1}{'hours'}{1} + $donehours{-1}{-1}{'minutes'}{1} /60);
@@ -968,7 +971,7 @@ sub ReadHours {
 
 	my $datap; 
 	
-	if($_[2]<0) {
+	if(!($_[2]=~/\d\d\d\d-\d\d-\d\d/) && $_[2]<0) {
 		#goah::Modules->AddMessage('debug',"Limiting search by result count",__FILE__,__LINE__);
 		$datap = goah::Db::Timetracking::Manager->get_timetracking(\%dbsearch, sort_by => 'day DESC', limit => -1*$_[2]);
 	} else {
