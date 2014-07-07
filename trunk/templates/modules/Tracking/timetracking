@@ -25,7 +25,7 @@
   [% IF data.type != "hidden" %]
         [% IF data.type == 'textfield' %]
 		[% IF data.field == 'day' %]
-			<td><input  name="[% data.field %]" value="[% datenow %]" /></td>
+			<td><input class='medium'  name="[% data.field %]" value="[% datenow %]" /></td>
 		[% ELSIF data.field == 'hours' || data.field == 'inthours' %]
 			<td><input class="tiny" name="[% data.field %]" title="[% gettext("1:30 or 1,5") %]" /></td>
 			[% IF data.field == 'inthours' %]
@@ -136,10 +136,10 @@
 			[% NEXT %]
 		[% END %]
 		[% day = week.$dk %]
-		<td class="number">[% day.done %]</td>
+		<td class="number_left">[% day.done %]</td>
 	[% END %]
-	<td class="number">[% week.total %] / [% week.goal %] ([% week.percent %]%)</td>
-	<td class="number_buy">[% week.all_total %] / [% week.all_goal %] ([% week.all_percent %]%)</td>
+	<td class="number_left">[% week.total %] / [% week.goal %] ([% week.percent %]%)</td>
+	<td class="number_left_color">[% week.all_total %] / [% week.all_goal %] ([% week.all_percent %]%)</td>
 	</tr>
 [% END %]
 		
@@ -150,14 +150,15 @@
 	[% IF key.match('[a-z]') %]
 		[% NEXT %]
 	[% END %]
-	<td class="number">[% current.$key.done %]</td>
+	<td class="number_left">[% current.$key.done %]</td>
 [% END %]
-<td class="number">[% current.total %] / [% current.goal %] ([% current.percent %]%)</td>
-<td class="number_buy">[% current.all_total %] / [% current.all_goal %] ([% current.all_percent %]%)</td>
+<td class="number_left">[% current.total %] / [% current.goal %] ([% current.percent %]%)</td>
+<td class="number_left_color">[% current.all_total %] / [% current.all_goal %] ([% current.all_percent %]%)</td>
 </tr>
 </tbody>
 </table>
 
+[% even = 1 %]
 [% monthgoals = hourgoals.months %]
 <h3>[% gettext("Monthly statistics") %]</h3>
 <table>
@@ -166,21 +167,29 @@
 <th>[% gettext("Your statistics") %]</th>
 <th>[% gettext("Company total") %]</th></tr>
 </thead>
-<tbody>
+<tbody class='rowdata'>
 [% FOREACH key IN monthgoals.keys.sort %]
 	[% IF key.match("[a-z]") %]
 		[% NEXT %]
 	[% END %]
 	[% month = monthgoals.$key %]
-	<tr>
-	<td>[% month.name %]</td>
-	<td class="number">[% month.done %] / [% month.goal %] ([% month.percent %]%)</td>
-	<td class="number_buy">[% month.all_done %] / [% month.all_goal %] ([% month.all_percent %]%)</td>
+
+	[% IF even == 1 %] 
+		<tr class="even">
+		[% even=0 %]
+	[% ELSE %]
+		<tr class="odd">
+		[% even=1 %]
+	[% END %]
+
+	<td>[% month.number %] / [% month.year %]</td>
+	<td class="number_left">[% month.done %] / [% month.goal %] ([% month.percent %]%)</td>
+	<td class="number_left_color">[% month.all_done %] / [% month.all_goal %] ([% month.all_percent %]%)</td>
 	</tr>
 [% END %]
 <tr><td>[% gettext("This month so far") %]</td>
-<td class="number">[% monthgoals.current.done %] / [% monthgoals.current.goal %] ([% monthgoals.current.percent %]%)</td>
-<td class="number_buy">[% monthgoals.current.all_done %] / [% monthgoals.current.all_goal %] ([% monthgoals.current.all_percent %]%)</td>
+<td class="number_left">[% monthgoals.current.done %] / [% monthgoals.current.goal %] ([% monthgoals.current.percent %]%)</td>
+<td class="number_left_color">[% monthgoals.current.all_done %] / [% monthgoals.current.all_goal %] ([% monthgoals.current.all_percent %]%)</td>
 </tr>
 </tbody>
 </table>
