@@ -1220,13 +1220,16 @@ sub RemoveHoursFromBasket {
 		return 0;
 	}
 
-	$datap->basket_id('');
-	if($_[1]) {
-		my $inthours=$datap->inthours;
-		$inthours+=$datap->hours;
-		$datap->inthours($inthours);
-		$datap->hours(0);
-	}
+	$datap->basket_id('') unless($_[1]);
+	
+	# We don't change hours to internal anymore, it's confusing due to 
+	# new tracking features, and it pretty much messes up with statistics
+	#if($_[1]) {
+	#	my $inthours=$datap->inthours;
+	#	$inthours+=$datap->hours;
+	#	$datap->inthours($inthours);
+	#	$datap->hours(0);
+	#}
 
 	return 1 if($datap->save);
 	return 0;
